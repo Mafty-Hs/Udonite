@@ -35,17 +35,17 @@
   border: none;
   border-radius: 2px;
   outline: none;
-  color: #444;
+  color: #EEE;
   padding: 2px;
   box-sizing: border-box;
 }
 
 .input:hover {
-  background: #EEE;
+  background: #111;
 }
 
 .input:focus {
-  background: #FFF;
+  background: #000;
 }
 
 input[type=number] {
@@ -58,7 +58,7 @@ input[type=number]:hover, input[type=number]:focus {
 
 input[type='range'] {
   --slider-track-color: transparent; /* #ccc */
-  --slider-fill-color: #555; /*#777 */
+  --slider-fill-color: #888; /*#777 */
   --slider-border-color: #777;
   --slider-height: 0.8em;
   --slider-thumb-size: 1.0em;
@@ -126,7 +126,7 @@ input[type='range']::-webkit-slider-thumb {
   box-sizing: border-box;
   border: solid 1px var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -136,7 +136,7 @@ input[type='range']::-moz-range-thumb {
   box-sizing: border-box;
   border: solid 1px var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -147,7 +147,7 @@ input[type='range']::-ms-thumb {
   box-sizing: border-box;
   border: solid 1px  var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -176,7 +176,7 @@ input[type='range']::-ms-tooltip {
   margin: 0px; 
   max-width: 500px;
 
-  background-color: rgba(240,218,189, 0.9);
+  background-color: rgba(240,240,240, 0.9);
 }
 
 .tab label {
@@ -234,7 +234,7 @@ input[type='range']::-ms-tooltip {
 
 .tab-setting {
   background-color: transparent;
-  color: #444; 
+  color: #FFF; 
   border: solid 1px #555;
   padding: 2px 8px;
   border-radius: 5px;

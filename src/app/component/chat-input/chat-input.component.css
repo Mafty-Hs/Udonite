@@ -6,6 +6,7 @@
   display: table;
   /*width: calc(100% - 30px);*/
   width: 100%;
+  color: #000;
 }
 
 .table .table-cell {

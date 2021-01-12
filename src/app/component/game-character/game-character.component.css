@@ -349,7 +349,7 @@
   max-width: 100%;
   min-width: 130px;
   font-size: 11px;
-  background: linear-gradient(-30deg, rgba(240, 218, 189, 0.9), rgba(255, 244, 232, 0.9));
+  background: linear-gradient(-30deg, rgba(189, 189, 189, 0.9), rgba(244, 244, 244, 0.9));
   border: 1px solid;
   border-radius: 24px;
   margin: 0px;
@@ -366,7 +366,7 @@
   border: none;
   background: none;
   min-width: 300px;
-  -webkit-text-stroke: 1px rgb(240, 218, 189);
+  -webkit-text-stroke: 1px rgb(189, 189, 189);
   letter-spacing: -8px;
   white-space: nowrap;
 }

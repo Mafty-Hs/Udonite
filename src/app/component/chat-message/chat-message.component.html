@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="!isEase;else ease" class="container">
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
     [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
@@ -15,7 +15,7 @@
         <span class='tip msg-from'>　{{chatMessage.from}}</span>
         <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
-      <div class="text msg-text">
+      <div class="text msg-text" [style.font-size.px]="localFontsize">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
     </div>
@@ -33,3 +33,19 @@
 <ng-template #secret>
   <span>（シークレットダイス）</span>
 </ng-template>
+<ng-template #ease class="container">
+  <div class="message"
+    [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
+    [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
+    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
+    [@flyInOut]="isMine ? null : 'active'" [@flyInOutMe]="!isMine ? null : 'active'">
+    <div class="body">
+      <div class="text msg-ease" [style.font-size.px]="localFontsize">
+        <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
+        ::
+        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

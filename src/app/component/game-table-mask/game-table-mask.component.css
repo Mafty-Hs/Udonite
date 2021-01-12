@@ -1,3 +1,23 @@
+.maskname {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center; /* 縦方向中央揃え（Safari用） */
+  align-items: center; /* 縦方向中央揃え */
+  -webkit-justify-content: center; /* 横方向中央揃え（Safari用） */
+  justify-content: center; /* 横方向中央揃え */
+  font-size: 20px;
+  text-shadow    : 
+       1px  1px 1px #000,
+      -1px  1px 1px #000,
+       1px -1px 1px #000,
+      -1px -1px 1px #000,
+       1px  0px 1px #000,
+       0px  1px 1px #000,
+      -1px  0px 1px #000,
+       0px -1px 1px #000;  
+  color: #FFF;
+}
+
 .is-grab {
   cursor: -moz-grab;
   cursor: -webkit-grab;

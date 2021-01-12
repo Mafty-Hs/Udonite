@@ -36,6 +36,8 @@ const isiOS = ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1 || ua.indexOf
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
+  @Input() localFontsize: number = 14;
+  @Input() isEase: boolean;
   sampleMessages: ChatMessageContext[] = [
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。' },
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: '全てのデータが各参加者のブラウザ内にあるため、ルームの状態を次回に持ち越したい場合は、必ず「保存」を実行してセーブデータ（zip）を生成してください。保存したzipの読み込みはブラウザ画面へのファイルドロップで行えます。' },
@@ -83,7 +85,12 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   get minScrollHeight(): number {
     let length = this.chatTab ? this.chatTab.chatMessages.length : this.sampleMessages.length;
-    return (length < 10000 ? length : 10000) * this.minMessageHeight;
+    if (this.isEase) {
+      return (length < 10000 ? length : 10000) * this.minMessageHeight / 2;
+    }
+    else {
+      return (length < 10000 ? length : 10000) * this.minMessageHeight;
+    }
   }
 
   get topSpace(): number { return this.minScrollHeight - this.bottomSpace; }

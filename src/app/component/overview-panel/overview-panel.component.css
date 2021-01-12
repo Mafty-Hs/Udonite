@@ -35,7 +35,7 @@
 }
 
 .component-background {
-  background: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));
+  background: linear-gradient(-30deg, rgba(232,232,232, 0.9), rgba(244, 244, 244, 0.9));
   border-bottom: solid 1px #999;
 }
 

@@ -5,6 +5,7 @@ import { TabletopObject } from './tabletop-object';
 @SyncObject('table-mask')
 export class GameTableMask extends TabletopObject {
   @SyncVar() isLock: boolean = false;
+  @SyncVar() isName: boolean = false;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get width(): number { return this.getCommonValue('width', 1); }

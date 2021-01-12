@@ -1,10 +1,18 @@
 <!--<h2>チャットシステム</h2>-->
 <div class="component">
 <div class="log">
-  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()"></chat-tab>
+  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [isEase]="this.isEase"></chat-tab>
   <div *ngIf="!chatTab">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
 </div>
 <div class="sticky-bottom">
+<div class="log-setting">
+<form name="logsetting" action="#">
+<label for="fontsize">簡易表示</label>
+<input id="switch" name="switch" type="checkbox" [(ngModel)]="isEase" />
+<label for="fontsize">文字サイズ {{ localFontsize }}px</label>
+<input id="fontsize" type="range" name="fontsize" min="10"  max="32" [(ngModel)]="localFontsize">
+</form>
+</div>
   <form>
     <div class="chat-tab">
       <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">

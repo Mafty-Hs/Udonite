@@ -1,3 +1,7 @@
+.palletebase{
+  background-color: rgba(240, 240, 240, 0.9);
+}
+
 .edit-info {
   width: 100%;
   text-align: center;
@@ -14,6 +18,7 @@
 
 .flex-container {
   display: flex;
+  background-color: rgba(240, 240, 240, 0.8);
   flex-direction: column;
   height: 100%;
 }

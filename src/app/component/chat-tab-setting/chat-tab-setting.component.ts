@@ -10,6 +10,7 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
+import { SaveHtmlService } from 'service/save-html.service';
 
 @Component({
   selector: 'app-chat-tab-setting',
@@ -38,7 +39,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
-    private saveDataService: SaveDataService
+    private saveDataService: SaveDataService,
+    private saveHtmlService: SaveHtmlService
   ) { }
 
   ngOnInit() {
@@ -64,6 +66,11 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   create() {
     ChatTabList.instance.addChatTab('タブ');
+  }
+
+  htmlsave() {
+    if (!this.selectedTab) return;
+    this.saveHtmlService.saveHtmlLog(this.selectedTab)
   }
 
   async save() {

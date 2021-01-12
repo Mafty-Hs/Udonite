@@ -3,8 +3,8 @@
   overflow: visible;
   position: absolute;
 
-  color: #444;
-  background: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));
+  color: #FFF;
+  background: linear-gradient(-30deg, rgba(40,40,40, 0.9), rgba(100,100,100, 0.9));
   border: solid 1px #999;
 
   padding: 0px;

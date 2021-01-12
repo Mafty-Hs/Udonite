@@ -10,7 +10,12 @@
       <img style="display: block" class="is-fit-full" [style.opacity]="opacity" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
   </ng-template>
-  <div *ngIf="isLock" class="lock-icon is-center">
-    <i class="material-icons">lock</i>
+  <div *ngIf='isName' class="maskname is-center">
+    {{name}}
+  </div>
+  <div *ngIf="isLock">
+    <div *ngIf='!isName' class="lock-icon is-center">
+      <i class="material-icons">lock</i>
+    </div>
   </div>
 </div>

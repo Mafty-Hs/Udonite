@@ -48,6 +48,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
+  @Input() localFontsize: number = 14;
+  @Input() isEase: boolean = true;
 
   constructor(
     private chatMessageService: ChatMessageService

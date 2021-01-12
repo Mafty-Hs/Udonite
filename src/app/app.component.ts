@@ -38,6 +38,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
+import { SaveHtmlService } from 'service/save-html.service';
 import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
@@ -67,6 +68,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
+    private saveHtmlService: SaveHtmlService,
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
     private standImageService: StandImageService
@@ -385,6 +387,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.isSaveing = false;
       this.progresPercent = 0;
     }, 500);
+  }
+
+  htmlsave(){
+    this.saveHtmlService.saveAllHtmlLog();
   }
 
   handleFileSelect(event: Event) {

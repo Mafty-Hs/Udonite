@@ -44,6 +44,8 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
+  get isName(): boolean { return this.gameTableMask.isName; }
+  set isName(isName: boolean) { this.gameTableMask.isName = isName; }
 
   gridSize: number = 50;
 
@@ -131,6 +133,19 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           name: '☐ 固定', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
+          }
+        }
+      ),
+      ContextMenuSeparator,
+      (this.isName
+        ? {
+          name: '☑ 名前を表示', action: () => {
+            this.isName = false;
+          }
+        }
+        : {
+          name: '☐ 名前を表示', action: () => {
+            this.isName = true;
           }
         }
       ),

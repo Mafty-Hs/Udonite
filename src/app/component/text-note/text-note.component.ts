@@ -57,6 +57,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isLocked(): boolean { return this.textNote.isLocked; }
   set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
+  get isSizeLocked(): boolean { return this.textNote.isSizeLocked; }
+  set isSizeLocked(isSizeLocked: boolean) { this.textNote.isSizeLocked = isSizeLocked; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
@@ -177,6 +179,17 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
+      (this.isSizeLocked
+        ? {
+          name: '☑ サイズ固定', action: () => {
+            this.isSizeLocked = false;
+          }
+        } : {
+          name: '☐ サイズ固定', action: () => {
+            this.isSizeLocked = true;
+          }
+        }),
+      ContextMenuSeparator,
       (this.isUpright
         ? {
           name: '☑ 直立', action: () => {
@@ -263,9 +276,16 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   calcFitHeight() {
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    let titlesize:number = this.gridSize;
     textArea.style.height = '0';
-    if (textArea.scrollHeight > textArea.offsetHeight) {
-      textArea.style.height = textArea.scrollHeight + 'px';
+    if (!this.isSizeLocked){
+      if (textArea.scrollHeight > textArea.offsetHeight) {
+        textArea.style.height = textArea.scrollHeight + 'px';
+      }
+    }
+    else{
+        if (this.title == "") { titlesize = 0 } 
+        textArea.style.height = this.height * this.gridSize - titlesize  + 'px';
     }
   }
 

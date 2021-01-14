@@ -348,6 +348,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         SoundEffect.play(PresetSound.piecePut);
       }
     });
+    actions.push({
+      name: 'コピーを作る(自動採番)', action: () => {
+        this.cloneNumberGameObject(gameObject);
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    });
     if (gameObject.location.name === 'graveyard') {
       actions.push({
         name: '削除する', action: () => {
@@ -375,6 +381,22 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   private cloneGameObject(gameObject: TabletopObject) {
     gameObject.clone();
+  }
+  private cloneNumberGameObject(gameObject: TabletopObject) {
+    let cloneObject = gameObject.clone();
+    cloneObject.name = this.appendCloneNumber(cloneObject.name);
+  }
+
+  private appendCloneNumber(objectname: string): string {    
+    let reg = new RegExp('(.*)_([0-9]*)');
+    let res = objectname.match(reg);
+
+    if(res != null && res.length == 3) {
+      let cloneNumber:number = parseInt(res[2]) + 1;
+      return res[1] + "_" + cloneNumber;
+    } else {
+      return objectname + "_2";
+    }
   }
 
   private showDetail(gameObject: GameCharacter) {

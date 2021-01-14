@@ -21,6 +21,7 @@ export class GameCharacter extends TabletopObject {
   text = '';
   isEmote = false;
 
+  set name(value:string) { this.setCommonValue('name', value); }
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
@@ -29,6 +30,27 @@ export class GameCharacter extends TabletopObject {
       if (child instanceof ChatPalette) return child;
     }
     return null;
+  }
+
+  cloneNumber() :this {
+    let cloneObject = super.clone();
+
+    let objectname:string;
+    let reg = new RegExp('(.*)_([0-9]*)');
+    let res = cloneObject.name.match(reg);
+
+    if(res != null && res.length == 3) {
+      let cloneNumber:number = parseInt(res[2]) + 1;
+      objectname = res[1] + "_" + cloneNumber;
+    } else {
+      objectname = cloneObject.name + "_2";
+    }
+
+    cloneObject.name = objectname;
+    cloneObject.update();
+
+    return cloneObject;
+
   }
 
   get standList(): StandList {

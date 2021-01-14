@@ -21,6 +21,8 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() posZ: number = 0;
 
+  set name(value:string) { this.setCommonValue('name', value); }
+  get name(): string { return this.getCommonValue('name', ''); } 
   get isVisibleOnTable(): boolean { return this.location.name === 'table'; }
 
   private _imageFile: ImageFile = ImageFile.Empty;

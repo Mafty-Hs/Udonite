@@ -558,7 +558,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           cloneObject.update();
           SoundEffect.play(PresetSound.piecePut);
         }
-      }
+      },
+      {
+        name: 'コピーを作る(自動採番)', action: () => {
+          let cloneObject = this.gameCharacter.cloneNumber();
+          cloneObject.location.x += this.gridSize;
+          cloneObject.location.y += this.gridSize;
+          cloneObject.update();
+          SoundEffect.play(PresetSound.piecePut);
+        }
+      },
     ], this.name);
   }
 
@@ -604,7 +613,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }
-
 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {

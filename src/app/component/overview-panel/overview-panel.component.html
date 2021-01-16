@@ -58,8 +58,10 @@
 </ng-template>
 
 <ng-template #overviewNote let-note="note">
-  <div class="component-content is-large-size"
-    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+  <div class="component-content"
+    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
+    [ngStyle]="{'width' : note.viewWidth != 0 ? note.viewWidth * 50 + 'px' : '100%',
+    'max-width' : note.viewWidth != 0 ? none : '350px' }">
     <div class="component-title title-background">{{note.title}}</div>
     <div class="component-background text-note-container">
       <div style="position: relative;">

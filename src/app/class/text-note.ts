@@ -13,6 +13,7 @@ export class TextNote extends TabletopObject {
   @SyncVar() isSizeLocked: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
+  get viewWidth(): number { return this.getCommonValue('viewWidth', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
   get fontSize(): number { return this.getCommonValue('fontsize', 1); }
   get title(): string { return this.getCommonValue('title', ''); }
@@ -23,11 +24,12 @@ export class TextNote extends TabletopObject {
     moveToTopmost(this);
   }
 
-  static create(title: string, text: string, fontSize: number = 16, width: number = 1, height: number = 1, identifier?: string): TextNote {
+  static create(title: string, text: string, fontSize: number = 16, width: number = 1, height: number = 1,viewWidth: number = 0, identifier?: string): TextNote {
     let object: TextNote = identifier ? new TextNote(identifier) : new TextNote();
 
     object.createDataElements();
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('viewWidth', viewWidth, {}, 'viewWidth_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('fontsize', fontSize, {}, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('title', title, {}, 'title_' + object.identifier));

@@ -11,6 +11,7 @@ export class TextNote extends TabletopObject {
   @SyncVar() isUpright: boolean = true;
   @SyncVar() isLocked: boolean = false;
   @SyncVar() isSizeLocked: boolean = false;
+  @SyncVar() isOnlyPreview: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
   get viewWidth(): number { return this.getCommonValue('viewWidth', 1); }

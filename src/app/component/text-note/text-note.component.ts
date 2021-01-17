@@ -30,6 +30,21 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
   set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
+  get _text(): string { 
+    if (this.isOnlyPreview) {
+      return "";
+    }
+    else {
+      this.calcFitHeightIfNeeded(); return this.textNote.text;
+    }
+  }
+  set _text(text: string) {
+    if (this.isOnlyPreview) {
+    }
+    else {
+      this.calcFitHeightIfNeeded(); this.textNote.text = text;
+    }
+  }
   get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
@@ -59,6 +74,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
   get isSizeLocked(): boolean { return this.textNote.isSizeLocked; }
   set isSizeLocked(isSizeLocked: boolean) { this.textNote.isSizeLocked = isSizeLocked; }
+  get isOnlyPreview(): boolean { return this.textNote.isOnlyPreview; }
+  set isOnlyPreview(isOnlyPreview: boolean) { this.textNote.isOnlyPreview = isOnlyPreview; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
@@ -187,6 +204,16 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         } : {
           name: '☐ サイズ固定', action: () => {
             this.isSizeLocked = true;
+          }
+        }),
+      (this.isOnlyPreview
+        ? {
+          name: '☑ プレビュー時のみ本文を表示', action: () => {
+            this.isOnlyPreview = false;
+          }
+        } : {
+          name: '☐ プレビュー時のみ本文を表示', action: () => {
+            this.isOnlyPreview = true;
           }
         }),
       ContextMenuSeparator,

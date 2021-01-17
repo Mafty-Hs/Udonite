@@ -7,7 +7,7 @@
         [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
         <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
         <textarea (input)="calcFitHeight();" class="textarea" #textArea [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
-          [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false"></textarea>
+          [style.font-size.px]="fontSize + 9" [(ngModel)]="_text" spellcheck="false"></textarea>
       </div>
       <div *ngIf="!isLocked" [ngClass]="{'is-grab': !isLocked}" class="grand-grabing-area" style="position: absolute"
         [ngStyle]="{'transform': 'translateX(' + gridSize / 2 + 'px) translateY(' + (-gridSize / 4) + 'px)'}" 
@@ -41,3 +41,6 @@
     </div>
   </div>
 </div>
+<ng-template #hideContent [ngStyle]="{ 'height' : height * gridSize + 'px'}">
+        <span> <span>
+/ng-template>

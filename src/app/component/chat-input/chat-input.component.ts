@@ -39,6 +39,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
   @Input() onlyCharacters: boolean = false;
+  @Input() Player: boolean = false;
   @Input() chatTabidentifier: string = '';
   get isUseStandImageOnChatTab(): boolean {
     const chatTab = <ChatTab>ObjectStore.instance.get(this.chatTabidentifier);
@@ -49,7 +50,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @Output() gameTypeChange = new EventEmitter<string>();
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) { this._gameType = gameType; this.gameTypeChange.emit(gameType); }
-
   @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
   @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };

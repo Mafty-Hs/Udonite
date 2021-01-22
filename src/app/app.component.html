@@ -16,6 +16,18 @@
           <div>チャット画面</div>
         </a>
       </li>
+      <li (click)="open('PlayerPaletteComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">library_books</i></div>
+          <div>パレットバインダー</div>
+        </a>
+      </li>
+      <li (click)="open('GameObjectInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder_shared</i></div>
+          <div>インベントリ</div>
+        </a>
+      </li>
       <li (click)="open('GameTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">layers</i></div>
@@ -38,12 +50,6 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">table_rows</i></div>
           <div>ダイスボット表</div>
-        </a>
-      </li>
-      <li (click)="open('GameObjectInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
         </a>
       </li>
       <li (click)="diceAllOpne()">

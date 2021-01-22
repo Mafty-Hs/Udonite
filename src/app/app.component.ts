@@ -19,6 +19,7 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
+import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
@@ -357,6 +358,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;
+        break;
+      case 'PlayerPaletteComponent':
+        component = PlayerPaletteComponent;
+        option = { width: 620, height: 400 };
         break;
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;

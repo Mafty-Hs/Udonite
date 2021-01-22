@@ -189,8 +189,8 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    Promise.resolve().then(() => this.panelService.title = 'パレットバインダー');
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-    this.panelService.title = 'パレットバインダー';
     this.localpalette.setPalette(`プレイヤーチャットパレット`);
     for (const identifier of this.paletteList) {
       if (!this.locationCheck(this.getcharacter(identifier))) {

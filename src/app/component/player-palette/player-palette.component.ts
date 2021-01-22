@@ -66,6 +66,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   sendTo: string = '';
   selectedCharacter: string = 'default';
   isEdit:boolean = false;
+  hidePalette:boolean = false;
   editPalette: string = '';
 
   private shouldUpdateCharacterList: boolean = true;

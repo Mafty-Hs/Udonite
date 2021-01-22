@@ -23,7 +23,7 @@
           <div>{{getcharacter(characterIdentifier).name}}</div>
         </label>
       </div>
-  <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div *ngIf="!hidePalette && !isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
@@ -32,12 +32,12 @@
       </ng-container>
     </select>
   </div>
-  <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div *ngIf="!hidePalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div>
   <div class="bottuns" style="flex-grow: 0;">
-    <button type="submit" (click)="toggleEditMode()">
+    <button *ngIf="!hidePalette" type="submit" (click)="toggleEditMode()">
       <span *ngIf="!isEdit">チャットパレットの編集</span>
       <span *ngIf="isEdit">チャットパレットを確定</span>
     </button>
@@ -45,6 +45,8 @@
       <span>リストから削除</span>
     </button>
   </div>
+      <label style="font-size:12px;color: #444;">パレット非表示</label>
+      <input type="checkbox" [(ngModel)]="hidePalette" />
       <div class="CharacterAdd">
         <select style="max-width: 160px" [(ngModel)]="selectedCharacter">
           <option value="default">-キャラクターを選択-</option>

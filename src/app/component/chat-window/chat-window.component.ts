@@ -17,6 +17,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   sendFrom: string = 'Guest';
   isEase:boolean = false;
+  isLogOnly:boolean = false;
   localFontsize:number = 16;
 
 setSize(value){

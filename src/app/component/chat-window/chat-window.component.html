@@ -7,6 +7,8 @@
 <div class="sticky-bottom">
 <div class="log-setting">
 <form name="logsetting" action="#">
+<label for="fontsize">ログ表示のみ</label>
+<input id="switch" name="switch" type="checkbox" [(ngModel)]="isLogOnly" />
 <label for="fontsize">簡易表示</label>
 <input id="switch" name="switch" type="checkbox" [(ngModel)]="isEase" />
 <label for="fontsize">文字サイズ {{ localFontsize }}px</label>
@@ -22,6 +24,8 @@
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
     </div>
   </form>
+  <div *ngIf="!isLogOnly">
   <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+  </div>
 </div>
 <!--<div style="white-space:pre-wrap; font-size: 8px;"><span>{{gameHelp}}</span></div>-->

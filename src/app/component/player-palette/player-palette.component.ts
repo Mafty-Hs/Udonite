@@ -30,7 +30,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   //Peerに紐付けると循環参照になるため、一旦コンポーネントに持たせる
   localpalette: ChatPalette = new ChatPalette('ChatPalette');
   get palette(): ChatPalette { 
-    if (this.sendFrom == this.myPeer.identifier) {
+    if (this.isMine(this.sendFrom)) {
       return this.localpalette; 
     }
     else {
@@ -50,11 +50,21 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     if (this.character.chatPalette) this.character.chatPalette.dicebot = gameType;
   };
 
+  private isMine(identifier: string):boolean {
+    if (identifier == this.myPeer.identifier) {
+      return true;
+    }
+    return false;
+  }
+
   _sendFrom: string = this.myPeer.identifier;
   get sendFrom(): string { return this._sendFrom; }
   set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
     if (this.isEdit) this.toggleEditMode();
+    if (!this.isMine(sendFrom)){
+      this.character = this.getcharacter(sendFrom);
+    }  
   }
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -124,7 +134,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   }
 
   private evaluatLine(line: string): string {
-    if (this.sendFrom == this.myPeer.identifier) {
+    if (this.isMine(this.sendFrom)) {
       return this.palette.evaluate(line);
     }
     else {

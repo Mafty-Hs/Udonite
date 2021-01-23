@@ -35,6 +35,12 @@
   float: left;
 }
 
+.control { 
+  user-select: none;
+  float: center;
+  display: column;
+}
+
 .CharacterAdd {
   padding : 0 5px 0px 5px;
   user-select: none;

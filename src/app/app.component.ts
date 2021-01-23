@@ -361,7 +361,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'PlayerPaletteComponent':
         component = PlayerPaletteComponent;
-        option = { width: 620, height: 400 };
+        option = { width: 645, height: 400 };
         break;
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;

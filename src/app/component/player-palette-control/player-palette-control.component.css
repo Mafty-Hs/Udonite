@@ -1,0 +1,54 @@
+
+.component {
+  padding: 0px 5px;
+  color: #000;
+  font-size: 14px;
+  display: flex;
+}
+
+.grid-container {
+  display: grid;
+}
+
+.frame {
+  margin: 0px 3px;
+  max-width: 10em;
+}
+
+.section {
+  max-width: 8em;
+}
+
+.tag {
+  height: 1.5em;
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.value {
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: top;
+  padding: 0px;
+}
+
+input[type="number"]  {
+  max-width: 3em;
+  font-size: 14px;
+  text-align: right;
+  background: none;
+  border: none;
+  padding: 0px;
+  border-radius: 0px;
+  outline: none;
+  color: #000;
+  box-sizing: border-box;
+  -moz-appearance:textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

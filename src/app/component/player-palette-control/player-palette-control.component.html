@@ -1,0 +1,62 @@
+<div *ngIf="!disableControl" class="component" (contextmenu)="displayContextMenu($event); false">
+  <div class="frame" *ngFor="let dataElm of inventoryDataElms">
+    <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+      <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #dataElement let-dataElm="dataElm">
+  <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>
+  <ng-template #thenBlock>
+    <div class="section">
+      <div *ngIf="0 < dataElm.name.trim().length" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+      <div class="grid-container">
+        <ng-container *ngFor="let childElm of dataElm.children">
+          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm }"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #elseBlock>
+    <ng-container [ngSwitch]="dataElm.type">
+      <ng-container *ngSwitchCase="'note'">
+          <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+          <div class="note" style="position: relative;">
+            <div class="textarea-spacer">{{dataElm.value}}</div>
+          </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'simpleNumber'">
+          <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+          <div class="value">
+            <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
+          </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'numberResource'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+          <input type="number" size="1" [(ngModel)]="dataElm.currentValue" />/{{!+dataElm.value ? '???' : dataElm.value}}
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'checkProperty'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+          <input type="checkbox" style="width: 2em;" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'abilityScore'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+            <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
+            <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div *ngIf="dataElm.name" class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">{{dataElm.value}}</div>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</ng-template>
+

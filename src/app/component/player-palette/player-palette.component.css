@@ -23,8 +23,12 @@
   height: 100%;
 }
 
+.CharacterControl {
+  max-height : 60px; 
+  overflow: auto;
+}
 .CharacterSelect {
-  height : 48px;
+  min-height : 48px;
   overflow: auto;
   padding : 0 5px 0px 5px;
   user-select: none;

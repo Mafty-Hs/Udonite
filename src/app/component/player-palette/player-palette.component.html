@@ -11,18 +11,21 @@
     <chat-input [Player]="true" [chatTabidentifier]="chatTabidentifier" 
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
   </div>
-      <div class="CharacterSelect">
-        <label>
-        <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
-        <input name="chara-tab" type="radio" value="{{myPeer.identifier}}" [(ngModel)]="sendFrom">
-        <div>{{myPeer.name}}</div>
-        </label>
-        <label *ngFor="let characterIdentifier of paletteList">
-          <img *ngIf="getcharacter(characterIdentifier).imageFile.url.length > 0" class="imgicon" [src]="getcharacter(characterIdentifier).imageFile.url | safe: 'resourceUrl'" />
-          <input name="chara-tab" type="radio" value="{{characterIdentifier}}" [(ngModel)]="sendFrom">
-          <div>{{getcharacter(characterIdentifier).name}}</div>
-        </label>
-      </div>
+  <div class="CharacterControl">
+    <player-palette-control  [disableControl]="disableControl" [character]="character"></player-palette-control>
+  </div>
+  <div class="CharacterSelect">
+    <label>
+      <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
+      <input name="chara-tab" type="radio" value="{{myPeer.identifier}}" [(ngModel)]="sendFrom">
+      <div>{{myPeer.name}}</div>
+    </label>
+    <label *ngFor="let characterIdentifier of paletteList">
+      <img *ngIf="getcharacter(characterIdentifier).imageFile.url.length > 0" class="imgicon" [src]="getcharacter(characterIdentifier).imageFile.url | safe: 'resourceUrl'" />
+      <input name="chara-tab" type="radio" value="{{characterIdentifier}}" [(ngModel)]="sendFrom">
+      <div  (contextmenu)="displayContextMenu($event,getcharacter(characterIdentifier)); false">{{getcharacter(characterIdentifier).name}}</div>
+    </label>
+  </div>
   <div *ngIf="!hidePalette && !isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">

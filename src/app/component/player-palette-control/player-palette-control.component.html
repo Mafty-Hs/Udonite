@@ -1,9 +1,11 @@
-<div *ngIf="!disableControl" class="component" (contextmenu)="displayContextMenu($event); false">
+<div *ngIf="!disableControl">
+  <div *ngIf="!isEdit; else edit" class="component">
   <div class="frame" *ngFor="let dataElm of inventoryDataElms">
     <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
       <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
       </ng-container>
     </ng-container>
+  </div>
   </div>
 </div>
 
@@ -28,13 +30,13 @@
           </div>
       </ng-container>
       <ng-container *ngSwitchCase="'simpleNumber'">
-          <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+          <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
           <div class="value">
             <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
           </div>
       </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
         <div class="value">
           <input type="number" size="1" [(ngModel)]="dataElm.currentValue" />/{{!+dataElm.value ? '???' : dataElm.value}}
         </div>
@@ -46,7 +48,7 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'abilityScore'">
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
         <div class="value">
             <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
             <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
@@ -58,5 +60,17 @@
       </ng-container>
     </ng-container>
   </ng-template>
+</ng-template>
+
+<ng-template #edit>
+  <div class="edit">
+    <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: selectElm }"></ng-container>
+    <div>
+    <textarea class="rc" style="height:1.6em;width:30em;" placeholder='文頭に+で加算、-で減算、他は計算後の数値で置き換え' [(ngModel)]="innerText" (keydown.enter)="sendCalc($event)"
+          #textArea></textarea>
+    </div>
+    <button style="height:2em; padding:2px 4px; "  (click)="sendCalc(null)">SEND</button>
+    <button style="height:2em; padding:2px 4px; "  (click)="cancelEdit()">戻る</button>
+  </div>
 </ng-template>
 

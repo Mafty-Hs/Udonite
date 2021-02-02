@@ -12,7 +12,7 @@
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
   </div>
   <div class="CharacterControl">
-    <player-palette-control  [disableControl]="disableControl" [character]="character"></player-palette-control>
+    <player-palette-control  [disableControl]="disableControl" [character]="character" (sendChat)="sendChat($event)"></player-palette-control>
   </div>
   <div class="CharacterSelect">
     <label>

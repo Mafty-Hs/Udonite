@@ -59,6 +59,47 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
+  _isOpenBasic: boolean = true;
+  _isOpenPL: boolean = false;
+  _isOpenGM: boolean = false;
+  _isOpenData: boolean = false;
+  set isOpenBasic(bool :boolean){
+    if(bool) {
+      this._isOpenPL = false;
+      this._isOpenGM = false;
+      this._isOpenData = false;
+    }
+    this._isOpenBasic = bool;
+  }
+  get isOpenBasic() : boolean {return this._isOpenBasic;}
+  set isOpenPL(bool :boolean){
+    if(bool) {
+      this._isOpenBasic = false;
+      this._isOpenGM = false;
+      this._isOpenData = false;
+    }
+    this._isOpenPL = bool;
+  }
+  get isOpenPL() : boolean {return this._isOpenPL;}
+  set isOpenGM(bool :boolean){
+    if(bool) {
+      this._isOpenPL = false;
+      this._isOpenBasic = false;
+      this._isOpenData = false;
+    }
+    this._isOpenGM = bool;
+  }
+  get isOpenGM() : boolean {return this._isOpenGM;}
+  set isOpenData(bool :boolean){
+    if(bool) {
+      this._isOpenPL = false;
+      this._isOpenGM = false;
+      this._isOpenBasic = false;
+    }
+    this._isOpenData = bool;
+  }
+  get isOpenData() : boolean {return this._isOpenData;}
+
   isSaveing: boolean = false;
   progresPercent: number = 0;
 

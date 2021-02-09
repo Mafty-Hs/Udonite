@@ -57,7 +57,7 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   background-color: rgba(30, 30, 30, 0.8);
   border:solid 1px #999;
   padding: 0px;
-  height: 100%;
+  max-height: 100%;
   width: 300px;
 }
 

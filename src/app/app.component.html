@@ -1,76 +1,101 @@
 <div id="app-table-layer" style="position: absolute; width: 100%; height: 100%; overflow: hidden;">
   <game-table></game-table>
 </div>
-<ui-panel [top]="0" [left]="0" [width]="100" [height]="710" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false">
+<ui-panel [top]="0" [left]="0" [width]="100" [height]="500" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false">
   <nav>
     <ul>
-      <li (click)="open('PeerMenuComponent')">
+      <li *ngIf="!isOpenBasic" (click)="isOpenBasic = true">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder</i></div>
+          <div>基本</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenBasic" (click)="open('PeerMenuComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">people</i></div>
           <div>接続</div>
         </a>
       </li>
-      <li (click)="open('ChatWindowComponent')">
+      <li *ngIf="isOpenBasic" (click)="open('ChatWindowComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">speaker_notes</i></div>
           <div>チャット画面</div>
         </a>
       </li>
-      <li (click)="open('PlayerPaletteComponent')">
+      <li *ngIf="!isOpenGM" (click)="isOpenGM = true">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">library_books</i></div>
-          <div>パレットバインダー</div>
+          <div><i class="material-icons icon-size">folder</i></div>
+          <div>ルーム共通設定</div>
         </a>
       </li>
-      <li (click)="open('GameObjectInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
-        </a>
-      </li>
-      <li (click)="open('GameTableSettingComponent')">
+      <li *ngIf="isOpenGM" (click)="open('GameTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">layers</i></div>
           <div>テーブル設定</div>
         </a>
       </li>
-      <li (click)="open('FileStorageComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">photo_library</i></div>
-          <div>画像</div>
-        </a>
-      </li>
-      <li (click)="open('JukeboxComponent')">
+      <li *ngIf="isOpenGM" (click)="open('JukeboxComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">queue_music</i></div>
           <div>音楽</div>
         </a>
       </li>
-      <li (click)="open('DiceRollTableSettingComponent')">
+      <li *ngIf="isOpenGM" (click)="open('DiceRollTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">table_rows</i></div>
           <div>ダイスボット表</div>
         </a>
       </li>
-      <li (click)="diceAllOpne()">
+      <li *ngIf="isOpenGM" (click)="diceAllOpne()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">all_out</i></div>
           <div>ダイス一斉公開</div>
         </a>
       </li>
-      <li (click)="standSetteings()">
+      <li *ngIf="!isOpenPL" (click)="isOpenPL = true">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder</i></div>
+          <div>プレイヤー操作</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenPL" (click)="open('GameObjectInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder_shared</i></div>
+          <div>インベントリ</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenPL" (click)="open('PlayerPaletteComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">library_books</i></div>
+          <div>パレットバインダー<sup>*</sup></div>
+        </a>
+      </li>
+      <li *ngIf="isOpenPL" (click)="standSetteings()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">how_to_reg</i></div>
           <div>スタンド設定<sup>*</sup></div>
         </a>
       </li>
-      <li (click)="resetPointOfView()">
+      <li *ngIf="isOpenPL" (click)="resetPointOfView()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">remove_red_eye</i></div>
           <div>視点リセット<sup>*</sup></div>
         </a>
       </li>
-      <li>
+      <div *ngIf="isOpenPL" style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
+      <li *ngIf="!isOpenData" (click)="isOpenData = true">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder</i></div>
+          <div>画像/データ</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenData" (click)="open('FileStorageComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">photo_library</i></div>
+          <div>画像</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenData">
         <a routerLink="/" routerLinkActive="active">
           <label>
             <div><i class="material-icons">open_in_browser</i></div>
@@ -80,26 +105,25 @@
           </label>
         </a>
       </li>
-      <li *ngIf="!isSaveing" (click)="save()">
+      <li *ngIf="isOpenData && !isSaveing" (click)="save()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">sd_storage</i></div>
           <div>保存</div>
         </a>
       </li>
-      <li *ngIf="isSaveing" style="pointer-events: none;">
+      <li *ngIf="isOpenData  && isSaveing" style="pointer-events: none;">
         <a>
           <div><i class="material-icons vibration-amine">sd_storage</i></div>
           <div>{{progresPercent}}%</div>
         </a>
       </li>
-      <li (click)="htmlsave()">
+      <li *ngIf="isOpenData" (click)="htmlsave()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">web</i></div>
           <div>HTML</div>
         </a>
       </li>
     </ul>
-    <div style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
   </nav>
 </ui-panel>
 <div #modalLayer></div>

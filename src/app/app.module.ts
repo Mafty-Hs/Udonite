@@ -66,6 +66,7 @@ import { StandImageService } from 'service/stand-image.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { PlayerPaletteComponent } from './component/player-palette/player-palette.component';
 import { PlayerPaletteControlComponent } from './component/player-palette-control/player-palette-control.component';
+import { NetworkStatusComponent } from './component/network-status/network-status.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { PlayerPaletteControlComponent } from './component/player-palette-contro
     StandImageComponent,
     DiceRollTableSettingComponent,
     PlayerPaletteComponent,
-    PlayerPaletteControlComponent
+    PlayerPaletteControlComponent,
+    NetworkStatusComponent
   ],
   imports: [
     BrowserModule,

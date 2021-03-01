@@ -1,0 +1,39 @@
+div {
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  font-size: 12px;
+}
+
+label {
+  font-weight: bold;
+}
+
+.box {
+}
+
+.boxChange {
+ animation: flash 1s linear infinite;
+ background:#606060;
+}
+
+.boxAlert {
+ animation: flash 1s linear infinite;
+ background:#BA3030;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+  
+  
+  100% {
+    opacity: 1;
+  }
+}
+

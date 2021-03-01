@@ -18,9 +18,9 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 import { GameCharacterGeneratorComponent } from 'component/game-character-generator/game-character-generator.component';

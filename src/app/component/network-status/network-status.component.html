@@ -1,0 +1,7 @@
+<div  [ngClass]="isAlert ? 'boxAlert' : 'box'">
+  <div><label>ルーム名</label></div>
+  <div>{{getRoomName()}}</div>
+  <div [ngClass]="isChange ? 'boxChange' : 'box'">
+    <label>接続人数</label> {{UserCount}}人
+  </div>
+</div>

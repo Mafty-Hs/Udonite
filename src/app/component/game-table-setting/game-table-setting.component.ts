@@ -1,14 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+import { ImageTag } from '@udonarium/image-tag';
 import { TableSelecter } from '@udonarium/table-selecter';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
@@ -21,16 +22,15 @@ import { SaveDataService } from 'service/save-data.service';
 export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   minSize: number = 1;
   maxSize: number = 100;
+
+  isShowHideImages = false;
+
   get tableBackgroundImage(): ImageFile {
-    if (!this.selectedTable) return ImageFile.Empty;
-    let file = ImageStorage.instance.get(this.selectedTable.imageIdentifier);
-    return file ? file : ImageFile.Empty;
+    return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.imageIdentifier : null);
   }
 
   get tableDistanceviewImage(): ImageFile {
-    if (!this.selectedTable) return ImageFile.Empty;
-    let file = ImageStorage.instance.get(this.selectedTable.backgroundImageIdentifier);
-    return file ? file : ImageFile.Empty;
+    return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.backgroundImageIdentifier : null);
   }
 
   get tableName(): string { return this.selectedTable.name; }
@@ -82,11 +82,12 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   constructor(
     private modalService: ModalService,
     private saveDataService: SaveDataService,
+    private imageService: ImageService,
     private panelService: PanelService
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => { this.modalService.title = this.panelService.title = 'テーブル設定'; this.panelService.isAbleFullScreenButton = false});
+    Promise.resolve().then(() => { this.modalService.title = this.panelService.title = 'テーブル設定' });
     this.selectedTable = this.tableSelecter.viewTable;
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
@@ -128,7 +129,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     this.progresPercent = 0;
 
     this.selectedTable.selected = true;
-    await this.saveDataService.saveGameObjectAsync(this.selectedTable, 'map_' + this.selectedTable.name, percent => {
+    await this.saveDataService.saveGameObjectAsync(this.selectedTable, 'fly_map_' + this.selectedTable.name, percent => {
       this.progresPercent = percent;
     });
 
@@ -153,9 +154,16 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
+  }
+  
   openBgImageModal() {
     if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedTable && this.selectedTable.imageIdentifier) currentImageIdentifires = [this.selectedTable.imageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.selectedTable || !value) return;
       this.selectedTable.imageIdentifier = value;
     });
@@ -163,9 +171,24 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   openDistanceViewImageModal() {
     if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedTable && this.selectedTable.backgroundImageIdentifier) currentImageIdentifires = [this.selectedTable.backgroundImageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.selectedTable || !value) return;
       this.selectedTable.backgroundImageIdentifier = value;
     });
+  }
+
+  onShowHiddenImages($event: Event) {
+    if (this.isShowHideImages) {
+      this.isShowHideImages = false;
+    } else {
+      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+        this.isShowHideImages = true;
+      } else {
+        this.isShowHideImages = false;
+        $event.preventDefault();
+      }
+    }
   }
 }

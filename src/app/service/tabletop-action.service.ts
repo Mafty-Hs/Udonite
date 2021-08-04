@@ -17,6 +17,8 @@ import { TextNote } from '@udonarium/text-note';
 import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
 
+import { ImageTag } from '@udonarium/image-tag';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -47,8 +49,12 @@ export class TabletopActionService {
 
   createTerrain(position: PointerCoordinate): Terrain {
     let url: string = './assets/images/tex.jpg';
-    let image: ImageFile = ImageStorage.instance.get(url)
-    if (!image) image = ImageStorage.instance.add(url);
+    let image: ImageFile = ImageStorage.instance.get(url);
+    //if (!image) image = ImageStorage.instance.add(url);
+    if (!image) {
+      image = ImageStorage.instance.add(url);
+      ImageTag.create(image.identifier).tag = '*default 地形';
+    }
 
     let viewTable = this.getViewTable();
     if (!viewTable) return;
@@ -77,14 +83,22 @@ export class TabletopActionService {
     diceSymbol.nothingFaces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
       image = ImageStorage.instance.get(url)
-      if (!image) { image = ImageStorage.instance.add(url); }
+      //if (!image) { image = ImageStorage.instance.add(url); }
+      if (!image) {
+        image = ImageStorage.instance.add(url);
+        ImageTag.create(image.identifier).tag = `*default ${ diceType === DiceType.D2 ? 'コイン' : 'ダイス'}`;
+      }
       diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
     });
     
     diceSymbol.faces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
       image = ImageStorage.instance.get(url);
-      if (!image) { image = ImageStorage.instance.add(url); }
+      //if (!image) { image = ImageStorage.instance.add(url); }
+      if (!image) {
+        image = ImageStorage.instance.add(url);
+        ImageTag.create(image.identifier).tag = `*default ${ diceType === DiceType.D2 ? 'コイン' : 'ダイス'}`;
+      }
       diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
     });
 
@@ -92,6 +106,29 @@ export class TabletopActionService {
     diceSymbol.location.y = position.y - 25;
     diceSymbol.posZ = position.z;
     return diceSymbol;
+  }
+
+  createBlankCard(position: PointerCoordinate): Card {
+    const frontUrl = './assets/images/trump/blank_card.png';
+    const backUrl = './assets/images/trump/z01.gif';
+    let frontImage: ImageFile;
+    let backImage: ImageFile;
+
+    frontImage = ImageStorage.instance.get(frontUrl);
+    if (!frontImage) {
+      frontImage = ImageStorage.instance.add(frontUrl);
+      ImageTag.create(frontImage.identifier).tag = '*default カード';
+    }
+    backImage = ImageStorage.instance.get(backUrl);
+    if (!backImage) {
+      backImage = ImageStorage.instance.add(backUrl);
+      ImageTag.create(backImage.identifier).tag = '*default カード';
+    }
+    let card = Card.create('カード', frontImage.identifier, backImage.identifier);
+    card.location.x = position.x - 25;
+    card.location.y = position.y - 25;
+    card.posZ = position.z;
+    return card;
   }
 
   createTrump(position: PointerCoordinate): CardStack {
@@ -102,7 +139,9 @@ export class TabletopActionService {
 
     let back: string = './assets/images/trump/z02.gif';
     if (!ImageStorage.instance.get(back)) {
-      ImageStorage.instance.add(back);
+      //ImageStorage.instance.add(back);
+      const image = ImageStorage.instance.add(back);
+      ImageTag.create(image.identifier).tag = '*default カード';
     }
 
     let suits: string[] = ['c', 'd', 'h', 's'];
@@ -120,7 +159,9 @@ export class TabletopActionService {
     for (let trump of trumps) {
       let url: string = './assets/images/trump/' + trump + '.gif';
       if (!ImageStorage.instance.get(url)) {
-        ImageStorage.instance.add(url);
+        //ImageStorage.instance.add(url);
+        const image = ImageStorage.instance.add(url);
+        ImageTag.create(image.identifier).tag = '*default カード';
       }
       let card = Card.create('カード', url, back);
       cardStack.putOnBottom(card);
@@ -137,6 +178,7 @@ export class TabletopActionService {
     let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
     bgFileContext.url = './assets/images/BG10a_80.jpg';
     testBgFile = ImageStorage.instance.add(bgFileContext);
+    ImageTag.create(testBgFile.identifier).tag = '*default テーブル';
     gameTable.name = '最初のテーブル';
     gameTable.imageIdentifier = testBgFile.identifier;
     gameTable.width = 20;
@@ -158,6 +200,7 @@ export class TabletopActionService {
       this.getCreateTableMaskMenu(position),
       this.getCreateTerrainMenu(position),
       this.getCreateTextNoteMenu(position),
+      this.getCreateBlankCardMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
     ];
@@ -200,6 +243,15 @@ export class TabletopActionService {
     }
   }
 
+  private getCreateBlankCardMenu(position: PointerCoordinate): ContextMenuAction {
+    return {
+      name: 'ブランクカードを作成', action: () => {
+        this.createBlankCard(position);
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    }
+  }
+
   private getCreateTrumpMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: 'トランプの山札を作成', action: () => {
@@ -211,6 +263,7 @@ export class TabletopActionService {
 
   private getCreateDiceSymbolMenu(position: PointerCoordinate): ContextMenuAction {
     let dices: { menuName: string, diceName: string, type: DiceType, imagePathPrefix: string }[] = [
+      { menuName: 'コイン (表/裏)', diceName: 'コイン', type: DiceType.D2, imagePathPrefix: '2_coin' },
       { menuName: 'D4', diceName: 'D4', type: DiceType.D4, imagePathPrefix: '4_dice' },
       { menuName: 'D6', diceName: 'D6', type: DiceType.D6, imagePathPrefix: '6_dice' },
       { menuName: 'D6 (Black)', diceName: 'D6', type: DiceType.D6, imagePathPrefix: '6_dice_black' },

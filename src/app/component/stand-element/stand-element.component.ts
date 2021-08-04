@@ -7,7 +7,7 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { accessSync } from 'fs';
+import { element } from 'protractor';
 import { ModalService } from 'service/modal.service';
 
 @Component({
@@ -101,6 +101,12 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + this.standElement.identifier));
   }
 
+  get showNameElement() {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('showName');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('showName', 'showName', { }, 'showName_' + this.standElement.identifier));
+  }
+
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
@@ -131,6 +137,14 @@ export class StandElementComponent implements OnInit {
     return false;
   }
 
+  get isShowName(): boolean {
+    let elm = this.showNameElement;
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
   get isSpeakable(): boolean {
     if (!this.standElement) return false;
     const elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
@@ -139,11 +153,14 @@ export class StandElementComponent implements OnInit {
 
   openModal(name='imageIdentifier', isAllowedEmpty=false) {
     if (!this.standElement) return;
+    let currentImageIdentifires: string[] = [];
     let elm = this.standElement.getFirstElementByName(name);
     if (!elm) {
       elm = <DataElement>this.standElement.appendChild(DataElement.create(name, '', { type: 'image' }, name + '_' + this.standElement.identifier));
+    } else {
+      currentImageIdentifires = [elm.value + ''];
     }
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!value) return;
       elm.value = value;
     });
@@ -197,7 +214,7 @@ export class StandElementComponent implements OnInit {
     });
     EventSystem.trigger('POPUP_CHAT_BALLOON', { 
       characterIdentifier: this.gameCharacter.identifier, 
-      text: 'テストテストテストテストテストテストテストテストテストテストテストテストテストテスト', 
+      text: 'これはテストです、あなたにだけ見えています。スタンドの設定を行う際は、メニューの「スタンド設定」から「透明化、自動退去」をオフにすると微調整が行いやすくなります。', 
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null,
       dialogTest: true
     });

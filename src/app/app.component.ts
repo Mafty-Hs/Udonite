@@ -47,6 +47,12 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
+import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
+
+import { ImageTag } from '@udonarium/image-tag';
+import { CutInService } from 'service/cut-in.service';
+import { CutIn } from '@udonarium/cut-in';
+import { CutInList } from '@udonarium/cut-in-list';
 
 @Component({
   selector: 'app-root',
@@ -113,7 +119,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private saveHtmlService: SaveHtmlService,
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
-    private standImageService: StandImageService
+    private standImageService: StandImageService,
+    private cutInService: CutInService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -147,6 +154,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
 
+    CutInList.instance.initialize();
+
     let sampleDiceRollTable = new DiceRollTable('SampleDiceRollTable');
     sampleDiceRollTable.initialize();
     sampleDiceRollTable.name = 'サンプルダイスボット表'
@@ -158,10 +167,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
 
     fileContext = ImageFile.createEmpty('stand_no_image').toContext();
     fileContext.url = './assets/images/nc96424.png';
-    ImageStorage.instance.add(fileContext);
+    let standNoIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(standNoIconImage.identifier).tag = '*default スタンド';
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
@@ -181,6 +192,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PresetSound.sweep = AudioStorage.instance.add('./assets/sounds/tm2/tm2_swing003.wav').identifier;
     PresetSound.puyon = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/puyon1.mp3').identifier;
     PresetSound.surprise = AudioStorage.instance.add('./assets/sounds/otologic/Onmtp-Surprise02-1.mp3').identifier;
+    PresetSound.coinToss = AudioStorage.instance.add('./assets/sounds/niconicomons/nc146227.mp3').identifier;
 
     AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
     AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
@@ -199,6 +211,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     AudioStorage.instance.get(PresetSound.sweep).isHidden = true
     AudioStorage.instance.get(PresetSound.puyon).isHidden = true;
     AudioStorage.instance.get(PresetSound.surprise).isHidden = true;
+    AudioStorage.instance.get(PresetSound.coinToss).isHidden = true;
 
     PeerCursor.createMyCursor();
     if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
@@ -212,17 +225,23 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
         if (event.data.dice && event.data.dice.url) {
-          fetch(event.data.dice.url + '/v1/names', {mode: 'cors'})
+          const API_VERSION = event.data.dice.api;
+          //console.log(api)
+          //ToDO BCDice-API管理者情報表示の良いUI思いつかないのでペンディング
+          //fetch(event.data.dice.url + '/v1/admin', {mode: 'cors'})
+          //  .then(response => { return response.json() })
+          //  .then(infos => { DiceBot.adminUrl = infos.url });
+          fetch(event.data.dice.url + (API_VERSION == 1 ? '/v1/names' : '/v2/game_system'), {mode: 'cors'})
             .then(response => { return response.json() })
             .then(infos => {
               let apiUrl = event.data.dice.url;
               DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
+              DiceBot.apiVersion = API_VERSION;
               DiceBot.diceBotInfos = [];
               //DiceBot.diceBotInfos.push(
-              let tempInfos = infos.names
-                .filter(info => info.system != 'DiceBot')
+              let tempInfos = (API_VERSION == 1 ? infos.names : infos.game_system)
+                .filter(info => (API_VERSION == 1 ? info.system : info.id) != 'DiceBot')
                 .map(info => {
-                  // namesの結果にソートキー欲しい
                   let normalize = (info.sort_key && info.sort_key.indexOf('国際化') < 0) ? info.sort_key : info.name.normalize('NFKD');
                   for (let replaceData of DiceBot.replaceData) {
                     if (replaceData[2] && info.name === replaceData[0]) {
@@ -244,7 +263,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                   return info;
                 })
                 .map(info => {
-                  const lang = /.+\:(.+)/.exec(info.system);
+                  const lang = /.+\:(.+)/.exec((API_VERSION == 1 ? info.system : info.id));
                   info.lang = lang ? lang[1] : 'A';
                   return info;
                 })
@@ -254,29 +273,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                     : a.normalize == b.normalize ? 0 
                     : a.normalize < b.normalize ? -1 : 1;
                 });
-              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: info.system, game: info.name } }));
+              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: (API_VERSION == 1 ? info.system : info.id), game: info.name } }));
               if (tempInfos.length > 0) {
                 let sentinel = tempInfos[0].normalize.substr(0, 1);
                 let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
                 for (let info of tempInfos) {
-                  let index = info.lang == 'B' ? '特殊' 
+                  let index = info.lang == 'Other' ? 'その他' 
                     : info.lang == 'ChineseTraditional' ? '正體中文'
                     : info.lang == 'Korean' ? '한국어'
                     : info.lang == 'English' ? 'English'
+                    : info.lang == 'SimplifiedChinese' ? '简体中文'
                     : info.normalize.substr(0, 1);
                   if (index !== sentinel) {
                     sentinel = index;
                     DiceBot.diceBotInfosIndexed.push(group);
                     group = { index: index, infos: [] };
                   }
-                  group.infos.push({ script: info.system, game: info.name });
+                  group.infos.push({ script: (API_VERSION == 1 ? info.system : info.id), game: info.name });
                 }
                 DiceBot.diceBotInfosIndexed.push(group);
+                DiceBot.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
               }
             });
         } else {
           DiceBot.diceBotInfos.forEach((info) => {
-            let normalize = info.game.normalize('NFKD');
+            let normalize = info.sort_key.normalize('NFKD');
             for (let replaceData of DiceBot.replaceData) {
               if (replaceData[2] && info.game === replaceData[0]) {
                 normalize = replaceData[1];
@@ -299,12 +320,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             //console.log(info.index + ': ' + normalize);
           });
           DiceBot.diceBotInfos.sort((a, b) => {
+            if (a.sort_key == 'Other' && b.sort_key == 'Other') {
+              return 0;
+            } else if (a.sort_key == 'Other') {
+              return 1;
+            } else if (b.sort_key == 'Other') {
+              return -1;
+            }
             return a.sort_key == b.sort_key ? 0 
             : a.sort_key < b.sort_key ? -1 : 1;
           });
           let sentinel = DiceBot.diceBotInfos[0].sort_key[0];
           let group = { index: sentinel, infos: [] };
           for (let info of DiceBot.diceBotInfos) {
+            if (info.lang == 'Other') info.lang = '简体中文'; //手抜き
             if ((info.lang ? info.lang : info.sort_key[0]) !== sentinel) {
               sentinel = info.lang ? info.lang : info.sort_key[0];
               DiceBot.diceBotInfosIndexed.push(group);
@@ -314,6 +343,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           }
           DiceBot.diceBotInfosIndexed.push(group);
         }
+        DiceBot.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
         Network.setApiKey(event.data.webrtc.key);
         Network.open();
       })
@@ -343,6 +373,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
       })
+      .on('PLAY_CUT_IN', -1000, event => {
+        let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
+        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
+      })
+      .on('STOP_CUT_IN', -1000, event => {
+        this.cutInService.stop(event.data.identifier);
+      })
       .on('POPUP_STAND_IMAGE', -1000, event => {
         let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
         let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
@@ -351,13 +388,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('FAREWELL_STAND_IMAGE', -1000, event => {
         this.standImageService.farewell(event.data.characterIdentifier);
       })
+      .on('DELETE_STAND_IMAGE', -1000, event => {
+        this.standImageService.destroy(event.data.characterIdentifier, event.data.identifier);
+      })
       .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
         this.standImageService.destroyAll();
       });
   }
 
   ngAfterViewInit() {
-    PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
+    PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 520, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
@@ -382,10 +422,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'GameTableSettingComponent':
         component = GameTableSettingComponent;
-        option = { width: 630, height: 400, left: 100 };
+        option = { width: 610, height: 400, left: 100 };
         break;
       case 'FileStorageComponent':
         component = FileStorageComponent;
+        option.width = 700;
         break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;
@@ -406,7 +447,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;
-        option = { width: 645, height: 470 };
+        option = { width: 645, height: 475 };
+        break;
+      case 'CutInSettingComponent':
+        component = CutInSettingComponent;
+        option = { width: 700, height: 600 };
         break;
     }
     if (component) {
@@ -424,7 +469,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
       ? Network.peerContext.roomName
-      : 'ルームデータ';
+      : 'fly_ルームデータ';
     await this.saveDataService.saveRoomAsync(roomName, percent => {
       this.progresPercent = percent;
     });
@@ -470,8 +515,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  openDiceRollTable() {
-
+  toolBox() {
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
+      { name: 'カットイン', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') },
+      { name: 'ダイスボット表', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') }
+    ], 'ツールボックス');
   }
 
   resetPointOfView() {
@@ -511,7 +559,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 */
   diceAllOpne() {
-    if (confirm('「一斉公開しない」設定ではないダイスをすべて公開します。\nよろしいですか？')) {
+    if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);
     }
   }

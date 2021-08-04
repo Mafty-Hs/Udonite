@@ -45,10 +45,31 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
-  get isName(): boolean { return this.gameTableMask.isName; }
-  set isName(isName: boolean) { this.gameTableMask.isName = isName; }
+  get blendType(): number { return this.gameTableMask.blendType; }
+  set blendType(blendType: number) { this.gameTableMask.blendType = blendType; }
+
+  get fontSize(): number { return this.gameTableMask.fontsize; }
+  set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
+  get text(): string { return this.gameTableMask.text; }
+  set text(text: string) { this.gameTableMask.text = text; }
+  get color(): string { return this.gameTableMask.color; }
+  set color(color: string) { this.gameTableMask.color = color; }
+  get bgcolor(): string { return this.gameTableMask.bgcolor; }
+  set bgcolor(bgcolor: string) { this.gameTableMask.bgcolor = bgcolor; }
+
+  get altitude(): number { return this.gameTableMask.altitude; }
+  set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
+
+  get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get gameTableMaskAltitude(): number {
+    return +this.altitude.toFixed(1); 
+  }
 
   gridSize: number = 50;
+  math = Math;
+  viewRotateZ = 10;
 
   movableOption: MovableOption = {};
 
@@ -80,11 +101,17 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.gameTableMask,
       transformCssOffset: 'translateZ(0.15px)',
-      colideLayers: ['terrain', 'text-note']
+      colideLayers: ['terrain']
     };
   }
 
@@ -138,19 +165,36 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         }
       ),
+      {
+        name: '画像と色',
+        subActions: [
+          { name: `${this.blendType == 0 ? '◉' : '○'} 画像のみ`,  action: () => { this.blendType = 0; SoundEffect.play(PresetSound.cardDraw) } },
+          { name: `${this.blendType == 1 ? '◉' : '○'} 背景色と重ねる`,  action: () => { this.blendType = 1; SoundEffect.play(PresetSound.cardDraw) } },
+          { name: `${this.blendType == 2 ? '◉' : '○'} 背景色と混ぜる`,  action: () => { this.blendType = 2; SoundEffect.play(PresetSound.cardDraw) } },
+          ContextMenuSeparator,
+          { name: '色の初期化', action: () => { this.color = '#555555'; this.bgcolor = '#0a0a0a'; SoundEffect.play(PresetSound.cardDraw) } }
+        ]
+      },
       ContextMenuSeparator,
-      (this.isName
+      (this.isAltitudeIndicate
         ? {
-          name: '☑ 名前を表示', action: () => {
-            this.isName = false;
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
           }
-        }
-        : {
-          name: '☐ 名前を表示', action: () => {
-            this.isName = true;
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
           }
-        }
-      ),
+        }),
+      {
+        name: '高度を0にする', action: () => {
+          if (this.altitude != 0) {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        },
+        altitudeHande: this.gameTableMask
+      },
       ContextMenuSeparator,
       { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } },
       (this.gameTableMask.getUrls().length <= 0 ? null : {
@@ -159,10 +203,16 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           const url = urlElement.value.toString();
           return {
             name: urlElement.name ? urlElement.name : url,
-            action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: this.gameTableMask.name, subTitle: urlElement.name }); },
+            action: () => {
+              if (StringUtil.sameOrigin(url)) {
+                window.open(url.trim(), '_blank', 'noopener');
+              } else {
+                this.modalService.open(OpenUrlComponent, { url: url, title: this.gameTableMask.name, subTitle: urlElement.name });
+              } 
+            },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-            materialIcon: 'open_in_new'
+            isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         })
       }),
@@ -205,7 +255,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'マップマスク設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 300 };
+    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 560 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }

@@ -14,7 +14,7 @@ export namespace StringUtil {
 
   export function isEmote(str: string): boolean {
     if (!str) return false;
-    str = this.cr(str).replace(/[\r\n]/g, '');
+    str = this.cr(str).replace(/[\s\r\n]/g, '');
     return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str)); 
   }
 
@@ -54,5 +54,30 @@ export namespace StringUtil {
       return false;
     }
     return /^https?\:\/\//.test(url.trim());
+  }
+
+  export function sameOrigin(url: string): boolean {
+    if (!url) return false;
+    try {
+      return (new URL(url)).origin === window.location.origin;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  export function escapeHtml(str) {
+    if(typeof str !== 'string') {
+      return str.toString();
+    }
+    return str.replace(/[&'`"<>]/g, function(match){
+      return {
+        '&': '&amp;',
+        "'": '&#x27;',
+        '`': '&#x60;',
+        '"': '&quot;',
+        '<': '&lt;',
+        '>': '&gt;',
+      }[match]
+    });
   }
 }

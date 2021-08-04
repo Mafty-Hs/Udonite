@@ -31,8 +31,14 @@
   <div class="component-content is-small-size"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div *ngIf="hasImage" style="position: relative;">
-      <img class="card-image" [src]="imageUrl | safe: 'resourceUrl'" />
-      <button class="zoom-button" (click)="chanageImageView(true)">
+      <div *ngIf="(card.aliasName == 'card' && (card.isFront || card.isHand)) || (card.aliasName == 'card-stack' && card.topCard.isFront)"
+        class="text" style="z-index: 5; top: 8px"
+        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left" 
+        [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
+        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+      </div>
+      <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
+      <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
         <i class="material-icons">zoom_in</i>
       </button>
       <div *ngIf="card.hasOwner && 0 < card.ownerName.length" class="component-owner position-right-bottom"
@@ -49,7 +55,7 @@
       <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible">
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
-            <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+            <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: card.name }"></ng-container>
           </ng-container>
         </div>
       </div>
@@ -105,7 +111,7 @@
         <ng-container *ngFor="let dataElm of inventoryDataElms">
           <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
             <div class="grid-container">
-              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: character.name }"></ng-container>
             </div>
           </ng-container>
         </ng-container>
@@ -143,7 +149,7 @@
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
             <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: dice.name }"></ng-container>
             </ng-container>
           </ng-container>
         </div>
@@ -152,14 +158,14 @@
   </div>
 </ng-template>
 
-<ng-template #dataElement let-dataElm="dataElm">
+<ng-template #dataElement let-dataElm="dataElm" let-name="name">
   <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>
   <ng-template #thenBlock>
     <div class="section" style="padding-top: 0.5em;">
       <div *ngIf="0 < dataElm.name.trim().length" class="section-text" [attr.title]="dataElm.name">{{dataElm.name}}</div>
       <div class="grid-container indetnt">
         <ng-container *ngFor="let childElm of dataElm.children">
-          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm }"></ng-container>
+          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm, name: name }"></ng-container>
         </ng-container>
       </div>
     </div>
@@ -213,6 +219,14 @@
             <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'url'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+          <div class="hidden-spacer">{{dataElm.value}}</div>
+          <input class="input" style="width:calc(8em - 1.6rem)" type="url" size="1" [(ngModel)]="dataElm.value" />
+          <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div *ngIf="dataElm.name" class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
@@ -227,7 +241,13 @@
 
 <ng-template #imageView>
   <div class="image-view-background is-fill" (click)="chanageImageView(false)" [@fadeInOut]="'in'">
-    <div class="close-button is-pointer-events-none"><i class="material-icons">close</i></div>
-    <img class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />
+    <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
+      class="text" style="z-index: 5"
+      [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top"
+      [ngStyle]="{transform: 'scale(' + fullImageAreaRect.scale + ')'}">
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+    </div>
+    <div class="close-button is-pointer-events-none" style="z-index: 10"><i class="material-icons">close</i></div>
+    <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />
   </div>
 </ng-template>

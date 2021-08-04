@@ -545,3 +545,64 @@ input[type='range']::-ms-tooltip {
 .aura.white {
   filter: drop-shadow(0 -6px 6px #fff);
 }
+
+button.link {
+/*.input {*/
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+
+  color: #444;
+  font-family: Cambria, Georgia;
+  font-size: 1.0em;
+  padding: 2px;
+  box-sizing: border-box;
+}
+  
+button.link i {
+  font-size: 1.0rem;
+}
+
+button.link:hover  {
+  background: #444;
+  color: #CCC;
+}
+
+button.link:disabled {
+  color: gray;
+}
+button.link:disabled:hover {
+  background-color: transparent;
+}
+
+.text {
+  transform-origin: left top;
+
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 24px;
+  color: #444;
+  z-index: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px;
+}

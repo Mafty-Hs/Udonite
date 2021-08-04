@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
@@ -73,6 +73,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('mainImage', { static: false }) mainImageElement: ElementRef;
 
   @Input() tabletopObject: TabletopObject = null;
   isEdit: boolean = false;
@@ -82,6 +83,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   isSaveing: boolean = false;
   progresPercent: number = 0;
+
+  gridSize = 50;
+  naturalWidth = 0;
+  naturalHeight = 0;
+
+  mainImageWidth = 0;
+  mainImageHeight = 0;
 
   constructor(
     private saveDataService: SaveDataService,
@@ -150,15 +158,21 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  get tableTopObjectName(): string {
+    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    return element ? <string>element.value : '';
+  }
+
   async saveToXML() {
     if (!this.tabletopObject || this.isSaveing) return;
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name');
-    let objectName: string = element ? <string>element.value : '';
+    //let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    //let objectName: string = element ? <string>element.value : '';
+    let objectName = this.tableTopObjectName;
 
-    await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'xml_' + objectName, percent => {
+    await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'fly_xml_' + objectName, percent => {
       this.progresPercent = percent;
     });
 
@@ -179,7 +193,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (name == 'shadowImageIdentifier') {
+      const element = this.tabletopObject.imageElement;
+      if (element && element.value != 'null' && element.currentValue) currentImageIdentifires = [element.currentValue + ''];
+    } else {
+      const elements = this.tabletopObject.imageDataElement.getElementsByName(name);
+      if (elements && elements.length > 0) currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (name == 'shadowImageIdentifier') {
         // 影はメイン画像のcurrentValueとする
@@ -217,7 +239,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModalAddImage() {
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    let currentImageIdentifires: string[] = [];
+    const elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
+    if (elements.length > 0) {
+      currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       let elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
       if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
@@ -233,7 +260,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModalReplaceImage(isAllowedEmpty: boolean = false) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    const elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
+    if (elements.length > 0) {
+      currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (value == 'null') {
         //削除
@@ -268,19 +300,22 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
     //ToDO インデックスも抽象化して汎用にする
     if (elements && 0 < elements.length && index < elements.length) {
-      if (this.tabletopObject.currntImageIndex >= index) this.tabletopObject.currntImageIndex -= 1;
-      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
+      if (this.tabletopObject.currntImageIndex > index) this.tabletopObject.currntImageIndex -= 1;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
+      if (this.tabletopObject.currntImageIndex >= elements.length - 1) this.tabletopObject.currntImageIndex =  elements.length - 2;
+      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
     }
   }
 
-  deleteIcon(index: number=0) {
+  deleteIcon(index: number=0, imageIdentifier='') {
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
     let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
-    if (elements && 0 < elements.length && index < elements.length) {
-      if (this.tabletopObject.currntIconIndex >= index) this.tabletopObject.currntIconIndex -= 1;
-      if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
+    //console.log(elements[index].value  + ' : ' + imageIdentifier);
+    if (elements && 0 < elements.length && index < elements.length && (!imageIdentifier || elements[index].value === imageIdentifier)) {
+      if (this.tabletopObject.currntIconIndex > index) this.tabletopObject.currntIconIndex -= 1;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
+      if (this.tabletopObject.currntIconIndex >= elements.length - 1) this.tabletopObject.currntIconIndex =  elements.length - 2;
+      if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       //if (sound) SoundEffect.play(PresetSound.sweep);
     }
   }
@@ -313,5 +348,82 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 572 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = <GameCharacter>this.tabletopObject;
+  }
+
+  onMainImageLoad() {
+    if (!this.mainImageElement) return;
+    this.mainImageWidth = this.mainImageElement.nativeElement.clientWidth;
+    this.mainImageHeight = this.mainImageElement.nativeElement.clientHeight;
+    this.naturalWidth = this.mainImageElement.nativeElement.naturalWidth;
+    this.naturalHeight = this.mainImageElement.nativeElement.naturalHeight;
+  }
+
+  identify(index, obj){
+    return obj.identifier;  
+  }
+
+  get imageAreaRreact(): {width: number, height: number, top: number, left: number, scale: number} {
+    return this.calcImageAreaRect(this.mainImageWidth, this.mainImageHeight, 0);
+  }
+
+  private calcImageAreaRect(areaWidth: number, areaHeight: number, offset: number): {width: number, height: number, top: number, left: number, scale: number} {
+    const rect = {width: 0, height: 0, top: offset, left: offset, scale: 1};
+    if (this.naturalWidth == 0 || this.naturalHeight == 0) return rect;
+
+    const viewWidth = areaWidth - offset * 2;
+    const viewHeight = areaHeight - offset * 2;
+    // scale使わなかった頃の名残
+    if ((this.naturalHeight * viewWidth / this.naturalWidth) > viewHeight) {
+      rect.width = this.naturalWidth * viewHeight / this.naturalHeight;
+      rect.height = viewHeight;
+      rect.left = offset + (viewWidth - rect.width) / 2;
+    } else {
+      rect.width = viewWidth;
+      rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
+      rect.top = offset + (viewHeight - rect.height) / 2;
+    } 
+
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    if (card) {
+      rect.scale = rect.width / (card.size * this.gridSize);
+      rect.width = card.size * this.gridSize;
+      rect.height = rect.width * this.naturalHeight / this.naturalWidth;
+    }
+    return rect;
+  }
+
+  get cardColor(): string {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.color : '#555555';
+  }
+
+  get cardFontSize(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.fontsize + 9 : 18;
+  }
+
+  get cardText(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.text : '';
   }
 }

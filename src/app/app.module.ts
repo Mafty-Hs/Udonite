@@ -67,6 +67,14 @@ import { DiceRollTableSettingComponent } from './component/dice-roll-table-setti
 import { PlayerPaletteComponent } from './component/player-palette/player-palette.component';
 import { PlayerPaletteControlComponent } from './component/player-palette-control/player-palette-control.component';
 import { NetworkStatusComponent } from './component/network-status/network-status.component';
+import { CutInComponent } from './component/cut-in/cut-in.component';
+import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
+
+import { LinkyModule } from 'ngx-linky';
+import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-output.component';
+
+import { YouTubePlayerModule } from "@angular/youtube-player";
+import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 
 @NgModule({
   declarations: [
@@ -120,13 +128,19 @@ import { NetworkStatusComponent } from './component/network-status/network-statu
     DiceRollTableSettingComponent,
     PlayerPaletteComponent,
     PlayerPaletteControlComponent,
-    NetworkStatusComponent
+    NetworkStatusComponent,
+    CutInComponent,
+    CutInSettingComponent,
+    ChatLogOutputComponent,
+    CardListImageComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
+    LinkyModule,
+    YouTubePlayerModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

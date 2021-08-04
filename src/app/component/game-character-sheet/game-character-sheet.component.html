@@ -3,7 +3,7 @@
   <ng-container *ngSwitchCase="'numberResource'">
   </ng-container>
   <ng-container *ngSwitchCase="'card'">
-    <button (click)="openModal('front')">表面の画像を変更</button>
+    <button (click)="openModal('front')" [disabled]="!tabletopObject.isFront && !tabletopObject.isHand">表面の画像を変更</button>
     <button (click)="openModal('back')">裏面の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'card-stack'">
@@ -41,16 +41,16 @@
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <img class="shadow-image" [src]="tabletopObject.shadowImageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.shadowImageFile.name" (click)="openModal('shadowImageIdentifier', true)">
-  <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">
+  <div *ngIf="(0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length) && tabletopObject.aliasName != 'table-mask'" class="box main-image-box">
     <div class="icons-box">
-      <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
+      <div *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i; trackBy: identify">
         <div @bounceInOut *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
           <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="selectIcon(i)" />
-          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="顔IC削除" (click)="deleteIcon(i)">
+          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="顔IC削除" (click)="deleteIcon(i, faceIconImage.identifier)">
             <b class="material-icons" style="font-size: 1rem;">close</b>
           </button>
         </div>
-      </ng-container>
+      </div>
     </div>
     <div class="image-showcase" style="position: absolute; height: 50px; top: 300px">
       <span *ngFor="let imageFile of tabletopObject.imageFiles; index as i" class="image-thumbnail" [ngClass]="{'hide': tabletopObject.currntImageIndex == i}" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i ) * 50">
@@ -61,11 +61,16 @@
         style="position: relative; bottom: 30px; z-index: 700;" 
         [style.left.px]="tabletopObject.imageFiles.length < 0 ? -5 : (tabletopObject.imageFiles.length - 1) * 50 - 5">{{ tabletopObject.imageFiles.length < 2 ? '切り替え画像設定' : '＋' }}</button>
     </div>
+    <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
+      class="text" [style.width.px]="imageAreaRreact.width" [style.height.px]="imageAreaRreact.height" [ngStyle]="{transform: 'scale(' + imageAreaRreact.scale + ')'}">
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+    </div>
     <span style="display: inline-block;" class="inverser" [ngClass]="{inverse: tabletopObject.isInverse}">
       <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
-        <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" 
-          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow}"
+        <img #mainImage class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" 
+          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow, small: tabletopObject.aliasName == ''}"
           (dblclick)="openMainImageModal()" 
+          (load)="onMainImageLoad()"
           [@switchImage]="tabletopObject.currntImageIndex" />
       </span>
     </span>
@@ -74,7 +79,8 @@
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
       <div class="table">
-        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [isTagLocked]="true"></div>
+        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
+          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>
@@ -86,7 +92,7 @@
   <ng-container *ngIf="tabletopObject.detailDataElement">
     <div class="flex-item" *ngFor="let childElement of tabletopObject.detailDataElement.children">
       <div class="table">
-        <div class="table-row" game-data-element [gameDataElement]="childElement" [isEdit]="isEdit"></div>
+        <div class="table-row" game-data-element [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit"></div>
       </div>
     </div>
   </ng-container>

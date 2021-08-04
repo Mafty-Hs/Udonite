@@ -15,7 +15,7 @@
 
   -moz-user-drag: none;
   -webkit-user-drag: none;
-  z-index: 9900;
+  z-index: 2000000;
 }
 .submenu-panel {
   position: absolute;
@@ -177,3 +177,8 @@ input.altitude {
    0px -1px 0px #ffffff;
   margin-right: -0.2rem;
 }
+
+.self-only {
+  color: red;
+}
+

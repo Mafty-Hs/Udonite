@@ -1,28 +1,40 @@
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
-      <button (click)="createGameTable()">新しいテーブルを作る</button>
+      <button style="margin-bottom: 2px; font-size: smaller" (click)="createGameTable()">新しいテーブルを作る</button>
     </div>
-    <select style="width: 10em;" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+    <select style="width: 100%; max-width: 155px" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
       <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
     </select>
   </div>
   <div class="flex-item">
+    <div style="float: right; margin-top: 3px; margin-right: 3px">
+      <label sytle="white-space: nowrap">
+        <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+      </label>
+    </div>
     <ng-container *ngIf="!isEmpty || selectedTable">
       <div class="images-select">
         <div>
           画像
-          <div (click)="openBgImageModal()">
-            <img height="120" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
+          <div (click)="openBgImageModal()" style="position: relative; overflow: hidden">
+            <div *ngIf="getHidden(tableBackgroundImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <img height="120" [ngClass]="{ blackout: !isShowHideImages && getHidden(tableBackgroundImage) }" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
           </div>
         </div>
         <div>
           背景
           <div *ngIf="!tableDistanceviewImage.url">
-            <button (click)="openDistanceViewImageModal()" style="height: 120px;">背景画像を追加</button>
+            <button (click)="openDistanceViewImageModal()" style="height: 120px;" [attr.disabled]="!isEditable ? '' : null">背景画像を追加</button>
           </div>
-          <div *ngIf="tableDistanceviewImage.url" (click)="openDistanceViewImageModal()">
-            <img height="120" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'">
+          <div *ngIf="tableDistanceviewImage.url" style="position: relative; overflow: hidden" (click)="openDistanceViewImageModal()">
+            <div *ngIf="getHidden(tableDistanceviewImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <img height="120" [ngClass]="{ blackout: !isShowHideImages && getHidden(tableDistanceviewImage) }" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'">
           </div>
         </div>
       </div>
@@ -63,14 +75,16 @@
       </div>
       <hr/>
       <div>
-        <label>グリッドを常に表示:
+        <label class="self-setting">
           <input type="checkbox" [(ngModel)]="tableGridShow" name="tableGridShow" />
+          グリッドを常に表示<sup class="self-only">*</sup>
         </label>
-        <label>スナップ:
+        <label style="margin-left: 1em" class="self-setting">
           <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
+          スナップ<sup class="self-only">*</sup>
         </label>
         <ng-container *ngIf="!isDeleted">
-          <button [disabled]="isSaveing" (click)="save()">
+          <button style="margin-left: 2em" [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
               <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
               <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>

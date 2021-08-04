@@ -9,6 +9,7 @@ import { StandElementComponent } from 'component/stand-element/stand-element.com
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 
 @Component({
   selector: 'app-stand-setting',
@@ -19,7 +20,8 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() character: GameCharacter = null;
 　@ViewChildren(StandElementComponent) standElementComponents: QueryList<StandElementComponent>;
 
-  panelId;
+  panelId: string;
+  standSettingXML = '';
 
   private _intervalId;
   private isSpeaking = false;
@@ -111,10 +113,16 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   add() {
     this.character.standList.add(this.character.imageFile.identifier);
+    this.standSettingXML = '';
   }
 
   delele(standElement: DataElement, index: number) {
+    EventSystem.call('DELETE_STAND_IMAGE', {
+      characterIdentifier: this.character.identifier,
+      identifier: standElement.identifier
+    });
     if (!this.character || !this.character.standList || !window.confirm('スタンド設定を削除しますか？')) return;
+    this.standSettingXML = standElement.toXml();
     let elm = this.character.standList.removeChild(standElement);
     if (elm) {
       if (this.character.standList.overviewIndex == index) {
@@ -124,8 +132,16 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+  
+  restore() {
+    if (!this.standSettingXML) return;
+    let restoreStand = <DataElement>ObjectSerializer.instance.parseXml(this.standSettingXML);
+    this.character.standList.appendChild(restoreStand);
+    this.standSettingXML = '';
+  }
 
   upStandIndex(standElement: DataElement) {
+    this.standSettingXML = '';
     let parentElement = this.character.standList;
     let index: number = parentElement.children.indexOf(standElement);
     if (0 < index) {
@@ -140,6 +156,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   downStandIndex(standElement: DataElement) {
+    this.standSettingXML = '';
     let parentElement = this.character.standList;
     let index: number = parentElement.children.indexOf(standElement);
     if (index < parentElement.children.length - 1) {
@@ -179,7 +196,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 　どの条件も満たさない場合「デフォルト」のものが使用され、同じ優先順位の条件が複数ある場合はランダムで1つが選択されます。
 
 　チャット末尾一致を判定する際、全角半角、アルファべットの大文字小文字は区別されません。
-　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。`;
+　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、（スタンドの有効無効、条件を満たすかに関わらず）そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。`;
   }
 
   private imageElementToFile(dataElm: DataElement): ImageFile {

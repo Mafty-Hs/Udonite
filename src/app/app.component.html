@@ -45,8 +45,14 @@
       </li>
       <li *ngIf="isOpenGM" (click)="open('DiceRollTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">table_rows</i></div>
+          <div><i class="material-icons">build</i></div>
           <div>ダイスボット表</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenGM" (click)="open('CutInSettingComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">perm_media</i></div>
+          <div>カットイン</div>
         </a>
       </li>
       <li *ngIf="isOpenGM" (click)="diceAllOpne()">
@@ -76,13 +82,13 @@
       <li *ngIf="isOpenPL" (click)="standSetteings()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">how_to_reg</i></div>
-          <div>スタンド設定<sup>*</sup></div>
+          <div>スタンド設定<sup class="self-only">*</sup></div>
         </a>
       </li>
       <li *ngIf="isOpenPL" (click)="resetPointOfView()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">remove_red_eye</i></div>
-          <div>視点リセット<sup>*</sup></div>
+          <div>視点リセット<sup class="self-only">*</sup></div>
         </a>
       </li>
       <div *ngIf="isOpenPL" style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>

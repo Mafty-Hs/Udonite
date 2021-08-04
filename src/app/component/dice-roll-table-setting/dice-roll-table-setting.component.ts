@@ -84,7 +84,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   }
 
   add() {
-    const diceRollTable = this.create('ダイスボット表');
+    const diceRollTable = this.create();
     setTimeout(() => {
       this.onChangeDiceRollTable(diceRollTable.identifier);
       this.diceRollTableSelecter.nativeElement.value = diceRollTable.identifier;
@@ -96,7 +96,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let fileName: string = 'rollTable_' + this.selectedDiceRollTable.name;
+    let fileName: string = 'fly_rollTable_' + this.selectedDiceRollTable.name;
 
     await this.saveDataService.saveGameObjectAsync(this.selectedDiceRollTable, fileName, percent => {
       this.progresPercent = percent;
@@ -120,6 +120,11 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
       let restoreTable = <DiceRollTable>ObjectSerializer.instance.parseXml(this.selectedDiceRollTableXml);
       DiceRollTableList.instance.addDiceRollTable(restoreTable);
       this.selectedDiceRollTableXml = '';
+      setTimeout(() => {
+        const diceRollTables = this.diceRollTables;
+        this.onChangeDiceRollTable(diceRollTables[diceRollTables.length - 1].identifier);
+        this.diceRollTableSelecter.nativeElement.selectedIndex = diceRollTables.length - 1;
+      });
     }
   }
 
@@ -150,7 +155,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     textView.title = 'ダイスボット表ヘルプ';
     textView.text = 
 `　名前、コマンド、振るダイスを設定し、ダイスの数字で表を参照し、表示します。
-　チャットでコマンドを送信することにより、ダイスボットと同様に結果が送信されます、なおコマンドには英数、記号のみ使用可能です。
+　チャットでコマンドを送信することにより、ダイスボットと同様に結果が送信されます。
 　表は1行ごとに数字と結果を:（コロン）で区切り「数字:結果」の形で記述します（よって、ダイスは最後に一つの数字を返すものである必要があります、バラバラロール nBm の成功数にも対応しています）。
 　
 　-（ハイフン）または～で区切って数字の範囲を指定することもできます。

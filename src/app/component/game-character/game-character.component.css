@@ -157,7 +157,7 @@
 }
 
 .inverse {
-  transform: scaleX(-1);
+  transform: rotateY(-180deg);
 }
 .inverser {
   transition: transform 132ms 0s ease;
@@ -355,7 +355,8 @@
   margin: 0px;
   padding: 6px 12px;
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 
@@ -368,7 +369,8 @@
   min-width: 300px;
   -webkit-text-stroke: 1px rgb(189, 189, 189);
   letter-spacing: -8px;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .chat-bubble p.is-whisper {

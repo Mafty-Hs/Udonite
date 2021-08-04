@@ -38,6 +38,7 @@ export class StandList extends DataElement {
     standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyRoll', '', { }, 'applyRoll_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('showName', 'showName', { }, 'showName_' + standElement.identifier));
     standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + standElement.identifier));
     standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + standElement.identifier));
     standElement.appendChild(DataElement.create('speakingImageIdentifier', '', { type: 'image' }, 'speakingImageIdentifier_' + standElement.identifier));
@@ -56,7 +57,7 @@ export class StandList extends DataElement {
 
     // 退去コマンド
     ['＠退去', '@farewell'].forEach((command) => {
-      if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(command).toUpperCase())) {
+      if (StringUtil.toHalfWidth(text).trimRight().toUpperCase().endsWith(StringUtil.toHalfWidth(command).toUpperCase())) {
         if ((command.slice(0, 1) == '@' || command.slice(0, 1) == '＠') && textTagMatch.length < command.length) textTagMatch = command;
         farewell = true;
       }
@@ -83,15 +84,15 @@ export class StandList extends DataElement {
       if (conditionType == StandConditionType.Default) {
         defautStands.push(standElement);
       } else {
-        const postfies = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
+        const postfixes = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
         const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
         let conditionPostfix = false;
         let conditionImage = false;
-        if (postfies 
+        if (postfixes 
           && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-          for (let postfix of postfies.split(/[\r\n]+/g)) {
-            if (!postfix || postfix.length == 0) continue;
-            if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(postfix).toUpperCase())) {
+          for (let postfix of postfixes.split(/[\r\n]+/g)) {
+            if (postfix == null || postfix.trim().length == 0) continue;
+            if (StringUtil.toHalfWidth(text).toUpperCase().trimRight().endsWith(StringUtil.toHalfWidth(postfix).trimRight().toUpperCase())) {
               if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
               conditionPostfix = true;
             }

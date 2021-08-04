@@ -123,7 +123,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     this.movableOption = {
       tabletopObject: this.textNote,
-      transformCssOffset: 'translateZ(0.15px)',
+      transformCssOffset: 'translateZ(0.17px)',
       colideLayers: ['terrain']
     };
     this.rotableOption = {
@@ -255,10 +255,16 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           const url = urlElement.value.toString();
           return {
             name: urlElement.name ? urlElement.name : url,
-            action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: this.textNote.title, subTitle: urlElement.name }); },
+            action: () => {
+              if (StringUtil.sameOrigin(url)) {
+                window.open(url.trim(), '_blank', 'noopener');
+              } else {
+                this.modalService.open(OpenUrlComponent, { url: url, title: this.textNote.title, subTitle: urlElement.name });
+              } 
+            },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-            materialIcon: 'open_in_new'
+            isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         })
       }),

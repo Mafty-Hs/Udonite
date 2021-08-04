@@ -64,6 +64,9 @@
         </ng-template>
       </button>
       {{gameObject.name}}
+      <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="💭の表示" [ngClass]="{'is-active': gameObject.isShowChatBubble}" (click)="gameObject.isShowChatBubble = !gameObject.isShowChatBubble">
+        <i class="material-icons" style="font-size: 1em;">{{ gameObject.isShowChatBubble ? 'textsms' : 'speaker_notes_off'}}</i>
+      </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 1px; width: 24px; height: 16px; margin-bottom: 1px" title="影の表示" [ngClass]="{'is-active': gameObject.isDropShadow}" (click)="gameObject.isDropShadow = !gameObject.isDropShadow">
         <i *ngIf="gameObject.shadowImageFile && 0 < gameObject.shadowImageFile.url.length; else altShadow" class="face-icon"><img style="filter: brightness(0);" [ngStyle]="{'opacity': gameObject.isDropShadow ? 0.7 : 0.3}" [src]="gameObject.shadowImageFile.url | safe: 'resourceUrl'" alt=""></i>
         <ng-template #altShadow>
@@ -92,14 +95,14 @@
       <div class="table-cell">
         <div *ngIf="gameObject.rootDataElement">
           <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
-            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
+            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm, name: gameObject.name }"></ng-container>
           </ng-container>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
-<ng-template #dataElmTag let-dataElm="dataElm">
+<ng-template #dataElmTag let-dataElm="dataElm" let-name="name">
   <ng-container *ngIf="dataElm?.name === newLineString"><br></ng-container>
   <div *ngIf="dataElm && dataElm.name !== newLineString" class="object-tag">
     <ng-container [ngSwitch]="dataElm.attributes['type']">
@@ -146,13 +149,25 @@
           </div>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'url'">
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center;">
+          <div style="display: inline-block;">
+            <div class="tag-value-box" style="white-space: nowrap">
+              <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+              <input class="input tag-value" type="url" size="1" style="min-width: calc(6em - 2rem); width: calc(100% - 2rem); max-width: calc(100% - 2rem);" [(ngModel)]="dataElm.value" placeholder="https://example.com" />
+              <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input class="input tag-value" style="min-width: 4em" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
             </div>
           </div>
         </div>

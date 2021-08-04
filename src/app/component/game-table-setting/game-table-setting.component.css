@@ -50,3 +50,39 @@ input[type='number'] {
   right: 0;
   font-size: 0.9em;
 }
+
+.red-eye {
+  color: darkred;
+  text-shadow: 0px 0px 2px crimson,
+  0px 0px 4px white;
+  font-weight: bolder;
+}
+
+.grow {
+  text-shadow    : 
+       1px  1px 0px #ffffff,
+      -1px  1px 0px #ffffff,
+       1px -1px 0px #ffffff,
+      -1px -1px 0px #ffffff,
+       1px  0px 0px #ffffff,
+       0px  1px 0px #ffffff,
+      -1px  0px 0px #ffffff,
+       0px -1px 0px #ffffff; 
+}
+
+.blackout {
+  filter: blur(12px) grayscale(70%);
+}
+
+.self-only {
+  color: red;
+}
+
+img {
+  transition: all 100ms 0s ease;
+}
+
+.self-setting {
+  font-weight: bolder;
+  font-size: smaller;
+}

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { Database } from '@udonarium/database/database';
 
-import * as yaml from 'js-yaml/dist/js-yaml.min.js';
+import * as yaml from 'js-yaml';
 
 export interface AppConfig {
   webrtc: {
@@ -18,7 +18,8 @@ export interface AppConfig {
     mode: string
   },
   dice?: {
-    url?: string
+    url?: string,
+    api?: number
   }
 }
 
@@ -42,7 +43,8 @@ export class AppConfigService {
       mode: ''
     },
     dice: {
-      url: ''
+      url: '',
+      api: 1
     }
   }
 
@@ -100,9 +102,8 @@ export class AppConfigService {
     try {
       console.log('YAML読み込み...');
       let config = await this.loadYaml();
-      let obj = yaml.safeLoad(config);
+      let obj = yaml.load(config);
       AppConfigService.applyConfig(obj);
-      console.log(AppConfigService.appConfig);
     } catch (e) {
       console.warn(e);
     }
@@ -118,7 +119,6 @@ export class AppConfigService {
         return;
       }
 
-      console.log('loadYaml ready...', config);
       let configString = config.textContent;
       let url = config.getAttribute('src');
 

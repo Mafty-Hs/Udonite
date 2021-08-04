@@ -26,6 +26,7 @@ import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -46,6 +47,17 @@ import { PointerDeviceService } from 'service/pointer-device.service';
         ]))
       ])
     ]),
+    trigger('coinFlip', [
+      transition('* => active', [
+        animate('800ms ease-out', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) translateY(0%) rotateX(60deg) rotateX(-0deg) rotateY(-0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2)  translateY(-28%) rotateX(60deg) rotateX(-360deg) rotateY(-360deg)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75) translateY(-40%) rotateX(60deg) rotateX(-520deg) rotateY(-520deg)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125) translateY(-28%) rotateX(60deg) rotateX(-630deg) rotateY(-630deg)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) translateY(0%) rotateX(60deg) rotateX(-720deg) rotateY(-720deg)', offset: 1.0 })
+        ]))
+      ])
+    ]),
     trigger('diceRollNameTag', [
       transition('* => active', [
         animate('800ms ease', keyframes([
@@ -62,6 +74,14 @@ import { PointerDeviceService } from 'service/pointer-device.service';
         animate('200ms ease', keyframes([
           style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateZ(0deg)', offset: 0 }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateZ(-360deg)', offset: 1.0 })
+        ]))
+      ])
+    ]),
+    trigger('changeFaceCoin', [
+      transition(':increment,:decrement', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateX(0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateX(-720deg)', offset: 1.0 })
         ]))
       ])
     ]),
@@ -107,8 +127,10 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get faces(): string[] { return this.diceSymbol.faces; }
   get nothingFaces(): string[] { return this.diceSymbol.nothingFaces; }
   get imageFile(): ImageFile {
-    let image = this.diceSymbol.imageFile;
-    return image ? image : this.emptyImage;
+    return this.imageService.getEmptyOr(this.diceSymbol.imageFile);
+  }
+  get backFaceImageFile(): ImageFile {
+    return this.imageService.getEmptyOr(this.diceSymbol.backFaceImageFile);
   }
 
   get isMine(): boolean { return this.diceSymbol.isMine; }
@@ -123,12 +145,13 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get isLock(): boolean { return this.diceSymbol.isLock; }
   set isLock(isLock: boolean) { this.diceSymbol.isLock = isLock; }
 
+  get isCoin(): boolean { return this.diceSymbol.isCoin; }
+
   animeState: string = 'inactive';
 
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
-  private emptyImage: ImageFile = ImageFile.Empty;
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -162,6 +185,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
+    private imageService: ImageService,
     private modalService: ModalService
   ) { }
 
@@ -287,7 +311,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //if (this.isVisible) {
       actions.push({
-        name: 'ダイスを振る', action: () => {
+        name: this.isCoin ? 'コイントス' : 'ダイスを振る', action: () => {
           this.diceRoll();
         },
         disabled: !this.isVisible,
@@ -297,7 +321,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     actions.push(ContextMenuSeparator);
     if (this.isMine || this.hasOwner) {
       actions.push({
-        name: 'ダイスを公開', action: () => {
+        name: `${this.isCoin ? 'コイン' : 'ダイス'}を公開`, action: () => {
           this.owner = '';
           SoundEffect.play(PresetSound.unlock);
         }
@@ -345,7 +369,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       });
-      actions.push({ name: 'ダイス目', action: null, subActions: subActions });
+      actions.push({ name: this.isCoin ? '表／裏' : 'ダイス目', action: null, subActions: subActions });
     }
 
     actions.push(ContextMenuSeparator);
@@ -370,10 +394,16 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           const url = urlElement.value.toString();
           return {
             name: urlElement.name ? urlElement.name : url,
-            action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: this.diceSymbol.name, subTitle: urlElement.name }); },
+            action: () => {
+              if (StringUtil.sameOrigin(url)) {
+                window.open(url.trim(), '_blank', 'noopener');
+              } else {
+                this.modalService.open(OpenUrlComponent, { url: url, title: this.diceSymbol.name, subTitle: urlElement.name });
+              } 
+            },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-            materialIcon: 'open_in_new'
+            isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         })
       });
@@ -407,7 +437,11 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   diceRoll(): string {
     EventSystem.call('ROLL_DICE_SYNBOL', { identifier: this.diceSymbol.identifier });
-    SoundEffect.play(PresetSound.diceRoll1);
+    if (this.isCoin) {
+      SoundEffect.play(PresetSound.coinToss);
+    } else {
+      SoundEffect.play(PresetSound.diceRoll1);
+    }
     return this.diceSymbol.diceRoll();
   }
 

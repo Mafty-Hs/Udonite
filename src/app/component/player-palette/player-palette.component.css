@@ -23,15 +23,30 @@
   height: 100%;
 }
 
-.CharacterControl {
+.Chat-Input {
+  flex-grow: 0;
+}
+
+.Character-Control {
   max-height : 60px; 
   overflow: auto;
 }
-.CharacterSelect {
-  min-height : 48px;
+.Character-Select {
+  min-height : 24px;
   overflow: auto;
   padding : 0 5px 0px 5px;
   user-select: none;
+}
+
+.Chat-Pallete {
+  flex-grow: 1;
+  height: 0;
+  min-height: 100px;
+}
+
+.Bottom-Control {
+  height : 38px; 
+  display: flex;
 }
 
 .bottuns { 
@@ -60,16 +75,16 @@
   font-size: 8px;
 }
 
-.CharacterSelect label {
+.Character-Select label {
   display: inline-block;
   position: relative;
 }
 
-.CharacterSelect input[type="radio"] {
+.Character-Select input[type="radio"] {
   display: none;
 }
 
-.CharacterSelect input[type="radio"] + div {
+.Character-Select input[type="radio"] + div {
   display: inline-block;
   vertical-align: middle;
   outline: 0;
@@ -84,13 +99,13 @@
   cursor: pointer;
 }
 
-.CharacterSelect input[type="radio"] + div:hover {
+.Character-Select input[type="radio"] + div:hover {
   background-color: #888;
   color: #eee;
   border: solid 1px #555;
 }
 
-.CharacterSelect input[type="radio"]:checked + div {
+.Character-Select input[type="radio"]:checked + div {
   background: #555;
   color: #CCC;
 }

@@ -1,5 +1,5 @@
 <div class="flex-container">
-  <div style="flex-grow: 0;">
+  <div class="Chat-Input">
     <form>
       <div class="chat-tab">
         <label *ngFor="let chatTab of chatMessageService.chatTabs">
@@ -11,10 +11,10 @@
     <chat-input [Player]="true" [chatTabidentifier]="chatTabidentifier" 
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
   </div>
-  <div class="CharacterControl">
-    <player-palette-control  [disableControl]="disableControl" [character]="character" (sendChat)="sendChat($event)"></player-palette-control>
+  <div class="Character-Control">
+    <player-palette-control  [disableControl]="disableControl" [character]="character" (chat)="sendChat($event)"></player-palette-control>
   </div>
-  <div class="CharacterSelect">
+  <div class="Character-Select">
     <label>
       <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
       <input name="chara-tab" type="radio" value="{{myPeer.identifier}}" [(ngModel)]="sendFrom">
@@ -26,7 +26,7 @@
       <div  (contextmenu)="displayContextMenu($event,getcharacter(characterIdentifier)); false">{{getcharacter(characterIdentifier).name}}</div>
     </label>
   </div>
-  <div *ngIf="!hidePalette && !isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div *ngIf="!hidePalette && !isEdit" class="Chat-Pallete">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
@@ -38,7 +38,7 @@
   <div *ngIf="!hidePalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
-  <div style="display: flex">
+  <div class="Bottom-Control">
     <div class="bottuns" style="flex-grow: 0;">
       <button *ngIf="!hidePalette" type="submit" (click)="toggleEditMode()">
         <span *ngIf="!isEdit">チャットパレットの編集</span>

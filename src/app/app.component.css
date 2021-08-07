@@ -14,7 +14,6 @@ nav ul > li {
   text-align: center;
   padding: 5px;
   color: #FFF;
-  color: #FFF;
 
   cursor: -moz-pointer;
   cursor: -webkit-pointer;
@@ -45,6 +44,10 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 
 .icon-size {
   font-size: 40px;
+}
+
+.folder {
+  color: #D0FF90;
 }
 
 .side-menu {

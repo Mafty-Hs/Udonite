@@ -21,7 +21,18 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     this._character = character;
     this.tabletopObject = character;
   }
-  @Output() chatSend = new EventEmitter();
+  @Output() chat = new EventEmitter<{ 
+    text: string, gameType: string, sendFrom: string, sendTo: string,
+    color?: string, 
+    isInverse?:boolean, 
+    isHollow?: boolean, 
+    isBlackPaint?: boolean, 
+    aura?: number, 
+    isUseFaceIcon?: boolean, 
+    characterIdentifier?: string, 
+    standIdentifier?: string, 
+    standName?: string,
+    isUseStandImage?: boolean }>();
 
   isEdit : boolean = false;
 
@@ -49,20 +60,41 @@ selectElm: DataElement;
 innerText:string;
 text:string;
 sendCalc($event){
-  let beforeValue;
+  let beforeValue = this.selectElm.value;
   let afterValue;
   if (this.selectElm.type == 'numberResource') {
+    beforeValue = this.selectElm.currentValue;
     this.selectElm.currentValue = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte());
+    afterValue = this.selectElm.currentValue;
   }
   else {
     if (typeof this.selectElm.value === 'number') {
       this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte());
+      afterValue = this.selectElm.value;
     }
     if (typeof this.selectElm.value === 'string') {
       this.selectElm.value = this.innerText;
+      afterValue = this.selectElm.value;
     }
   }
-  this.innerText = ''; 
+  this.innerText = '';
+  let resulttext : string = this.character.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue; 
+  this.chat.emit({
+        text: resulttext,
+        gameType: "",
+        sendFrom: "System",
+        sendTo: "",
+        color: "", 
+        isInverse: false,
+        isHollow:  false,
+        isBlackPaint: false,
+        aura: -1,
+        isUseFaceIcon: false,
+        characterIdentifier: null,
+        standIdentifier: null,
+        standName: "",
+        isUseStandImage: false
+      });
   this.isEdit = false;
 }
 

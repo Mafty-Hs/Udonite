@@ -9,7 +9,7 @@
       </li>
       <li *ngIf="!isOpenBasic" (click)="isOpenBasic = true">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder</i></div>
+          <div><i class="material-icons icon-size folder">folder</i></div>
           <div>基本</div>
         </a>
       </li>
@@ -25,9 +25,15 @@
           <div>チャット画面</div>
         </a>
       </li>
+      <li *ngIf="isOpenBasic" (click)="open('GameObjectInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder_shared</i></div>
+          <div>インベントリ</div>
+        </a>
+      </li>
       <li *ngIf="!isOpenGM" (click)="isOpenGM = true">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder</i></div>
+          <div><i class="material-icons icon-size folder">folder</i></div>
           <div>ルーム共通設定</div>
         </a>
       </li>
@@ -63,20 +69,14 @@
       </li>
       <li *ngIf="!isOpenPL" (click)="isOpenPL = true">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder</i></div>
+          <div><i class="material-icons icon-size folder">folder</i></div>
           <div>プレイヤー操作</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="open('GameObjectInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
         </a>
       </li>
       <li *ngIf="isOpenPL" (click)="open('PlayerPaletteComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">library_books</i></div>
-          <div>パレットバインダー<sup>*</sup></div>
+          <div>パレットバインダー<sup class="self-only">*</sup></div>
         </a>
       </li>
       <li *ngIf="isOpenPL" (click)="standSetteings()">
@@ -94,7 +94,7 @@
       <div *ngIf="isOpenPL" style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
       <li *ngIf="!isOpenData" (click)="isOpenData = true">
         <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder</i></div>
+          <div><i class="material-icons icon-size folder">folder</i></div>
           <div>画像/データ</div>
         </a>
       </li>

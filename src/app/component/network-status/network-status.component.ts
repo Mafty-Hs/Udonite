@@ -13,14 +13,15 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
   isAlert:boolean = false;
   UserCount:number;
   private timer;
+
   countUserID() {
-    console.log(Network)
     if (Network.peerContext.roomId){
-      Network.listAllPeers().then((x) => this.peerCount(x));
+	this.peerCount()
     }
   }
-  peerCount(peerList:string[]) {
-    const result = peerList.filter(item => item.length == 28);
+
+  peerCount() {
+    const result = Network.peerIds;
     if (this.UserCount != result.length) {
       this.UserCount = result.length;
       this.isChange = true;
@@ -29,7 +30,12 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
         this.isChange = false;
         this.changeDetectorRef.detectChanges();
       },5000);
-      if (this.UserCount == 1) this.isAlert = true; 
+      if (this.UserCount == 1) {
+	this.isAlert = true;
+      } 
+      else {
+	this.isAlert = false;
+      }
     }
   }
 

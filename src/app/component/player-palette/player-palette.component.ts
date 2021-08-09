@@ -122,8 +122,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string, isUseStandImage?: boolean }) {
-   console.log('value') 
-   console.log(value) 
    if (this.chatTab) {
         let text = this.evaluatLine(value.text);
       this.chatMessageService.sendMessage(

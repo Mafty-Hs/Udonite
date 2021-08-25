@@ -63,6 +63,7 @@ import { StandElementComponent } from './component/stand-element/stand-element.c
 import { StandImageComponent } from './component/stand-image/stand-image.component';
 
 import { StandImageService } from 'service/stand-image.service';
+import { CounterService } from 'service/counter.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { PlayerPaletteComponent } from './component/player-palette/player-palette.component';
 import { PlayerPaletteControlComponent } from './component/player-palette-control/player-palette-control.component';
@@ -75,6 +76,8 @@ import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-out
 
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
+import { RoundComponent } from './component/round/round.component';
+import { CounterListComponent } from './component/counter-list/counter-list.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +92,7 @@ import { CardListImageComponent } from './component/card-list-image/card-list-im
     ChatTabSettingComponent,
     ChatWindowComponent,
     ContextMenuComponent,
+    CounterListComponent,
     FileSelecterComponent,
     FileStorageComponent,
     GameCharacterGeneratorComponent,
@@ -132,7 +136,8 @@ import { CardListImageComponent } from './component/card-list-image/card-list-im
     CutInComponent,
     CutInSettingComponent,
     ChatLogOutputComponent,
-    CardListImageComponent
+    CardListImageComponent,
+    RoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -153,6 +158,7 @@ import { CardListImageComponent } from './component/card-list-image/card-list-im
     PointerDeviceService,
     TabletopService,
     StandImageService,
+    CounterService,
   ],
   bootstrap: [AppComponent]
 })

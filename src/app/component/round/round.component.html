@@ -1,0 +1,16 @@
+<div (contextmenu)="displayContextMenu($event); false"> 
+   <ul>
+      <li *ngIf="round == 0" (click)="addRound()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">arrow_forward</i></div>
+          <div>ラウンドを開始</div>
+        </a>
+      </li>
+      <li *ngIf="round != 0" (click)="addRound()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i>{{round}}R</i></div>
+          <div>ラウンドを進める</div>
+        </a>
+      </li>
+    </ul>
+</div>

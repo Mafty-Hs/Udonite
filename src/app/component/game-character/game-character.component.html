@@ -5,7 +5,7 @@
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner" [ngClass]="{'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
-      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" id="{{identifier}}" class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
@@ -29,11 +29,11 @@
         [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-          <div class="rotate-inner is-3d">
+          <div id="{{identifier}}" class="rotate-inner is-3d">
             <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
-              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
-              <div class="back-tag has-length-limit is-3d">{{name}}</div>
+              <div id="{{identifier}}" class="fornt-tag has-length-limit is-3d">{{name}}</div>
+              <div id="{{identifier}}" class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
             <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">

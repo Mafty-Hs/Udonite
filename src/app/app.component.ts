@@ -19,6 +19,8 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
+import { CounterListComponent } from 'component/counter-list/counter-list.component';
+import { RoundComponent } from 'component/round/round.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -38,6 +40,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { CounterService } from 'service/counter.service';
 import { SaveDataService } from 'service/save-data.service';
 import { SaveHtmlService } from 'service/save-html.service';
 import { StandImageService } from 'service/stand-image.service';
@@ -61,6 +64,7 @@ import { CutInList } from '@udonarium/cut-in-list';
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
 
+  @ViewChild(RoundComponent) round:RoundComponent;
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
@@ -120,7 +124,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
     private standImageService: StandImageService,
-    private cutInService: CutInService
+    private cutInService: CutInService,
+    private counterService: CounterService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -440,6 +445,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;
+        break;
+      case 'CounterListComponent':
+        component = CounterListComponent;
+        option = { width:450 , height: 600 };
         break;
       case 'PlayerPaletteComponent':
         component = PlayerPaletteComponent;

@@ -1,7 +1,7 @@
 <div id="app-table-layer" style="position: absolute; width: 100%; height: 100%; overflow: hidden;">
   <game-table></game-table>
 </div>
-<ui-panel [top]="0" [left]="0" [width]="100" [height]="500" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false">
+<ui-panel [top]="0" [left]="0" [width]="100" [height]="600" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false">
   <nav>
     <ul>
       <li>
@@ -31,6 +31,9 @@
           <div>インベントリ</div>
         </a>
       </li>
+      <li *ngIf="isOpenBasic">
+        <round></round>
+      </li>
       <li *ngIf="!isOpenGM" (click)="isOpenGM = true">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size folder">folder</i></div>
@@ -41,12 +44,6 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">layers</i></div>
           <div>テーブル設定</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="open('JukeboxComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">queue_music</i></div>
-          <div>音楽</div>
         </a>
       </li>
       <li *ngIf="isOpenGM" (click)="open('DiceRollTableSettingComponent')">
@@ -67,6 +64,12 @@
           <div>ダイス一斉公開</div>
         </a>
       </li>
+      <li *ngIf="isOpenGM" (click)="this.round.resetRound()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">refresh</i></div>
+          <div>ラウンドをリセット</div>
+        </a>
+      </li>
       <li *ngIf="!isOpenPL" (click)="isOpenPL = true">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size folder">folder</i></div>
@@ -77,6 +80,12 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">library_books</i></div>
           <div>パレットバインダー<sup class="self-only">*</sup></div>
+        </a>
+      </li>
+      <li *ngIf="isOpenPL" (click)="open('CounterListComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">library_books</i></div>
+          <div>カウンターリスト</div>
         </a>
       </li>
       <li *ngIf="isOpenPL" (click)="standSetteings()">
@@ -96,6 +105,12 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size folder">folder</i></div>
           <div>画像/データ</div>
+        </a>
+      </li>
+      <li *ngIf="isOpenData" (click)="open('JukeboxComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">queue_music</i></div>
+          <div>音楽</div>
         </a>
       </li>
       <li *ngIf="isOpenData" (click)="open('FileStorageComponent')">

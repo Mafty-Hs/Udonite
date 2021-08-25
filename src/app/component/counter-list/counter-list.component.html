@@ -1,1 +1,45 @@
-<p>counter-list works!</p>
+<div class="Counter-Make">
+  <label>カウンター新規作成</label>
+  <div class="Make-Row">
+    <label class="title">名前</label>
+    <input type="text" [(ngModel)]="inputName">
+    <label class="title">持続</label>
+    <input type="number" style="width:4em"  [(ngModel)]="inputAge">
+  </div>
+  <div class="Make-Row">
+    <label class="title">説明</label>
+    <input type="text"  style="width:24em" [(ngModel)]="inputDesc">
+  </div>
+  <div class="Make-Row">
+    <div class="Left">
+      <label class="title">永続</label>
+      <input type="checkbox" [(ngModel)]="inputPermanent">
+      <label class="title">重複可</label>
+      <input type="checkbox" [(ngModel)]="inputDuplicate">
+    </div>
+    <div class="Right">
+      <button class="submit" (click)="addCounter()">追加</button>
+    </div>
+  </div>
+</div>
+<HR>
+ <div class="chat-tab">
+  <label *ngFor="let chatTab of chatMessageService.chatTabs">
+      <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
+        <div>{{chatTab.name}}</div>
+  </label>
+</div>
+<HR>
+<label>カウンター一覧</label>
+  <p class="desc">付与したいカウンターを選んで、付与したいコマの上でクリックすると、カウンターが付与できます。</p>
+  <p class="desc">カウンターを右クリックすると詳細が表示されます。</p>
+  <div class="Make-Row">
+    <label class="title">コメント</label>
+    <input type="text" style="width:24em" [(ngModel)]="inputComment">
+  </div>
+<div class="Counter-List">
+  <label *ngFor="let item of counterList">
+    <div id="{{item.identifier}}" [ngClass]="{'pointer-events-none': isDrag}" class="selector"  appDraggable (contextmenu)="displayContextMenu($event,item); false" (click)="selectCounter($event,item)"><p>{{item.name}}</p></div>
+  </label>
+</div>
+

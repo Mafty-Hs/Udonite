@@ -1,15 +1,202 @@
-import { Component, OnInit } from '@angular/core';
+import { Counter } from '@udonarium/counter';
+import { Component, OnDestroy, OnInit,ElementRef,HostListener,AfterViewInit} from '@angular/core';
+import { EventSystem } from '@udonarium/core/system';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { GameCharacter } from '@udonarium/game-character';
+import { PanelOption, PanelService } from 'service/panel.service';
+import { CounterService } from 'service/counter.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
+import { ContextMenuAction, ContextMenuService} from 'service/context-menu.service';
+import { ChatTab } from '@udonarium/chat-tab';
+import { ChatTabList } from '@udonarium/chat-tab-list';
+import { ChatMessageService } from 'service/chat-message.service';
 
 @Component({
-  selector: 'app-counter-list',
+  selector: 'counter-list',
   templateUrl: './counter-list.component.html',
-  styleUrls: ['./counter-list.component.css']
+  styleUrls: ['./counter-list.component.css'],
 })
-export class CounterListComponent implements OnInit {
 
-  constructor() { }
+export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
+
+  private _inputName:string = "";
+  private _inputDesc:string = "";
+  private _inputAge:number = 0;
+  private _inputPermanent:boolean = false;
+  private _inputDuplicate:boolean = false;
+  private _inputComment:string = "";
+  get inputName(): string { return this._inputName };
+  set inputName(inputName: string) { this._inputName = inputName };
+  get inputDesc(): string { return this._inputDesc };
+  set inputDesc(inputDesc: string) { this._inputDesc = inputDesc };
+  get inputAge(): number { return this._inputAge };
+  set inputAge(inputAge: number) { this._inputAge = inputAge };
+  get inputPermanent(): boolean { return this._inputPermanent };
+  set inputPermanent(inputPermanent: boolean) { this._inputPermanent = inputPermanent };
+  get inputDuplicate(): boolean { return this._inputDuplicate };
+  set inputDuplicate(inputDuplicate: boolean) { this._inputDuplicate = inputDuplicate };
+  get inputComment(): string { return this._inputComment };
+  set inputComment(inputComment: string) { this._inputComment = inputComment };
+
+
+  private selectCount:string = "";
+  private selectElm: HTMLElement;
+  private topStart: number;
+  private leftStart: number;
+  private isDrag:boolean = false;
+  private chatTabidentifier:string;
+  get chatTab(): ChatTab { 
+    if(!this.chatTabidentifier) {
+       this.chatTabidentifier = ChatTabList.instance.chatTabs[0].identifier
+    }
+    return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier);     
+  }
+  
+  get counterList():Counter[] {
+    return this.counterService.list();
+  }
+
+  addCounter() {
+    console.log(this.inputName);
+    this.counterService.create(this.inputName,this.inputDesc,this.inputDuplicate,this.inputPermanent,this.inputAge);
+    this.inputName = "";
+    this.inputDesc = "";
+    this.inputAge = 0;
+    this.inputPermanent = false;
+    this.inputDuplicate = false;
+  }
+
+  getCharacter(charaidentifier: string): GameCharacter {
+    let object = ObjectStore.instance.get(charaidentifier);
+    if (object instanceof GameCharacter) {
+      return object;
+    }
+    return null;
+  }
+ 
+  getCounter(identifier: string): Counter {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof Counter) {
+      return object;
+    }
+    return null;
+  }
+  get isPointerDragging(): boolean { 
+  return this.pointerDeviceService.isDragging; }
+
+  makeElm(selectElm :HTMLElement) : HTMLElement {
+    let element = selectElm.cloneNode(true) as HTMLElement;
+    element.style.zIndex = "999999";
+    element.style.position = "absolute";
+//    element.style.top = this.leftStart + "";
+//    element.style.left = this.topStart + "";
+    document.body.appendChild(element);
+    return element;
+  }
+
+  selectCounter(e: Event,_counter: Counter) {
+    if(!this.isDrag) {
+      this.selectCount = _counter.identifier;
+      this.leftStart = this.pointerDeviceService.pointerX;
+      this.topStart = this.pointerDeviceService.pointerY;
+      let element : HTMLElement = document.getElementById(this.selectCount) as HTMLElement;
+      this.selectElm = this.makeElm(element);
+      this.isDrag = true;
+    }
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  @HostListener("document:click", ["$event"])
+   public onClick(e: MouseEvent) {
+     if (this.isDrag) {
+       let target : HTMLElement = e.target as HTMLElement;
+       document.body.removeChild(this.selectElm);
+       console.log(target.id)
+       if (this.getCharacter(target.id)){       
+         let message :string = this.getCounter(this.selectCount).name + "を"　+ this.getCharacter(target.id).name + "に付与 :" + this.inputComment;
+         this.chat(message);
+       }
+       this.selectCount = "";
+       this.isDrag = false; 
+    }
+  }
+
+  @HostListener("document:mousemove", ["$event"])
+   public onMouseMove(e: MouseEvent) {
+     if (this.isDrag && this.selectElm){
+       let posX:number = e.clientX - 50;
+       let posY:number = e.clientY - 50;
+       this.selectElm.style.transform = 'translate(' + posX + 'px, ' + posY + 'px)';
+     }
+   }
+  constructor(
+   public element: ElementRef,
+   public chatMessageService: ChatMessageService,
+   private pointerDeviceService: PointerDeviceService,
+   private panelService: PanelService,
+   private contextMenuService: ContextMenuService,
+   private counterService: CounterService
+  ) {
+   }
+
+  public ngAfterViewInit() {
+  }
 
   ngOnInit(): void {
+    Promise.resolve().then(() => this.panelService.title = 'カウンターリスト');
+    //this.counterService.create("ブレス(器用)","器用+6",false,false,18);
+    //this.counterService.create("ブレス(敏捷)","敏捷+6",false,false,18);
+    //this.counterService.create("ブレス(筋力)","筋力+6",false,false,18);
   }
+
+  ngOnDestroy() {
+    EventSystem.unregister(this);
+  }
+
+  private chat(chattext: string) {
+    this.chatMessageService.sendMessage
+      (
+      this.chatTab,
+      chattext,
+      "",
+      "System",
+      "",
+      "",
+      false,
+      false,
+      false,
+      -1,
+      false,
+      null,
+      null,
+      "",
+      false
+     );
+  }
+
+    displayContextMenu(e: Event, _counter:Counter){
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let position = this.pointerDeviceService.pointers[0];
+
+    let actions: ContextMenuAction[] = [];
+      actions.push({
+        name: "名前：" + _counter.name
+      });
+      actions.push({
+        name: "持続：" + (_counter.isPermanent ? "永続" : (String(_counter.age) + "R"))
+      });
+      actions.push({
+        name: "重複：" + (_counter.canDuplicate ? "可能" : "不可" )
+      });
+      actions.push({
+        name: "説明：" + _counter.desc
+      });
+    this.contextMenuService.open(position, actions, 'カウンター詳細');
+  }
+  
 
 }

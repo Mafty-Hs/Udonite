@@ -4,7 +4,7 @@ import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { Counter , CounterContext } from './counter';
 
-@SyncObject('data')
+@SyncObject('counter-list')
 export class CounterList extends ObjectNode implements InnerXml{
   private static _instance: CounterList;
   static get instance(): CounterList {

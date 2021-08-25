@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
+import { IRound } from '@udonarium/round';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
@@ -144,6 +145,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
 
+    IRound.init();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
 

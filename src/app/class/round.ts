@@ -5,21 +5,42 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { ChatTab } from '@udonarium/chat-tab';
 
 
-@SyncObject('data')
-export class Round extends ObjectNode implements InnerXml{
-  private static _instance: Round;
-  static get instance(): Round {
-    if (!Round._instance) {
-      Round._instance = new Round('Round');
-      Round._instance.initialize();
-      Round._instance.count = 0;
+@SyncObject('round')
+export class Round extends ObjectNode{
+  @SyncVar() count:number;
+  @SyncVar() tab:ChatTab;
+}
+
+@SyncObject('Iround')
+export class IRound extends ObjectNode implements InnerXml{
+  private static _instance: IRound;
+
+  static init() {
+    if (!IRound._instance) {
+      IRound._instance = new IRound('Round');
+      IRound._instance.initialize();
     }
-    return Round._instance;
-  }
-  static set instance(_round : Round) {
-    Round._instance = _round;
+    if (IRound._instance.children.length == 0) {
+      let round = new Round('CommonRound')
+      round.initialize();
+      round.count = 0;
+      IRound._instance.appendChild(round);
+    }
   }
 
-  count:number;
-  tab:ChatTab;
+  private get getchild(): Round { 
+    let round:Round[] = this.children as Round[];
+    return round[0];
+  }
+  private set getchild(_round :Round) {
+    let round:Round[] = this.children as Round[];
+    round[0] = _round;
+  }
+
+  static get instance(): Round {
+    return IRound._instance.getchild;
+  }
+  static set instance(_round : Round) {
+    IRound._instance.getchild = _round;
+  }
 }

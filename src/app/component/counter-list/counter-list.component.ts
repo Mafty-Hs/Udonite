@@ -57,7 +57,6 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   }
 
   addCounter() {
-    console.log(this.inputName);
     this.counterService.create(this.inputName,this.inputDesc,this.inputDuplicate,this.inputPermanent,this.inputAge);
     this.inputName = "";
     this.inputDesc = "";
@@ -192,11 +191,25 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       actions.push({
         name: "重複：" + (_counter.canDuplicate ? "可能" : "不可" )
       });
-      actions.push({
-        name: "説明：" + _counter.desc
-      });
+
+      let desc_ = this.strcut(("説明：" + _counter.desc),15);
+      for (let str of desc_){
+        actions.push({
+        name: str
+        });
+      }
     this.contextMenuService.open(position, actions, 'カウンター詳細');
   }
   
+  private strcut(text :string , length :number):string[] {
+  let result:string[] = [];
+  let start:number = 0;
+  for (start; start < text.length; start += length) {
+    result.push(text.substring(start, start + length));
+  }
+  result.push(text.substring(start, text.length));
+  return result;
+  }
 
 }
+

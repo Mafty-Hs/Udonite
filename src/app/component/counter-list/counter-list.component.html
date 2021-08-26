@@ -23,11 +23,18 @@
   </div>
 </div>
 <HR>
- <div class="chat-tab">
-  <label *ngFor="let chatTab of chatMessageService.chatTabs">
+<label>チャット設定</label>
+<div class="Make-Row">
+  <select style="max-width: 160px" [(ngModel)]="selectedCharacter">
+     <option value="default">-キャラクターを選択-</option>
+     <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
+  </select>
+  <div class="chat-tab">
+    <label *ngFor="let chatTab of chatMessageService.chatTabs">
       <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
         <div>{{chatTab.name}}</div>
-  </label>
+    </label>
+  </div>
 </div>
 <HR>
 <label>カウンター一覧</label>
@@ -42,4 +49,8 @@
     <div id="{{item.identifier}}" [ngClass]="{'pointer-events-none': isDrag}" class="selector"  appDraggable (contextmenu)="displayContextMenu($event,item); false" (click)="selectCounter($event,item)"><p>{{item.name}}</p></div>
   </label>
 </div>
-
+<div class="Make-Row">
+  <div class="Right">
+    <button disable>一覧</button>
+  </div>
+</div>

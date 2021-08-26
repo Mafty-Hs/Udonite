@@ -38,12 +38,24 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   get inputComment(): string { return this._inputComment };
   set inputComment(inputComment: string) { this._inputComment = inputComment };
 
-
+  selectedCharacter:string = 'default';
+  private shouldUpdateCharacterList: boolean = true;
+  private _gameCharacters: GameCharacter[] = [];
+  get gameCharacters(): GameCharacter[] {
+    if (this.shouldUpdateCharacterList) {
+      this.shouldUpdateCharacterList = false;
+      this._gameCharacters = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter)
+        .filter(character => this.locationCheck(character));
+    }
+    return this._gameCharacters;
+  };
   private selectCount:string = "";
   private selectElm: HTMLElement;
   private topStart: number;
   private leftStart: number;
   private isDrag:boolean = false;
+
   private chatTabidentifier:string;
   get chatTab(): ChatTab { 
     if(!this.chatTabidentifier) {
@@ -144,9 +156,11 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
 
   ngOnInit(): void {
     Promise.resolve().then(() => this.panelService.title = 'カウンターリスト');
-    //this.counterService.create("ブレス(器用)","器用+6",false,false,18);
-    //this.counterService.create("ブレス(敏捷)","敏捷+6",false,false,18);
-    //this.counterService.create("ブレス(筋力)","筋力+6",false,false,18);
+    EventSystem.register(this)
+      .on('UPDATE_GAME_OBJECT', -1000, event => {
+        if (event.data.aliasName !== GameCharacter.aliasName) return;
+        this.shouldUpdateCharacterList = true;
+      });
   }
 
   ngOnDestroy() {
@@ -154,12 +168,18 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   }
 
   private chat(chattext: string) {
+    let chatCharacter:GameCharacter
+    let isCharacter:boolean = false;
+    if (this.selectedCharacter != 'default'){
+      isCharacter = true;
+      chatCharacter = this.getCharacter(this.selectedCharacter);
+    }
     this.chatMessageService.sendMessage
       (
       this.chatTab,
       chattext,
       "",
-      "System",
+      isCharacter ? chatCharacter.identifier : "System",
       "",
       "",
       false,
@@ -167,7 +187,7 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       false,
       -1,
       false,
-      null,
+      isCharacter ? chatCharacter.identifier : null,
       null,
       "",
       false
@@ -202,13 +222,23 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   }
   
   private strcut(text :string , length :number):string[] {
-  let result:string[] = [];
-  let start:number = 0;
-  for (start; start < text.length; start += length) {
-    result.push(text.substring(start, start + length));
+    let result:string[] = [];
+    let start:number = 0;
+    for (start; start < text.length; start += length) {
+      result.push(text.substring(start, start + length));
+    }
+    result.push(text.substring(start, text.length));
+    return result;
   }
-  result.push(text.substring(start, text.length));
-  return result;
+
+  private locationCheck(gameCharacter: GameCharacter): boolean {
+    if (!gameCharacter) return false; 
+    switch (gameCharacter.location.name) {
+      case 'table':
+        return true;
+      default:
+        return false;
+    }
   }
 
 }

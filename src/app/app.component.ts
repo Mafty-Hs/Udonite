@@ -491,6 +491,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }, 500);
   }
 
+  resetRound() {
+    this.counterService.round.count = 0;
+  }
+
   htmlsave(){
     this.saveHtmlService.saveAllHtmlLog();
   }

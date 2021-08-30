@@ -1,0 +1,23 @@
+<div>
+  <table>
+     <tr>
+       <th style="width:140px">キャラクター</th>
+       <th style="width:140px">名前</th>
+       <th style="width:160px">説明</th>
+       <th style="width:80px">寿命</th>
+       <th style="width:160px">コメント</th>
+       <th style="width:40px">削除</th>
+     <tr>
+    <tr *ngFor="let counterinfo of counterList; let i = index" [ngStyle]="{'background-color': counterinfo.age === 0 ? 'maroon' : 'black'}">
+       <td *ngIf="isFirst(i)"class="character" [attr.rowspan]="mergeRow(counterinfo.characterIdentifier)" [ngStyle]="{'background-image': 'url(' + getimage(counterinfo.characterIdentifier) + ')'}">{{getCharacter(counterinfo.characterIdentifier).name}}</td>
+       <td>{{counterinfo.name}}</td>
+       <td>{{getCounter(counterinfo.counterIdentifier).desc}}</td>
+       <td class="center"><p *ngIf="!counterinfo.isPermanent; else permanent">{{counterinfo.age}}/{{getCounter(counterinfo.counterIdentifier).age}}</p></td>
+       <td>{{counterinfo.comment}}</td>
+       <td class="center"><button class="close" (click)="remove()"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
+    </tr>
+  </table>
+</div>
+<ng-template #permanent>
+    永続
+</ng-template>

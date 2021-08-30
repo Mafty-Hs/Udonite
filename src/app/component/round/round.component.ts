@@ -1,3 +1,4 @@
+import { CounterAssign } from '@udonarium/counter';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { Component, OnInit} from '@angular/core';
@@ -41,6 +42,9 @@ export class RoundComponent implements OnInit {
     this.round = this.round + 1;
     let message:string = "第" + this.round + "ラウンド";
     this.chat(message);
+    this.counterService.assignedList().forEach(function (value) {
+      value.aging();
+    });
   }
 
   resetRound() {

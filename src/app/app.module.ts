@@ -78,6 +78,7 @@ import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 import { RoundComponent } from './component/round/round.component';
 import { CounterListComponent } from './component/counter-list/counter-list.component';
+import { CounterInventoryComponent } from './component/counter-inventory/counter-inventory.component';
 
 @NgModule({
   declarations: [
@@ -138,6 +139,7 @@ import { CounterListComponent } from './component/counter-list/counter-list.comp
     ChatLogOutputComponent,
     CardListImageComponent,
     RoundComponent,
+    CounterInventoryComponent,
   ],
   imports: [
     BrowserModule,

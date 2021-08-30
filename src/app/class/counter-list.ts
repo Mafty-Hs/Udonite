@@ -2,7 +2,7 @@ import { SyncObject } from './core/synchronize-object/decorator';
 import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { Counter , CounterContext } from './counter';
+import { Counter , CounterAssign , CounterContext , CounterAssignContext} from './counter';
 
 @SyncObject('counter-list')
 export class CounterList extends ObjectNode implements InnerXml{
@@ -29,5 +29,32 @@ export class CounterList extends ObjectNode implements InnerXml{
     this.appendChild(counter);
   }
 
+
+}
+
+@SyncObject('assigned-counter-list')
+export class AssignedCounterList extends ObjectNode implements InnerXml{
+
+  add(_counter :CounterAssignContext) {
+    let counter = new CounterAssign();
+    counter.initialize();
+    for (let key in _counter) {
+      if (key === 'identifier') continue;
+      if (_counter[key] == null || _counter[key] === '') continue;
+     counter.setAttribute(key, _counter[key]);
+    }
+    this.appendChild(counter);
+  }
+
+  remove(counter :CounterAssign) {
+    this.removeChild(counter);
+  }
+
+  counter(identifier :string) :CounterAssign{
+    return this.list.find(child => child.counterIdentifier == identifier);
+  }
+
+  get list(): CounterAssign[] {
+  return this.children as CounterAssign[]; }
 
 }

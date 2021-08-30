@@ -1,4 +1,5 @@
 import { Counter } from '@udonarium/counter';
+import { CounterInventoryComponent } from 'component/counter-inventory/counter-inventory.component';
 import { Component, OnDestroy, OnInit,ElementRef,HostListener,AfterViewInit} from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -86,12 +87,9 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   }
  
   getCounter(identifier: string): Counter {
-    let object = ObjectStore.instance.get(identifier);
-    if (object instanceof Counter) {
-      return object;
-    }
-    return null;
+    return this.counterService.get(identifier);
   }
+
   get isPointerDragging(): boolean { 
   return this.pointerDeviceService.isDragging; }
 
@@ -127,6 +125,7 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
        if (this.getCharacter(target.id)){       
          let message :string = this.getCounter(this.selectCount).name + "を"　+ this.getCharacter(target.id).name + "に付与 :" + this.inputComment;
          this.chat(message);
+         this.counterService.assign(this.selectCount, target.id, this.inputComment);
        }
        this.selectCount = "";
        this.isDrag = false; 
@@ -194,6 +193,13 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
      );
   }
 
+  openInventory(){
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'カウンターインベントリ';
+    let option: PanelOption = { title: title, width: 800, height: 600 }
+    let component = this.panelService.open<CounterInventoryComponent>(CounterInventoryComponent, option);
+  }
+
     displayContextMenu(e: Event, _counter:Counter){
     e.stopPropagation();
     e.preventDefault();
@@ -240,6 +246,5 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
         return false;
     }
   }
-
 }
 

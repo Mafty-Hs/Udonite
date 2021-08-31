@@ -7,7 +7,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { CounterService } from 'service/counter.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { ContextMenuAction, ContextMenuService} from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -224,6 +224,8 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
         name: str
         });
       }
+      actions.push(ContextMenuSeparator);
+      actions.push({ name: '削除', action: () => { _counter.destroy(); } });
     this.contextMenuService.open(position, actions, 'カウンター詳細');
   }
   

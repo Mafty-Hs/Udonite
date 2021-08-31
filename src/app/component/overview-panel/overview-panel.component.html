@@ -107,6 +107,13 @@
     <div class="dataElm-area component-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <div class="grid-container-root" *ngIf="hasDataElms">
+        <div class="grid-container">
+          <div class="counter-container"> 
+            <div class="counter" *ngFor="let counter of counterList(character)" [ngStyle]="{'color': counter.age === 0 && !counter.isPermanent ? 'maroon' : 'black'}">>
+              {{counter.name}}<span *ngIf="!counter.isPermanent">:{{counter.age}}</span>
+            </div> 
+          </div>
+        </div>
         <!--<ng-container *ngFor="let dataElm of dataElms">-->
         <ng-container *ngFor="let dataElm of inventoryDataElms">
           <ng-container *ngIf="dataElm && dataElm.name !== newLineString">

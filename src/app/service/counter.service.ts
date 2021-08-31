@@ -11,6 +11,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 export class CounterService {
   get round(): Round {return IRound.instance;} 
   set round(_round) {IRound.instance = _round;}
+  private nullCounter:Counter = new Counter;
 
   create(_name: string,_desc: string,_canDuplicate: boolean,_isPermanent: boolean,_age: number) {
    CounterList.instance.create({
@@ -27,7 +28,7 @@ export class CounterService {
     if (object instanceof Counter) {
       return object;
     }
-    return null;
+    return this.nullCounter;
   }
 
   remove(identifier :string) {
@@ -67,6 +68,7 @@ export class CounterService {
   }
 
   initialize() {
+    //this.nullCounter.initialize();
   }
 
   assignedList(): CounterAssign[] {

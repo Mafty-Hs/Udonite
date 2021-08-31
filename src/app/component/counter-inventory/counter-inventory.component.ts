@@ -51,6 +51,10 @@ export class CounterInventoryComponent implements OnInit {
     return this.counterService.get(identifier);
   }
 
+  remove(counter : CounterAssign){
+    counter.remove();
+  }
+
   constructor(
     private counterService: CounterService,
     private panelService: PanelService,

@@ -16,12 +16,14 @@ import { DataElement } from '@udonarium/data-element';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { CounterService } from 'service/counter.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
+import { Counter, CounterAssign } from '@udonarium/counter';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { element } from 'protractor';
@@ -164,11 +166,16 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
 
   get pointerEventsStyle(): any { return { 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }; }
 
+  counterList(character: GameCharacter): CounterAssign[] {
+    return this.counterService.getList(character).children as CounterAssign[];
+  }
+
   isOpenImageView: boolean = false;
 
   checkRegExp = /[|｜]/g;
 
   constructor(
+    private counterService: CounterService,
     private inventoryService: GameObjectInventoryService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,

@@ -606,3 +606,18 @@ button.link:disabled:hover {
   #fff 0px 0px 2px,
   #fff 0px 0px 2px;
 }
+
+.counter-container {
+  width: 100%;
+  display:flex; 
+  flex-direction: row;
+  flex-wrap: erap;
+  padding: 1px;
+}
+
+.counter {
+  border: solid 1px #222;
+  padding: 2px 4px;
+  margin: 2px;
+  border-radius: 100px;
+}

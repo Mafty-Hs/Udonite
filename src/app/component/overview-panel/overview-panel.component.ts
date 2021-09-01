@@ -170,6 +170,10 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     return this.counterService.getList(character).children as CounterAssign[];
   }
 
+  openCounter(character: GameCharacter) {
+
+  }
+
   isOpenImageView: boolean = false;
 
   checkRegExp = /[|｜]/g;

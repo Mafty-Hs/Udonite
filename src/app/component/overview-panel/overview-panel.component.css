@@ -611,7 +611,7 @@ button.link:disabled:hover {
   width: 100%;
   display:flex; 
   flex-direction: row;
-  flex-wrap: erap;
+  flex-wrap: wrap;
   padding: 1px;
 }
 

@@ -116,20 +116,15 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
     e.preventDefault();
   }
 
-  @HostListener("document:click", ["$event"])
-   public onClick(e: MouseEvent) {
-     if (this.isDrag) {
-       let target : HTMLElement = e.target as HTMLElement;
-       document.body.removeChild(this.selectElm);
-       console.log(target.id)
-       if (this.getCharacter(target.id)){       
-         let message :string = this.getCounter(this.selectCount).name + "を"　+ this.getCharacter(target.id).name + "に付与 :" + this.inputComment;
-         this.chat(message);
-         this.counterService.assign(this.selectCount, target.id, this.inputComment);
-       }
-       this.selectCount = "";
-       this.isDrag = false; 
-    }
+   onSelect(characterIdentifier: string) {
+     document.body.removeChild(this.selectElm);
+     if (this.getCharacter(characterIdentifier)){       
+       let message :string = this.getCounter(this.selectCount).name + "を"　+ this.getCharacter(characterIdentifier).name + "に付与 :" + this.inputComment;
+       this.chat(message);
+       this.counterService.assign(this.selectCount, characterIdentifier, this.inputComment);
+     }
+     this.selectCount = "";
+     this.isDrag = false; 
   }
 
   @HostListener("document:mousemove", ["$event"])
@@ -159,7 +154,12 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
         this.shouldUpdateCharacterList = true;
-      });
+      })
+      .on('SELECT_TABLETOP_OBJECT', -1000, event => {
+        if (this.isDrag) {
+          this.onSelect(event.data.identifier);
+        }
+     });
   }
 
   ngOnDestroy() {

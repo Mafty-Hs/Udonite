@@ -12,8 +12,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CounterInventoryComponent implements OnInit {
 
+  myList:CounterAssign[] = this.counterService.assignedList();
+
   get counterList():CounterAssign[]{
-    return this.counterService.assignedList().sort(function(a,b){
+    return this.myList.sort(function(a,b){
     if(a.characterIdentifier > b.characterIdentifier) return -1;
     if(a.characterIdentifier < b.characterIdentifier) return 1;
     return 0;

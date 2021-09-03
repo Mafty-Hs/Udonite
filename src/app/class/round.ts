@@ -9,6 +9,16 @@ import { ChatTab } from '@udonarium/chat-tab';
 export class Round extends ObjectNode{
   @SyncVar() count:number;
   @SyncVar() tab:ChatTab;
+  @SyncVar() isInitiative:boolean;
+  @SyncVar() currentInitiative:number;
+  @SyncVar() roundState:number;
+  @SyncVar() initName:string;
+
+  reset() {
+    this.count = 0;
+    this.currentInitiative = -1;
+    this.roundState = 0;
+  }
 }
 
 @SyncObject('Iround')
@@ -23,7 +33,8 @@ export class IRound extends ObjectNode implements InnerXml{
     if (IRound._instance.children.length == 0) {
       let round = new Round('CommonRound')
       round.initialize();
-      round.count = 0;
+      round.reset();
+      round.isInitiative = false;
       IRound._instance.appendChild(round);
     }
   }

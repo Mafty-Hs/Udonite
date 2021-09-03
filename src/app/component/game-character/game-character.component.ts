@@ -31,6 +31,8 @@ import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
+import * as createjs from 'createjs-module';
+
 @Component({
   selector: 'game-character',
   templateUrl: './game-character.component.html',
@@ -94,6 +96,8 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
+
+  stage = new createjs.Stage('effect');
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
@@ -333,7 +337,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     };
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+  }
 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);

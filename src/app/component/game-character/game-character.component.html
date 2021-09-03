@@ -5,7 +5,7 @@
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner" [ngClass]="{'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
-      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" id="{{identifier}}" class="pedestal-outer"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
@@ -29,16 +29,17 @@
         [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-          <div id="{{identifier}}" class="rotate-inner is-3d">
+          <div class="rotate-inner is-3d">
             <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
-              <div id="{{identifier}}" class="fornt-tag has-length-limit is-3d">{{name}}</div>
-              <div id="{{identifier}}" class="back-tag has-length-limit is-3d">{{name}}</div>
+              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
+              <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
             <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
                 <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
                   <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
+                    <canvas [style.height.px]="size * gridSize * heightWidthRatio" [style.width.px]="size * gridSize"  id="effect"></canvas>
                     <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
                     [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
                   </span>

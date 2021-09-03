@@ -28,7 +28,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": [
+            ],
             "allowedCommonJsDependencies": [
               "bcdice",
               "hammerjs",
@@ -37,7 +38,8 @@
               "file-saver",
               "msgpack-lite",
               "lzbase62",
-              "pako"
+              "pako",
+              "createjs-module"
             ]
           },
           "configurations": {

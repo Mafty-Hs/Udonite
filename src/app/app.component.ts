@@ -65,7 +65,6 @@ import { CutInList } from '@udonarium/cut-in-list';
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
 
-  @ViewChild(RoundComponent) round:RoundComponent;
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
@@ -492,7 +491,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   resetRound() {
-    this.counterService.round.count = 0;
+    this.counterService.round.reset();
   }
 
   htmlsave(){

@@ -100,6 +100,12 @@
           <div>視点リセット<sup class="self-only">*</sup></div>
         </a>
       </li>
+      <li *ngIf="isOpenPL" (click)="open('EffectViewComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">library_books</i></div>
+          <div>エフェクトビュー</div>
+        </a>
+      </li>
       <div *ngIf="isOpenPL" style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
       <li *ngIf="!isOpenData" (click)="isOpenData = true">
         <a routerLink="/" routerLinkActive="active">

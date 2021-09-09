@@ -4,6 +4,7 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { EventSystem } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
+import { EffectService } from 'service/effect.service';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
@@ -43,6 +44,11 @@ export class ChatTab extends ObjectNode implements InnerXml {
       if (message[key] == null || message[key] === '') continue;
       chat.setAttribute(key, message[key]);
     }
+    chat.value =  this.filterEffect(String(chat.value) ,chat.characterIdentifier);
+    if (chat.value == '') {
+      chat.destroy;
+      return null;
+    }
     chat.initialize();
     EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
     this.appendChild(chat);
@@ -51,6 +57,16 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   markForRead() {
     this._unreadLength = 0;
+  }
+
+  filterEffect(text :string ,identifier :string):string {
+    let result = text.match(/\@effect\((.*)\)$/i);
+    if (result && identifier) {
+      text = text.replace(/\@effect\(.*\)$/,'');
+      let eventstat = [result[1] , [identifier]]
+      EventSystem.trigger('CHARACTER_EFFECT', eventstat);
+    }
+    return text;
   }
 
   innerXml(): string {

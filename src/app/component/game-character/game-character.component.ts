@@ -28,10 +28,10 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
+import { EffectService } from 'service/effect.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
-
-import * as createjs from 'createjs-module';
+import * as THREE from 'three';
 
 @Component({
   selector: 'game-character',
@@ -97,8 +97,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
 
-  stage = new createjs.Stage('effect');
-
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
@@ -145,6 +143,78 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
+
+  canvas:HTMLCanvasElement;
+
+  private renderer;
+  private camera = new THREE.PerspectiveCamera( 30.0, 1, 1, 1000);
+  private scene = new THREE.Scene();
+  private clock = new THREE.Clock();
+  context : effekseer.EffekseerContext = null;
+  effects :{[key: string]: any} = {};
+  private hasEffect = null;
+
+  createMyEffect() {
+    this.canvas = document.createElement('canvas');
+    this.canvas.style.zIndex = "1000";
+    this.canvas.style.position = "absolute";
+    this.canvas.style.display = "none";
+    this.renderer = new THREE.WebGLRenderer({canvas: this.canvas , alpha: true});
+    this.setCanvasSize(100,100)
+    this.camera.position.set(20, 20, 20);
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+ 
+    document.body.appendChild(this.canvas);
+
+    this.context = this.effectService.createContext(this.renderer);
+    this.effects = this.effectService.addEffect(this.context)
+    this.ngZone.runOutsideAngular(() => {
+      const mainLoop = () => {
+        requestAnimationFrame(mainLoop.bind(this));
+        this.animate();
+      };
+      mainLoop();
+    });
+  }
+
+  setCanvasSize(mywidth: number , myheight: number){ 
+    this.canvas.style.width = String(mywidth);
+    this.canvas.style.height = String(mywidth);
+    this.renderer.setSize(mywidth, myheight);
+    this.camera.aspect = mywidth / myheight;
+  }
+
+  setEffect(effectName: string) {
+    if (this.hasEffect) clearTimeout(this.hasEffect);
+    if (!this.characterImage?.nativeElement) return;
+    let rect = this.characterImage.nativeElement.getBoundingClientRect();
+    let newWidth = this.effectService.width(rect);
+    let newHeight = this.effectService.height(rect); 
+    let top = this.effectService.top(rect);
+    let left = this.effectService.left(rect);
+    this.setCanvasSize(newWidth ,newHeight);
+    this.canvas.style.left = left + 'px';
+    this.canvas.style.top = top + 'px';
+    this.canvas.style.display = "block";
+    this.context.play(this.effects[effectName], 0, 0, 0);
+    this.hasEffect = setTimeout(() => {
+      this.stopEffect();
+    }, this.effectService.effectTime[effectName])
+  }
+
+  stopEffect() {
+    this.hasEffect = null;
+    this.canvas.style.display = "none"
+  }
+
+  animate() {
+         this.context.update(this.clock.getDelta() * 60.0);
+         this.renderer.render(this.scene, this.camera);
+         this.context.setProjectionMatrix(Float32Array.from(this.camera.projectionMatrix.elements));
+         this.context.setCameraMatrix(Float32Array.from(this.camera.matrixWorldInverse.elements));
+         this.context.draw();
+         this.renderer.resetState();
+  }
 
   set dialog(dialog) {
     if (!this.gameCharacter) return;
@@ -277,6 +347,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
+    private effectService: EffectService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private ngZone: NgZone,
@@ -290,6 +361,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (!this.gameCharacter || !object) return;
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
           this.changeDetector.markForCheck();
+        }
+      })
+      .on('CHARACTER_EFFECT', event => {
+        let effectName = event.data[0];
+        let character = event.data[1];
+        if(this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+          this.setEffect(effectName);
         }
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
@@ -338,9 +416,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit() {
+    this.createMyEffect()
   }
 
   ngOnDestroy() {
+    document.body.removeChild(this.canvas);
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
     if (this.gameCharacter) {

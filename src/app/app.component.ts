@@ -22,6 +22,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
 import { RoundComponent } from 'component/round/round.component';
+import { EffectViewComponent } from 'component/effect-view/effect-view.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -450,6 +451,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       case 'CounterListComponent':
         component = CounterListComponent;
         option = { width:450 , height: 600 };
+        break;
+      case 'EffectViewComponent':
+        component = EffectViewComponent;
+        option = { width: 400, height: 370 };
         break;
       case 'PlayerPaletteComponent':
         component = PlayerPaletteComponent;

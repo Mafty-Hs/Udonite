@@ -79,6 +79,7 @@ import { CardListImageComponent } from './component/card-list-image/card-list-im
 import { RoundComponent } from './component/round/round.component';
 import { CounterListComponent } from './component/counter-list/counter-list.component';
 import { CounterInventoryComponent } from './component/counter-inventory/counter-inventory.component';
+import { EffectViewComponent } from './component/effect-view/effect-view.component';
 
 @NgModule({
   declarations: [
@@ -140,6 +141,7 @@ import { CounterInventoryComponent } from './component/counter-inventory/counter
     CardListImageComponent,
     RoundComponent,
     CounterInventoryComponent,
+    EffectViewComponent,
   ],
   imports: [
     BrowserModule,

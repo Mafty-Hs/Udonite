@@ -1,0 +1,32 @@
+.flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.demo {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.canvas {
+  float: left;
+}
+
+.selecter {
+  float: right;
+  padding: 0px 5px
+}
+
+.bottom {
+}
+.logo {
+ float: left;
+ font-size: 14px; 
+ width: 60%;
+}
+.right {
+ font-size: 14px; 
+ float: right;
+ width: 40%;
+}

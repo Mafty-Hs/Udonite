@@ -444,7 +444,7 @@ export class DiceBot extends GameObject {
       }
       matchMostLongText = standInfo.matchMostLongText;
     }
-    
+
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     // ダイスによるカットイン発生
     const cutInInfo = CutInList.instance.matchCutInInfo(result);

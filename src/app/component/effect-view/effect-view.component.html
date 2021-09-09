@@ -1,0 +1,26 @@
+<div class="flex">
+  <div class="demo">
+    <div class="canvas">
+      <canvas class="democanvas" #effect [style.width.px]="width" [style.height.px]="height"></canvas>
+    </div>
+    <div class="selecter">
+       <select [style.width.px]="170" size="10" [(ngModel)]="effectName">
+          <option *ngFor="let effect of effectsName" value="{{effect}}">{{effect}}</option>
+       </select>
+    </div>
+  </div>
+  <div>
+    <button (click)="play()">再生</button>
+  </div>
+  <div class="bottom">
+    <div class="logo">
+      チャット末尾に<br>@effect(エフェクト名)<br>を入れることでも表示できます。
+    </div>
+    <div class="right" *ngIf="!isDrag; else dragging">
+      <button  (click)="setEffect()">エフェクトを付与</button>
+    </div>
+  </div>
+</div>
+<ng-template #dragging>
+  <span style="font-size:14px">付与したいキャラクターをクリック</span>
+</ng-template>

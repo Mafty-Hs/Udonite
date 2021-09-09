@@ -110,7 +110,7 @@ export class RoundComponent implements OnInit {
     let inventory = this.getInventory().sort(function(a,b){return(b[1] - a[1]);});
     if (inventory.length == 0) return 0;
     if (this.currentInitiative == -1) return inventory[0][1]  
-    let current = inventory.find(value => value[1] < this.currentInitiative)
+    let current = inventory.find(value => Number(value[1]) < Number(this.currentInitiative))
     if (!current || current[1] < 0) return 0;
     return current[1];
   }

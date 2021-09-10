@@ -80,12 +80,19 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ngZone.run(() => { });
         if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
       });
-    if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
+    if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px' 
   }
 
   ngOnDestroy() {
     clearTimeout(this._timeOutId);
     EventSystem.unregister(this);
+  }
+
+  peerStatus(peerID: string) :string {
+    let count = this.myPeer.keepalive[this.findUserId(peerID)]
+    if (count < -5) return '#F00';
+    if (count < -1) return '#FF0';
+    return '#0F0';
   }
 
   changeIcon() {

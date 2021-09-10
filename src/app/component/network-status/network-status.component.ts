@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 @Component({
   selector: 'network-status',
@@ -13,6 +14,7 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
   isAlert:boolean = false;
   UserCount:number;
   private timer;
+  myKeepalive: number = 0;
 
   countUserID() {
     if (Network.peerContext.roomId){
@@ -30,12 +32,6 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
         this.isChange = false;
         this.changeDetectorRef.detectChanges();
       },5000);
-      if (this.UserCount == 1) {
-	this.isAlert = true;
-      } 
-      else {
-	this.isAlert = false;
-      }
     }
   }
 
@@ -48,21 +44,33 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
 
   ngAfterViewInit() {
     EventSystem.register(this)
-      .on('*', event => {
+      .on('KEEPALIVE', event => {
           this.countUserID();
-          clearTimeout(this.timer);
-          this.startTimer();
+          if (event.data == Network.peerContext.userId) {
+            this.myKeepalive -= 1;
+            PeerCursor.myCursor.keepaliveAging();
+            if (this.myKeepalive < -5 && this.UserCount > 1) {
+               this.isAlert = true;
+             }
+             else {
+               this.isAlert = false;
+             }
+          }
+          else {
+            PeerCursor.myCursor.keepalive[event.data] = 0;
+            this.myKeepalive = 0;
+          }
       });
   };
 
   ngOnInit(): void {
-    this.startTimer();
+    this.startKeepAlive();
   }
 
-  startTimer(): void {
+  startKeepAlive(): void {
     this.timer = setInterval(() => {
-      this.countUserID(); 
-    },60000);
+      EventSystem.call('KEEPALIVE', Network.peerContext.userId);
+    },10000);
   }
 
   ngOnDestroy() {

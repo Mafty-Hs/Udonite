@@ -28,9 +28,20 @@ export class PeerCursor extends GameObject {
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
+  keepalive: { [key: string]: number; } = {};
+
+  keepaliveAging() {
+    Object.keys(this.keepalive).forEach(key => {
+      this.keepalive[key] -= 1;
+      if (this.keepalive[key] < -180 ) delete this.keepalive[key];
+    });  
+    
+  }
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+
+
 
   // GameObject Lifecycle
   onStoreAdded() {

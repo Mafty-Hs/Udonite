@@ -156,7 +156,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   createMyEffect() {
     this.canvas = document.createElement('canvas');
-    this.canvas.style.zIndex = "1000";
+    this.canvas.style.zIndex = "200";
     this.canvas.style.position = "absolute";
     this.canvas.style.display = "none";
     this.renderer = new THREE.WebGLRenderer({canvas: this.canvas , alpha: true});
@@ -185,17 +185,21 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   setEffect(effectName: string) {
-    if (this.hasEffect) clearTimeout(this.hasEffect);
     if (!this.characterImage?.nativeElement) return;
+
     let rect = this.characterImage.nativeElement.getBoundingClientRect();
-    let newWidth = this.effectService.width(rect);
-    let newHeight = this.effectService.height(rect); 
-    let top = this.effectService.top(rect);
-    let left = this.effectService.left(rect);
+    if (!this.effectService.isValid(rect)) return;
+
+    if (this.hasEffect) clearTimeout(this.hasEffect);
+
+    let newWidth,newHeight,top,left: number;
+    [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName); 
     this.setCanvasSize(newWidth ,newHeight);
     this.canvas.style.left = left + 'px';
     this.canvas.style.top = top + 'px';
     this.canvas.style.display = "block";
+
+    //this.canvas.style.backgroundColor = '#FFF';
     this.context.play(this.effects[effectName], 0, 0, 0);
     this.hasEffect = setTimeout(() => {
       this.stopEffect();

@@ -7,6 +7,7 @@ import * as THREE from 'three';
 export class EffectService {
 
   effectName :string[] = ['光柱','光','光2','闇','炎','炎2','炎SE','冷気','水','風1','風2','土','雷','爆発','爆発2','爆発SE','出血','!','?','♪','ハート','ハート2','ハート3'];
+  emotionEffect:string[] = ['!','?','♪','ハート','ハー 2','ハート3']
   effectTime : {[key: string]: number } = {
     '光柱': 3000,
     '光': 2000,
@@ -72,21 +73,28 @@ export class EffectService {
     return effects;
   }
 
-  width(rect: DOMRect) :number {
-    let value:number = (rect.right - rect.left) * 2;
-    return this.validation(value);
+  isValid(rect: DOMRect) :boolean {
+    if
+    (  rect.right < 1
+    || rect.left < 1
+    || rect.top < 1
+    || rect.bottom < 1
+    ) return false;
+    return true;
   }
-  height(rect: DOMRect):number {
-    let value:number = (rect.bottom - rect.top) * 2;
-    return this.validation(value);;
-  }
-  top(rect: DOMRect):number {
-    let value:number = rect.top - (this.height(rect) / 6);
-    return value;
-  }
-  left(rect: DOMRect):number {
-    let value:number = rect.left - (this.width(rect) / 4);
-    return value;
+  
+  calcSize(rect: DOMRect , effectName:string) :number[] {
+    let width:number = this.validation((rect.right - rect.left) * 2);
+    let height:number = this.validation((rect.bottom - rect.top) * 2);
+    let top:number;
+    if (this.emotionEffect.includes(effectName)) { 
+      top = rect.top - ((rect.bottom - rect.top) / 2);
+    }
+    else {
+      top = rect.top - ((rect.bottom - rect.top) / 4);
+    }
+    let left:number = rect.left - ((rect.right - rect.left) / 2);
+    return [width,height,top,left]
   }
   validation(number :number):number {
     if (number < 0) return 0;

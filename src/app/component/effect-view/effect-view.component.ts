@@ -38,10 +38,14 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
     } 
   }
 
+  cancel() {
+    this.isDrag = false;
+  }
+
   onSelect(characterIdentifier: string) {
      if (characterIdentifier){       
        let eventstat = [this.effectName , [characterIdentifier]]
-       EventSystem.trigger('CHARACTER_EFFECT', eventstat);
+       EventSystem.call('CHARACTER_EFFECT', eventstat);
      }
      this.isDrag = false; 
   }

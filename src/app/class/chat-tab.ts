@@ -64,7 +64,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     if (result && identifier) {
       text = text.replace(/\@effect\(.*\)$/,'');
       let eventstat = [result[1] , [identifier]]
-      EventSystem.trigger('CHARACTER_EFFECT', eventstat);
+      EventSystem.call('CHARACTER_EFFECT', eventstat);
     }
     return text;
   }

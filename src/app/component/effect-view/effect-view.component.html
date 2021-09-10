@@ -11,16 +11,13 @@
   </div>
   <div>
     <button (click)="play()">再生</button>
+    <button *ngIf="!isDrag"  (click)="setEffect()">エフェクトを付与</button>
+    <button *ngIf="isDrag" (click)="cancel()">キャンセル</button>
   </div>
   <div class="bottom">
-    <div class="logo">
-      チャット末尾に<br>@effect(エフェクト名)<br>を入れることでも表示できます。
-    </div>
-    <div class="right" *ngIf="!isDrag; else dragging">
-      <button  (click)="setEffect()">エフェクトを付与</button>
+    <div style="width=100%">
+    エフェクトを付与をクリック後、付与したいキャラクターをクリック。<br>
+    または、チャット末尾に @effect(エフェクト名)
     </div>
   </div>
 </div>
-<ng-template #dragging>
-  <span style="font-size:14px">付与したいキャラクターをクリック</span>
-</ng-template>

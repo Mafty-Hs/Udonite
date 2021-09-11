@@ -33,7 +33,7 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
   isDrag :boolean = false;
 
   setEffect() {
-    if(!this.isDrag) {
+    if(!this.isDrag && this.effectName) {
       this.isDrag = true;
     } 
   }

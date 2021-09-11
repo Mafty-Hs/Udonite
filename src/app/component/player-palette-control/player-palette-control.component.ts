@@ -13,7 +13,6 @@ import { GameCharacter } from '@udonarium/game-character';
   styleUrls: ['./player-palette-control.component.css']
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
-  @Input() disableControl : boolean;
   private _character: GameCharacter;
   private tabletopObject : TabletopObject;
   @Input() set character(character :GameCharacter){

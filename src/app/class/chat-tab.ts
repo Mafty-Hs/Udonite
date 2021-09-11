@@ -62,7 +62,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
   filterEffect(text :string ,identifier :string):string {
     let result = text.match(/\@effect\((.*)\)$/i);
     if (result && identifier) {
-      text = text.replace(/\@effect\(.*\)$/,'');
+      text = text.replace(/\@effect\(.*?\)$/,'');
       let eventstat = [result[1] , [identifier]]
       EventSystem.call('CHARACTER_EFFECT', eventstat);
     }

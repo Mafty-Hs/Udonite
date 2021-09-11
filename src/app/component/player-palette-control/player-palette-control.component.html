@@ -1,11 +1,9 @@
-<div *ngIf="!disableControl">
-  <div *ngIf="!isEdit; else edit" class="component">
+<div *ngIf="!isEdit; else edit" class="component">
   <div class="frame" *ngFor="let dataElm of inventoryDataElms">
     <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
       <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
       </ng-container>
     </ng-container>
-  </div>
   </div>
 </div>
 

@@ -42,7 +42,14 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       return this.getcharacter(this.sendFrom).chatPalette;
    }
   }
-  disableControl : boolean = true;
+
+  @ViewChild('characterSelect') characterSelect: ElementRef;
+  _disableControl : boolean = true;
+  get disableControl(): boolean { return this._disableControl };
+  set disableControl(control: boolean) {
+    this._disableControl = control;
+  };
+
   get color(): string {
     return this.chatInputComponent.color;
   }
@@ -78,6 +85,16 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }  
   }
 
+  resizeHeight() {
+    if(this.characterSelect.nativeElement.clientHeight > 32
+      && this.panelService.height == 400) 
+      this.panelService.height += 32 ;
+    if(this.characterSelect.nativeElement.clientHeight == 32
+      && this.panelService.height > 400) 
+      this.panelService.height -= 32 ;
+
+  }
+
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
@@ -87,8 +104,18 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   sendTo: string = '';
   selectedCharacter: string = 'default';
   isEdit:boolean = false;
-  hidePalette:boolean = false;
   editPalette: string = '';
+  _hidePalette:boolean = false;
+  get hidePalette(): boolean { return this._hidePalette };
+  set hidePalette(hidePalette: boolean) {
+    if (hidePalette) {
+      this.panelService.height -= 100 ;
+    }
+    else {
+      this.panelService.height += 100 ;
+    }
+    this._hidePalette = hidePalette;
+  };
 
   private shouldUpdateCharacterList: boolean = true;
   private _gameCharacters: GameCharacter[] = [];
@@ -188,6 +215,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     if (this.checkList(this.selectedCharacter)) { return }
     this.paletteList.push(this.selectedCharacter);
     this.selectedCharacter = 'default';
+    this.resizeHeight();
   }
 
   removeList(identifier: string) {
@@ -197,6 +225,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     if (index > -1) {
       this.paletteList.splice(index, 1);
     }
+    this.resizeHeight();
   }
 
   private checkList(identifier: string):boolean {     

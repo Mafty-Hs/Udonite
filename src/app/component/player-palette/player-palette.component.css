@@ -28,11 +28,12 @@
 }
 
 .Character-Control {
-  max-height : 60px; 
+  height : 60px; 
   overflow: auto;
 }
 .Character-Select {
-  min-height : 24px;
+  min-height : 32px;
+  max-height : 64px;
   overflow: auto;
   padding : 0 5px 0px 5px;
   user-select: none;

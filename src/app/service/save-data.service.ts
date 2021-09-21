@@ -1,5 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 
+import { CounterList } from '@udonarium/counter-list';
+import { IRound } from '@udonarium/round';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
@@ -38,11 +40,15 @@ export class SaveDataService {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
+    let counterXml = this.convertToXml(CounterList.instance);
+    let roundXml = this.convertToXml(IRound.instance);
     let diceRollTableXml = this.convertToXml(DiceRollTableList.instance);
     let cutInXml = this.convertToXml(CutInList.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
     files.push(new File([roomXml], 'fly_data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'fly_chat.xml', { type: 'text/plain' }));
+    files.push(new File([roundXml], 'fly_round.xml', { type: 'text/plain' }));
+    files.push(new File([counterXml], 'fly_counter.xml', { type: 'text/plain' }));
     files.push(new File([diceRollTableXml], 'fly_rollTable.xml', { type: 'text/plain' }));
     files.push(new File([cutInXml], 'fly_cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));

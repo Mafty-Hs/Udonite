@@ -68,7 +68,6 @@ export class CounterService {
   }
 
   initialize() {
-    //this.nullCounter.initialize();
   }
 
   assignedList(): CounterAssign[] {

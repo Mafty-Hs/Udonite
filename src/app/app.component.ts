@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
+import { CounterList } from '@udonarium/counter-list';
 import { IRound } from '@udonarium/round';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
@@ -43,6 +44,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { CounterService } from 'service/counter.service';
+import { EffectService } from 'service/effect.service';
 import { SaveDataService } from 'service/save-data.service';
 import { SaveHtmlService } from 'service/save-html.service';
 import { StandImageService } from 'service/stand-image.service';
@@ -114,6 +116,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  get canEffect():boolean {
+    return this.effectService.canEffect;
+  }
+  set canEffect(canEffect: boolean) {
+    this.effectService.canEffect = canEffect;
+  }
+  
+  get effectTxt():string {  
+    if(this.canEffect)  
+      return "非表示";
+    else
+      return "表示"; 
+  }
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -126,7 +142,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private contextMenuService: ContextMenuService,
     private standImageService: StandImageService,
     private cutInService: CutInService,
-    private counterService: CounterService
+    private counterService: CounterService,
+    private effectService: EffectService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -146,6 +163,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.pointerDeviceService.initialize();
 
     IRound.init();
+    CounterList.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
 
@@ -546,6 +564,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
       { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
     ], '視点リセット');
+  }
+
+  effectSW() {
+    if (this.canEffect)
+      this.canEffect = false;
+    else
+      this.canEffect = true;
   }
 
   standSetteings() {

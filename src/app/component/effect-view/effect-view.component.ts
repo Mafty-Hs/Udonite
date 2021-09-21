@@ -52,7 +52,7 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   private setContext() {
         this.context = this.effectService.createContext(this.renderer);
-        this.effects = this.effectService.addEffect(this.context)
+        this.effects = this.effectService.addEffectDemo(this.context)
         this.ngZone.runOutsideAngular(() => { 
         const mainLoop = () => {
           requestAnimationFrame(mainLoop.bind(this));

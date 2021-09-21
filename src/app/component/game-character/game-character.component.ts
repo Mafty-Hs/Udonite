@@ -32,6 +32,7 @@ import { EffectService } from 'service/effect.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import * as THREE from 'three';
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'game-character',
@@ -137,6 +138,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
 
+  get canEffect():boolean {
+    return this.effectService.canEffect;
+  }
+
   gridSize: number = 50;
   math = Math;
   stringUtil = StringUtil;
@@ -145,35 +150,47 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   heightWidthRatio = 1.5;
 
   canvas:HTMLCanvasElement;
-
+  private effect$: Subscription;
   private renderer;
   private camera = new THREE.PerspectiveCamera( 30.0, 1, 1, 1000);
   private scene = new THREE.Scene();
   private clock = new THREE.Clock();
   context : effekseer.EffekseerContext = null;
-  effects :{[key: string]: any} = {};
+  effects;
   private hasEffect = null;
+
+  toggleEffect(canEffect: boolean){
+    if(canEffect) {
+      this.createMyEffect()
+    }
+    else {
+      cancelAnimationFrame(this.myLoop);
+      document.body.removeChild(this.canvas);
+      this.canvas.remove();
+    }
+  }
+  private myLoop; 
+  mainLoop = () => {
+    this.myLoop = requestAnimationFrame(this.mainLoop.bind(this));
+    this.animate();
+  };
 
   createMyEffect() {
     this.canvas = document.createElement('canvas');
-    this.canvas.style.zIndex = "200";
+    this.canvas.style.zIndex = "20";
     this.canvas.style.position = "absolute";
     this.canvas.style.display = "none";
-    this.renderer = new THREE.WebGLRenderer({canvas: this.canvas , alpha: true});
-    this.setCanvasSize(100,100)
     this.camera.position.set(20, 20, 20);
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
  
     document.body.appendChild(this.canvas);
 
+  }
+
+  newContext() {
     this.context = this.effectService.createContext(this.renderer);
-    this.effects = this.effectService.addEffect(this.context)
     this.ngZone.runOutsideAngular(() => {
-      const mainLoop = () => {
-        requestAnimationFrame(mainLoop.bind(this));
-        this.animate();
-      };
-      mainLoop();
+      this.mainLoop();
     });
   }
 
@@ -182,6 +199,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.canvas.style.height = String(mywidth);
     this.renderer.setSize(mywidth, myheight);
     this.camera.aspect = mywidth / myheight;
+    this.camera.updateProjectionMatrix();
   }
 
   setEffect(effectName: string) {
@@ -190,25 +208,39 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let rect = this.characterImage.nativeElement.getBoundingClientRect();
     if (!this.effectService.isValid(rect)) return;
 
-    if (this.hasEffect) clearTimeout(this.hasEffect);
-
     let newWidth,newHeight,top,left: number;
     [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName); 
-    this.setCanvasSize(newWidth ,newHeight);
     this.canvas.style.left = left + 'px';
     this.canvas.style.top = top + 'px';
+    if (this.hasEffect) {
+      clearTimeout(this.hasEffect);
+      this.setCanvasSize(newWidth ,newHeight);
+    }
+    else {
+      this.renderer = new THREE.WebGLRenderer({canvas: this.canvas , alpha: true});
+      this.newContext();
+      this.setCanvasSize(newWidth ,newHeight);
+    }
     this.canvas.style.display = "block";
-
+    this.effects = this.effectService.addEffect(this.context,effectName)
     //this.canvas.style.backgroundColor = '#FFF';
-    this.context.play(this.effects[effectName], 0, 0, 0);
+    setTimeout(() => {
+      this.playEffect(effectName);
+    }, 500);
+  }
+
+  playEffect(effectName:string) {
+    this.context.play(this.effects, 0, 0, 0);
     this.hasEffect = setTimeout(() => {
       this.stopEffect();
-    }, this.effectService.effectTime[effectName])
+    }, this.effectService.effectInfo[effectName].time);
   }
 
   stopEffect() {
     this.hasEffect = null;
+    cancelAnimationFrame(this.myLoop);
     this.canvas.style.display = "none"
+    this.renderer = null;
   }
 
   animate() {
@@ -370,7 +402,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('CHARACTER_EFFECT', event => {
         let effectName = event.data[0];
         let character = event.data[1];
-        if(this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+        if(this.effectService.canEffect && this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
           this.setEffect(effectName);
         }
       })
@@ -417,13 +449,19 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
+
+    this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => { 
+      this.toggleEffect(bool);
+    });
+
   }
 
   ngAfterViewInit() {
-    this.createMyEffect()
+    if (this.effectService.canEffect) this.createMyEffect()
   }
 
   ngOnDestroy() {
+    this.effect$.unsubscribe();
     document.body.removeChild(this.canvas);
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);

@@ -61,9 +61,9 @@ export class RoundComponent implements OnInit {
     }
     return null;
   }
-  get chatTab(): ChatTab { return this.counterService.round.tab };
+  get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.counterService.round.tabIdentifier) };
   set chatTab(tab: ChatTab) {
-    this.counterService.round.tab = tab;
+    this.counterService.round.tabIdentifier = tab.identifier;
   };
   get round(): number { return this.counterService.round.count };
   set round(count: number) {

@@ -8,9 +8,9 @@
 <div class="log-setting">
 <form name="logsetting" action="#">
 <label for="fontsize">ログ表示のみ</label>
-<input id="switch" name="switch" type="checkbox" [(ngModel)]="isLogOnly" />
+<input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
 <label for="fontsize">簡易表示</label>
-<input id="switch" name="switch" type="checkbox" [(ngModel)]="isEase" />
+<input name="isEase" type="checkbox" [(ngModel)]="isEase" />
 <label for="fontsize">文字サイズ {{ localFontsize }}px</label>
 <input id="fontsize" type="range" name="fontsize" min="10"  max="32" [(ngModel)]="localFontsize">
 </form>

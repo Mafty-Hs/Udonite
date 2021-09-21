@@ -15,7 +15,7 @@ export class PeerCursor extends GameObject {
   @SyncVar() peerId: PeerId = '';
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
-  @SyncVar() paletteList: string[] = [];
+  paletteList: string[] = [];
   @SyncVar() color: string = PeerCursor.CHAT_DEFAULT_COLOR;
   
 

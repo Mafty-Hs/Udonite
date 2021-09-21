@@ -58,6 +58,12 @@
           <div>カットイン</div>
         </a>
       </li>
+      <li *ngIf="isOpenGM" (click)="open('CounterListComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">blur_linear</i></div>
+          <div>カウンターリスト</div>
+        </a>
+      </li>
       <li *ngIf="isOpenGM" (click)="diceAllOpne()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">all_out</i></div>
@@ -82,12 +88,6 @@
           <div>パレットバインダー<sup class="self-only">*</sup></div>
         </a>
       </li>
-      <li *ngIf="isOpenPL" (click)="open('CounterListComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">blur_linear</i></div>
-          <div>カウンターリスト</div>
-        </a>
-      </li>
       <li *ngIf="isOpenPL" (click)="standSetteings()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">how_to_reg</i></div>
@@ -98,6 +98,12 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">remove_red_eye</i></div>
           <div>視点リセット<sup class="self-only">*</sup></div>
+        </a>
+      </li>
+      <li *ngIf="isOpenPL" (click)="effectSW()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">water_drop</i></div>
+          <div>エフェクト{{effectTxt}}<sup class="self-only">*</sup></div>
         </a>
       </li>
       <li *ngIf="isOpenPL" (click)="open('EffectViewComponent')">

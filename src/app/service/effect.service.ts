@@ -1,38 +1,71 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+
+interface effectData {
+      time: number;
+      file: string;
+      isEmotion: boolean;
+      size: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class EffectService {
 
-  effectName :string[] = ['光柱','光','光2','闇','炎','炎2','炎SE','冷気','水','風1','風2','土','雷','爆発','爆発2','爆発SE','出血','!','?','♪','ハート','ハート2','ハート3'];
-  emotionEffect:string[] = ['!','?','♪','ハート','ハー 2','ハート3']
-  effectTime : {[key: string]: number } = {
-    '光柱': 3000,
-    '光': 2000,
-    '光2': 1500,
-    '闇': 1500,
-    '炎': 1800,
-    '炎2': 2400,
-    '炎SE': 1800,
-    '冷気': 2000,
-    '水': 2000,
-    '風1': 2000,
-    '風2': 1400,
-    '土': 2000,
-    '雷': 2000,
-    '爆発': 1500,
-    '爆発2': 5000,
-    '爆発SE': 1500,
-    '出血': 2000,
-    '!': 2000,
-    '?': 2000,
-    '♪': 2000,
-    'ハート': 5000,
-    'ハート2': 2000,
-    'ハート3': 2000,
-  };
+  private _canEffect$ : Subject<boolean> = new Subject<boolean>();
+  private _canEffect : boolean;
+  public canEffect$ = this._canEffect$.asObservable();
+  get canEffect():boolean {
+    return this._canEffect;
+  }
+  set canEffect(canEffect: boolean) {
+    this._canEffect$.next(canEffect);
+    this._canEffect = canEffect; 
+  }
+
+  effectInfo:
+    { [key: string]: effectData; }
+    = {
+    '光柱': {time: 3000, file: "assets/effect/light.efk",size: 1,isEmotion: false},
+    '光': {time: 2000, file: "assets/effect/light2.efk",size: 1,isEmotion: false},
+    '光2': {time: 1500, file: "assets/effect/light3.efk",size: 1,isEmotion: false},
+    '闇': {time: 2000, file: "assets/effect/dark.efk",size: 1,isEmotion: false},
+    '闇球': {time: 6000, file: "assets/effect/darksphere.efk",size: 1.8,isEmotion: false},
+    '炎': {time: 1800, file: "assets/effect/fire.efk",size: 1,isEmotion: false},
+    '炎2': {time: 2400, file: "assets/effect/fire2.efk",size: 1,isEmotion: false},
+    '青炎': {time: 2400, file: "assets/effect/bluefire.efk",size: 1,isEmotion: false},
+    '炎SE': {time: 1800, file: "assets/effect/firese.efk",size: 1,isEmotion: false},
+    '冷気': {time: 2000, file: "assets/effect/cold.efk",size: 1,isEmotion: false},
+    '水': {time: 2000, file: "assets/effect/water.efk",size: 1,isEmotion: false},
+    '氷': {time: 2000, file: "assets/effect/ice.efk",size: 1,isEmotion: false},
+    '氷SE': {time: 2000, file: "assets/effect/icese.efk",size: 1,isEmotion: false},
+    '風1': {time: 2000, file: "assets/effect/wind.efk",size: 1,isEmotion: false},
+    '風2': {time: 1400, file: "assets/effect/wind2.efk",size: 1,isEmotion: false},
+    '土': {time: 2000, file: "assets/effect/soil.efk",size: 1,isEmotion: false},
+    '雷': {time: 2000, file: "assets/effect/lightning.efk",size: 1,isEmotion: false},
+    '爆発': {time: 1500, file: "assets/effect/bomb.efk",size: 1,isEmotion: false},
+    '爆発2': {time: 5000, file: "assets/effect/bomb2.efk",size: 1,isEmotion: false},
+    '爆発SE': {time: 1500, file: "assets/effect/bombse.efk",size: 1,isEmotion: false},
+    '核': {time: 6000, file: "assets/effect/nuke.efk",size: 1.8,isEmotion: false},
+    '銃': {time: 1000, file: "assets/effect/gun.efk",size: 1,isEmotion: false},
+    '出血': {time: 2000, file: "assets/effect/blood.efk",size: 1,isEmotion: false},
+    '触手1': {time: 2000, file: "assets/effect/tentacle1.efk",size: 1,isEmotion: false},
+    '触手2': {time: 2000, file: "assets/effect/tentacle2.efk",size: 1,isEmotion: false},
+    '!': {time: 2000, file: "assets/effect/ex.efk",size: 1,isEmotion: true},
+    '?': {time: 2000, file: "assets/effect/question.efk",size: 1,isEmotion: true},
+    '♪': {time: 2000, file: "assets/effect/note.efk",size: 1,isEmotion: true},
+    'ハート': {time: 5000, file: "assets/effect/heart.efk",size: 1,isEmotion: true},
+    'ハート2': {time: 2000, file: "assets/effect/heart2.efk",size: 1,isEmotion: true},
+    'ハート3': {time: 2000, file: "assets/effect/heart3.efk",size: 1,isEmotion: true},
+  }
+
+  get effectName() {
+    return Object.keys(this.effectInfo) as string[];
+  }
 
   createContext(renderer: THREE.WebGLRenderer) :effekseer.EffekseerContext {
     let context:  effekseer.EffekseerContext;
@@ -45,32 +78,18 @@ export class EffectService {
     return context;  
   }
 
-  addEffect(context :effekseer.EffekseerContext) {
+  addEffectDemo(context :effekseer.EffekseerContext) {
     let effects :{[key: string]: any} = {};
-    effects["光柱"] = context.loadEffect("assets/effect/light.efk");
-    effects["光"] = context.loadEffect("assets/effect/light2.efk");
-    effects["光2"] = context.loadEffect("assets/effect/light3.efk");
-    effects["闇"] = context.loadEffect("assets/effect/dark.efk");
-    effects["炎"] = context.loadEffect("assets/effect/fire.efk");
-    effects["炎2"] = context.loadEffect("assets/effect/fire2.efk");
-    effects["炎SE"] = context.loadEffect("assets/effect/firese.efk");
-    effects["冷気"] = context.loadEffect("assets/effect/cold.efk");
-    effects["水"] = context.loadEffect("assets/effect/water.efk");
-    effects["風1"] = context.loadEffect("assets/effect/wind.efk");
-    effects["風2"] = context.loadEffect("assets/effect/wind2.efk");
-    effects["土"] = context.loadEffect("assets/effect/soil.efk");
-    effects["雷"] = context.loadEffect("assets/effect/lightning.efk");
-    effects["爆発"] = context.loadEffect("assets/effect/bomb.efk");
-    effects["爆発2"] = context.loadEffect("assets/effect/bomb2.efk");
-    effects["爆発SE"] = context.loadEffect("assets/effect/bombse.efk");
-    effects["出血"] = context.loadEffect("assets/effect/blood.efk");
-    effects["!"] = context.loadEffect("assets/effect/ex.efk");
-    effects["?"] = context.loadEffect("assets/effect/question.efk");
-    effects["♪"] = context.loadEffect("assets/effect/note.efk");
-    effects["ハート"] = context.loadEffect("assets/effect/heart.efk");
-    effects["ハート2"] = context.loadEffect("assets/effect/heart2.efk");
-    effects["ハート3"] = context.loadEffect("assets/effect/heart3.efk");
+    Object.keys(this.effectInfo).forEach(
+      key => 
+        effects[key] = context.loadEffect(this.effectInfo[key].file)
+    );
     return effects;
+  }
+
+  addEffect(context :effekseer.EffekseerContext ,effectName:string) {
+    let effect = context.loadEffect(this.effectInfo[effectName].file);
+    return effect;
   }
 
   isValid(rect: DOMRect) :boolean {
@@ -84,23 +103,26 @@ export class EffectService {
   }
   
   calcSize(rect: DOMRect , effectName:string) :number[] {
-    let width:number = this.validation((rect.right - rect.left) * 2);
-    let height:number = this.validation((rect.bottom - rect.top) * 2);
+    let size:number = this.effectInfo[effectName].size;
+    let width:number = this.validation((rect.right - rect.left) * 2 * size);
+    let height:number = this.validation((rect.bottom - rect.top) * 2 * size);
     let top:number;
-    if (this.emotionEffect.includes(effectName)) { 
-      top = rect.top - ((rect.bottom - rect.top) / 2);
+    if (this.effectInfo[effectName].isEmotion) { 
+      top = rect.top - ((rect.bottom - rect.top) * size / 2);
     }
     else {
-      top = rect.top - ((rect.bottom - rect.top) / 4);
+      top = rect.top - ((rect.bottom - rect.top) * size / 4);
     }
-    let left:number = rect.left - ((rect.right - rect.left) / 2);
+    let left:number = rect.left - (width - (rect.right - rect.left)) / 2;
     return [width,height,top,left]
   }
   validation(number :number):number {
     if (number < 0) return 0;
-    if (number > 500) return 500;
+    if (number > 800) return 800;
     return number;
   }
 
-  constructor() { }
+  constructor() { 
+    this.canEffect = true;
+  }
 }

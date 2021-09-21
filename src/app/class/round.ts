@@ -8,7 +8,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 @SyncObject('round')
 export class Round extends ObjectNode{
   @SyncVar() count:number;
-  @SyncVar() tab:ChatTab;
+  @SyncVar() tabIdentifier:string;
   @SyncVar() isInitiative:boolean;
   @SyncVar() currentInitiative:number;
   @SyncVar() roundState:number;

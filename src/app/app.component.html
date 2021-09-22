@@ -1,166 +1,53 @@
-<div id="app-table-layer" style="position: absolute; width: 100%; height: 100%; overflow: hidden;">
-  <game-table></game-table>
+<div class="container">
+  <div id="menu" class="menu">
+    <div id="menu" class="left">
+      <button class="select" [ngStyle]="{'border': this.selectMenu == 'file' ? '2px solid #000' : '2px solid #989898'}"  
+        (click)='openSubMenu($event,"file")'>
+          <span *ngIf="!minimumMode; else miniFile">ファイル{{isOpen("file")}}
+      </span></button>
+      <button class="select" [ngStyle]="{'border': this.selectMenu == 'room' ? '2px solid #000' : '2px solid #989898'}"
+        (click)='openSubMenu($event,"room")'>
+          <span *ngIf="!minimumMode; else miniRoom">ルーム{{isOpen("room")}}
+      </span></button>
+      <button class="select" [ngStyle]="{'border': this.selectMenu == 'work' ? '2px solid #000' : '2px solid #989898'}"
+        (click)='openSubMenu($event,"work")'>
+          <span *ngIf="!minimumMode; else miniWork">機能{{isOpen("work")}}
+      </span></button>
+      <button class="select" [ngStyle]="{'border': this.selectMenu == 'view' ? '2px solid #000' : '2px solid #989898'}"
+        (click)='openSubMenu($event,"view")'>
+           <span *ngIf="!minimumMode; else miniView">表示{{isOpen("view")}}
+      </span></button>
+      <div class="select"><round [minimumMode]="this.minimumMode"></round></div>
+    </div>
+    <div class="right">
+      <network-indicator style="width:40px;height:40px;"></network-indicator>
+      <div class="select"><network-status  [minimumMode]="this.minimumMode"></network-status></div>
+      <button class="select" *ngIf="!minimumMode"  (click)='menuHelp()'>？</button>
+    </div>
+  </div>
+  <div id="app-table-layer" class="game-table">
+    <game-table></game-table>
+  </div>
 </div>
-<ui-panel [top]="0" [left]="0" [width]="100" [height]="600" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false">
-  <nav>
-    <ul>
-      <li>
-        <network-status></network-status>
-      </li>
-      <li *ngIf="!isOpenBasic" (click)="isOpenBasic = true">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size folder">folder</i></div>
-          <div>基本</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenBasic" (click)="open('PeerMenuComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">people</i></div>
-          <div>接続</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenBasic" (click)="open('ChatWindowComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">speaker_notes</i></div>
-          <div>チャット画面</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenBasic" (click)="open('GameObjectInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenBasic">
-        <round></round>
-      </li>
-      <li *ngIf="!isOpenGM" (click)="isOpenGM = true">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size folder">folder</i></div>
-          <div>ルーム共通設定</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="open('GameTableSettingComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">layers</i></div>
-          <div>テーブル設定</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="open('DiceRollTableSettingComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">build</i></div>
-          <div>ダイスボット表</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="open('CutInSettingComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">perm_media</i></div>
-          <div>カットイン</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="open('CounterListComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">blur_linear</i></div>
-          <div>カウンターリスト</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="diceAllOpne()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">all_out</i></div>
-          <div>ダイス一斉公開</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenGM" (click)="resetRound()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">refresh</i></div>
-          <div>ラウンドをリセット</div>
-        </a>
-      </li>
-      <li *ngIf="!isOpenPL" (click)="isOpenPL = true">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size folder">folder</i></div>
-          <div>プレイヤー操作</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="open('PlayerPaletteComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">library_books</i></div>
-          <div>パレットバインダー<sup class="self-only">*</sup></div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="standSetteings()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">how_to_reg</i></div>
-          <div>スタンド設定<sup class="self-only">*</sup></div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="resetPointOfView()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">remove_red_eye</i></div>
-          <div>視点リセット<sup class="self-only">*</sup></div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="effectSW()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">water_drop</i></div>
-          <div>エフェクト{{effectTxt}}<sup class="self-only">*</sup></div>
-        </a>
-      </li>
-      <li *ngIf="isOpenPL" (click)="open('EffectViewComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">water_drop</i></div>
-          <div>エフェクトビュー</div>
-        </a>
-      </li>
-      <div *ngIf="isOpenPL" style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
-      <li *ngIf="!isOpenData" (click)="isOpenData = true">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size folder">folder</i></div>
-          <div>画像/データ</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenData" (click)="open('JukeboxComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">queue_music</i></div>
-          <div>音楽</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenData" (click)="open('FileStorageComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">photo_library</i></div>
-          <div>画像</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenData">
-        <a routerLink="/" routerLinkActive="active">
-          <label>
-            <div><i class="material-icons">open_in_browser</i></div>
-            <div>ZIP読込</div>
-            <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple
-              accept="application/xml,text/xml,application/zip" />
-          </label>
-        </a>
-      </li>
-      <li *ngIf="isOpenData && !isSaveing" (click)="save()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">sd_storage</i></div>
-          <div>保存</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenData  && isSaveing" style="pointer-events: none;">
-        <a>
-          <div><i class="material-icons vibration-amine">sd_storage</i></div>
-          <div>{{progresPercent}}%</div>
-        </a>
-      </li>
-      <li *ngIf="isOpenData" (click)="htmlsave()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">web</i></div>
-          <div>HTML</div>
-        </a>
-      </li>
-    </ul>
-  </nav>
-</ui-panel>
 <div #modalLayer></div>
-<network-indicator class="networkIndicator"></network-indicator>
+<div #subMenu class="subMenu"><sub-menu [selectMenu]="this.selectMenu" (closeMe)="closeSub()"></sub-menu></div>
+<ng-template #miniFile>
+  <i class="material-icons">
+    sd_storage
+  </i>
+</ng-template>
+<ng-template #miniRoom>
+  <i class="material-icons">
+    people
+  </i>
+</ng-template>
+<ng-template #miniWork>
+  <i class="material-icons">
+    settings
+  </i>
+</ng-template>
+<ng-template #miniView>
+  <i class="material-icons">
+    emoji_objects
+  </i>
+</ng-template>

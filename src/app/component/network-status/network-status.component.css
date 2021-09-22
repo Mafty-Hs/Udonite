@@ -2,7 +2,8 @@ div {
   padding: 0px;
   margin: 0px;
   text-align: center;
-  font-size: 12px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 label {
@@ -10,11 +11,6 @@ label {
 }
 
 .box {
-}
-
-.boxChange {
- animation: flash 1s linear infinite;
- background:#606060;
 }
 
 .boxAlert {

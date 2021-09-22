@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef} from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
@@ -10,11 +10,11 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 export class NetworkStatusComponent implements OnInit,OnDestroy{
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
-  isChange:boolean = false;
   isAlert:boolean = false;
   UserCount:number;
   private timer;
   myKeepalive: number = 0;
+  @Input() minimumMode:boolean;
 
   countUserID() {
     if (Network.peerContext.roomId){
@@ -26,12 +26,6 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
     const result = Network.peerIds;
     if (this.UserCount != result.length) {
       this.UserCount = result.length;
-      this.isChange = true;
-      this.changeDetectorRef.detectChanges();
-      setInterval(() => {
-        this.isChange = false;
-        this.changeDetectorRef.detectChanges();
-      },5000);
     }
   }
 

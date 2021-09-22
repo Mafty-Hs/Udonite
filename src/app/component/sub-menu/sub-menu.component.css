@@ -1,0 +1,63 @@
+.sub {
+  width: 100px;
+  background: #424242;
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+  background-image:
+         linear-gradient(45deg,  #212121 25%, #212121 25%, transparent 25%,
+          transparent 75%, #212121 75%, #212121 75%),
+         linear-gradient(-135deg, #212121 25%, #212121 25%, transparent 25%,
+          transparent 75%, #212121 75%, #212121 75%);
+  border:2px solid #989898;
+  border-top-style:none;
+  border-bottom-style:outset;
+  box-shadow:6px 5px 8px -1px #212121 inset;
+
+}
+
+nav ul {
+    list-style:none;
+    padding: 0px;
+    margin: 0px;
+}
+
+nav ul > li {
+  text-align: center;
+  padding: 5px;
+  color: #FFF;
+  text-shadow: 2px 2px 4px #000000;
+  cursor: -moz-pointer;
+  cursor: -webkit-pointer;
+  cursor: pointer;
+}
+
+nav ul > li:hover {
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.8);
+}
+nav ul > li > a {
+  height: 128px;
+  width: 128px;
+  font-size: 8px;
+  user-select: none;
+}
+nav ul > li > a > label {
+  cursor: -moz-pointer;
+  cursor: -webkit-pointer;
+  cursor: pointer;
+}
+nav ul i {
+  font-size: 24px;
+}
+nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
+  text-decoration: none;
+}
+
+.icon-size {
+  font-size: 40px;
+}
+
+.footer {
+  height: 10px;
+  background:linear-gradient(0deg, #212121 5%, #424242 15%, #FAFAFA 40%, #424242 55%, #212121 95% 100%);
+}

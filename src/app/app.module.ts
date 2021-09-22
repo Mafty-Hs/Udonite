@@ -80,6 +80,7 @@ import { RoundComponent } from './component/round/round.component';
 import { CounterListComponent } from './component/counter-list/counter-list.component';
 import { CounterInventoryComponent } from './component/counter-inventory/counter-inventory.component';
 import { EffectViewComponent } from './component/effect-view/effect-view.component';
+import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import { EffectViewComponent } from './component/effect-view/effect-view.compone
     RoundComponent,
     CounterInventoryComponent,
     EffectViewComponent,
+    SubMenuComponent,
   ],
   imports: [
     BrowserModule,

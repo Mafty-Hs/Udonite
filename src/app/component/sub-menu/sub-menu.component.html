@@ -1,0 +1,113 @@
+<div class="sub">
+  <nav>
+    <ul>
+      <li *ngIf="isOpen('file')" (click)="open('FileStorageComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">photo_library</i></div>
+          <div>画像</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('file')">
+        <a routerLink="/" routerLinkActive="active">
+          <label>
+            <div><i class="material-icons">open_in_browser</i></div>
+            <div>ZIP読込</div>
+            <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple
+              accept="application/xml,text/xml,application/zip" />
+          </label>
+        </a>
+      </li>
+      <li *ngIf="isOpen('file') && !isSaveing" (click)="save()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">sd_storage</i></div>
+          <div>保存</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('file')  && isSaveing" style="pointer-events: none;">
+        <a>
+          <div><i class="material-icons vibration-amine">sd_storage</i></div>
+          <div>{{progresPercent}}%</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('file')" (click)="htmlsave()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">web</i></div>
+          <div>HTML</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('room')" (click)="open('PeerMenuComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">people</i></div>
+          <div>接続</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('room')" (click)="open('GameTableSettingComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">layers</i></div>
+          <div>テーブル設定</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('room')" (click)="open('JukeboxComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">queue_music</i></div>
+          <div>音楽</div>
+        </a>
+      </li>
+     <li *ngIf="isOpen('room')" (click)="diceAllOpne()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">all_out</i></div>
+          <div>ダイス一斉公開</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('room')" (click)="resetRound()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">refresh</i></div>
+          <div>ラウンドをリセット</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('ChatWindowComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">speaker_notes</i></div>
+          <div>チャット画面</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('GameObjectInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder_shared</i></div>
+          <div>インベントリ</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('PlayerPaletteComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">library_books</i></div>
+          <div>パレットバインダー</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('CounterListComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">blur_linear</i></div>
+          <div>カウンターリスト</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('DiceRollTableSettingComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">build</i></div>
+          <div>ダイスボット表</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('CutInSettingComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons">perm_media</i></div>
+          <div>カットイン</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('EffectViewComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">water_drop</i></div>
+          <div>エフェクトビュー</div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="footer"></div>
+</div>

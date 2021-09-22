@@ -1,49 +1,6 @@
-ul {
-    list-style:none;
-    padding: 0px;
-    margin: 0px;
-  /*
-  border: 1px solid #bbb;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: rgba(30, 30, 30, 0.8);
-  */
-}
-
-ul > li {
-  text-align: center;
-  padding: 5px;
-  color: #FFF;
-
-  cursor: -moz-pointer;
-  cursor: -webkit-pointer;
-  cursor: pointer;
-}
-
-ul > li:hover {
-  color: #CCC;
-  background-color: rgba(30, 30, 30, 0.8);
-}
-
-ul > li > a {
-  height: 128px;
-  width: 128px;
-  font-size: 8px;
-  user-select: none;
-}
-
-ul > li > a > label {
-  cursor: -moz-pointer;
-  cursor: -webkit-pointer;
-  cursor: pointer;
-}
-ul i {
-  font-size: 24px;
-}
-ul a, ul a:hover, ul a:active, ul a:visited {
-  text-decoration: none;
-}
-
-.icon-size {
-  font-size: 40px;
+div {
+  padding: 0px;
+  margin: 0px;
+  font-size: 14px;
+  color: #FFF; 
 }

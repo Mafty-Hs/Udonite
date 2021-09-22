@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { CounterList } from '@udonarium/counter-list';
@@ -20,21 +20,13 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
-import { CounterListComponent } from 'component/counter-list/counter-list.component';
+import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoundComponent } from 'component/round/round.component';
-import { EffectViewComponent } from 'component/effect-view/effect-view.component';
+import { SubMenuComponent } from 'component/sub-menu/sub-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
-import { FileStorageComponent } from 'component/file-storage/file-storage.component';
-import { GameCharacterGeneratorComponent } from 'component/game-character-generator/game-character-generator.component';
-import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
-import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
-import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { ModalComponent } from 'component/modal/modal.component';
-import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { AppConfig, AppConfigService } from 'service/app-config.service';
@@ -45,8 +37,6 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { CounterService } from 'service/counter.service';
 import { EffectService } from 'service/effect.service';
-import { SaveDataService } from 'service/save-data.service';
-import { SaveHtmlService } from 'service/save-html.service';
 import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
@@ -54,7 +44,6 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
-import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
 
 import { ImageTag } from '@udonarium/image-tag';
 import { CutInService } from 'service/cut-in.service';
@@ -69,66 +58,11 @@ import { CutInList } from '@udonarium/cut-in-list';
 export class AppComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
+  @ViewChild('subMenu') subMenu: ElementRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
-  private openPanelCount: number = 0;
-  _isOpenBasic: boolean = true;
-  _isOpenPL: boolean = false;
-  _isOpenGM: boolean = false;
-  _isOpenData: boolean = false;
-  set isOpenBasic(bool :boolean){
-    if(bool) {
-      this._isOpenPL = false;
-      this._isOpenGM = false;
-      this._isOpenData = false;
-    }
-    this._isOpenBasic = bool;
-  }
-  get isOpenBasic() : boolean {return this._isOpenBasic;}
-  set isOpenPL(bool :boolean){
-    if(bool) {
-      this._isOpenBasic = false;
-      this._isOpenGM = false;
-      this._isOpenData = false;
-    }
-    this._isOpenPL = bool;
-  }
-  get isOpenPL() : boolean {return this._isOpenPL;}
-  set isOpenGM(bool :boolean){
-    if(bool) {
-      this._isOpenPL = false;
-      this._isOpenBasic = false;
-      this._isOpenData = false;
-    }
-    this._isOpenGM = bool;
-  }
-  get isOpenGM() : boolean {return this._isOpenGM;}
-  set isOpenData(bool :boolean){
-    if(bool) {
-      this._isOpenPL = false;
-      this._isOpenGM = false;
-      this._isOpenBasic = false;
-    }
-    this._isOpenData = bool;
-  }
-  get isOpenData() : boolean {return this._isOpenData;}
-
-  isSaveing: boolean = false;
-  progresPercent: number = 0;
-
-  get canEffect():boolean {
-    return this.effectService.canEffect;
-  }
-  set canEffect(canEffect: boolean) {
-    this.effectService.canEffect = canEffect;
-  }
-  
-  get effectTxt():string {  
-    if(this.canEffect)  
-      return "非表示";
-    else
-      return "表示"; 
-  }
+  minimumMode: boolean = false;
+  selectMenu:string = "";
 
   constructor(
     private modalService: ModalService,
@@ -136,8 +70,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private pointerDeviceService: PointerDeviceService,
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
-    private saveDataService: SaveDataService,
-    private saveHtmlService: SaveHtmlService,
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
     private standImageService: StandImageService,
@@ -423,9 +355,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
+    if (window.innerWidth < 600) this.minimumMode = true;
     setTimeout(() => {
-      this.panelService.open(PeerMenuComponent, { width: 520, height: 450, left: 100 });
-      this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
+      this.panelService.open(PeerMenuComponent, { width: 520, height: 400, left: 0,top: 50 });
+      this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
     }, 0);
   }
 
@@ -433,99 +366,98 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
-  open(componentName: string) {
-    let component: { new(...args: any[]): any } = null;
-    let option: PanelOption = { width: 450, height: 600, left: 100 }
-    switch (componentName) {
-      case 'PeerMenuComponent':
-        option.width = 520;
-        component = PeerMenuComponent;
-        break;
-      case 'ChatWindowComponent':
-        component = ChatWindowComponent;
-        option.width = 700;
-        break;
-      case 'GameTableSettingComponent':
-        component = GameTableSettingComponent;
-        option = { width: 610, height: 400, left: 100 };
-        break;
-      case 'FileStorageComponent':
-        component = FileStorageComponent;
-        option.width = 700;
-        break;
-      case 'GameCharacterSheetComponent':
-        component = GameCharacterSheetComponent;
-        break;
-      case 'JukeboxComponent':
-        component = JukeboxComponent;
-        break;
-      case 'GameCharacterGeneratorComponent':
-        component = GameCharacterGeneratorComponent;
-        option = { width: 500, height: 300, left: 100 };
-        break;
-      case 'GameObjectInventoryComponent':
-        component = GameObjectInventoryComponent;
-        break;
-      case 'CounterListComponent':
-        component = CounterListComponent;
-        option = { width:450 , height: 600 };
-        break;
-      case 'EffectViewComponent':
-        component = EffectViewComponent;
-        option = { width: 400, height: 370 };
-        break;
-      case 'PlayerPaletteComponent':
-        component = PlayerPaletteComponent;
-        option = { width: 645, height: 400 };
-        break;
-      case 'DiceRollTableSettingComponent':
-        component = DiceRollTableSettingComponent;
-        option = { width: 645, height: 475 };
-        break;
-      case 'CutInSettingComponent':
-        component = CutInSettingComponent;
-        option = { width: 700, height: 600 };
-        break;
+  isOpen(menuName: string) {
+    if (this.selectMenu == menuName)
+      return "▲";
+    else
+      return "▼";
+  }
+
+  showViewMenu(left: number) {
+
+    const isShowStand = StandImageComponent.isShowStand;
+    const isShowNameTag = StandImageComponent.isShowNameTag;
+    const isCanBeGone = StandImageComponent.isCanBeGone; 
+    const canEffect = this.effectService.canEffect; 
+
+    this.contextMenuService.open(
+      { x: left, y: 50 }, [
+        { name: "視点設定" },
+        ContextMenuSeparator,
+          { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
+          { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') },
+        ContextMenuSeparator,
+        { name: "スタンド設定" },
+        ContextMenuSeparator,
+          { name: `${ isShowStand ? '☑' : '☐' }スタンド表示`, 
+            action: () => {
+              StandImageComponent.isShowStand = !isShowStand;
+            }
+          },
+          { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
+            action: () => {
+              StandImageComponent.isShowNameTag = !isShowNameTag;
+            }
+          },
+          { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
+            action: () => {
+            StandImageComponent.isCanBeGone = !isCanBeGone;
+            }
+          },
+          { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }, 
+        ContextMenuSeparator,
+        { name: "エフェクト設定" },
+        ContextMenuSeparator,
+          { name: `${ canEffect ? '☑' : '☐' }エフェクト表示`,
+            action: () => {
+              this.effectService.canEffect = !canEffect;
+            }
+          }
+      ], 
+      '自分のみ反映されます');
+  }
+
+  openSubMenu(e: Event , menuName: string) {
+    if (this.selectMenu == menuName) {
+      this.closeSub();
+      return;
     }
-    if (component) {
-      option.top = (this.openPanelCount % 10 + 1) * 20;
-      option.left = 100 + (this.openPanelCount % 20 + 1) * 5;
-      this.openPanelCount = this.openPanelCount + 1;
-      this.panelService.open(component, option);
+    let button = e.srcElement as HTMLElement;
+    let rect = button.getBoundingClientRect();
+    if (menuName == "view") {
+      this.selectMenu = menuName;
+      this.showViewMenu(rect.left);
     }
+    else {
+      this.subMenu.nativeElement.style.top = "50px";
+      this.subMenu.nativeElement.style.left = rect.left + 'px';
+      this.selectMenu = menuName;
+      this.subMenu.nativeElement.style.display = "block";
+   }
   }
 
-  async save() {
-    if (this.isSaveing) return;
-    this.isSaveing = true;
-    this.progresPercent = 0;
-
-    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
-      : 'fly_ルームデータ';
-    await this.saveDataService.saveRoomAsync(roomName, percent => {
-      this.progresPercent = percent;
-    });
-
-    setTimeout(() => {
-      this.isSaveing = false;
-      this.progresPercent = 0;
-    }, 500);
+  closeSub() {
+    this.selectMenu = "";
+    this.subMenu.nativeElement.style.display = "none";
   }
 
-  resetRound() {
-    this.counterService.round.reset();
-  }
+  menuHelp(){
+　　　let gameHelp:string[] =
+      [
+      'ファイル\n  画像の管理、部屋データの保存、チャットログの保存ができます。',
+      'ルーム\n  接続の管理、テーブルの管理ができます。',
+      '機能\n  セッション中に便利な機能があります。',
+      '表示\n  自分だけ非表示にしたい項目を選択できます。',
+      'ラウンド管理\n  ラウンド制またはイニシアティブ制でラウンド進行を管理できます。\n  右クリックすることで動作の設定が可能です。',
+      'ネットワークインジケーター\n  データの送受信が発生しているとき、白く光ります',
+      'ルーム情報\n  ルーム名、参加人数が表示されます。自分以外全員とデータ送受信できていないとき赤く点滅します'
+      ];     
 
-  htmlsave(){
-    this.saveHtmlService.saveAllHtmlLog();
-  }
-
-  handleFileSelect(event: Event) {
-    let input = <HTMLInputElement>event.target;
-    let files = input.files;
-    if (files.length) FileArchiver.instance.load(files);
-    input.value = '';
+      let coordinate = { x: ( window.innerWidth - 650 ), y: 50 };
+      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 450 };
+      let textView = this.panelService.open(TextViewComponent, option);
+      textView.title = "メニューバー説明";
+      textView.text = gameHelp;
   }
 
   private lazyNgZoneUpdate(isImmediate: boolean) {
@@ -549,62 +481,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         }
         this.ngZone.run(() => { });
       }, 100);
-    }
-  }
-
-  toolBox() {
-    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: 'カットイン', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') },
-      { name: 'ダイスボット表', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') }
-    ], 'ツールボックス');
-  }
-
-  resetPointOfView() {
-    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
-      { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
-    ], '視点リセット');
-  }
-
-  effectSW() {
-    if (this.canEffect)
-      this.canEffect = false;
-    else
-      this.canEffect = true;
-  }
-
-  standSetteings() {
-    const isShowStand = StandImageComponent.isShowStand;
-    const isShowNameTag = StandImageComponent.isShowNameTag;
-    const isCanBeGone = StandImageComponent.isCanBeGone; 
-    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: `${ isShowStand ? '☑' : '☐' }スタンド表示`, 
-        action: () => {
-          StandImageComponent.isShowStand = !isShowStand;
-        }
-      },
-      { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
-        action: () => {
-          StandImageComponent.isShowNameTag = !isShowNameTag;
-        }
-      },
-      { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
-        action: () => {
-          StandImageComponent.isCanBeGone = !isCanBeGone;
-        }
-      },
-      ContextMenuSeparator,
-      { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
-    ], 'スタンド設定');
-  }
-/*
-  farewellStandAll() {
-    EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null);
-  }
-*/
-  diceAllOpne() {
-    if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
-      EventSystem.trigger('DICE_ALL_OPEN', null);
     }
   }
 }

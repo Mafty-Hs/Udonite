@@ -1,7 +1,7 @@
 import { CounterAssign } from '@udonarium/counter';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { CounterService } from 'service/counter.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuAction, ContextMenuSeparator ,ContextMenuService } from 'service/context-menu.service';
@@ -25,6 +25,8 @@ export class RoundComponent implements OnInit {
     private pointerDeviceService: PointerDeviceService,
     private inventoryService: GameObjectInventoryService,
   ) { }
+
+  @Input() minimumMode:boolean;
 
   get chatTabs(): ChatTab[] {
     return ChatTabList.instance.chatTabs;

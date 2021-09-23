@@ -32,7 +32,6 @@
                "src/assets/lib/effekseer_asmjs.js"
             ],
             "allowedCommonJsDependencies": [
-              "bcdice",
               "hammerjs",
               "crypto-js/sha256",
               "crypto-js/lib-typedarrays",
@@ -40,7 +39,6 @@
               "msgpack-lite",
               "lzbase62",
               "pako",
-              "createjs-module"
             ]
           },
           "configurations": {

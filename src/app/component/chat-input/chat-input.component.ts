@@ -5,12 +5,12 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
-import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { BatchService } from 'service/batch.service';
 import { ChatMessageService } from 'service/chat-message.service';
+import { DiceBotService } from 'service/dice-bot.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -200,17 +200,18 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   writingPeerNameAndColors: { name: string, color: string }[] = [];
   //writingPeerNames: string[] = [];
 
-  get diceBotInfos() { return DiceBot.diceBotInfos }
+  get diceBotInfos() { return this.diceBotService.diceBotInfos }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
-  get diceBotInfosIndexed() { return DiceBot.diceBotInfosIndexed }
+  get diceBotInfosIndexed() { return this.diceBotService.diceBotInfosIndexed }
 
   constructor(
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
     private batchService: BatchService,
     private panelService: PanelService,
+    private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService
   ) { }
@@ -423,17 +424,17 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   loadDiceBot(gameType: string) {
     console.log('onChangeGameType ready');
-    DiceBot.getHelpMessage(gameType).then(help => {
+    this.diceBotService.getHelpMessage(gameType).then(help => {
       console.log('onChangeGameType done\n' + help);
     });
   }
 
   showDicebotHelp() {
-    DiceBot.getHelpMessage(this.gameType).then(help => {
+    this.diceBotService.getHelpMessage(this.gameType).then(help => {
       this.gameHelp = help;
 
       let gameName: string = 'ダイスボット';
-      for (let diceBotInfo of DiceBot.diceBotInfos) {
+      for (let diceBotInfo of this.diceBotService.diceBotInfos) {
         if (diceBotInfo.script === this.gameType) {
           gameName = 'ダイスボット〈' + diceBotInfo.game + '〉'
         }

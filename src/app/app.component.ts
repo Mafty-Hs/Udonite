@@ -16,7 +16,6 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ObjectSynchronizer } from '@udonarium/core/synchronize-object/object-synchronizer';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DataSummarySetting } from '@udonarium/data-summary-setting';
-import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
@@ -35,6 +34,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { DiceBotService } from 'service/dice-bot.service';
 import { CounterService } from 'service/counter.service';
 import { EffectService } from 'service/effect.service';
 import { StandImageService } from 'service/stand-image.service';
@@ -67,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+    private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
@@ -98,9 +99,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     CounterList.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
-
-    let diceBot: DiceBot = new DiceBot('DiceBot');
-    diceBot.initialize();
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
@@ -182,125 +180,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
         if (event.data.dice && event.data.dice.url) {
-          const API_VERSION = event.data.dice.api;
-          //console.log(api)
-          //ToDO BCDice-API管理者情報表示の良いUI思いつかないのでペンディング
-          //fetch(event.data.dice.url + '/v1/admin', {mode: 'cors'})
-          //  .then(response => { return response.json() })
-          //  .then(infos => { DiceBot.adminUrl = infos.url });
-          fetch(event.data.dice.url + (API_VERSION == 1 ? '/v1/names' : '/v2/game_system'), {mode: 'cors'})
-            .then(response => { return response.json() })
-            .then(infos => {
-              let apiUrl = event.data.dice.url;
-              DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
-              DiceBot.apiVersion = API_VERSION;
-              DiceBot.diceBotInfos = [];
-              //DiceBot.diceBotInfos.push(
-              let tempInfos = (API_VERSION == 1 ? infos.names : infos.game_system)
-                .filter(info => (API_VERSION == 1 ? info.system : info.id) != 'DiceBot')
-                .map(info => {
-                  let normalize = (info.sort_key && info.sort_key.indexOf('国際化') < 0) ? info.sort_key : info.name.normalize('NFKD');
-                  for (let replaceData of DiceBot.replaceData) {
-                    if (replaceData[2] && info.name === replaceData[0]) {
-                      normalize = replaceData[1];
-                      info.name = replaceData[2];
-                    }
-                    normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
-                  }
-                  info.normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
-                    .replace(/第(.+?)版/g, 'タイ$1ハン')
-                    .replace(/[・!?！？\s　:：=＝\/／（）\(\)]+/g, '')
-                    .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
-                    .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
-                    .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
-                    .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
-                    .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
-                    .replace(/ン+ー+/g, 'ン')
-                    .replace(/ン+/g, 'ン');
-                  return info;
-                })
-                .map(info => {
-                  const lang = /.+\:(.+)/.exec((API_VERSION == 1 ? info.system : info.id));
-                  info.lang = lang ? lang[1] : 'A';
-                  return info;
-                })
-                .sort((a, b) => {
-                  return a.lang < b.lang ? -1 
-                    : a.lang > b.lang ? 1
-                    : a.normalize == b.normalize ? 0 
-                    : a.normalize < b.normalize ? -1 : 1;
-                });
-              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: (API_VERSION == 1 ? info.system : info.id), game: info.name } }));
-              if (tempInfos.length > 0) {
-                let sentinel = tempInfos[0].normalize.substr(0, 1);
-                let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
-                for (let info of tempInfos) {
-                  let index = info.lang == 'Other' ? 'その他' 
-                    : info.lang == 'ChineseTraditional' ? '正體中文'
-                    : info.lang == 'Korean' ? '한국어'
-                    : info.lang == 'English' ? 'English'
-                    : info.lang == 'SimplifiedChinese' ? '简体中文'
-                    : info.normalize.substr(0, 1);
-                  if (index !== sentinel) {
-                    sentinel = index;
-                    DiceBot.diceBotInfosIndexed.push(group);
-                    group = { index: index, infos: [] };
-                  }
-                  group.infos.push({ script: (API_VERSION == 1 ? info.system : info.id), game: info.name });
-                }
-                DiceBot.diceBotInfosIndexed.push(group);
-                DiceBot.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
-              }
-            });
+          this.diceBotService.initialize(event.data.dice.url);
         } else {
-          DiceBot.diceBotInfos.forEach((info) => {
-            let normalize = info.sort_key.normalize('NFKD');
-            for (let replaceData of DiceBot.replaceData) {
-              if (replaceData[2] && info.game === replaceData[0]) {
-                normalize = replaceData[1];
-                info.game = replaceData[2];
-              }
-              normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
-            }
-            normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
-              .replace(/第(.+?)版/g, 'タイ$1ハン')
-              .replace(/[・!?！？\s　:：=＝\/／（）\(\)]+/g, '')
-              .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
-              .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
-              .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
-              .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
-              .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
-              .replace(/ン+ー+/g, 'ン')
-              .replace(/ン+/g, 'ン');
-            info.sort_key = info.lang ? info.lang : normalize.normalize('NFKD');
-            //return info;
-            //console.log(info.index + ': ' + normalize);
-          });
-          DiceBot.diceBotInfos.sort((a, b) => {
-            if (a.sort_key == 'Other' && b.sort_key == 'Other') {
-              return 0;
-            } else if (a.sort_key == 'Other') {
-              return 1;
-            } else if (b.sort_key == 'Other') {
-              return -1;
-            }
-            return a.sort_key == b.sort_key ? 0 
-            : a.sort_key < b.sort_key ? -1 : 1;
-          });
-          let sentinel = DiceBot.diceBotInfos[0].sort_key[0];
-          let group = { index: sentinel, infos: [] };
-          for (let info of DiceBot.diceBotInfos) {
-            if (info.lang == 'Other') info.lang = '简体中文'; //手抜き
-            if ((info.lang ? info.lang : info.sort_key[0]) !== sentinel) {
-              sentinel = info.lang ? info.lang : info.sort_key[0];
-              DiceBot.diceBotInfosIndexed.push(group);
-              group = { index: sentinel, infos: [] };
-            }
-            group.infos.push({ script: info.script, game: info.game });
-          }
-          DiceBot.diceBotInfosIndexed.push(group);
+          //ダイスボットAPIのURLが存在しない時のエラー処理
         }
-        DiceBot.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
         Network.setApiKey(event.data.webrtc.key);
         Network.open();
       })

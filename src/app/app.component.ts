@@ -256,6 +256,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       return "▼";
   }
 
+  closePanel() {
+    if (confirm('表示されているパネルを全て削除しますか？')) {
+      EventSystem.trigger('ALL_PANEL_DIE', null);
+    }
+    return;
+  }
+
   showViewMenu(left: number) {
 
     const isShowStand = StandImageComponent.isShowStand;
@@ -265,6 +272,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     this.contextMenuService.open(
       { x: left, y: 50 }, [
+        { name: "パネル設定" },
+        ContextMenuSeparator,
+          { name: '全てのパネルを消去', action: () => this.closePanel() },
+        ContextMenuSeparator,
         { name: "視点設定" },
         ContextMenuSeparator,
           { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },

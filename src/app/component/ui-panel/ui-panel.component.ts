@@ -1,5 +1,6 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -57,7 +58,12 @@ export class UIPanelComponent implements OnInit {
   constructor(
     public panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
-  ) { }
+  ) { 
+    EventSystem.register(this)
+      .on('ALL_PANEL_DIE', event => { 
+        this.close();
+    });
+  }
 
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;

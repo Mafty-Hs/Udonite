@@ -40,8 +40,18 @@
 }
 
 .component-title {
-  color: #ccc;
+  color: #FFF;
+  text-shadow    : 
+       2px  2px 4px #000000,
+      -2px  2px 4px #000000,
+       2px -2px 4px #000000,
+      -2px -2px 4px #000000,
+       2px  0px 4px #000000,
+       0px  2px 4px #000000,
+      -2px  0px 4px #000000,
+       0px -2px 4px #000000;
   font-size: 1em;
+  font-weight : bold;
   text-align: right;
   vertical-align: middle; 
   height: 32px;
@@ -53,7 +63,7 @@
 }
 
 .title-background {
-  background-color: #555;
+  background:linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 60%, #D0D0D0 80%, #424242 90%, #212121 100% 100%);
   border-top: solid 1px #999;
   border-left: solid 1px #999;
   border-right: solid 1px #999;

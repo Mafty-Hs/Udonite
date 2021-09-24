@@ -1,31 +1,25 @@
 <!--<h2>チャットシステム</h2>-->
 <div class="component">
 <div class="log">
-  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [isEase]="this.isEase"></chat-tab>
+  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [isEase]="this.isEase" [bgColor]="this.bgColor"></chat-tab>
   <div *ngIf="!chatTab">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
 </div>
 <div class="sticky-bottom">
-<div class="log-setting">
-<form name="logsetting" action="#">
-<label for="fontsize">ログ表示のみ</label>
-<input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
-<label for="fontsize">簡易表示</label>
-<input name="isEase" type="checkbox" [(ngModel)]="isEase" />
-<label for="fontsize">文字サイズ {{ localFontsize }}px</label>
-<input id="fontsize" type="range" name="fontsize" min="10"  max="32" [(ngModel)]="localFontsize">
-</form>
-</div>
-  <form>
+  <div class="set-area">
     <div class="chat-tab">
       <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
         <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
         <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
       </label>
-      <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
     </div>
-  </form>
+    <div class="setting">
+      <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>チャット設定</button>
+    </div>
+  </div>
   <div *ngIf="!isLogOnly">
-  <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+    <div *ngIf="!disableControl" class="Character-Control">
+      <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+    </div>
+    <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
   </div>
 </div>
-<!--<div style="white-space:pre-wrap; font-size: 8px;"><span>{{gameHelp}}</span></div>-->

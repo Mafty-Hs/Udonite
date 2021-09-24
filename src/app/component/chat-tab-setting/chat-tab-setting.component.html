@@ -1,45 +1,91 @@
 <div class="flex-container">
-  <div class="flex-item no-grow">
-    <div>
-      <button (click)="create()">チャットタブを作る</button>
-    </div>
-    <select style="width: 10em;" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
-      <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
-    </select>
+  <div class="window-setting">
+      <div>チャットウィンドウ設定</div>
+      <div class="comment">元のチャットウィンドウのみ変更されます</div>
+      <div class="window-item">
+        <div class="item-text">メッセージの背景色</div>
+        <div class="item-setting">
+           <div>
+             <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
+             白
+             <input name="bgColor" type="radio" value="grey" [(ngModel)]="bgColor">
+　　　　　　 灰
+             <input name="bgColor" type="radio" value="black" [(ngModel)]="bgColor">
+             黒
+           </div>
+        </div>
+      </div>
+      <div class="window-item">
+        <div class="item-text">メッセージの文字サイズ</div>
+        <div class="item-setting">
+          <div>
+            {{this.localFontsize}}
+            <input type="range" name="fontsize" min="10"  max="32" [(ngModel)]="localFontsize">
+          </div>
+        </div>
+      </div>
+      <div class="window-item">
+        <div class="item-text">表示</div>
+        <div class="item-setting">
+          <div>
+            <input name="isEase" type="checkbox" [(ngModel)]="isEase" />
+            <label for="fontsize"> メッセージを簡易表示にする</label>
+          </div>
+          <div>
+            <input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
+            <label for="fontsize">チャットログ表示のみ</label>
+          </div>
+        </div>
+      </div>
+      <div class="window-item">
+        <div class="item-text"></div>
+        <div class="item-setting"><button (click)="setConf()">反映</button></div>
+      </div>
   </div>
-  <div class="flex-item">
-    <ng-container *ngIf="!isEmpty && selectedTab">
-      <div>タブ名 :
-        <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
-      </div>
-      <div style="font-weight: bolder; font-size: smaller">
-        <label>
-          <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" [attr.disabled]="!isEditable ? '' : null" />
-          スタンド有効
-        </label>
-      </div>
-      <hr/>
+  <div><HR /></div>
+  <div class="tab-setting">
+    <div style="width:100%;">チャットタブ設定</div>
+    <div class="tab-master">
+    <div class="flex-item no-grow">
       <div>
-        <ng-container *ngIf="!isDeleted">
-          <button (click)="upTabIndex()">↑</button>
-          <button (click)="downTabIndex()">↓</button>
-          <button [disabled]="isSaveing" (click)="save()">
-            <div style="position: relative;">
-              <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
-              <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
-            </div>
-          </button>
-          <button (click)="htmlsave()">HTML保存
-          </button>
-          <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
-        </ng-container>
-        <ng-container *ngIf="isDeleted">
-          <button (click)="restore()">元に戻す</button>
-        </ng-container>
+        <button (click)="create()">チャットタブを作る</button>
       </div>
-    </ng-container>
+      <select style="width: 10em;" size="5" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
+        <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+      </select>
+    </div>
+    <div class="flex-item">
+      <ng-container *ngIf="!isEmpty && selectedTab">
+        <div>タブ名 :
+          <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+        </div>
+        <div style="font-weight: bolder; font-size: smaller">
+          <label>
+            <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" [attr.disabled]="!isEditable ? '' : null" />
+            スタンド有効
+          </label>
+        </div>
+        <hr/>
+        <div>
+          <ng-container *ngIf="!isDeleted">
+            <button (click)="upTabIndex()">↑</button>
+            <button (click)="downTabIndex()">↓</button>
+            <button [disabled]="isSaveing" (click)="save()">
+              <div style="position: relative;">
+                <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+                <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+              </div>
+            </button>
+            <button (click)="htmlsave()">HTML保存
+            </button>
+            <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
+          </ng-container>
+          <ng-container *ngIf="isDeleted">
+            <button (click)="restore()">元に戻す</button>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    </div>
   </div>
 </div>
-<ng-container *ngIf="isEmpty">
-  <div style="font-size: 12px;">※チャットタブが１つも作成されていません。「チャットタブを作る」からチャットタブを作成することができます。</div>
-</ng-container>

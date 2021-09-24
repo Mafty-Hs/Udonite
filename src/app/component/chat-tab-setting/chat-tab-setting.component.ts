@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit , Input } from '@angular/core';
 
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
@@ -35,6 +35,17 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  identifier: string;
+  localFontsize: number;
+  bgColor: string;
+  isEase: boolean;
+  isLogOnly: boolean;
+
+  setConf() {
+   let mySetData: any[] = [this.identifier,this.localFontsize,this.bgColor,this.isEase,this.isLogOnly]
+    EventSystem.trigger('CHAT_WINDOW_CONF', mySetData);
+  }
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -44,7 +55,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャット設定');
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
         if (!this.selectedTab || event.data.identifier !== this.selectedTab.identifier) return;

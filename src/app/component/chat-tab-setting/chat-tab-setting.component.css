@@ -1,9 +1,10 @@
 .flex-container {
+  width: 100%;
   display: -webkit-flex; /* Safari */
   display: flex;
 
   -webkit-flex-flow: row wrap; /* Safari */
-  flex-flow:  row wrap;
+  flex-flow:  column wrap;
 
   -webkit-justify-content: flex-start; /* Safari */
   justify-content: flex-start;
@@ -12,10 +13,57 @@
   align-items: stretch;
 
 }
+
+.comment {
+  font-size: 10px;
+  color: pink;
+}
+
+.window-setting {
+  width: 100%;
+  display: flex;
+  flex-flow:  column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.window-item {
+  display:flex; 
+  flex-diretion: row; 
+  justify-content:space-between;
+}
+.item-text {
+  font-size: 14px;
+}
+.item-setting {
+  display: flex;
+  flex-flow:  column;
+  justify-content: flex-start;
+  font-size: 14px;
+}
+
+.tab-setting {
+  width: 100%;
+  display: flex;
+  flex-flow:  column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.tab-master {
+  width: 100%;
+  display: flex;
+  flex-flow:  row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
 .flex-item {
   margin: 5px;
   -webkit-flex: 1 0 auto; /* Safari */
+  display: flex;
   flex: 1 0 auto;
+  flex-flow:  column wrap;
   box-sizing: border-box;
   -webkit-flex-grow: 1; /* Safari */
   flex-grow: 1;

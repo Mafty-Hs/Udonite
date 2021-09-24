@@ -29,6 +29,17 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.scrollable-panel::-webkit-scrollbar {
+  width: 7px;
+}
+.scrollable-panel::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 5px;
+}
+.scrollable-panel::-webkit-scrollbar-track {
+  background: #dcdcdc;
+}
+
 .title {
   overflow: hidden;
   white-space: nowrap;
@@ -37,7 +48,7 @@
   height: 25px;
   padding: 2px 5px;
   width: 100%;
-  background: linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 30% ,#212121 50%,#424242 70% , #D0D0D0 80%, #424242 90%, #212121 100% 100%);
+  background: linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 40% ,#323232 60%,#424242 80% , #BABABA 85%, #424242 90%, #212121 100% 100%);
   color: #FFF;
   border-left: ridge 2px #212121;
   border-right: ridge 2px #212121;

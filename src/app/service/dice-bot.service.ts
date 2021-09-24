@@ -164,7 +164,6 @@ export class DiceBotService {
 
   initialize(apiUrl:string) {
     DiceBot.instance.initialize();
-    console.log(this.api); 
     this.api.url = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
     this.api.version = 2
     this.retry = 0;

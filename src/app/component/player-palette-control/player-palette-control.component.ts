@@ -13,12 +13,17 @@ import { GameCharacter } from '@udonarium/game-character';
   styleUrls: ['./player-palette-control.component.css']
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
-  private _character: GameCharacter;
+  private character: GameCharacter;
   private tabletopObject : TabletopObject;
-  @Input() set character(character :GameCharacter){
+  private _sendFrom: string = ""; 
+  get sendFrom(){
+    return this._sendFrom;
+  }
+  @Input() set sendFrom(sendFrom:string){
     this.cancelEdit();
-    this._character = character;
-    this.tabletopObject = character;
+    this.character = this.getCharacter(sendFrom);
+    this.tabletopObject = this.character;
+    this._sendFrom = sendFrom;
   }
   @Output() chat = new EventEmitter<{ 
     text: string, gameType: string, sendFrom: string, sendTo: string,
@@ -33,9 +38,16 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     standName?: string,
     isUseStandImage?: boolean }>();
 
+  getCharacter(charaidentifier: string): GameCharacter {
+    let object = ObjectStore.instance.get(charaidentifier);
+    if (object instanceof GameCharacter) {
+      return object;
+    }
+    return null;
+  }
+
   isEdit : boolean = false;
 
-  get character() : GameCharacter {return this._character;}
   get newLineString(): string { return this.inventoryService.newLineString; }
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }
   get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }

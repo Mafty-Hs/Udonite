@@ -5,9 +5,11 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
+import { PlayerPaletteControlComponent } from 'component/player-palette-control/player-palette-control.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { UUID } from '@udonarium/core/system/util/uuid';
 
 @Component({
   selector: 'chat-window',
@@ -15,14 +17,37 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   styleUrls: ['./chat-window.component.css'],
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
-  sendFrom: string = 'Guest';
+  _sendFrom: string = 'Guest';
+
+  get sendFrom(): string { return this._sendFrom; }
+  set sendFrom(sendFrom: string) {
+    this._sendFrom = sendFrom;
+    if (this.isMine(sendFrom)){
+      this.disableControl = true;
+    }
+    else {
+      this.disableControl = false;
+    }  
+  }
+
+   private isMine(identifier: string):boolean {
+    if (identifier ==  PeerCursor.myCursor.identifier) {
+      return true;
+    }
+    return false;
+  }
+
+  identifier:string;
   isEase:boolean = false;
   isLogOnly:boolean = false;
-  localFontsize:number = 16;
+  localFontsize:number = 14;
+  bgColor:string = "grey";
+  _disableControl : boolean = false;
+  get disableControl(): boolean { return this._disableControl };
+  set disableControl(control: boolean) {
+    this._disableControl = control;
+  };
 
-setSize(value){
-  this.localFontsize = value;
-}
 
   get gameType(): string { return this.chatMessageService.gameType; }
   set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
@@ -62,11 +87,20 @@ setSize(value){
           this.checkAutoScroll();
         }
         if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
-      });
+      })
+      .on('CHAT_WINDOW_CONF', event => {
+        if (event.data[0] == this.identifier) {
+          this.localFontsize = event.data[1];
+          this.bgColor = event.data[2];
+          this.isEase = event.data[3];
+          this.isLogOnly= event.data[4];
+        }
+      })
     Promise.resolve().then(() => this.updatePanelTitle());
   }
 
   ngAfterViewInit() {
+    this.identifier = UUID.generateUuid() ;
     this.scrollToBottom(true);
   }
 
@@ -115,9 +149,14 @@ setSize(value){
 
   showTabSetting() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 400 };
     let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
     component.selectedTab = this.chatTab;
+    component.identifier = this.identifier;
+    component.localFontsize = this.localFontsize;
+    component.bgColor = this.bgColor;
+    component.isEase = this.isEase;
+    component.isLogOnly = this.isLogOnly;
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,

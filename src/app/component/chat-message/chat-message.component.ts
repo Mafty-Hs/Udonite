@@ -50,6 +50,14 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   animeState: string = 'inactive';
   @Input() localFontsize: number = 14;
   @Input() isEase: boolean = true;
+  @Input() bgColor: string = "grey";
+
+  get isBlack():boolean {
+    if (this.bgColor == 'black') 
+      return true;
+    else
+      return false;
+  }
 
   constructor(
     private chatMessageService: ChatMessageService

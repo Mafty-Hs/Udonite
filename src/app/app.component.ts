@@ -23,6 +23,7 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoundComponent } from 'component/round/round.component';
 import { SubMenuComponent } from 'component/sub-menu/sub-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { LobbyComponent } from 'component/lobby/lobby.component';
 import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { ModalComponent } from 'component/modal/modal.component';
@@ -240,8 +241,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     if (window.innerWidth < 600) this.minimumMode = true;
     setTimeout(() => {
-      this.panelService.open(PeerMenuComponent, { width: 520, height: 400, left: 0,top: 50 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
+      this.panelService.open(PeerMenuComponent, { width: 450, height: 400, left: 0,top: 50 });
+      this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
     }, 0);
   }
 

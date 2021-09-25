@@ -28,6 +28,7 @@ export class DiceBotService {
 
   private queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
   private retry:number;
+  isConnect: boolean = false;
 
   async diceRoll(messageIdentifier: string) {
     const chatMessage = ObjectStore.instance.get<ChatMessage>(messageIdentifier);
@@ -255,6 +256,7 @@ export class DiceBotService {
      this.diceBotInfosIndexed.push(group);
      this.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
    }
+    this.isConnect = true;
   }
 
   getHelpMessage(gameType: string): Promise<string|string[]> {

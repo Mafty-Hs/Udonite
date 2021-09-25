@@ -10,6 +10,7 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { DiceBotService } from 'service/dice-bot.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
@@ -63,10 +64,15 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  colorReset() {
+    this.myPeerColor = PeerCursor.CHAT_DEFAULT_COLOR;
+  }
+
   constructor(
     private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
+    public diceBotService: DiceBotService,
     public appConfigService: AppConfigService
   ) { }
 
@@ -109,14 +115,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       Network.open();
       PeerCursor.myCursor.peerId = Network.peerId;
     }
-  }
-
-  connectPeer() {
-    this.help = '';
-    let context = PeerContext.create(this.targetUserId);
-    if (context.isRoom) return;
-    ObjectStore.instance.clearDeleteHistory();
-    Network.connect(context.peerId);
   }
 
   async connectPeerHistory() {
@@ -188,20 +186,5 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   findPeerColor(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.color : '';
-  }
-
-  copyPeerId() {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(this.networkService.peerContext.userId);
-      this.isCopied = true;
-      clearTimeout(this._timeOutId);
-      this._timeOutId = setTimeout(() => {
-        this.isCopied = false;
-      }, 1000);
-    }
-  }
-
-  isAbleClipboardCopy(): boolean {
-    return navigator.clipboard ? true : false;
   }
 }

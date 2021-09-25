@@ -1,3 +1,31 @@
+button {
+  padding: 1px 6px;
+  border: solid 2px;
+}
+
+.flex-box {
+  width: 100%;
+  display:flex;
+  flex-flow: column wrap; 
+  justify-content: flex-start;
+}
+.flex-item {
+  width: 100%;
+  display:flex; 
+  flex-flow: row wrap; 
+  justify-content:flex-start;
+  font-size: 16px;
+}
+.item-name {
+  width: 13em;
+}
+.item-data {
+  display:flex; 
+  flex-flow: row wrap; 
+  justify-content:flex-start;
+
+}
+
 .image {
   padding: 0px;
   width: 64px;

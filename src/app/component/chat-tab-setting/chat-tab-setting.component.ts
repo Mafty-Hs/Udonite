@@ -40,9 +40,10 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   bgColor: string;
   isEase: boolean;
   isLogOnly: boolean;
+  noControl: boolean;
 
   setConf() {
-   let mySetData: any[] = [this.identifier,this.localFontsize,this.bgColor,this.isEase,this.isLogOnly]
+   let mySetData: any[] = [this.identifier,this.localFontsize,this.bgColor,this.isEase,this.isLogOnly,this.noControl]
     EventSystem.trigger('CHAT_WINDOW_CONF', mySetData);
   }
 

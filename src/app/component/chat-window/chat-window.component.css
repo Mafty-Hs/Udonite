@@ -38,6 +38,10 @@
   justify-content:space-between;
 }
 
+.log {
+  box-shadow:0px -2px 4px -1px #222;
+}
+
 .chat-tab {
   width:100%;
   padding : 5px;
@@ -115,7 +119,8 @@ button {
 
 .setting {
  border-top:2px solid #444;
- box-shadow:0px -8px 8px -2px #222;
+ box-shadow:0px -2px 4px -1px #222;
+ vertical-align: middle;
  white-space: nowrap;
 }
 

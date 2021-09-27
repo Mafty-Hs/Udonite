@@ -1,0 +1,45 @@
+<div #setting class="flex-box">
+  <div class="flex-column" *ngIf="canVisible('sendTo')">
+        ➡
+        <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
+          <option value="" class="not-specified">全員</option>
+          <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
+            <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
+          </option>
+        </select>
+  </div>
+  <div class="flex-column" *ngIf="canVisible('gameType')">
+        <select *ngIf="diceBotInfosIndexed.length < 1" style="max-width: 12em;font-size:11px;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
+          [ngClass]="{'not-specified': gameType == ''}">
+          <option value="" class="not-specified">ダイスボット指定なし</option>
+          <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+        </select>
+        <select *ngIf="diceBotInfosIndexed.length > 0" style="width:12em ;font-size:11px;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
+          [ngClass]="{'not-specified': gameType == ''}">
+          <option value="" class="not-specified">ダイスボット指定なし</option>
+          <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
+            <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+          </optgroup>
+        </select>
+        <button style="padding: 0.2em 0.5em;" (click)="showDicebotHelp()">?</button>
+  </div>
+  <div class="flex-column" *ngIf="canVisible('stand')">
+    <b style="font-size: 8px;">Stand: </b>
+    <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" />
+    <select style="width: 8em; font-size:12px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}" >
+        <option value="" class="not-specified">未選択</option>
+        <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
+    </select>
+  </div>
+  <div class="flex-column" *ngIf="canVisible('standPos')">
+    <b style="font-size: 8px;">StandPos: </b>
+    <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position">
+  </div>
+  <div class="flex-column" *ngIf="canVisible('color')">
+    <b style="font-size: 0.7em;">色: </b>
+    <input type="color" style="width:4em; " [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
+  </div>
+  <div class="material-icons setting" (click)="config($event)">
+    settings
+  </div>
+</div>

@@ -1,0 +1,24 @@
+.flex-box {
+  padding: 0px;
+  margin: 0px;
+  display:flex; 
+  flex-diretion: row; 
+  justify-content: flex-start;
+}
+
+.flex-column {
+  width: 160px;
+  border: solid 1px black;
+  box-shadow: 1px 1px 1px 0px black;
+  color: black;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.setting {
+  color: black;
+  font-size: 1.2em;
+  border: solid 1px black;
+  box-shadow: 1px 1px 1px 0px black;
+  vertical-align: middle;
+}

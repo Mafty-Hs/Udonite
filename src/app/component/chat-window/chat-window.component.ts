@@ -42,9 +42,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   isLogOnly:boolean = false;
   localFontsize:number = 14;
   bgColor:string = "grey";
+  noControl = false;
   _disableControl : boolean = false;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
+    if (this.noControl) this._disableControl = true;
     this._disableControl = control;
   };
 
@@ -94,6 +96,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.bgColor = event.data[2];
           this.isEase = event.data[3];
           this.isLogOnly= event.data[4];
+          this.noControl= event.data[5];
         }
       })
     Promise.resolve().then(() => this.updatePanelTitle());
@@ -157,6 +160,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     component.bgColor = this.bgColor;
     component.isEase = this.isEase;
     component.isLogOnly = this.isLogOnly;
+    component.noControl = this.noControl;
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,

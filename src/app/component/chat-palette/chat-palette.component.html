@@ -8,7 +8,7 @@
         </label>
       </div>
     </form>
-    <chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier" 
+    <chat-input [chatTabidentifier]="chatTabidentifier" 
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
   </div>

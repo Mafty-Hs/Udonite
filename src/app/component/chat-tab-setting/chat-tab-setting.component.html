@@ -6,12 +6,14 @@
         <div class="item-text">メッセージの背景色</div>
         <div class="item-setting">
            <div>
+             <form>
              <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
              白
              <input name="bgColor" type="radio" value="grey" [(ngModel)]="bgColor">
 　　　　　　 灰
              <input name="bgColor" type="radio" value="black" [(ngModel)]="bgColor">
              黒
+             </form>
            </div>
         </div>
       </div>
@@ -19,14 +21,17 @@
         <div class="item-text">メッセージの文字サイズ</div>
         <div class="item-setting">
           <div>
+             <form>
             {{this.localFontsize}}
             <input type="range" name="fontsize" min="10"  max="32" [(ngModel)]="localFontsize">
+             </form>
           </div>
         </div>
       </div>
       <div class="window-item">
         <div class="item-text">表示</div>
         <div class="item-setting">
+             <form>
           <div>
             <input name="isEase" type="checkbox" [(ngModel)]="isEase" />
             <label for="fontsize"> メッセージを簡易表示にする</label>
@@ -35,6 +40,11 @@
             <input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
             <label for="fontsize">チャットログ表示のみ</label>
           </div>
+          <div>
+            <input name="noControl" type="checkbox" [(ngModel)]="noControl" />
+            <label for="fontsize">キャラクター操作パネルを表示しない</label>
+          </div>
+             </form>
         </div>
       </div>
       <div class="window-item">

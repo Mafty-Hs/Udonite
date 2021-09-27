@@ -81,6 +81,8 @@ import { CounterListComponent } from './component/counter-list/counter-list.comp
 import { CounterInventoryComponent } from './component/counter-inventory/counter-inventory.component';
 import { EffectViewComponent } from './component/effect-view/effect-view.component';
 import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
+import { ChatInputSendfromComponent } from './component/chat-input-sendfrom/chat-input-sendfrom.component';
+import { ChatInputSettingComponent } from './component/chat-input-setting/chat-input-setting.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +146,8 @@ import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
     CounterInventoryComponent,
     EffectViewComponent,
     SubMenuComponent,
+    ChatInputSendfromComponent,
+    ChatInputSettingComponent,
   ],
   imports: [
     BrowserModule,

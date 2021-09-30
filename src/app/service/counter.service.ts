@@ -4,6 +4,7 @@ import { CounterList , AssignedCounterList } from '@udonarium/counter-list';
 import { Round , IRound } from '@udonarium/round';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { GameCharacterService } from './game-character.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,26 @@ export class CounterService {
   set round(_round) {IRound.instance = _round;}
   private nullCounter:Counter = new Counter;
 
-  create(_name: string,_desc: string,_canDuplicate: boolean,_isPermanent: boolean,_age: number) {
-   CounterList.instance.create({
-      name: _name,
-      desc: _desc,
-      canDuplicate: _canDuplicate,
-      isPermanent: _isPermanent,
-      age: _age
-    });
+  create( _name: string, _desc: string, _canDuplicate: boolean, _isPermanent: boolean, _age: number, _uniqueIdentifier?: string) {
+    if (_uniqueIdentifier) {
+      CounterList.instance.create({
+        name: _name,
+        desc: _desc,
+        canDuplicate: _canDuplicate,
+        isPermanent: _isPermanent,
+        age: _age,
+        uniqueIdentifier: _uniqueIdentifier
+      });
+    }
+    else {
+      CounterList.instance.create({
+        name: _name,
+        desc: _desc,
+        canDuplicate: _canDuplicate,
+        isPermanent: _isPermanent,
+        age: _age
+      });
+    }
   }
 
   get(identifier :string): Counter {
@@ -31,6 +44,20 @@ export class CounterService {
     return this.nullCounter;
   }
 
+  unique(identifier :string): Counter {
+    let counter = CounterList.instance.unique(identifier);
+    console.log(counter);
+    return counter ? counter : this.nullCounter;
+  }
+
+  getAssign(identifier :string): CounterAssign {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof CounterAssign) {
+      return object;
+    }
+    return null;
+  }
+
   remove(identifier :string) {
   }
 
@@ -39,7 +66,7 @@ export class CounterService {
   }
 
   assign(_counterIdentifier :string, _characterIdentifier :string, _comment :string) {
-    let gameCharacter = this.getCharacter(_characterIdentifier)
+    let gameCharacter = this.gameCharacterService.get(_characterIdentifier)
     let list = this.getList(gameCharacter)
     let counter = this.get(_counterIdentifier)
     if (!counter.canDuplicate && list.counter(_counterIdentifier)){
@@ -49,8 +76,7 @@ export class CounterService {
     }
     list.add({
       name: counter.name,
-      counterIdentifier: _counterIdentifier,
-      characterIdentifier: _characterIdentifier,
+      counterIdentifier: counter.uniqueIdentifier,
       isPermanent: counter.isPermanent,
       age: counter.age,
       comment: _comment
@@ -75,16 +101,22 @@ export class CounterService {
   }
 
   constructor(
+    private gameCharacterService :GameCharacterService
   ) {
     this.initialize()
   }
 
-  private getCharacter(charaidentifier: string): GameCharacter {
-    let object = ObjectStore.instance.get(charaidentifier);
-    if (object instanceof GameCharacter) {
-      return object;
-    }
-    return null;
+  loadRound(object :Round) {
+    this.round.count = Number(object.count);
+    this.round.isInitiative = Boolean(object.isInitiative);
+    this.round.currentInitiative = Number(object.currentInitiative);
+    this.round.roundState = Number(object.roundState);
+    this.round.initName = String(object.initName);
   }
 
+  loadCounter(object :CounterList){
+    for (let counter of object.children as Counter[]) {
+      this.create(counter.name,counter.desc,Boolean(counter.canDuplicate),Boolean(counter.isPermanent),Number(counter.age), counter.uniqueIdentifier) 
+    }
+  }
 }

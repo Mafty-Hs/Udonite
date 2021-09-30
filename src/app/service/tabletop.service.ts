@@ -8,7 +8,6 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInList } from '@udonarium/cut-in-list';
-import { DiceBot } from '@udonarium/dice-bot';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceSymbol } from '@udonarium/dice-symbol';
@@ -21,6 +20,9 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
+import { CounterList } from '@udonarium/counter-list';
+import { Round } from '@udonarium/round';
+import { CounterService } from './counter.service';
 
 import { CoordinateService } from './coordinate.service';
 
@@ -62,7 +64,8 @@ export class TabletopService {
   get peerCursors(): PeerCursor[] { return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor); }
 
   constructor(
-    private coordinateService: CoordinateService
+    private coordinateService: CoordinateService,
+    private counterService: CounterService
   ) {
     this.initialize();
   }
@@ -104,19 +107,16 @@ export class TabletopService {
           gameObject.posZ = pointer.z;
           this.placeToTabletop(gameObject);
           SoundEffect.play(PresetSound.piecePut);
-          /* TODO ダイスボット読むか検討
-          if (gameObject instanceof GameCharacter && gameObject.chatPalette) {
-            DiceBot.getHelpMessage(gameObject.chatPalette.dicebot).then(help => {
-              console.log('onChangeGameType done\n' + help);
-            });
-          }
-          */
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
         } else if (gameObject instanceof DiceRollTable) {
           DiceRollTableList.instance.addDiceRollTable(gameObject);
         }  else if (gameObject instanceof CutIn) {
           CutInList.instance.addCutIn(gameObject);
+        } else if (gameObject instanceof Round) {
+          this.counterService.loadRound(gameObject);
+        } else if (gameObject instanceof CounterList) {
+          this.counterService.loadCounter(gameObject);
         }
       });
   }

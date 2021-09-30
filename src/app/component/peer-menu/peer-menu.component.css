@@ -14,7 +14,7 @@ button {
   display:flex; 
   flex-flow: row wrap; 
   justify-content:flex-start;
-  font-size: 16px;
+  font-size: 14px;
 }
 .item-name {
   width: 13em;

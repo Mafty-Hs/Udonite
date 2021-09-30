@@ -7,16 +7,13 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ChatInputSendfromComponent } from 'component/chat-input-sendfrom/chat-input-sendfrom.component';
+import { ChatInputSettingComponent } from 'component/chat-input-setting/chat-input-setting.component';
 import { BatchService } from 'service/batch.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
-import { PointerDeviceService } from 'service/pointer-device.service';
-import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -34,6 +31,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     const chatTab = <ChatTab>ObjectStore.instance.get(this.chatTabidentifier);
     return chatTab && chatTab.isUseStandImage;
   }
+
+  @Input('isPalette') isPalette: boolean = false;
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();

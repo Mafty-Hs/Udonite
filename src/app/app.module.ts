@@ -70,10 +70,7 @@ import { PlayerPaletteControlComponent } from './component/player-palette-contro
 import { NetworkStatusComponent } from './component/network-status/network-status.component';
 import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
-
-import { LinkyModule } from 'ngx-linky';
-import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-output.component';
-
+//import { LinkyModule } from 'ngx-linky';
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 import { RoundComponent } from './component/round/round.component';
@@ -83,6 +80,7 @@ import { EffectViewComponent } from './component/effect-view/effect-view.compone
 import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
 import { ChatInputSendfromComponent } from './component/chat-input-sendfrom/chat-input-sendfrom.component';
 import { ChatInputSettingComponent } from './component/chat-input-setting/chat-input-setting.component';
+import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.component';
 
 @NgModule({
   declarations: [
@@ -140,7 +138,6 @@ import { ChatInputSettingComponent } from './component/chat-input-setting/chat-i
     NetworkStatusComponent,
     CutInComponent,
     CutInSettingComponent,
-    ChatLogOutputComponent,
     CardListImageComponent,
     RoundComponent,
     CounterInventoryComponent,
@@ -148,13 +145,13 @@ import { ChatInputSettingComponent } from './component/chat-input-setting/chat-i
     SubMenuComponent,
     ChatInputSendfromComponent,
     ChatInputSettingComponent,
+    ChatTabEaseComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
-    LinkyModule,
     YouTubePlayerModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],

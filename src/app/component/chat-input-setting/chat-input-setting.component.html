@@ -1,5 +1,5 @@
 <div #setting class="flex-box">
-  <div class="flex-column" *ngIf="canVisible('sendTo')">
+  <div class="flex-column" *ngIf="isSendTo">
         ➡
         <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
           <option value="" class="not-specified">全員</option>
@@ -8,7 +8,7 @@
           </option>
         </select>
   </div>
-  <div class="flex-column" *ngIf="canVisible('gameType')">
+  <div class="flex-column" *ngIf="isGameType">
         <select *ngIf="diceBotInfosIndexed.length < 1" style="max-width: 12em;font-size:11px;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
           [ngClass]="{'not-specified': gameType == ''}">
           <option value="" class="not-specified">ダイスボット指定なし</option>
@@ -23,7 +23,7 @@
         </select>
         <button style="padding: 0.2em 0.5em;" (click)="showDicebotHelp()">?</button>
   </div>
-  <div class="flex-column" *ngIf="canVisible('stand')">
+  <div class="flex-column" *ngIf="isStand">
     <b style="font-size: 8px;">Stand: </b>
     <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" />
     <select style="width: 8em; font-size:12px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}" >
@@ -31,13 +31,13 @@
         <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
     </select>
   </div>
-  <div class="flex-column" *ngIf="canVisible('standPos')">
+  <div class="flex-column" *ngIf="isStandPos">
     <b style="font-size: 8px;">StandPos: </b>
     <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position">
   </div>
-  <div class="flex-column" *ngIf="canVisible('color')">
+  <div class="flex-column" *ngIf="isColor">
     <b style="font-size: 0.7em;">色: </b>
-    <input type="color" style="width:4em; " [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
+    <input type="color" style="width:4em;" (change)="colorChange()" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
   </div>
   <div class="material-icons setting" (click)="config($event)">
     settings

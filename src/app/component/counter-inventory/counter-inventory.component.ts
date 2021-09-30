@@ -1,9 +1,21 @@
 import { Counter , CounterAssign } from '@udonarium/counter';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { GameCharacter } from '@udonarium/game-character';
+import { GameCharacterService } from 'service/game-character.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { CounterService } from 'service/counter.service';
 import { Component, OnInit } from '@angular/core';
+
+interface inventoryContext {
+  characterIdentifier: string;
+  characterImage: string;
+  characterName: string;
+  name: string;
+  desc: string;
+  age: number;
+  isPermanent: boolean;
+  maxAge: number;
+  comment: string;
+  identifier: string;
+}
 
 @Component({
   selector: 'counter-inventory',
@@ -12,31 +24,42 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CounterInventoryComponent implements OnInit {
 
-  myList:CounterAssign[] = this.counterService.assignedList();
-
-  get counterList():CounterAssign[]{
-    return this.myList.sort(function(a,b){
-    if(a.characterIdentifier > b.characterIdentifier) return -1;
-    if(a.characterIdentifier < b.characterIdentifier) return 1;
-    return 0;
-});
-  }
-
-  getimage(charaidentifier: string): string {
-    return this.getCharacter(charaidentifier).imageFile.url as string
-  }
-
-  getCharacter(charaidentifier: string): GameCharacter {
-    let object = ObjectStore.instance.get(charaidentifier);
-    if (object instanceof GameCharacter) {
-      return object;
+  myList:inventoryContext[] = this.counterService.assignedList().map(
+    list => { 
+      let character = this.character(list.characterIdentifier);
+      let counter = this.getCounter(list.counterIdentifier);
+      let inventory:inventoryContext =
+      {
+        characterIdentifier: list.characterIdentifier,
+        characterImage: character ? character?.imageFile?.url : "" ,
+        characterName:  character ? character?.name : "",
+        name: list.name,
+        desc: counter ? counter.desc : "",
+        age: list.age,
+        isPermanent: list.isPermanent  ,
+        maxAge: counter ? counter.age : 0,
+        comment: list.comment,
+        identifier: list.identifier
+      };
+      return inventory;
     }
-    return null;
+  ).sort(function(a,b){
+      if(a.characterIdentifier > b.characterIdentifier) return -1;
+      if(a.characterIdentifier < b.characterIdentifier) return 1;
+      return 0;
+  });
+
+  character(identifier :string){
+    return this.gameCharacterService.get(identifier)
+  }
+
+  get counterList(){
+    return this.myList
   }
 
   isFirst(index :number) :boolean {
     if (index == 0) return true;
-    let locallist: CounterAssign[] = this.counterList;
+    let locallist = this.counterList;
     if (locallist[index].characterIdentifier ==
          locallist[index - 1].characterIdentifier) {
       return false;
@@ -50,15 +73,17 @@ export class CounterInventoryComponent implements OnInit {
  }
 
   getCounter(identifier: string): Counter {
-    return this.counterService.get(identifier);
+    return this.counterService.unique(identifier);
   }
 
-  remove(counter : CounterAssign){
-    counter.remove();
+  remove(identifier: string){
+    let counter = this.counterService.getAssign(identifier);
+    if (counter)  counter.remove() ;
   }
 
   constructor(
     private counterService: CounterService,
+    public gameCharacterService: GameCharacterService,
     private panelService: PanelService,
   ) { }
 

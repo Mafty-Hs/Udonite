@@ -11,6 +11,7 @@ import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'serv
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ChatMessageService } from 'service/chat-message.service';
+import { GameCharacterService } from 'service/game-character.service';
 
 @Component({
   selector: 'counter-list',
@@ -40,16 +41,9 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   set inputComment(inputComment: string) { this._inputComment = inputComment };
 
   selectedCharacter:string = 'default';
-  private shouldUpdateCharacterList: boolean = true;
-  private _gameCharacters: GameCharacter[] = [];
   get gameCharacters(): GameCharacter[] {
-    if (this.shouldUpdateCharacterList) {
-      this.shouldUpdateCharacterList = false;
-      this._gameCharacters = ObjectStore.instance
-        .getObjects<GameCharacter>(GameCharacter)
-        .filter(character => this.locationCheck(character));
-    }
-    return this._gameCharacters;
+    let OnlyTable = true;
+    return this.gameCharacterService.list(OnlyTable);
   };
   private selectCount:string = "";
   private selectElm: HTMLElement;
@@ -78,12 +72,8 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
     this.inputDuplicate = false;
   }
 
-  getCharacter(charaidentifier: string): GameCharacter {
-    let object = ObjectStore.instance.get(charaidentifier);
-    if (object instanceof GameCharacter) {
-      return object;
-    }
-    return null;
+  getCharacter(identifier: string): GameCharacter {
+    return this.gameCharacterService.get(identifier);
   }
  
   getCounter(identifier: string): Counter {
@@ -141,7 +131,8 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
    private pointerDeviceService: PointerDeviceService,
    private panelService: PanelService,
    private contextMenuService: ContextMenuService,
-   private counterService: CounterService
+   private counterService: CounterService,
+   private gameCharacterService: GameCharacterService
   ) {
    }
 
@@ -151,10 +142,6 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   ngOnInit(): void {
     Promise.resolve().then(() => this.panelService.title = 'カウンターリスト');
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-        if (event.data.aliasName !== GameCharacter.aliasName) return;
-        this.shouldUpdateCharacterList = true;
-      })
       .on('SELECT_TABLETOP_OBJECT', -1000, event => {
         if (this.isDrag) {
           this.onSelect(event.data.identifier);
@@ -238,15 +225,4 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
     result.push(text.substring(start, text.length));
     return result;
   }
-
-  private locationCheck(gameCharacter: GameCharacter): boolean {
-    if (!gameCharacter) return false; 
-    switch (gameCharacter.location.name) {
-      case 'table':
-        return true;
-      default:
-        return false;
-    }
-  }
 }
-

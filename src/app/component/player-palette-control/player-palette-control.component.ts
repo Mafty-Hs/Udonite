@@ -1,11 +1,8 @@
-import { Component, ElementRef, Input, Output, EventEmitter, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { Component, Input, Output, EventEmitter,OnDestroy, OnInit } from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
-import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
-import { GameCharacter } from '@udonarium/game-character';
+import { GameCharacterService } from 'service/game-character.service';
 
 @Component({
   selector: 'player-palette-control',
@@ -13,18 +10,18 @@ import { GameCharacter } from '@udonarium/game-character';
   styleUrls: ['./player-palette-control.component.css']
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
-  private character: GameCharacter;
-  private tabletopObject : TabletopObject;
+
   private _sendFrom: string = ""; 
   get sendFrom(){
     return this._sendFrom;
   }
   @Input() set sendFrom(sendFrom:string){
     this.cancelEdit();
-    this.character = this.getCharacter(sendFrom);
-    this.tabletopObject = this.character;
     this._sendFrom = sendFrom;
+    this.name = this.gameCharacterService.get(sendFrom).name;
   }
+  private name:string;
+
   @Output() chat = new EventEmitter<{ 
     text: string, gameType: string, sendFrom: string, sendTo: string,
     color?: string, 
@@ -38,26 +35,29 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     standName?: string,
     isUseStandImage?: boolean }>();
 
-  getCharacter(charaidentifier: string): GameCharacter {
-    let object = ObjectStore.instance.get(charaidentifier);
-    if (object instanceof GameCharacter) {
-      return object;
-    }
-    return null;
+  get inventoryDataElms(): DataElement[] {
+    return this.inventoryService.tableInventory.dataElementMap.get(this.sendFrom);
   }
+  get dataElms(): DataElement[] { return this.gameCharacterService.dataElements(this.sendFrom)  }
+  get newLineString(): string { return this.inventoryService.newLineString; }
 
   isEdit : boolean = false;
+  
+  setDataElm(dataElm: DataElement){
+    this.isEdit = true;
+    this.selectElm = dataElm;
+  }
 
-  get newLineString(): string { return this.inventoryService.newLineString; }
-  get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }
-  get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }
-  private getInventoryTags(gameObject: TabletopObject): DataElement[] {
-    return this.inventoryService.tableInventory.dataElementMap.get(gameObject.identifier);
+  selectElm: DataElement;
+ 
+  cancelEdit(){
+    this.innerText = '';
+    this.isEdit = false;
   }
 
   constructor(
-    private ngZone: NgZone,
     private inventoryService: GameObjectInventoryService,
+    private gameCharacterService: GameCharacterService
   ) {}
 
   ngOnInit(): void {
@@ -67,30 +67,29 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     EventSystem.unregister(this);
   }
 
-selectElm: DataElement;
-innerText:string;
-text:string;
-sendCalc($event){
-  let beforeValue = this.selectElm.value;
-  let afterValue;
-  if (this.selectElm.type == 'numberResource') {
-    beforeValue = this.selectElm.currentValue;
-    this.selectElm.currentValue = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte());
-    afterValue = this.selectElm.currentValue;
-  }
-  else {
-    if (typeof this.selectElm.value === 'number') {
-      this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte());
-      afterValue = this.selectElm.value;
+  innerText:string;
+  text:string;
+  sendCalc($event){
+    let beforeValue = this.selectElm.value;
+    let afterValue;
+    if (this.selectElm.type == 'numberResource') {
+      beforeValue = this.selectElm.currentValue;
+      this.selectElm.currentValue = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte());
+      afterValue = this.selectElm.currentValue;
     }
-    if (typeof this.selectElm.value === 'string') {
-      this.selectElm.value = this.innerText;
-      afterValue = this.selectElm.value;
+    else {
+      if (typeof this.selectElm.value === 'number') {
+        this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte());
+        afterValue = this.selectElm.value;
+      }
+      if (typeof this.selectElm.value === 'string') {
+        this.selectElm.value = this.innerText;
+        afterValue = this.selectElm.value;
+      }
     }
-  }
-  this.innerText = '';
-  let resulttext : string = this.character.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue; 
-  this.chat.emit({
+    this.innerText = '';
+    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue; 
+    this.chat.emit({
         text: resulttext,
         gameType: "",
         sendFrom: "System",
@@ -106,8 +105,8 @@ sendCalc($event){
         standName: "",
         isUseStandImage: false
       });
-  this.isEdit = false;
-}
+    this.isEdit = false;
+  }
 
 text2Byte () : string {
   let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
@@ -153,15 +152,5 @@ myeval(value : string): number{
   return 0;
 }
 
-setDataElm(dataElm: DataElement){
-  console.log(dataElm)
-  this.isEdit = true;
-  this.selectElm = dataElm;
-}
-
-cancelEdit(){
-  this.innerText = '';
-  this.isEdit = false;
-}
 
 }

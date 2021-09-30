@@ -453,7 +453,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => { 
       this.toggleEffect(bool);
     });
-
   }
 
   ngAfterViewInit() {

@@ -15,7 +15,7 @@
       あなたの色
     </div>
     <div class="item-data">
-      <button style="height:2em;padding 3px;" (click)="colorReset()" >初期化</button><input type="color" style="width:2em; height:2em;" [(ngModel)]="myPeerColor">
+      <button style="height:2em;padding 3px;" (click)="colorReset()" >初期化</button><input type="color" style="width:2em; height:2em;" (change)="colorChange()" [(ngModel)]="myPeerColor">
     </div>
   </div>
   <div class="flex-item">

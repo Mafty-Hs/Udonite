@@ -69,10 +69,14 @@ export class DiceBotService {
      || isChoice ) {} 
     else
      return;
-    console.log(/choice\d*\[.*\]/i.test(rollText));
+    //console.log(/choice\d*\[.*\]/i.test(rollText));
     if (repeat < 1) return;
-    console.log("choice");
-    finalResult = await this.bcDice(rollText, gameType, repeat);
+    try {
+      finalResult = await this.bcDice(rollText, gameType, repeat);
+    }
+    catch(e) {
+
+    }
     finalResult.isSecret = finalResult.isSecret || isRepSecret;
     this.sendResultMessage(finalResult, chatMessage);
     return;

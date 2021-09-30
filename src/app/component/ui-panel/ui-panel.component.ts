@@ -76,7 +76,7 @@ export class UIPanelComponent implements OnInit {
       panel.style.transition = null;
     }, 100);
     if (panel.offsetLeft <= 0
-      && panel.offsetTop <= 0
+      && panel.offsetTop <= 50
       && panel.offsetWidth >= window.innerWidth
       && panel.offsetHeight >= window.innerHeight) {
       this.isFullScreen = false;
@@ -91,9 +91,9 @@ export class UIPanelComponent implements OnInit {
       this.preHeight = panel.offsetHeight;
 
       this.left = 0;
-      this.top = 0;
+      this.top = 50;
       this.width = window.innerWidth;
-      this.height = window.innerHeight;
+      this.height = window.innerHeight - 50;
 
       panel.style.left = this.left + 'px';
       panel.style.top = this.top + 'px';

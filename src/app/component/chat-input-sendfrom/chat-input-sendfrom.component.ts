@@ -1,15 +1,16 @@
-import { Component, OnInit,Input ,Output ,EventEmitter} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter} from '@angular/core';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';
+import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'chat-input-sendfrom',
   templateUrl: './chat-input-sendfrom.component.html',
   styleUrls: ['./chat-input-sendfrom.component.css']
 })
-export class ChatInputSendfromComponent implements OnInit {
+export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
   @Input('isLock') isLock: boolean = false;;
   @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
@@ -59,17 +60,11 @@ export class ChatInputSendfromComponent implements OnInit {
     return this.gameCharacterService.list(onlyTable);
   }  
 
-  private timer
   getColor():string {
-    let tempcolor:string; 
     if(this.character) {
-      tempcolor = this.gameCharacterService.color(this.sendFrom)
+      return this.gameCharacterService.color(this.sendFrom);
     }
-    else tempcolor = this.myColor;
-    if (this.color != tempcolor) {
-      this.timer = setTimeout(() => { this.laterColorChange() }, 1000);
-    }
-    return tempcolor;
+    else return this.myColor;
   }
 
   laterColorChange() {
@@ -93,9 +88,18 @@ export class ChatInputSendfromComponent implements OnInit {
   constructor(
     private gameCharacterService: GameCharacterService
   ) {     
+    
   }
 
   ngOnInit(): void {
+    EventSystem.register(this)
+      .on('COLOR_CHANGE', -1000, event => {
+        setTimeout(() => { this.laterColorChange() }, 1000);
+      })
+  }
+
+  ngOnDestroy() {
+    EventSystem.unregister(this);
   }
 
 }

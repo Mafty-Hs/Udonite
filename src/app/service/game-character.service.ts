@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { DataElement } from '@udonarium/data-element';
+import { PanelOption, PanelService } from 'service/panel.service';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +30,32 @@ export class GameCharacterService {
     return null
   }
 
+  location(identifier: string,onlyTable :boolean) :boolean {
+    return this.locationCheck(this.get(identifier) ,onlyTable)
+  }
+
+  dataElements(identifier :string) :DataElement[] {
+    return this.get(identifier).detailDataElement.children as DataElement[];
+  }
+
+  showDetail(identifier :string ,coordinate?) {
+    let character = this.get(identifier);
+    let option: PanelOption;
+    let title = 'キャラクターシート';
+    if (character.name.length) title += ' - ' + character.name;
+
+    if (coordinate) {
+      option = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 800, height: 600 };
+    }
+    else {
+      option = { title: title, left: 100, top: 100, width: 800, height: 600 };
+    }
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = character;
+  }
+
   //リスト系
-  locationCheck(gameCharacter: GameCharacter,onlyTable): boolean {
+  locationCheck(gameCharacter: GameCharacter,onlyTable :boolean): boolean {
     if (!gameCharacter) return false;
     switch (gameCharacter.location.name) {
       case 'table':
@@ -41,13 +68,19 @@ export class GameCharacterService {
   }
   private shouldUpdateCharacterList: boolean = true;
   private _gameCharacters: GameCharacter[] = [];
+  private _gameCharacters_onlyTable: GameCharacter[] = [];
   list(onlyTable: boolean) : GameCharacter[] {
     if (this.shouldUpdateCharacterList) {
       this.shouldUpdateCharacterList = false;
-      this._gameCharacters = ObjectStore.instance
-        .getObjects<GameCharacter>(GameCharacter)
-        .filter(character => this.locationCheck(character, onlyTable));
+      let tempCharacters = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter);
+
+      this._gameCharacters = tempCharacters
+        .filter(character => this.locationCheck(character, false));
+      this._gameCharacters_onlyTable = tempCharacters
+        .filter(character => this.locationCheck(character, true));
     }
+    if (onlyTable) return this._gameCharacters_onlyTable;
     return this._gameCharacters;
   }
 
@@ -71,7 +104,9 @@ export class GameCharacterService {
     return "";
   }
 
-  constructor() { 
+  constructor(
+    private panelService: PanelService
+  ) { 
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;

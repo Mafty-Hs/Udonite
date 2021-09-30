@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatLogOutputComponent } from './chat-log-output.component';
+import { ChatTabEaseComponent } from './chat-tab-ease.component';
 
-describe('ChatLogOutputComponent', () => {
-  let component: ChatLogOutputComponent;
-  let fixture: ComponentFixture<ChatLogOutputComponent>;
+describe('ChatTabEaseComponent', () => {
+  let component: ChatTabEaseComponent;
+  let fixture: ComponentFixture<ChatTabEaseComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChatLogOutputComponent ]
+      declarations: [ ChatTabEaseComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChatLogOutputComponent);
+    fixture = TestBed.createComponent(ChatTabEaseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

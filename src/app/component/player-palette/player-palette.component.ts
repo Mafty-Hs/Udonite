@@ -7,8 +7,8 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
-import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteControlComponent } from 'component/player-palette-control/player-palette-control.component';
+import { GameCharacterService } from 'service/game-character.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
@@ -23,11 +23,22 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
   @ViewChild('playerPaletteControl', { static: true }) playerPaletteControlComponent: PlayerPaletteControlComponent;
   @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
-  @Input() character: GameCharacter = null;
+  @ViewChild('characterSelect') characterSelect: ElementRef;
+
+
+  get character() {
+    return this.gameCharacterService.get(this.sendFrom);
+  } ;
 
   get paletteList(): string[] {
     return PeerCursor.myCursor.paletteList;
   }
+  get characterPaletteList(): GameCharacter[] {
+    return this.paletteList.map( identifier => 
+      this.gameCharacterService.get(identifier)
+    )
+  }
+
   set paletteList(identifers: string[]) {
     PeerCursor.myCursor.paletteList = identifers;
   };
@@ -39,11 +50,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       return this.localpalette; 
     }
     else {
-      return this.getcharacter(this.sendFrom).chatPalette;
+      return this.character.chatPalette;
    }
   }
-
-  @ViewChild('characterSelect') characterSelect: ElementRef;
+  
   _disableControl : boolean = true;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
@@ -78,7 +88,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     else {
       this.disableControl = false;
-      this.character = this.getcharacter(sendFrom);
      if (!this.gameType) {
         this.gameType = this.character.chatPalette.dicebot;
       }
@@ -117,37 +126,12 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this._hidePalette = hidePalette;
   };
 
-  private shouldUpdateCharacterList: boolean = true;
-  private _gameCharacters: GameCharacter[] = [];
-  getcharacter(charaidentifier: string): GameCharacter {
-    let object = ObjectStore.instance.get(charaidentifier);
-    if (object instanceof GameCharacter) {
-      return object;
-    }
-    return null;
-  } 
   get gameCharacters(): GameCharacter[] {
-    if (this.shouldUpdateCharacterList) {
-      this.shouldUpdateCharacterList = false;
-      this._gameCharacters = ObjectStore.instance
-        .getObjects<GameCharacter>(GameCharacter)
-        .filter(character => this.locationCheck(character));
-    }
-    return this._gameCharacters;
-  }
-  private locationCheck(gameCharacter: GameCharacter): boolean {
-    if (!gameCharacter) return false; 
-    switch (gameCharacter.location.name) {
-      case 'table':
-        return true;
-      case 'graveyard':
-        return false;
-      default :
-        return true;
-    }
+    let onlyTable : boolean = false;
+    return this.gameCharacterService.list(onlyTable);
   }
 
- sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
+  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string, isUseStandImage?: boolean }) {
    if (this.chatTab) {
         let text = this.evaluatLine(value.text);
@@ -236,6 +220,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   constructor(
     public chatMessageService: ChatMessageService,
     private panelService: PanelService,
+    private gameCharacterService: GameCharacterService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
   ) { }
@@ -245,17 +230,16 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     this.localpalette.setPalette(`プレイヤーチャットパレット`);
     for (const identifier of this.paletteList) {
-      if (!this.locationCheck(this.getcharacter(identifier))) {
+      if (!this.gameCharacterService.location(identifier, false)) {
         this.removeList(identifier);
       }
     }
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
-        if (!this.locationCheck(this.getcharacter(event.data.identifier))) {
+        if (!this.gameCharacterService.location(event.data.identifier, false)) {
           this.removeList(event.data.identifier); 
         }
-        this.shouldUpdateCharacterList = true;
       })
       .on('DELETE_GAME_OBJECT', -1000, event => {
         if (this.chatTabidentifier === event.data.identifier) {
@@ -275,16 +259,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this.text = line;
   }
 
-  private showDetail(gameObject: GameCharacter) {
-    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let title = 'キャラクターシート';
-    if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 800, height: 600 };
-    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
-    component.tabletopObject = gameObject;
-  }
-
   displayContextMenu(e: Event , gameObject: GameCharacter) {
     if (document.activeElement instanceof HTMLInputElement && document.activeElement.getAttribute('type') !== 'range') return;
     e.stopPropagation();
@@ -299,7 +273,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       { name: Network.peerId, alias: '個人インベントリへ移動' },
       { name: 'graveyard', alias: '墓場へ移動' }
     ];
-    actions.push({ name: '詳細を表示', action: () => { this.showDetail(gameObject); } });
+    actions.push({ name: '詳細を表示', action: () => { this.gameCharacterService.showDetail(gameObject.identifier); } });
     actions.push(ContextMenuSeparator);
     for (let location of locations) {
       if (gameObject.location.name === location.name) continue;

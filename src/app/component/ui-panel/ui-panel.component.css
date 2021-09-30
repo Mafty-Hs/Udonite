@@ -31,6 +31,7 @@
 
 .scrollable-panel::-webkit-scrollbar {
   width: 7px;
+  height: 7px;
 }
 .scrollable-panel::-webkit-scrollbar-thumb {
   background-color: #444;

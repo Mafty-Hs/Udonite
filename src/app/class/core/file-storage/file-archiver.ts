@@ -112,7 +112,6 @@ export class FileArchiver {
 
   private async handleText(file: File): Promise<void> {
     if (file.type.indexOf('text/') < 0) return;
-    console.log(file.name + ' type:' + file.type);
     try {
       let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
       if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });

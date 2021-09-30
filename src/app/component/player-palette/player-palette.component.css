@@ -1,119 +1,38 @@
-.palletebase{
-  background-color: rgba(240, 240, 240, 0.9);
-}
-
-.edit-info {
-  width: 100%;
-  text-align: center;
-  color: #CCC;
-  background-color: rgba(30, 30, 30, 0.8);
-}
-.palette {
-/*.input {*/
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, sans-serif;
-  width: 100%;
-  height: 100%;
-}
-
 .flex-container {
+  margin: -4px;
   display: flex;
-  background-color: rgba(240, 240, 240, 0.8);
   flex-direction: column;
   height: 100%;
 }
 
-.Chat-Input {
-  flex-grow: 0;
-}
-
-.Character-Control {
-  height : 60px; 
-  overflow: auto;
-}
-.Character-Select {
-  min-height : 32px;
-  max-height : 64px;
-  overflow: auto;
-  padding : 0 5px 0px 5px;
-  user-select: none;
-}
-
-.Chat-Pallete {
-  flex-grow: 1;
-  height: 0;
-  min-height: 100px;
-}
-
-.Bottom-Control {
-  height : 38px; 
+.top {
   display: flex;
-}
-
-.bottuns { 
-  user-select: none;
-  float: left;
-}
-
-.control { 
-  user-select: none;
-  float: center;
-  display: column;
-}
-
-.CharacterAdd {
-  padding : 0 5px 0px 5px;
-  user-select: none;
-  float: right;
-}
-
-.imgicon {
-  width: 24px;
-  height: 24px;
-}
-
-.comment {
-  font-size: 8px;
-}
-
-.Character-Select label {
-  display: inline-block;
-  position: relative;
-}
-
-.Character-Select input[type="radio"] {
-  display: none;
-}
-
-.Character-Select input[type="radio"] + div {
-  display: inline-block;
-  vertical-align: middle;
-  outline: 0;
-  font-size: 10px;
-  font-weight: bold;
-  background-color: transparent;
-  color: #000;
-  border: solid 1px #555;
-  padding: 2px 8px;
-  margin: 2px;
-  border-radius: 100px;
-  cursor: pointer;
-}
-
-.Character-Select input[type="radio"] + div:hover {
-  background-color: #888;
-  color: #eee;
-  border: solid 1px #555;
-}
-
-.Character-Select input[type="radio"]:checked + div {
-  background: #555;
-  color: #CCC;
+  flex-direction: column;
+  padding :0;
+  margin :0;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, 
+    hsl(0,0%,90%) 47%, 
+    hsl(0,0%,78%) 53%,
+    hsl(0,0%,70%)100%);
 }
 
 .chat-tab {
-  padding : 0 5px 5px 5px;
+  width:100%;
+  padding : 5px;
+  padding-top : 0px;
+  margin-top : 0px;
+  background-color: #444;
+  box-shadow:0px -8px 8px 1px #222 inset;
   user-select: none;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  border:none;
+  border-bottom:2px solid #222;
+  border-bottom-right-radius: 10px;
 }
 
 .chat-tab label {
@@ -129,25 +48,39 @@
   display: inline-block;
   vertical-align: middle;
   outline: 0;
-  font-size: 8px;
-  background-color: transparent;
-  color: #444; 
-  border: solid 1px #555;
+  font-size: 11px;
+  background-color: #777;
+  border: solid 2px #222;
+  padding-top : 0px;
+  margin-top : 0px;
   padding: 2px 8px;
   margin: 2px;
-  border-radius: 100px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px; 
   cursor: pointer;
 }
 
 .chat-tab input[type="radio"] + div:hover {
-  background-color: #888;
-  color: #eee;
-  border: solid 1px #555;
+  background-color: #AAA;
+  color: #000;
 }
 
 .chat-tab input[type="radio"]:checked + div {
-  background: #555;
-  color: #CCC;
+  border-top: none;
+  font-weight: bold;
+  background: #CCC;
+  color: #222;
+}
+
+.chat-tab::-webkit-scrollbar {
+  height: 5px;
+}
+.chat-tab::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.chat-tab::-webkit-scrollbar-track {
+  background: #444;
 }
 
 .badge {
@@ -156,3 +89,124 @@
   right: 0;
 }
 
+.chat-input {
+  flex-grow: 0;
+}
+
+.character-control {
+  height : 45px; 
+  overflow: auto;
+}
+
+.character-select {
+  min-height : 32px;
+  max-height : 64px;
+  overflow: auto;
+  padding : 0 5px 0px 5px;
+  user-select: none;
+  background-color: #BBB;
+}
+
+.character-select::-webkit-scrollbar {
+  height: 5px;
+  width: 7px;
+}
+.character-select::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.character-select::-webkit-scrollbar-track {
+  background: #444;
+}
+
+.character-select label {
+  display: inline-block;
+  position: relative;
+}
+
+.character-select input[type="radio"] {
+  display: none;
+}
+
+.character-select input[type="radio"] + div {
+  display: inline-block;
+  vertical-align: middle;
+  outline: 0;
+  font-size: 10px;
+  font-weight: bold;
+  background-color: transparent;
+  color: #000;
+  border: solid 1px #555;
+  padding: 2px 8px;
+  margin: 2px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.character-select input[type="radio"] + div:hover {
+  background-color: #888;
+  color: #eee;
+  border: solid 1px #555;
+}
+
+.character-select input[type="radio"]:checked + div {
+  background: #555;
+  color: #CCC;
+}
+
+.imgicon {
+  width: 24px;
+  height: 24px;
+}
+
+.chat-pallete {
+  flex-grow: 1;
+  height: 0;
+  min-height: 100px;
+}
+
+.palette {
+/*.input {*/
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.palletebase{
+  background-color: rgba(240, 240, 240, 0.9);
+}
+
+.bottom {
+  height : 38px; 
+  display: flex;
+  background-color: #AAA;
+}
+
+.edit-info {
+  width: 100%;
+  text-align: center;
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.bottuns { 
+  user-select: none;
+  float: left;
+}
+
+.control { 
+  user-select: none;
+  float: center;
+  display: column;
+}
+
+.character-add {
+  padding : 0 5px 0px 5px;
+  user-select: none;
+  float: right;
+}
+
+.comment {
+  font-size: 8px;
+}

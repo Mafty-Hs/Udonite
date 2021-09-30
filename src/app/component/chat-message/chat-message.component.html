@@ -1,4 +1,4 @@
-<div *ngIf="!isEase;else ease" [class]="bgColor">
+<div [class]="bgColor">
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
     [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
@@ -32,22 +32,5 @@
 </ng-template>
 <ng-template #secret>
   <span>（シークレットダイス）</span>
-</ng-template>
-<ng-template #ease>
-<div [class]="bgColor">
-  <div class="message"
-    [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
-    [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
-    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
-    [@flyInOut]="isMine ? null : 'active'" [@flyInOutMe]="!isMine ? null : 'active'">
-    <div class="body">
-      <div class="text msg-ease" [style.font-size.px]="localFontsize">
-        <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-        ::
-        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
-      </div>
-    </div>
-  </div>
-</div>
 </ng-template>
 

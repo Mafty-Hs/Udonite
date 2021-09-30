@@ -49,7 +49,6 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
   @Input() localFontsize: number = 14;
-  @Input() isEase: boolean = true;
   @Input() bgColor: string = "grey";
 
   get isBlack():boolean {

@@ -1,6 +1,6 @@
 <div class="box" [ngClass]="{ 'direct-message': isDirect }">
   <div class="sendFrom">
-    <chat-input-sendfrom [(sendFrom)]="sendFrom" [(color)]="color"></chat-input-sendfrom>
+    <chat-input-sendfrom [(sendFrom)]="sendFrom" [(color)]="color" [isLock]="isPalette"></chat-input-sendfrom>
   </div>
   <div class="rightObject">
     <div class="null">

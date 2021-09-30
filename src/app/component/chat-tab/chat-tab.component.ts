@@ -37,7 +37,6 @@ const isiOS = ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1 || ua.indexOf
 })
 export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
   @Input() localFontsize: number = 14;
-  @Input() isEase: boolean;
   @Input() bgColor: string;
   sampleMessages: ChatMessageContext[] = [
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。' },

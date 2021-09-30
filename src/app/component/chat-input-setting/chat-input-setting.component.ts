@@ -1,5 +1,6 @@
 import { Component, OnInit,Input ,Output ,EventEmitter, ViewChild, AfterViewInit , ElementRef,ChangeDetectorRef } from '@angular/core';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { EventSystem } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -24,7 +25,13 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   @Output() gameTypeChange = new EventEmitter<string>();
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) { this._gameType = gameType; this.gameTypeChange.emit(gameType); }
-  @Input('sendFrom') sendFrom: string;
+  private _sendFrom: string;
+  @Input()
+  set sendFrom(sendFrom: string) {
+    this._sendFrom = sendFrom;
+    this.canVisible();
+  }
+  get sendFrom() { return this._sendFrom; }
 
   @Input('sendTo') _sendTo: string = '';
   @Output() sendToChange = new EventEmitter<string>();
@@ -32,17 +39,55 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   set sendTo(sendTo: string) { this._sendTo = sendTo; this.sendToChange.emit(sendTo);}
 
   visibleList:string[] = ["sendTo","gameType","stand","standPos","color"];
-  mustCharacter:string[] = ["stand","standPos","color"];
-  canVisible(selectType :string) {
+  characterVisibleList:string[] = ["stand","standPos","color"];
+  isSendTo:boolean = true;
+  isGameType:boolean = true;
+  isStand:boolean = false;
+  isStandPos:boolean = false;
+  isColor:boolean = false;
+  canVisible() {
     let canDisplayCount: number = this.myWindow?.offsetWidth < 190 ? 1 : 2;
-    if (this.visibleList.indexOf(selectType) + 1 > canDisplayCount ) return false;
-    if (!this.character && this.mustCharacter.includes(selectType)) return false;
-    return true;
+    let count: number = 0;
+    if (!this.character) this.sortVisible(canDisplayCount);
+    for (let item = 0; item < this.visibleList.length ; item++) {
+      (item < canDisplayCount) ? this.changeVisible(item,true)  : this.changeVisible(item,false)
+    }
+  }
+  sortVisible(canDisplayCount :number) {
+    for (let item = 0; item < canDisplayCount ; item++) {
+      if (this.characterVisibleList.includes(this.visibleList[item])) {
+        let itemObject:string = this.visibleList[item];
+        this.visibleList.splice(item,1);
+        this.visibleList.push(itemObject);
+      }
+    }
+  }
+  changeVisible(item :number,bool :boolean) {
+    let result:boolean;
+    switch (this.visibleList[item]) {
+      case 'sendTo':
+        this.isSendTo = bool;
+       break;
+      case 'gameType':
+        this.isGameType = bool;
+       break;
+      case 'stand':
+        this.isStand = this.character ?  bool : false;
+       break;
+      case 'standPos':
+        this.isStandPos = this.character ? bool : false;
+       break;
+      case 'color':
+        this.isColor = this.character ? bool : false;
+       break;
+      default:
+    }
   }
 
   setVisible(selectType:string) {
     this.visibleList.splice(this.visibleList.indexOf(selectType),1);
     this.visibleList.unshift(selectType);
+    this.canVisible();
   }
 
   config(e: Event) {
@@ -147,6 +192,10 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     this.character.chatPalette.color = color ? color : PeerCursor.CHAT_TRANSPARENT_COLOR;
   }
 
+  colorChange() {
+    EventSystem.trigger('COLOR_CHANGE', null);
+  }
+
   constructor(
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
@@ -158,6 +207,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
+    this.canVisible()
   }
 
   ngOnInit(): void {

@@ -1,32 +1,36 @@
 <div class="flex-container">
-  <div class="Chat-Input">
-    <form>
-      <div class="chat-tab">
-        <label *ngFor="let chatTab of chatMessageService.chatTabs">
-          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-          <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
-        </label>
-      </div>
-    </form>
-    <chat-input [chatTabidentifier]="chatTabidentifier" 
-    [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
+  <div class="top">
+    <div class="chat-tab">
+      <form>
+        <div class="chat-tab">
+          <label *ngFor="let chatTab of chatMessageService.chatTabs">
+            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
+            <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="chat-input">
+      <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true" 
+      [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
+    </div>
+    <div *ngIf="!disableControl" class="character-control">
+      <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+    </div>
   </div>
-  <div *ngIf="!disableControl" class="Character-Control">
-    <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
-  </div>
-  <div #characterSelect class="Character-Select">
+  <div #characterSelect class="character-select">
     <label>
       <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
       <input name="chara-tab" type="radio" value="{{myPeer.identifier}}" [(ngModel)]="sendFrom">
       <div>{{myPeer.name}}</div>
     </label>
-    <label *ngFor="let characterIdentifier of paletteList">
-      <img *ngIf="getcharacter(characterIdentifier).imageFile.url.length > 0" class="imgicon" [src]="getcharacter(characterIdentifier).imageFile.url | safe: 'resourceUrl'" />
-      <input name="chara-tab" type="radio" value="{{characterIdentifier}}" [(ngModel)]="sendFrom">
-      <div  (contextmenu)="displayContextMenu($event,getcharacter(characterIdentifier)); false">{{getcharacter(characterIdentifier).name}}</div>
+    <label *ngFor="let gameCharacter of characterPaletteList; index as i">
+      <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
+      <input name="chara-tab" type="radio" tabindex="{{i}}" value="{{gameCharacter.identifier}}" [(ngModel)]="sendFrom">
+      <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
     </label>
   </div>
-  <div *ngIf="!hidePalette && !isEdit" class="Chat-Pallete">
+  <div *ngIf="!hidePalette && !isEdit" class="chat-pallete">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
@@ -38,7 +42,7 @@
   <div *ngIf="!hidePalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
-  <div class="Bottom-Control">
+  <div class="bottom">
     <div class="bottuns" style="flex-grow: 0;">
       <button *ngIf="!hidePalette" type="submit" (click)="toggleEditMode()">
         <span *ngIf="!isEdit">チャットパレットの編集</span>
@@ -52,12 +56,12 @@
       <label style="font-size:12px;color: #444;">パレット非表示</label>
       <input type="checkbox" [(ngModel)]="hidePalette" />
     </div>
-    <div class="CharacterAdd">
+    <div class="character-add">
       <select style="max-width: 160px" [(ngModel)]="selectedCharacter">
         <option value="default">-キャラクターを選択-</option>
         <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
       </select>
-      <button type="button" (click)="addList()">追加</button>
+      <button (click)="addList()">追加</button>
     </div>
   </div>
 </div>

@@ -9,10 +9,17 @@ import { ChatTab } from '@udonarium/chat-tab';
 export class Round extends ObjectNode{
   @SyncVar() count:number;
   @SyncVar() tabIdentifier:string;
-  @SyncVar() isInitiative:boolean;
+  @SyncVar() _isInitiative:number;
   @SyncVar() currentInitiative:number;
   @SyncVar() roundState:number;
   @SyncVar() initName:string;
+
+  get isInitiative():boolean {
+    return this._isInitiative === 1 ? true : false;
+  }
+  set isInitiative(_isInitiative :boolean) {
+    this._isInitiative = _isInitiative ? 1 : 0;
+  }
 
   reset() {
     this.count = 0;

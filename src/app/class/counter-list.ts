@@ -17,15 +17,20 @@ export class CounterList extends ObjectNode implements InnerXml{
 
   get list(): Counter[] { 
   return this.children as Counter[]; }
- 
+
+  unique(uniqueIdentifier :string) { 
+    return this.list.find(child => child.uniqueIdentifier == uniqueIdentifier);
+  }
+
   create(_counter :CounterContext) {
     let counter = new Counter();
     counter.initialize();
-    for (let key in _counter) {
-      if (key === 'identifier') continue;
-      if (_counter[key] == null || _counter[key] === '') continue;
-     counter.setAttribute(key, _counter[key]);
-    }
+    counter.name = _counter["name"];
+    counter.desc =  _counter["desc"];
+    counter.canDuplicate = _counter["canDuplicate"];
+    counter.isPermanent = _counter["isPermanent"];
+    counter.age = _counter["age"];
+    counter.uniqueIdentifier = _counter["uniqueIdentifier"] ? _counter["uniqueIdentifier"] : counter.identifier
     this.appendChild(counter);
   }
 
@@ -38,11 +43,11 @@ export class AssignedCounterList extends ObjectNode implements InnerXml{
   add(_counter :CounterAssignContext) {
     let counter = new CounterAssign();
     counter.initialize();
-    for (let key in _counter) {
-      if (key === 'identifier') continue;
-      if (_counter[key] == null || _counter[key] === '') continue;
-     counter.setAttribute(key, _counter[key]);
-    }
+    counter.name = _counter["name"];
+    counter.counterIdentifier =  _counter["counterIdentifier"];
+    counter.isPermanent = _counter["isPermanent"];
+    counter.age = _counter["age"];
+    counter.comment = _counter["comment"];
     this.appendChild(counter);
   }
 

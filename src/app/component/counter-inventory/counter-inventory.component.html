@@ -9,12 +9,12 @@
        <th style="width:40px">削除</th>
      <tr>
     <tr *ngFor="let counterinfo of counterList; let i = index" [ngStyle]="{'background-color': counterinfo.age === 0 && !counterinfo.isPermanent ? 'maroon' : 'black'}">
-       <td *ngIf="isFirst(i)"class="character" [attr.rowspan]="mergeRow(counterinfo.characterIdentifier)" [ngStyle]="{'background-image': 'url(' + getimage(counterinfo.characterIdentifier) + ')'}">{{getCharacter(counterinfo.characterIdentifier).name}}</td>
+       <td *ngIf="isFirst(i)"class="character" [attr.rowspan]="mergeRow(counterinfo.characterIdentifier)" [ngStyle]="{'background-image': 'url(' + counterinfo.characterImage + ')'}">{{counterinfo.characterName}}</td>
        <td>{{counterinfo.name}}</td>
-       <td>{{getCounter(counterinfo.counterIdentifier).desc}}</td>
-       <td class="center"><p *ngIf="!counterinfo.isPermanent; else permanent">{{counterinfo.age}}/{{getCounter(counterinfo.counterIdentifier).age}}</p></td>
+       <td>{{counterinfo.desc}}</td>
+       <td class="center"><p *ngIf="!counterinfo.isPermanent; else permanent">{{counterinfo.age}}/{{counterinfo.maxAge}}</p></td>
        <td>{{counterinfo.comment}}</td>
-       <td class="center"><button class="close" (click)="remove(counterinfo)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
+       <td class="center"><button class="close" (click)="remove(counterinfo.identifier)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
     </tr>
   </table>
 </div>

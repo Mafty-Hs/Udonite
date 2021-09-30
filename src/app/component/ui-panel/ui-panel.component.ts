@@ -32,9 +32,13 @@ export class UIPanelComponent implements OnInit {
 
   @Input() set title(title: string) { this.panelService.title = title; }
   @Input() set left(left: number) { this.panelService.left = left; }
-  @Input() set top(top: number) { this.panelService.top = top; }
+  @Input() set top(top: number) { 
+    this.panelService.top = top; 
+  }
   @Input() set width(width: number) { this.panelService.width = width; }
-  @Input() set height(height: number) { this.panelService.height = height; }
+  @Input() set height(height: number) {
+    this.panelService.height = height ;
+  }
   @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
 

@@ -22,9 +22,21 @@ export class PanelService {
   private panelComponentRef: ComponentRef<any>
   title: string = '無名のパネル';
   left: number = 0;
-  top: number = 0;
+  _top: number = 50;
+  get top():number {
+    return this._top;
+  }
+  set top(_top:number) {
+    this._top = _top < 50 ? 50 : _top;
+  }
   width: number = 100;
-  height: number = 100;
+  _height: number = 100;
+  get height():number {
+    return this._height;
+  }
+  set height(_height:number) {
+    this._height = _height > (window.innerHeight - 50) ? (window.innerHeight - 50) : _height;
+  }
   isAbleFullScreenButton: boolean = true;
   isAbleCloseButton: boolean = true;
 

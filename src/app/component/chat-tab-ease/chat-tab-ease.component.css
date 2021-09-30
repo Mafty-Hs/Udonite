@@ -1,3 +1,26 @@
+.white {
+  width: 100%;
+  overflow-x: hidden;
+  background: #FFF;
+  color: #000;
+}
+.grey {
+  width: 100%;
+  overflow-x: hidden;
+  background: #CCC;
+  color: #000;
+}
+.black {
+  width: 100%;
+  overflow-x: hidden;
+  background: #212121;
+  color: #FFF;
+}
+
+.message {
+  margin: 3px;
+  padding: 0px 6px;
+}
 
 .log {
   position: relative;
@@ -12,5 +35,4 @@
 
 .virtual-scroll-container {
   flex-shrink: 0;
-  width: 100%;
 }

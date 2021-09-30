@@ -1,1 +1,12 @@
-<div></div>
+<div class="log" #logContainer>
+  <div class="virtual-scroll-container" [class]="bgColor" #messageContainer>
+    <ng-container *ngIf="0 < chatMessages.length">
+      <ng-container *ngFor="let chatMessage of chatMessages">
+        <p class="message" style="font-size:{{localFontSize}}"><span style="color:{{chatMessage.color}}">{{chatMessage.name}}</span>::<span style="color:{{chatMessage.color}}">{{chatMessage.text}}</span></p>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="chatMessages.length <= 0">
+        <p class="message" style="font-size:{{localFontSize}}"><span style="color:#444">SYSTEM</span>::<span style="color:#444">ログがありません</span></p>
+    </ng-container>
+  </div>
+</div>

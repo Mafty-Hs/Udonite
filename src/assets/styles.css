@@ -14,43 +14,37 @@ body, input[text], button {
   color: #888; 
   /*font-family: Cambria, Georgia; */
 }
-button {
-  /*font-family: Arial;*/
-  background-color: #eee;
-  color: #444; 
-  /*border: none;*/
-  border: solid 1px #444;
-  padding: 0.35em 0.7em;
-  margin: 0 2px;
-  border-radius: 4px;
-  cursor: pointer;
-  cursor: hand;
+
+button{
+	position: relative;
+	display: inline-block;
+        margin: 0;
+	padding: 0.6em 1em;
+        background:linear-gradient(#222,#666);
+	text-decoration: none;
+	color: #EEE;
+	font-weight: 100;
+        border: solid 2px #111;
+	border-radius: 3px;
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
 }
-button:hover {
-  background-color: #cfd8dc;
-}
-button:disabled {
-  background-color: #eee;
-  color: #aaa; 
-  cursor: auto;
+button:after{
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: calc(100% - 4px);
+	height: 50%;
+	background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.2));
 }
 
-button.danger {
-  background-color: rgb(207, 82, 82);
-  color: #eee; 
-  border: solid 1px rgb(184, 59, 59);
+button:hover{
+	background: linear-gradient(#000,#444);
 }
 
-button.danger:hover {
-  background-color: rgb(160, 32, 32);
-  color: #f5f5f5; 
-}
 
-button.danger:disabled {
-  background-color: rgb(224, 131, 131);
-  border: solid 1px rgb(187, 55, 55);
-  color: #eee; 
-}
+
 /* everywhere else */
 /*
 * { 
@@ -244,5 +238,66 @@ input[type="range"]:active::-webkit-slider-thumb {
   box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
 }
 
+.toggle {
+  width: 44px;
+  border:none;
+  padding: 0;
+  margin: 0;
+}
 
+.toggle input[type="checkbox"] {
+  display: none;
+}
+
+.toggle input[type="checkbox"] + div {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: 40px;
+  height: 18px;
+  color: #CCC;
+  font-size: 12px;
+  background-color: #666;
+  border: 2px solid #000;
+  box-shadow: inset 0 0 2px 2px #222;
+  border-radius: 3px;
+}
+
+.toggle input[type="checkbox"] + div::after {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  content : "OFF";
+}
+
+.toggle input[type="checkbox"]:checked + div {
+  background-color: #0000CC;
+}
+.toggle input[type="checkbox"]:checked + div::after {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  content : "ON";
+}
+
+.toggle input[type="checkbox"] + div > div {
+   position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 5px;
+    height: 14px;
+    border: 1px solid #444;
+    border-radius: 3px;
+    background-color: #CCC;
+    transition: 0.2s;
+}
+
+.toggle input[type="checkbox"]:checked + div > div {
+    left: 32px;
+}
 

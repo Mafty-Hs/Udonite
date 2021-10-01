@@ -13,9 +13,15 @@
   <div class="Make-Row">
     <div class="Left">
       <label class="title">永続</label>
-      <input type="checkbox" [(ngModel)]="inputPermanent">
+      <div class="toggle"><label>
+        <input type="checkbox" [(ngModel)]="inputPermanent">
+        <div><div></div></div>
+      </label></div>
       <label class="title">重複可</label>
-      <input type="checkbox" [(ngModel)]="inputDuplicate">
+      <div class="toggle"><label>
+        <input type="checkbox" [(ngModel)]="inputDuplicate">
+        <div><div></div></div>
+      </label></div>
     </div>
     <div class="Right">
       <button class="submit" (click)="addCounter()">追加</button>

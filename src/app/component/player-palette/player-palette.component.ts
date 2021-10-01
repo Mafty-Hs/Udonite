@@ -114,16 +114,16 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   selectedCharacter: string = 'default';
   isEdit:boolean = false;
   editPalette: string = '';
-  _hidePalette:boolean = false;
-  get hidePalette(): boolean { return this._hidePalette };
-  set hidePalette(hidePalette: boolean) {
-    if (hidePalette) {
-      this.panelService.height -= 100 ;
-    }
-    else {
+  _showPalette:boolean = true;
+  get showPalette(): boolean { return this._showPalette };
+  set showPalette(showPalette: boolean) {
+    if (showPalette) {
       this.panelService.height += 100 ;
     }
-    this._hidePalette = hidePalette;
+    else {
+      this.panelService.height -= 100 ;
+    }
+    this._showPalette = showPalette;
   };
 
   get gameCharacters(): GameCharacter[] {

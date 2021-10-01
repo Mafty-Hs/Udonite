@@ -242,7 +242,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (window.innerWidth < 600) this.minimumMode = true;
     setTimeout(() => {
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
-      this.panelService.open(PeerMenuComponent, { width: 450, height: 400, left: 0,top: 50 });
+      this.panelService.open(PeerMenuComponent, { width: 400, height: 400, left: 0,top: 50 });
       this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
     }, 0);
   }

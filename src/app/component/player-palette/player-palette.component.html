@@ -30,7 +30,7 @@
       <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
     </label>
   </div>
-  <div *ngIf="!hidePalette && !isEdit" class="chat-pallete">
+  <div *ngIf="showPalette && !isEdit" class="chat-pallete">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
@@ -39,29 +39,33 @@
       </ng-container>
     </select>
   </div>
-  <div *ngIf="!hidePalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div *ngIf="!showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div class="bottom">
-    <div class="bottuns" style="flex-grow: 0;">
-      <button *ngIf="!hidePalette" type="submit" (click)="toggleEditMode()">
-        <span *ngIf="!isEdit">チャットパレットの編集</span>
-        <span *ngIf="isEdit">チャットパレットを確定</span>
-      </button>
-      <button type="submit"  (click)="removeList(sendFrom)">
-        <span>リストから削除</span>
-      </button>
-    </div>
     <div class="control">
-      <label style="font-size:12px;color: #444;">パレット非表示</label>
-      <input type="checkbox" [(ngModel)]="hidePalette" />
+      <span>チャットパレット</span>
+      <div class="toggle"><label>
+        <input name="showPalette" type="checkbox" [(ngModel)]="showPalette">
+        <div><div></div></div>
+      </label></div>
+    </div>
+    <div class="bottuns" style="flex-grow: 0;">
+      <button *ngIf="showPalette" type="submit" (click)="toggleEditMode()">
+        <span *ngIf="!isEdit">編集</span>
+        <span *ngIf="isEdit">確定</span>
+      </button>
     </div>
     <div class="character-add">
-      <select style="max-width: 160px" [(ngModel)]="selectedCharacter">
-        <option value="default">-キャラクターを選択-</option>
-        <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
-      </select>
+      <div class="control">
+        <span>キャラクターリスト</span>
+        <select style="width: 10em" [(ngModel)]="selectedCharacter">
+          <option value="default">-追加対象の選択-</option>
+          <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
+        </select>
+      </div>
       <button (click)="addList()">追加</button>
+      <button (click)="removeList(sendFrom)">削除</button>
     </div>
   </div>
 </div>

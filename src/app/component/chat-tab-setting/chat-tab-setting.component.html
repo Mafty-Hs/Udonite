@@ -32,24 +32,33 @@
         <div class="item-text">表示</div>
         <div class="item-setting">
              <form>
-          <div>
+          <div style="display: flex;">
+            <div class="toggle"><label>
             <input name="isEase" type="checkbox" [(ngModel)]="isEase" />
-            <label for="fontsize"> メッセージを簡易表示にする</label>
+             <div><div></div></div>
+            </label></div>
+            <span> メッセージ簡易表示</span>
           </div>
-          <div>
+          <div style="display: flex;">
+            <div class="toggle"><label>
             <input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
-            <label for="fontsize">チャットログ表示のみ</label>
+            <div><div></div></div>
+            </label></div>
+            <span>チャットログ表示</span>
           </div>
-          <div>
+          <div style="display: flex;">
+            <div class="toggle"><label>
             <input name="noControl" type="checkbox" [(ngModel)]="noControl" />
-            <label for="fontsize">キャラクター操作パネルを表示しない</label>
+            <div><div></div></div>
+            </label></div>
+            <span>キャラクター操作パネル表示</span>
           </div>
              </form>
         </div>
       </div>
       <div class="window-item">
         <div class="item-text"></div>
-        <div class="item-setting"><button (click)="setConf()">反映</button></div>
+        <div class="item-setting" style="margin: 0 0 0 auto;"><button style="width:5em;" (click)="setConf()">反映</button></div>
       </div>
   </div>
   <div><HR /></div>
@@ -69,11 +78,12 @@
         <div>タブ名 :
           <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
         </div>
-        <div style="font-weight: bolder; font-size: smaller">
-          <label>
+        <div style="font-weight: bolder; font-size: smaller;display: flex;">
+          <span>スタンド</span>
+          <div class="toggle"><label>
             <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" [attr.disabled]="!isEditable ? '' : null" />
-            スタンド有効
-          </label>
+            <div><div></div></div>
+            </label></div>
         </div>
         <hr/>
         <div>

@@ -44,7 +44,7 @@ export class SubMenuComponent implements OnInit {
     let option: PanelOption = { width: 450, height: 600, left: 100 }
     switch (componentName) {
       case 'PeerMenuComponent':
-        option.width = 450;
+        option.width = 400;
         component = PeerMenuComponent;
         break;
       case 'ChatWindowComponent':

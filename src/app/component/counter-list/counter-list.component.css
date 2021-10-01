@@ -16,7 +16,7 @@
 }
 
 .Left {
-
+  display: flex;
 }
 
 .Right {

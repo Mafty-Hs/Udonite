@@ -36,6 +36,7 @@
   font-size: 14px;
 }
 .item-setting {
+  width: 18em;
   display: flex;
   flex-flow:  column;
   justify-content: flex-start;

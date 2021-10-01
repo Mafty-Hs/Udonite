@@ -161,7 +161,11 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     return this.gameCharacterService.get(this.sendFrom);
   }
 
-  isUseStandImage: boolean = true;
+
+  @Input('isUseStandImage') _isUseStandImage:boolean;
+  @Output() isUseStandImageChange = new EventEmitter<boolean>();
+  get isUseStandImage(): boolean { return this._isUseStandImage };
+  set isUseStandImage(isUseStandImage: boolean) { this._isUseStandImage = isUseStandImage; this.isUseStandImageChange.emit(isUseStandImage); }
   get hasStand(): boolean {
     if (!this.character || !this.character.standList) return false;
     return this.character.standList.standElements.length > 0;

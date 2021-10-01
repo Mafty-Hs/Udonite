@@ -1,5 +1,6 @@
 .flex-container {
   margin: -4px;
+  margin-bottom: -8px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -180,7 +181,7 @@
 .bottom {
   height : 38px; 
   display: flex;
-  background-color: #AAA;
+  background-color: #444;
 }
 
 .edit-info {
@@ -192,19 +193,21 @@
 
 .bottuns { 
   user-select: none;
-  float: left;
+  white-space:nowrap;
 }
 
 .control { 
   user-select: none;
-  float: center;
-  display: column;
+  white-space:nowrap;
+  display: flex;
+  flex-direction: column;
+  font-size:12px;
 }
 
 .character-add {
-  padding : 0 5px 0px 5px;
+  margin:0 0 0 auto;
+  display: flex;
   user-select: none;
-  float: right;
 }
 
 .comment {

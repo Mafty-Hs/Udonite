@@ -39,10 +39,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   identifier:string;
   isEase:boolean = false;
-  isLogOnly:boolean = false;
+  isLogOnly:boolean = true;
   localFontsize:number = 14;
   bgColor:string = "grey";
-  noControl = false;
+  noControl = true;
   _disableControl : boolean = false;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {

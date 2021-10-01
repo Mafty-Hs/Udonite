@@ -18,8 +18,8 @@
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>チャット設定</button>
     </div>
   </div>
-  <div *ngIf="!isLogOnly">
-    <div *ngIf="!disableControl && !noControl" class="Character-Control">
+  <div *ngIf="isLogOnly">
+    <div *ngIf="!disableControl && noControl" class="Character-Control">
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
     </div>
     <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>

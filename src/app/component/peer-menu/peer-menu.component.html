@@ -7,7 +7,7 @@
       <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
       (click)="changeIcon()">
       </div>
-      <button style="height:2em;padding 3px;" (click)="changeIcon()">変更</button>
+      <button (click)="changeIcon()">変更</button>
     </div>
   </div>
   <div class="flex-item">
@@ -15,7 +15,8 @@
       あなたの色
     </div>
     <div class="item-data">
-      <button style="height:2em;padding 3px;" (click)="colorReset()" >初期化</button><input type="color" style="width:2em; height:2em;" (change)="colorChange()" [(ngModel)]="myPeerColor">
+      <input type="color" style="width:2em; height:2.5em;" (change)="colorChange()" [(ngModel)]="myPeerColor">
+      <button (click)="colorReset()" >初期化</button>
     </div>
   </div>
   <div class="flex-item">

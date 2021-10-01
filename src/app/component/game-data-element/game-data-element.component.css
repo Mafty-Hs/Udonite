@@ -90,13 +90,6 @@ button:hover  {
   font-size: 0.5rem;
 }
 
-button:disabled {
-  color: gray;
-}
-button:disabled:hover {
-  background-color: transparent;
-}
-
 input[type='range'] {
   --slider-track-color: transparent; /* #ccc */
   --slider-fill-color: #555; /*#777 */
@@ -198,42 +191,4 @@ input[type='range']::-ms-tooltip {
 
 .modeifire-type {
   font-size: smaller;
-}
-
-input[type="color"]:hover,
-input[type="color"]:not(:hover) {
-  appearance: auto;
-  width: 44px;
-  height: 22px;
-  background-color: rgb(239, 239, 239);
-  cursor: default;
-  color: black;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(118, 118, 118);
-  border-image: initial;
-  padding: 1px 2px;
-}
-@media (prefers-color-scheme: dark) {
-  input[type="color"]:hover,
-  input[type="color"]:not(:hover) {
-    background-color: rgb(59, 59, 59);
-    color: white;
-    border-color: rgb(133, 133, 133);
-  }
-}
-
-.color-sample {
-  display: inline-block;
-  font-weight: bolder;
-  width: 6em;
-  text-shadow: 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px,
-    #fff 0px 0px 2px,
-    #fff 0px 0px 2px;
 }

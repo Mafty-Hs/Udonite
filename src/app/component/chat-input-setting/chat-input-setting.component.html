@@ -37,7 +37,7 @@
   </div>
   <div class="flex-column" *ngIf="isColor">
     <b style="font-size: 0.7em;">色: </b>
-    <input type="color" style="width:4em;" (change)="colorChange()" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
+    <input type="color" style="width:4em;" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
   </div>
   <div class="material-icons setting" (click)="config($event)">
     settings

@@ -1,6 +1,5 @@
 import { Component, OnInit,Input ,Output ,EventEmitter, ViewChild, AfterViewInit , ElementRef,ChangeDetectorRef } from '@angular/core';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
-import { EventSystem } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -206,10 +205,6 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   set paletteColor(color: string) {
     this.character.chatPalette.color = color ? color : PeerCursor.CHAT_TRANSPARENT_COLOR;
-  }
-
-  colorChange() {
-    EventSystem.trigger('COLOR_CHANGE', null);
   }
 
   constructor(

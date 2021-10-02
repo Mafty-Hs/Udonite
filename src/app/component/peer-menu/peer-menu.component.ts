@@ -64,10 +64,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  colorChange() {
-    EventSystem.trigger('COLOR_CHANGE', null);
-  }
-
   colorReset() {
     this.myPeerColor = PeerCursor.CHAT_DEFAULT_COLOR;
   }

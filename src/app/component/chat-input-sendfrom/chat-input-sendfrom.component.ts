@@ -3,7 +3,6 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';
-import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'chat-input-sendfrom',
@@ -19,16 +18,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   set sendFrom(sendFrom: string) { 
     this._sendFrom = sendFrom;
     this.sendFromChange.emit(sendFrom); 
-    this.color = this.getColor();
   }
 
-  @Input('color') _color: string;
-  @Output() colorChange = new EventEmitter<string>();
-  get color(): string { return this._color };
-  set color(color: string) {
-    this._color = color;
-    this.colorChange.emit(color); 
-  }
   touched:boolean = false;
   touch() {
     this.touched = true;
@@ -67,15 +58,6 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     else return this.myColor;
   }
 
-  laterColorChange() {
-    let tempcolor:string;
-    if(this.character) {
-      tempcolor = this.gameCharacterService.color(this.sendFrom)
-    }
-    else tempcolor = this.myColor;
-    this.color = tempcolor;
-    return;
-  }
   get myColor(): string {
     if (PeerCursor.myCursor
       && PeerCursor.myCursor.color
@@ -92,14 +74,9 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }
 
   ngOnInit(): void {
-    EventSystem.register(this)
-      .on('COLOR_CHANGE', -1000, event => {
-        setTimeout(() => { this.laterColorChange() }, 1000);
-      })
   }
 
   ngOnDestroy() {
-    EventSystem.unregister(this);
   }
 
 }

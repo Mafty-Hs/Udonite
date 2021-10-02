@@ -18,6 +18,13 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { ChatTab } from '@udonarium/chat-tab';
 
+interface chatDataContext {
+  sendTo : string;
+  gameType : string;
+  isCharacter : boolean;
+  isUseStandImage : boolean;
+}
+
 @Component({
   selector: 'chat-input',
   templateUrl: './chat-input.component.html',
@@ -32,8 +39,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     return chatTab && chatTab.isUseStandImage;
   }
 
-  @Input('isPalette') isPalette: boolean = false;
-
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
   get gameType(): string { return this._gameType };
@@ -42,10 +47,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };
   set sendFrom(sendFrom: string) { this._sendFrom = sendFrom; this.sendFromChange.emit(sendFrom); }
-  @Input('sendTo') _sendTo: string = '';
-  @Output() sendToChange = new EventEmitter<string>();
+  private _sendTo: string = '';
   get sendTo(): string { return this._sendTo };
-  set sendTo(sendTo: string) { this._sendTo = sendTo; this.sendToChange.emit(sendTo);}
+  set sendTo(sendTo: string) { this._sendTo = sendTo;}
   @Input('text') _text: string = '';
   @Output() textChange = new EventEmitter<string>();
   get text(): string { return this._text };
@@ -64,13 +68,20 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     standName?: string,
     isUseStandImage?: boolean }>();
 
-  get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
-
+  isDirect: boolean = false;
+  @Input('isPalette') isPalette: boolean = false;
   isUseFaceIcon: boolean = true;
   isUseStandImage: boolean = true;
   color:string = PeerCursor.myCursor.color; 
   standName: string;
-
+  isCharacter:boolean = false;
+  public chatSetting(e :chatDataContext) {
+    this.gameType = e.gameType;
+    this.isCharacter = e.isCharacter;
+    this.isUseStandImage = e.isUseStandImage;
+    this.sendTo = e.sendTo;
+    this.isDirect = (this.sendTo != null && this.sendTo.length) ? true : false;
+  }
   get character(): GameCharacter {
     return this.gameCharacterService.get(this.sendFrom);
   }

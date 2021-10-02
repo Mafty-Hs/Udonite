@@ -11,6 +11,13 @@ import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 
+interface chatDataContext {
+  sendTo : string;
+  gameType : string;
+  isCharacter : boolean;
+  isUseStandImage : boolean;
+}
+
 @Component({
   selector: 'chat-input-setting',
   templateUrl: './chat-input-setting.component.html',
@@ -20,23 +27,32 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   @ViewChild('setting') settingDOM: ElementRef;
   myWindow:HTMLElement;
+  chatData:chatDataContext = {sendTo: "", gameType: "", isCharacter: false ,isUseStandImage: true };
+  @Output() chatSetting = new EventEmitter<object>();
 
-  @Input('gameType') _gameType: string = '';
-  @Output() gameTypeChange = new EventEmitter<string>();
-  get gameType(): string { return this._gameType };
-  set gameType(gameType: string) { this._gameType = gameType; this.gameTypeChange.emit(gameType); }
+  get gameType(): string { return this.chatData.gameType };
+  set gameType(gameType: string) { this.chatData.gameType = gameType; this.chatSetting.emit(this.chatData); };
   private _sendFrom: string;
   @Input()
   set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
+    if (this.character) {
+      this.chatData.isCharacter = true;
+      if(!this.gameType && this.diceBotInfos) {
+        this.gameType = this.character.chatPalette?.dicebot;
+      }
+    }
+    else this.chatData.isCharacter = false;
+    this.chatSetting.emit(this.chatData);
     this.canVisible();
   }
   get sendFrom() { return this._sendFrom; }
 
-  @Input('sendTo') _sendTo: string = '';
-  @Output() sendToChange = new EventEmitter<string>();
-  get sendTo(): string { return this._sendTo };
-  set sendTo(sendTo: string) { this._sendTo = sendTo; this.sendToChange.emit(sendTo);}
+  get sendTo(): string { return this.chatData.sendTo };
+  set sendTo(sendTo: string) { this.chatData.sendTo = sendTo; this.chatSetting.emit(this.chatData);}
+
+  get isUseStandImage(): boolean { return this.chatData.isUseStandImage };
+  set isUseStandImage(isUseStandImage: boolean) { this.chatData.isUseStandImage = isUseStandImage; this.chatSetting.emit(this.chatData); }
 
   visibleList:string[] = ["sendTo","gameType","stand","standPos","color"];
   characterVisibleList:string[] = ["stand","standPos","color"];
@@ -162,10 +178,6 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   }
 
 
-  @Input('isUseStandImage') _isUseStandImage:boolean;
-  @Output() isUseStandImageChange = new EventEmitter<boolean>();
-  get isUseStandImage(): boolean { return this._isUseStandImage };
-  set isUseStandImage(isUseStandImage: boolean) { this._isUseStandImage = isUseStandImage; this.isUseStandImageChange.emit(isUseStandImage); }
   get hasStand(): boolean {
     if (!this.character || !this.character.standList) return false;
     return this.character.standList.standElements.length > 0;

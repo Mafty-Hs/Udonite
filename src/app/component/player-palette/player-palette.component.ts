@@ -65,11 +65,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   }
   private doubleClickTimer: NodeJS.Timer = null;
   private selectedPaletteIndex = -1;
-  private _gameType: string = '';
-  get gameType(): string { return this._gameType };
-  set gameType(gameType: string) {
-    this._gameType = gameType;
-  };
 
   private isMine(identifier: string):boolean {
     if (identifier == this.myPeer.identifier) {
@@ -88,9 +83,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     else {
       this.disableControl = false;
-     if (!this.gameType) {
-        this.gameType = this.character.chatPalette.dicebot;
-      }
     }  
   }
 
@@ -110,7 +102,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   chatTabidentifier: string = '';
   text: string = '';
-  sendTo: string = '';
   selectedCharacter: string = 'default';
   isEdit:boolean = false;
   editPalette: string = '';

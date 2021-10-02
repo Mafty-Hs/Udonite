@@ -50,10 +50,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     this._disableControl = control;
   };
 
-
-  get gameType(): string { return this.chatMessageService.gameType; }
-  set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
-
   private _chatTabidentifier: string = '';
   get chatTabidentifier(): string { return this._chatTabidentifier; }
   set chatTabidentifier(chatTabidentifier: string) {

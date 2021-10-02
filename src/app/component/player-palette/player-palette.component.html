@@ -12,7 +12,7 @@
     </div>
     <div class="chat-input">
       <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true" 
-      [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
+      [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     </div>
     <div *ngIf="!disableControl" class="character-control">
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>

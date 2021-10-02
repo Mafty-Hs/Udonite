@@ -22,7 +22,7 @@
     <div *ngIf="!disableControl && noControl" class="Character-Control">
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
     </div>
-    <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+    <chat-input [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
   </div>
 </div>
 <ng-template #ease>

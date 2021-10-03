@@ -23,17 +23,8 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   private name:string;
 
   @Output() chat = new EventEmitter<{ 
-    text: string, gameType: string, sendFrom: string, sendTo: string,
-    color?: string, 
-    isInverse?:boolean, 
-    isHollow?: boolean, 
-    isBlackPaint?: boolean, 
-    aura?: number, 
-    isUseFaceIcon?: boolean, 
-    characterIdentifier?: string, 
-    standIdentifier?: string, 
-    standName?: string,
-    isUseStandImage?: boolean }>();
+    text: string, gameType: string, sendFrom: string, sendTo: string
+    }>();
 
   get inventoryDataElms(): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(this.sendFrom);
@@ -94,16 +85,6 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
         gameType: "",
         sendFrom: "System",
         sendTo: "",
-        color: "", 
-        isInverse: false,
-        isHollow:  false,
-        isBlackPaint: false,
-        aura: -1,
-        isUseFaceIcon: false,
-        characterIdentifier: null,
-        standIdentifier: null,
-        standName: "",
-        isUseStandImage: false
       });
     this.isEdit = false;
   }

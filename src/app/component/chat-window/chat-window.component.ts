@@ -160,7 +160,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
-    color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string, isUseStandImage?: boolean }) {
+    isUseFaceIcon?:boolean ,isCharacter?: boolean, standName?: string, isUseStandImage?: boolean }) {
     if (this.chatTab) {
       this.chatMessageService.sendMessage(
         this.chatTab, 
@@ -168,16 +168,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         value.gameType, 
         value.sendFrom, 
         value.sendTo,
-        value.color, 
-        value.isInverse,
-        value.isHollow,
-        value.isBlackPaint,
-        value.aura,
+        value.isCharacter,
         value.isUseFaceIcon,
-        value.characterIdentifier,
-        value.standIdentifier,
-        value.standName,
-        value.isUseStandImage
+        value.isUseStandImage,
+        value.standName
       );
     }
   }

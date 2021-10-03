@@ -15,6 +15,7 @@ interface chatDataContext {
   gameType : string;
   isCharacter : boolean;
   isUseStandImage : boolean;
+  standName : string;
 }
 
 @Component({
@@ -26,7 +27,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   @ViewChild('setting') settingDOM: ElementRef;
   myWindow:HTMLElement;
-  chatData:chatDataContext = {sendTo: "", gameType: "", isCharacter: false ,isUseStandImage: true };
+  chatData:chatDataContext = {sendTo: "", gameType: "", isCharacter: false ,isUseStandImage: true , standName: ""};
   @Output() chatSetting = new EventEmitter<object>();
 
   get gameType(): string { return this.chatData.gameType };
@@ -52,6 +53,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   get isUseStandImage(): boolean { return this.chatData.isUseStandImage };
   set isUseStandImage(isUseStandImage: boolean) { this.chatData.isUseStandImage = isUseStandImage; this.chatSetting.emit(this.chatData); }
+  get standName(): string { return this.chatData.standName };
+  set standName(standName: string) { this.chatData.standName = standName; this.chatSetting.emit(this.chatData); }
 
   visibleList:string[] = ["sendTo","gameType","stand","standPos","color"];
   characterVisibleList:string[] = ["stand","standPos","color"];
@@ -192,7 +195,6 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     }
     return ret.sort();
   }
-  standName: string = '';
 
   get paletteColor(): string {
     if (this.character 

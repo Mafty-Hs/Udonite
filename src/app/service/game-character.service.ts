@@ -54,6 +54,30 @@ export class GameCharacterService {
     component.tabletopObject = character;
   }
 
+  //チャット用
+  private chatId :string;
+  private chatCharacter:GameCharacter;
+  chatSet(sendFrom :string ,isUseFaceIcon: boolean){
+    if (sendFrom != this.chatId) {
+      this.chatId = sendFrom;
+      this.chatCharacter = this.get(this.chatId);
+    }
+    (isUseFaceIcon && this.chatCharacter.faceIcon) ? isUseFaceIcon = true : isUseFaceIcon = false;
+    let imageIdentifier = isUseFaceIcon ?
+        this.chatCharacter.faceIcon?.identifier : this.chatCharacter.imageFile?.identifier;
+    return {
+      name: this.chatCharacter.name ,
+      imageIdentifier: imageIdentifier ? imageIdentifier : '',
+      color: this.chatCharacter.chatPalette?.paletteColor ? 
+       this.chatCharacter.chatPalette.paletteColor : "",
+      isInverse: !isUseFaceIcon ? Number(this.chatCharacter.isInverse) : 0,
+      isHollow: !isUseFaceIcon ? Number(this.chatCharacter.isHollow) : 0,
+      isBlackPaint: !isUseFaceIcon ? Number(this.chatCharacter.isBlackPaint) : 0,
+      aura: !isUseFaceIcon ? Number(this.chatCharacter.aura) : -1,
+      isUseFaceIcon: isUseFaceIcon
+    };
+  }
+
   //リスト系
   locationCheck(gameCharacter: GameCharacter,onlyTable :boolean): boolean {
     if (!gameCharacter) return false;

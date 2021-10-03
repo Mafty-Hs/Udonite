@@ -167,16 +167,10 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       "",
       isCharacter ? chatCharacter.identifier : "System",
       "",
-      "",
       false,
       false,
       false,
-      -1,
-      false,
-      isCharacter ? chatCharacter.identifier : null,
-      null,
-      "",
-      false
+      ""
      );
   }
 

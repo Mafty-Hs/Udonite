@@ -212,17 +212,7 @@ export class RoundComponent implements OnInit {
       chattext,
       "",
       "System",
-      "",
-      "",
-      false,
-      false,
-      false,
-      -1,
-      false,
-      null,
-      null,
-      "",
-      false
+      ""
      );
   }
 

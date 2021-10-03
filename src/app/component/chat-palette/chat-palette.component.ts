@@ -6,7 +6,7 @@ import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
-import { ChatMessageService } from 'service/chat-message.service';
+//import { ChatMessageService } from 'service/chat-message.service';
 import { PanelService } from 'service/panel.service';
 import { DiceBotService } from 'service/dice-bot.service';
 
@@ -58,14 +58,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
-    public chatMessageService: ChatMessageService,
+//    public chatMessageService: ChatMessageService,
     private panelService: PanelService,
     private diceBotService: DiceBotService
   ) { }
 
   ngOnInit() {
     Promise.resolve().then(() => this.updatePanelTitle());
-    this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+  //  this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     this.gameType = this.character.chatPalette ? this.character.chatPalette.dicebot : '';
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', -1000, event => {
@@ -73,7 +73,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
           this.panelService.close();
         }
         if (this.chatTabidentifier === event.data.identifier) {
-          this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+      //    this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
       });
   }
@@ -127,23 +127,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string, isUseStandImage?: boolean }) {
     if (this.chatTab) {
       let text = this.palette.evaluate(value.text, this.character.rootDataElement);
-      this.chatMessageService.sendMessage(
-        this.chatTab, 
-        text, 
-        value.gameType, 
-        value.sendFrom, 
-        value.sendTo,
-        value.color, 
-        value.isInverse,
-        value.isHollow,
-        value.isBlackPaint,
-        value.aura,
-        value.isUseFaceIcon,
-        value.characterIdentifier,
-        value.standIdentifier,
-        value.standName,
-        value.isUseStandImage
-      );
       this.filterText = '';
     }
   }

@@ -9,12 +9,8 @@ import { EventSystem } from '@udonarium/core/system';
 import { PromiseQueue } from '@udonarium/core/system/util/promise-queue';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
-import { GameCharacter } from '@udonarium/game-character';
-import { PeerCursor } from '@udonarium/peer-cursor';
-import { StandConditionType } from '@udonarium/stand-list';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-import { CutInList } from '@udonarium/cut-in-list';
-
+import { StandService } from 'service/stand.service.ts';
 
 @Injectable({
   providedIn: 'root'
@@ -236,76 +232,13 @@ export class DiceBotService {
 
     let matchMostLongText = '';
     // ダイスボットへのスタンドの反応
-    const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
-    if (gameCharacter instanceof GameCharacter) {
-      const standInfo = gameCharacter.standList.matchStandInfo(result, originalMessage.imageIdentifier);
-      if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
-        if (standInfo.farewell) {
-          const sendObj = {
-            characterIdentifier: gameCharacter.identifier
-          };
-          if (originalMessage.to) {
-            const targetPeer = PeerCursor.findByUserId(originalMessage.to);
-            if (targetPeer) {
-              if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetPeer.peerId);
-              EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
-            }
-          } else {
-            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj);
-          }
-        } else if (standInfo && standInfo.standElementIdentifier) {
-          const diceBotMatch = <DataElement>ObjectStore.instance.get(standInfo.standElementIdentifier);
-          if (diceBotMatch && diceBotMatch.getFirstElementByName('conditionType')) {
-            const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value;
-            if (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage) {
-              const sendObj = {
-                characterIdentifier: gameCharacter.identifier, 
-                standIdentifier: standInfo.standElementIdentifier, 
-                color: originalMessage.color,
-                secret: originalMessage.to ? true : false
-              };              
-              if (sendObj.secret) {
-                const targetPeer = PeerCursor.findByUserId(originalMessage.to);
-                if (targetPeer) {
-                  if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
-                  EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
-                }
-              } else {
-                EventSystem.call('POPUP_STAND_IMAGE', sendObj);
-              }
-            }
-          }
-        }
-      }
-      matchMostLongText = standInfo.matchMostLongText;
+    if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
+      this.standService.diceBotShowStand(result,originalMessage.characterIdentifier,originalMessage.to,originalMessage.color,originalMessage.imageIdentifier);
     }
     
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
-    // ダイスによるカットイン発生
-    const cutInInfo = CutInList.instance.matchCutInInfo(result);
     if (!isSecret && chatTab.isUseStandImage) {
-      for (const identifier of cutInInfo.identifiers) {
-        const sendObj = {
-          identifier: identifier, 
-          secret: originalMessage.to ? true : false,
-          sender: PeerCursor.myCursor.peerId
-        };
-        if (sendObj.secret) {
-          const targetPeer = PeerCursor.findByUserId(originalMessage.to);
-          if (targetPeer) {
-            if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, targetPeer.peerId);
-            EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
-          }
-        } else {
-          EventSystem.call('PLAY_CUT_IN', sendObj);
-        }
-      }
-    }
-
-    // 切り取り
-    if (matchMostLongText.length < cutInInfo.matchMostLongText.length) matchMostLongText = cutInInfo.matchMostLongText;
-    if (matchMostLongText && diceBotMessage.text) {
-      diceBotMessage.text = diceBotMessage.text.slice(0, diceBotMessage.text.length - matchMostLongText.length);
+      this.standService.cutIn(result,originalMessage.to);
     }
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
@@ -318,5 +251,7 @@ export class DiceBotService {
   }
 
 
-  constructor() { }
+  constructor(
+    private standService: StandService
+  ) { }
 }

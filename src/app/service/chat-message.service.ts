@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { GameCharacterService } from 'service/game-character.service';
+import { StandService } from 'service/stand.service.ts';
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -20,7 +21,8 @@ export class ChatMessageService {
   gameType: string = '';
 
   constructor(
-    private gameCharacterService:  GameCharacterService
+    private gameCharacterService:  GameCharacterService,
+    private standService:  StandService
   ) { }
 
   get chatTabs(): ChatTab[] {
@@ -49,24 +51,38 @@ export class ChatMessageService {
   characterSend(chatTab: ChatTab, text: string, gameType: string, sendFrom: string,
    sendTo?: string,isUseFaceIcon?: boolean, isUseStandImage?: boolean ,standName? :string)
   {
-    let chatSet = this.gameCharacterService.chatSet(sendFrom,isUseFaceIcon);
+    let chatSet = this.gameCharacterService.chatSet(sendFrom,isUseFaceIcon,text,standName);
+    let color = chatSet.color ? chatSet.color : this.myColor; 
+    let name,newTo :string;
+    if (sendTo) {
+      newTo = this.findId(sendTo);
+      name = this.makeMessageName(chatSet.name , sendTo);
+    }
+    else {
+      newTo = "";
+      name = chatSet.name;
+    } 
+    if (isUseStandImage && chatSet.standInfo) {
+      this.standService.showStand(text,sendFrom,sendTo,color,chatSet.standInfo,true);
+    }
+    this.standService.cutIn(text,sendTo);
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.userId,
-      to: '',
-      name: chatSet.name,
+      to: newTo,
+      name: name,
       imageIdentifier: chatSet.imageIdentifier,
       timestamp: this.calcTimeStamp(chatTab),
       tag: chatSet.isUseFaceIcon ? gameType : `${gameType} noface`,
       text: StringUtil.cr(text),
-      color: chatSet.color ? chatSet.color : this.myColor,
+      color: color ,
       isInverseIcon: chatSet.isInverse,
       isHollowIcon:  chatSet.isHollow,
       isBlackPaint:  chatSet.isBlackPaint,
       aura:  chatSet.aura,
       characterIdentifier: sendFrom,
-      standIdentifier: "",
-      standName: "",
-      isUseStandImage: false
+      standIdentifier: chatSet.standIdentifier,
+      standName: standName,
+      isUseStandImage: isUseStandImage
     };
     return chatTab.addMessage(chatMessage);
   }
@@ -74,21 +90,10 @@ export class ChatMessageService {
   systemSend(chatTab: ChatTab, text: string) {
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.userId,
-      to: '',
       name: 'System',
-      imageIdentifier: '',
       timestamp: this.calcTimeStamp(chatTab),
-      tag: '',
       text: StringUtil.cr(text),
       color: '',
-      isInverseIcon: 0,
-      isHollowIcon:  0,
-      isBlackPaint:  0,
-      aura:  -1,
-      characterIdentifier: "",
-      standIdentifier: "",
-      standName: "",
-      isUseStandImage: false
     };
     return chatTab.addMessage(chatMessage);
   }
@@ -106,6 +111,7 @@ export class ChatMessageService {
       name = PeerCursor.myCursor.name;
       newTo = "";
     }
+    this.standService.cutIn(text,sendTo);
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.userId,
       to: newTo,

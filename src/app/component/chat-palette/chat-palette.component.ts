@@ -8,7 +8,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 //import { ChatMessageService } from 'service/chat-message.service';
 import { PanelService } from 'service/panel.service';
-import { DiceBotService } from 'service/dice-bot.service';
+//import { DiceBotService } from 'service/dice-bot.service';
 
 @Component({
   selector: 'chat-palette',
@@ -51,16 +51,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   private selectedPaletteIndex = -1;
 
-  get diceBotInfos() { return this.diceBotService.diceBotInfos }
+//  get diceBotInfos() { return this.diceBotService.diceBotInfos }
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
-//    public chatMessageService: ChatMessageService,
-    private panelService: PanelService,
-    private diceBotService: DiceBotService
+    private panelService: PanelService
   ) { }
 
   ngOnInit() {

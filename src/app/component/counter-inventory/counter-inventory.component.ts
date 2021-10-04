@@ -2,7 +2,7 @@ import { Counter , CounterAssign } from '@udonarium/counter';
 import { GameCharacterService } from 'service/game-character.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { CounterService } from 'service/counter.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 interface inventoryContext {
   characterIdentifier: string;
@@ -53,8 +53,8 @@ export class CounterInventoryComponent implements OnInit {
     return this.gameCharacterService.get(identifier)
   }
 
-  get counterList(){
-    return this.myList
+  get counterList():inventoryContext[] {
+    return this.myList;
   }
 
   isFirst(index :number) :boolean {
@@ -79,13 +79,16 @@ export class CounterInventoryComponent implements OnInit {
   remove(identifier: string){
     let counter = this.counterService.getAssign(identifier);
     if (counter)  counter.remove() ;
+    this.changeDetectorRef.detectChanges();
   }
 
   constructor(
     private counterService: CounterService,
     public gameCharacterService: GameCharacterService,
     private panelService: PanelService,
-  ) { }
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
   }

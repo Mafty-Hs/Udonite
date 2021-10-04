@@ -17,8 +17,8 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -28,6 +28,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
+import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
@@ -383,6 +384,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     private effectService: EffectService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
@@ -735,10 +737,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private showChatPalette(gameObject: GameCharacter) {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
-    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
-    component.character = gameObject;
+    let palette = this.playerService.myPalette;
+    this.playerService.addList(gameObject.identifier);
+    if (!palette) {
+      let option: PanelOption = { left: 200, top: 100 , width: 620, height: 350 };
+      palette = this.panelService.open<PlayerPaletteComponent>(PlayerPaletteComponent
+, option);
+    }
   }
 
   private showStandSetting(gameObject: GameCharacter) {

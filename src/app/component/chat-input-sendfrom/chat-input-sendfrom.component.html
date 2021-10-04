@@ -1,4 +1,4 @@
-<div class="test">
+<div class="selecter">
   <div *ngIf="!touched && !isLock ;else images">
     <select name="sendFrom" class="select" (change)="touch()" [(ngModel)]="sendFrom"
      [ngStyle]="{'color': getColor(), 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
@@ -9,6 +9,9 @@
        </option>
     </select>
   </div>
+</div>
+<div class="setting">
+  <chat-input-setting  [character]='character' (chatSetting)='_chatSetting($event)'></chat-input-setting>
 </div>
 <ng-template #images>
   <div *ngIf="!character; else isCharacter" class="imagebox">

@@ -4,7 +4,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { DataElement } from '@udonarium/data-element';
 import { PanelOption, PanelService } from 'service/panel.service';
-import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { PlayerService } from 'service/player.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,22 +36,6 @@ export class GameCharacterService {
 
   dataElements(identifier :string) :DataElement[] {
     return this.get(identifier).detailDataElement.children as DataElement[];
-  }
-
-  showDetail(identifier :string ,coordinate?) {
-    let character = this.get(identifier);
-    let option: PanelOption;
-    let title = 'キャラクターシート';
-    if (character.name.length) title += ' - ' + character.name;
-
-    if (coordinate) {
-      option = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 800, height: 600 };
-    }
-    else {
-      option = { title: title, left: 100, top: 100, width: 800, height: 600 };
-    }
-    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
-    component.tabletopObject = character;
   }
 
   //チャット用
@@ -137,12 +121,21 @@ export class GameCharacterService {
   }
 
   constructor(
-    private panelService: PanelService
+    private panelService: PanelService,
+    private playerService: PlayerService
   ) { 
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
+        if (!this.locationCheck(this.get(event.data.identifier),true)) {
+          this.playerService.removeList(event.data.identifier); 
+        }
         this.shouldUpdateCharacterList = true;
       })
+      .on('DELETE_GAME_OBJECT', -1000, event => {
+        if (this.playerService.checkList(event.data.identifier)) {
+          this.playerService.removeList(event.data.identifier);
+        }
+      });
   }
 }

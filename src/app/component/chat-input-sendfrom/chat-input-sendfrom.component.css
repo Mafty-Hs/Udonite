@@ -1,13 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
 
-.test {
+.selecter {
   margin: 0;
+}
+
+.setting {
+  left: 180px;
+  top: 0px;
+  position: absolute;
+  height: 30px;
+  width: calc(100%-180px);
+  margin: 0;
+  padding: 0;
 }
 
 .select {
   width: 12em;
   position: absolute;
-  z-index: 5;
   top: 8px;
   left: 8px;
 }
@@ -16,7 +25,6 @@
   width: 9em;
   position: absolute;
   overflow:hidden;
-  z-index: 5;
   top: 8px;
   left: 40px;
 }
@@ -27,7 +35,7 @@
   font-size: 14px;
   font-weight: bold;
   font-family: 'Noto Sans JP', sans-serif;
-  background:rgba(200,200,200,0.7);
+  background:rgba(200,200,200,0.8);
   text-shadow    :
        -0.1px  -0.1px 0px #222,
        0.1px  0.1px 0px #666;

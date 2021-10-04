@@ -31,22 +31,28 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   @Output() chatSetting = new EventEmitter<object>();
 
   get gameType(): string { return this.chatData.gameType };
-  set gameType(gameType: string) { this.chatData.gameType = gameType; this.chatSetting.emit(this.chatData); };
-  private _sendFrom: string;
+  set gameType(gameType: string) { 
+    this.chatData.gameType = gameType;
+    this.chatSetting.emit(this.chatData);
+    if (this.character && this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
+      this.character.chatPalette.dicebot = gameType;
+    }
+  };
+  private _character: GameCharacter;
   @Input()
-  set sendFrom(sendFrom: string) {
-    this._sendFrom = sendFrom;
-    if (this.character) {
+  set character(character: GameCharacter) {
+    this._character = character;
+    if (character) {
       this.chatData.isCharacter = true;
       if(!this.gameType && this.diceBotInfos) {
-        this.gameType = this.character.chatPalette?.dicebot;
+        this.gameType = character.chatPalette?.dicebot;
       }
     }
     else this.chatData.isCharacter = false;
     this.chatSetting.emit(this.chatData);
     this.canVisible();
   }
-  get sendFrom() { return this._sendFrom; }
+  get character(): GameCharacter { return this._character; }
 
   get sendTo(): string { return this.chatData.sendTo };
   set sendTo(sendTo: string) { this.chatData.sendTo = sendTo; this.chatSetting.emit(this.chatData);}
@@ -174,11 +180,6 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
       textView.text = this.gameHelp;
     });
   }
-
-  get character(): GameCharacter {
-    return this.gameCharacterService.get(this.sendFrom);
-  }
-
 
   get hasStand(): boolean {
     if (!this.character || !this.character.standList) return false;

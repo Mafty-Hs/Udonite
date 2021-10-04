@@ -9,7 +9,6 @@ import { CardStackComponent } from 'component/card-stack/card-stack.component';
 import { CardComponent } from 'component/card/card.component';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { ChatMessageComponent } from 'component/chat-message/chat-message.component';
-import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
@@ -90,7 +89,6 @@ import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.co
     CardStackComponent,
     CardStackListComponent,
     ChatMessageComponent,
-    ChatPaletteComponent,
     ChatTabComponent,
     ChatTabSettingComponent,
     ChatWindowComponent,
@@ -115,7 +113,6 @@ import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.co
     RoomSettingComponent,
     UIPanelComponent,
     SafePipe,
-    ChatPaletteComponent,
     TextViewComponent,
     TerrainComponent,
     PeerCursorComponent,

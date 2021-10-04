@@ -39,7 +39,7 @@
       </ng-container>
     </select>
   </div>
-  <div *ngIf="!showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div *ngIf="showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div class="bottom">

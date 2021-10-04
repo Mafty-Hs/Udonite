@@ -14,26 +14,15 @@
   flex-flow: column;
   justify-content:flex-start;
   position: absolute;
+  top: 30px;
   left: 60px;
+  height: calc(100% - 30px);
   width: calc(100% - 65px);
-}
-
-.null {
-  height: 30px;
-  pointer-events: none;
-  display:flex; 
-  flex-flow: row; 
-  justify-content:flex-end;
-}
-
-.setting {
-  width: calc(100% - 130px);
-  pointer-events: auto;
 }
 
 .sendFrom {
   height: 75px;
-  max-width:240px;
+  width:100%;
   padding: 0;
   margin: 0;
 }

@@ -97,12 +97,12 @@ export class StandService {
           if (sendToPeer != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, sendToPeer);
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
         }
-        } else {
-          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
-        }
-      } else if (StringUtil.cr(text).trim() && character.text) {
-        EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: sendFrom });
+      } else {
+       EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
       }
+    } else if (StringUtil.cr(text).trim() && character.text) {
+      EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: sendFrom });
+    }
   }
 
   getPeer(identifier :string ) {

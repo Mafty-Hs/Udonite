@@ -9,6 +9,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { PlayerPaletteControlComponent } from 'component/player-palette-control/player-palette-control.component';
 import { GameCharacterService } from 'service/game-character.service';
+import { PlayerService } from 'service/player.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
@@ -31,7 +32,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   } ;
 
   get paletteList(): string[] {
-    return PeerCursor.myCursor.paletteList;
+    return this.playerService.paletteList;
   }
   get characterPaletteList(): GameCharacter[] {
     return this.paletteList.map( identifier => 
@@ -39,15 +40,9 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     )
   }
 
-  set paletteList(identifers: string[]) {
-    PeerCursor.myCursor.paletteList = identifers;
-  };
-
-  //Peerに紐付けると循環参照になるため、一旦コンポーネントに持たせる
-  localpalette: ChatPalette = new ChatPalette('ChatPalette');
   get palette(): ChatPalette { 
     if (this.isMine(this.sendFrom)) {
-      return this.localpalette; 
+      return  this.playerService.localpalette; 
     }
     else {
       return this.character.chatPalette;
@@ -76,6 +71,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   _sendFrom: string = this.myPeer.identifier;
   get sendFrom(): string { return this._sendFrom; }
   set sendFrom(sendFrom: string) {
+    if (!sendFrom) return;
     this._sendFrom = sendFrom;
     if (this.isEdit) this.toggleEditMode();
     if (this.isMine(sendFrom)){
@@ -179,31 +175,21 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   addList() {
     if (this.selectedCharacter == 'default') { return }
-    if (this.checkList(this.selectedCharacter)) { return }
-    this.paletteList.push(this.selectedCharacter);
+    this.playerService.addList(this.selectedCharacter);
     this.selectedCharacter = 'default';
     this.resizeHeight();
   }
 
   removeList(identifier: string) {
-    if (identifier == this.myPeer.identifier) {return}
-    if (identifier == this.sendFrom) {this.sendFrom = this.myPeer.identifier;}
-    const index = this.paletteList.indexOf(identifier);
-    if (index > -1) {
-      this.paletteList.splice(index, 1);
-    }
+    this.playerService.removeList(identifier);
     this.resizeHeight();
-  }
-
-  private checkList(identifier: string):boolean {     
-    if (this.paletteList.indexOf(identifier) >= 0) { return true } 
-    return false; 
   }
 
   constructor(
     public chatMessageService: ChatMessageService,
     private panelService: PanelService,
     private gameCharacterService: GameCharacterService,
+    private playerService: PlayerService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
   ) { }
@@ -211,31 +197,18 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'パレットバインダー');
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-    this.localpalette.setPalette(`プレイヤーチャットパレット`);
-    for (const identifier of this.paletteList) {
-      if (!this.gameCharacterService.location(identifier, false)) {
-        this.removeList(identifier);
-      }
-    }
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-        if (event.data.aliasName !== GameCharacter.aliasName) return;
-        if (!this.gameCharacterService.location(event.data.identifier, false)) {
-          this.removeList(event.data.identifier); 
-        }
-      })
       .on('DELETE_GAME_OBJECT', -1000, event => {
         if (this.chatTabidentifier === event.data.identifier) {
           this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
-        if (this.checkList(event.data.identifier)) {
-          this.removeList(event.data.identifier);
-        }
       });
+   if(!this.playerService.myPalette) this.playerService.myPalette = this;
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.playerService.myPalette = null;
   }
 
   selectPalette(line: string) {
@@ -256,7 +229,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       { name: Network.peerId, alias: '個人インベントリへ移動' },
       { name: 'graveyard', alias: '墓場へ移動' }
     ];
-    actions.push({ name: '詳細を表示', action: () => { this.gameCharacterService.showDetail(gameObject.identifier); } });
     actions.push(ContextMenuSeparator);
     for (let location of locations) {
       if (gameObject.location.name === location.name) continue;

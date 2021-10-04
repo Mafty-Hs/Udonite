@@ -5,9 +5,10 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
-
+import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
+import { PlayerService } from 'service/player.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
@@ -16,7 +17,6 @@ import { CardStack } from '@udonarium/card-stack';
 import { Card } from '@udonarium/card';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
-import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -94,6 +94,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     private modalService: ModalService,
     private pointerDeviceService: PointerDeviceService,
   ) { }
@@ -336,10 +337,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   showChatPalette() {
     if (!(this.tabletopObject instanceof GameCharacter)) return;
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
-    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
-    component.character = <GameCharacter>this.tabletopObject;
+    let palette = this.playerService.myPalette;
+    this.playerService.addList(this.tabletopObject.identifier);
+    if (!palette) {
+      let option: PanelOption = { left: 200, top: 100 , width: 620, height: 350 };
+      palette = this.panelService.open<PlayerPaletteComponent>(PlayerPaletteComponent
+, option);
+    }
   }
 
   showStandSetting() {

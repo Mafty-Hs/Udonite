@@ -9,14 +9,14 @@ import { SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
-
-import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
+import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ModalService } from 'service/modal.service';
+import { PlayerService } from 'service/player.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -54,6 +54,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
+    private playerService: PlayerService,
     private inventoryService: GameObjectInventoryService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
@@ -286,9 +287,9 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     });
     actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(gameObject); } });
-    //if (gameObject.location.name !== 'graveyard') {
+    if (gameObject.location.name !== 'graveyard') {
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
-    //}
+    }
     actions.push({ name: 'スタンド設定', action: () => { this.showStandSetting(gameObject) } });
     actions.push(ContextMenuSeparator);
     actions.push({
@@ -430,10 +431,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private showChatPalette(gameObject: GameCharacter) {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
-    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
-    component.character = gameObject;
+    let palette = this.playerService.myPalette;
+    this.playerService.addList(gameObject.identifier);
+    if (!palette) {
+      let option: PanelOption = { left: 200, top: 100 , width: 620, height: 350 };
+      palette = this.panelService.open<PlayerPaletteComponent>(PlayerPaletteComponent, option);
+    }
   }
 
   selectGameObject(gameObject: GameObject) {

@@ -17,7 +17,13 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   get sendFrom(): string { return this._sendFrom };
   set sendFrom(sendFrom: string) { 
     this._sendFrom = sendFrom;
+    this.character = this.gameCharacterService.get(sendFrom) 
     this.sendFromChange.emit(sendFrom); 
+  }
+
+  @Output() chatSetting = new EventEmitter<object>();
+  _chatSetting(e) {
+    this.chatSetting.emit(e);
   }
 
   touched:boolean = false;
@@ -28,9 +34,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   isUseFaceIcon: boolean = true;  
-  get character(): GameCharacter {
-    return this.gameCharacterService.get(this.sendFrom);
-  }
+  character: GameCharacter; 
 
   get imageFile(): ImageFile {
     let image: ImageFile = null;

@@ -5,8 +5,6 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { ChatInputSendfromComponent } from 'component/chat-input-sendfrom/chat-input-sendfrom.component';
-import { ChatInputSettingComponent } from 'component/chat-input-setting/chat-input-setting.component';
 import { BatchService } from 'service/batch.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';

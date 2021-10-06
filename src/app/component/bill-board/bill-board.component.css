@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #dcdcdc;
+}
+
+.handle {
+  top: 0px;
+  height: 30px;
+  background:linear-gradient(0deg, #212121 10%, #424242 20%, #FAFAFA 50%, #424242 65%, #212121 95% 100%);
+  padding:0;
+  margin:0;
+  position: absolute;
+  width: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.normal {
+  font-size: 14px;
+  background-color: #212121;
+  color: white;
+}
+.alert {
+  font-size: 14px;
+  animation: flash 1s linear infinite;
+  background-color: #BA3030;
+  color: white;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+  
+  
+  100% {
+    opacity: 1;
+  }
+}
+
+.content {
+  position: absolute;
+  top:0px;
+  width: 240px;
+  height: 0px;
+  overflow:auto;
+  transition: 0.2s;
+  background: #424242;
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+  background-image:
+	 linear-gradient(45deg,  #212121 25%, #212121 25%, transparent 25%,
+	  transparent 75%, #212121 75%, #212121 75%),
+	 linear-gradient(-135deg, #212121 25%, #212121 25%, transparent 25%,
+	  transparent 75%, #212121 75%, #212121 75%);
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  flex-direction: column; 
+  flex-wrap: nowrap;
+}
+
+.card {
+  font-family: 'Roboto', sans-serif;
+  margin: 12px;
+  padding: 0.5rem ;
+  border: solid 1px black;
+  width: 180px;
+  height: 40px;
+  border-radius:  4px;
+  background-color: #EEE;
+  color: black;
+  font-size:14px;
+  box-shadow: 5px 5px 5px #222;
+}
+

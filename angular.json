@@ -39,6 +39,7 @@
               "msgpack-lite",
               "lzbase62",
               "pako",
+              "buffer",
             ]
           },
           "configurations": {

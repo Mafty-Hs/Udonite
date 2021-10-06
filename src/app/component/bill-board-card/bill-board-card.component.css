@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.frame {
+  width:100%;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.item {
+  width:100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.password-box {
+  width:180px;
+  display: flex;
+  flex-direction: row;
+}
+
+.peer-select {
+ 
+  font-size: 12px;
+}
+
+.small-text {
+  font-size: 12px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;  
+}
+
+.control {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.auth {
+  display: flex;
+  flex-direction: row;
+}
+
+.password {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-text {
+  font-size: 12px;
+}
+

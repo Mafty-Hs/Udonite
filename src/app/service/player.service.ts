@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatPalette } from '@udonarium/chat-palette';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class PlayerService {
     return false; 
   }
 
-   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
   constructor() {
     this.localpalette =  new ChatPalette('LocalPalette');
   }

@@ -46,7 +46,6 @@ export class CounterService {
 
   unique(identifier :string): Counter {
     let counter = CounterList.instance.unique(identifier);
-    console.log(counter);
     return counter ? counter : this.nullCounter;
   }
 

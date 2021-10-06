@@ -80,6 +80,8 @@ import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
 import { ChatInputSendfromComponent } from './component/chat-input-sendfrom/chat-input-sendfrom.component';
 import { ChatInputSettingComponent } from './component/chat-input-setting/chat-input-setting.component';
 import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.component';
+import { BillBoardComponent } from './component/bill-board/bill-board.component';
+import { BillBoardCardComponent } from './component/bill-board-card/bill-board-card.component';
 
 @NgModule({
   declarations: [
@@ -143,6 +145,8 @@ import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.co
     ChatInputSendfromComponent,
     ChatInputSettingComponent,
     ChatTabEaseComponent,
+    BillBoardComponent,
+    BillBoardCardComponent,
   ],
   imports: [
     BrowserModule,

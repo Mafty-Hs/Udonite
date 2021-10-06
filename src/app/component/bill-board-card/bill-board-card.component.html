@@ -1,0 +1,66 @@
+<div class="frame">
+  <div class="item">
+    <div *ngIf="isEdit; else showAuthority">
+      <select style="max-width: 140px" [(ngModel)]="dataType">
+        <option value=0>全体に公開</option>
+        <option value=1>全体に公開(編集不可)</option>
+        <option value=2>公開範囲を制限</option>
+      </select>
+    </div>
+    <div style="margin: 1px 6px"></div>
+    <div *ngIf="isEdit; else showTitle">
+        <input class="title" style="width:100%" type="text" placeholder="件名" [(ngModel)]="title">
+    </div>
+  </div>
+  <div class="item" style="height:50px;" *ngIf="isEdit">
+    <div class="password-box" *ngIf=
+     "(dataType && ( !card || !card?.ownerPassword ))">
+      <div class="password">
+        <label class="control-text">オーナーパスワード</label>
+        <input class="control-text" style="height: 1em;width: 9em;" type="text" [(ngModel)]="password">
+      </div>
+      <div class="small-text" style="color:pink;">必須！
+      </div>
+    </div>
+    <div class="peer-select" *ngIf='dataType == 2'>
+      <label>許可するプレイヤー</label >
+      <select style="max-width: 10em" [(ngModel)]="peer">
+          <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color">{{peer.name}}
+          </option>
+      </select>
+      <button class="control-text" (click)="addPeer()">追加</button>
+    </div>
+  </div>
+  <div class="item">
+    <form>
+      <textarea name="textArea" rows="20" cols="65" [readOnly]="!isEdit"  placeholder="本文" [(ngModel)]="text"></textarea>
+    </form>
+  </div>
+  <div class="control">
+    <div class="auth" *ngIf="( !isEdit && (readOnly || isSecret) ); else nullspace">
+      <div class="password">
+        <label class="control-text">オーナーパスワード</label>
+        <input class="control-text" style="height: 1em;width: 8em;" type="text" [(ngModel)]="password">
+      </div>
+      <button class="control-text" (click)="passwordAuth()">認証</button>
+    </div>
+    <div class="buttons">
+      <button *ngIf="isEdit&&!card" class="control-text" (click)="create()" >作成</button>
+      <button *ngIf="!isEdit&&!readOnly&&!isSecret" class="control-text" (click)="edit()" >編集</button>
+      <button *ngIf="isEdit&&card" class="control-text" (click)="remove()" >削除</button>
+      <button *ngIf="isEdit&&card" class="control-text" (click)="save()" >保存</button>
+      <button class="control-text" (click)="close()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #nullspace>
+  <p>　</p>
+</ng-template>
+<ng-template #showTitle>
+  <span class="title">{{title}}</span>
+</ng-template>
+<ng-template #showAuthority>
+  <span style="font-size:14px">{{authType[dataType]}}</span>
+</ng-template>

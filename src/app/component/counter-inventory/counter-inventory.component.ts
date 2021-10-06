@@ -53,13 +53,9 @@ export class CounterInventoryComponent implements OnInit {
     return this.gameCharacterService.get(identifier)
   }
 
-  get counterList():inventoryContext[] {
-    return this.myList;
-  }
-
   isFirst(index :number) :boolean {
     if (index == 0) return true;
-    let locallist = this.counterList;
+    let locallist = this.myList;
     if (locallist[index].characterIdentifier ==
          locallist[index - 1].characterIdentifier) {
       return false;
@@ -68,7 +64,7 @@ export class CounterInventoryComponent implements OnInit {
   }
 
   mergeRow(characterIdentifier:string) :number {
-    let locallist = this.counterList.filter(counter => counter.characterIdentifier == characterIdentifier);
+    let locallist = this.myList.filter(counter => counter.characterIdentifier == characterIdentifier);
     return locallist.length; 
  }
 

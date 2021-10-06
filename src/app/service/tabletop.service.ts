@@ -21,8 +21,10 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 import { CounterList } from '@udonarium/counter-list';
+import { BillBoard } from '@udonarium/bill-board';
 import { Round } from '@udonarium/round';
 import { CounterService } from './counter.service';
+import { BillBoardService } from './bill-board.service';
 
 import { CoordinateService } from './coordinate.service';
 
@@ -65,7 +67,8 @@ export class TabletopService {
 
   constructor(
     private coordinateService: CoordinateService,
-    private counterService: CounterService
+    private counterService: CounterService,
+    private billBoardService: BillBoardService
   ) {
     this.initialize();
   }
@@ -117,6 +120,8 @@ export class TabletopService {
           this.counterService.loadRound(gameObject);
         } else if (gameObject instanceof CounterList) {
           this.counterService.loadCounter(gameObject);
+        } else if (gameObject instanceof BillBoard) {
+          this.billBoardService.loadCard(gameObject);
         }
       });
   }

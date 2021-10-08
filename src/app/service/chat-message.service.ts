@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { GameCharacterService } from 'service/game-character.service';
-import { StandService } from 'service/stand.service.ts';
+import { StandService } from 'service/stand.service';
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';

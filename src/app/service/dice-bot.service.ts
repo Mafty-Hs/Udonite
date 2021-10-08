@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DiceBot , DiceBotInfo, DiceBotInfosIndexed, DiceRollResult , api } from '@udonarium/dice-bot';
-import { SvcDiceBotSetting } from '@udonarium/service/svc-dice-bot-setting.ts'
+import { SvcDiceBotSetting } from '@udonarium/service/svc-dice-bot-setting'
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
@@ -10,7 +10,7 @@ import { PromiseQueue } from '@udonarium/core/system/util/promise-queue';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-import { StandService } from 'service/stand.service.ts';
+import { StandService } from 'service/stand.service';
 
 @Injectable({
   providedIn: 'root'

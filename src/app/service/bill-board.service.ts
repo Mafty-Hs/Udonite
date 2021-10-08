@@ -18,7 +18,7 @@ export class BillBoardService {
   } 
 
   add(_title:string ,_text:string, _dataType: number, _ownerPassword?: string, _allowPeers?: string[]){
-    this.billBoard.create({
+    let result = this.billBoard.create({
         title: _title,
         text: _text,
         dataType:String(_dataType),
@@ -27,6 +27,7 @@ export class BillBoardService {
         ownerPassword: _ownerPassword,
         allowPeers: _allowPeers
     });
+    return result.identifier;
   }
 
   remove(card :BillBoardCard) {
@@ -36,7 +37,7 @@ export class BillBoardService {
   loadCard(gameObject :BillBoard) {
     let board = gameObject.children as BillBoardCard[];
     for (let card of board) {
-      this.billBoard.create({
+    this.billBoard.create({
         title: card.title,
         text: card.text,
         dataType:card.dataType,

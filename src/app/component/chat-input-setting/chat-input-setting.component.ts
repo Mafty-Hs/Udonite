@@ -1,5 +1,6 @@
 import { Component, OnInit,Input ,Output ,EventEmitter, ViewChild, AfterViewInit , ElementRef,ChangeDetectorRef } from '@angular/core';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { PlayerService } from 'service/player.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -139,8 +140,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     this.contextMenuService.open(position, actions, '現在表示可能な項目');
   }
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+  get myPeer(): PeerCursor { return this.playerService.myPeer; }
+  get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   get sendToColor(): string {
     let object = ObjectStore.instance.get(this.sendTo);
     if (object instanceof PeerCursor) {
@@ -214,6 +215,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
     private diceBotService: DiceBotService,
+    private playerService: PlayerService,
     private gameCharacterService:GameCharacterService,
     private contextMenuService: ContextMenuService,
     private changeDetectorRef: ChangeDetectorRef

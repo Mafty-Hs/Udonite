@@ -36,6 +36,9 @@ export class BillBoardComponent implements OnInit {
   handle_message:string = "Message Board";
   notification :boolean = false;
 
+  newList:string[] = [];
+  updateList:string[] = [];
+
   get cards():BillBoardCard[] {
     return this.billBoardService.list();
   }
@@ -44,12 +47,20 @@ export class BillBoardComponent implements OnInit {
 
 
   createCard() {
-    let option: PanelOption = { left: 400, top: 100, width: 500, height: 450 };
+    let title = '新規作成';
+    let option: PanelOption = { title: title,left: 400, top: 100, width: 500, height: 450 };
     let component = this.panelService.open<BillBoardCardComponent>(BillBoardCardComponent, option);
     component.isEdit = true;
   }
   openCard(card :BillBoardCard) {
-    let option: PanelOption = { left: 400, top: 100, width: 500, height: 400 };
+    if (this.updateList.includes(card.identifier)) {
+      this.updateList.splice(this.updateList.indexOf(card.identifier),1);
+    }
+    if (this.newList.includes(card.identifier)) {
+      this.newList.splice(this.newList.indexOf(card.identifier),1);
+    }
+    let title = ' ' + card.title;
+    let option: PanelOption = { title: title, left: 400, top: 100, width: 500, height: 400 };
     let component = this.panelService.open<BillBoardCardComponent>(BillBoardCardComponent, option);
     component.card = card;
   }
@@ -93,6 +104,12 @@ export class BillBoardComponent implements OnInit {
     EventSystem.register(this)
       .on('BOARD_UPDATE', event => {
           this.alert();
+          this.updateList.push(event.data);
+      });
+    EventSystem.register(this)
+      .on('BOARD_NEW', event => {
+          this.alert();
+          this.newList.push(event.data);
       });
   }
 

@@ -2,7 +2,11 @@
   <div *ngIf="toggleSW" class="box">
     <button style="width:200px;margin: 6px 12px;" (click)="createCard()" >新規作成</button>
     <div *ngFor="let message of cards">
-      <div class="card" [@flyInOut]="'active'" (click)="openCard(message)">{{message.title}}
+      <div class="card" [ngClass]="{'secret' : message.dataType == '2',
+        'update' : updateList.includes(message.identifier),
+        'new' : newList.includes(message.identifier)}"
+         [@flyInOut]="'active'" (click)="openCard(message)">
+      {{message.title}}
       </div><div></div>
     </div>
   </div>

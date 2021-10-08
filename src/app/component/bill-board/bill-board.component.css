@@ -78,6 +78,7 @@
 }
 
 .card {
+  position:relative;
   font-family: 'Roboto', sans-serif;
   margin: 12px;
   padding: 0.5rem ;
@@ -91,3 +92,31 @@
   box-shadow: 5px 5px 5px #222;
 }
 
+.secret {
+  color: #666;
+}
+
+.secret::before {
+  font-family: 'Material Icons';
+  color: #222;
+  font-size:12px;
+  content: "\e899";
+}
+
+.update::after {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  color: #FF4500;
+  font-size:8px;
+  content: "Update";
+}
+
+.new::after {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  color: red;
+  font-size:8px;
+  content: "New!";
+}

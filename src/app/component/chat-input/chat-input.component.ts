@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { PlayerService } from 'service/player.service';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { BatchService } from 'service/batch.service';
@@ -11,7 +11,6 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
-import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { ChatTab } from '@udonarium/chat-tab';
 
 interface chatDataContext {
@@ -60,7 +59,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   isDirect: boolean = false;
   @Input('isPalette') isPalette: boolean = false;
   isUseFaceIcon: boolean = true;
-  color:string = PeerCursor.myCursor.color; 
+  color:string = this.myPeer.color; 
   public chatSetting(e :chatDataContext) {
     this.chatData = e;
     this.isDirect = (this.sendTo != null && this.sendTo.length) ? true : false;
@@ -73,8 +72,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   writingPeers: Map<string, ResettableTimeout> = new Map();
   writingPeerNameAndColors: { name: string, color: string }[] = [];
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+  get myPeer(): PeerCursor { return this.playerService.myPeer; }
+  get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
 
 
   constructor(
@@ -82,6 +81,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     public chatMessageService: ChatMessageService,
     private batchService: BatchService,
     private panelService: PanelService,
+    private playerService: PlayerService,
   ) { }
 
   ngOnInit(): void {
@@ -119,11 +119,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   private updateWritingPeerNameAndColors() {
     this.writingPeerNameAndColors = Array.from(this.writingPeers.keys()).map(peerId => {
-      let peer = PeerCursor.findByPeerId(peerId);
-      return {
-        name: (peer ? peer.name : ''),
-        color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
-      };
+      return this.playerService.findPeerNameAndColor(peerId);
     });
   }
   
@@ -131,11 +127,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (this.writingEventInterval === null && this.previousWritingLength <= this.text.length) {
       let sendTo: string = null;
       if (this.isDirect) {
-        let object = ObjectStore.instance.get(this.sendTo);
-        if (object instanceof PeerCursor) {
-          let peer = PeerContext.parse(object.peerId);
-          if (peer) sendTo = peer.peerId;
-        }
+        let peerId = this.playerService.getPeerId(this.sendTo);
+        if (peerId) sendTo = peerId;
       }
       EventSystem.call('WRITING_A_MESSAGE', this.chatTabidentifier, sendTo);
       this.writingEventInterval = setTimeout(() => {

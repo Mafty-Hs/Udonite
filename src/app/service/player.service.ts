@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
@@ -32,6 +33,31 @@ export class PlayerService {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+  getPeer(identifier :string): PeerCursor {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof PeerCursor) {
+      return object as PeerCursor;
+    }
+    return null;
+  }
+  getPeerId(identifier :string): string {
+    let peer = this.getPeer(identifier);
+    if (peer) {
+      let peerContext = PeerContext.parse(peer.peerId);
+      return peerContext.peerId;
+    }
+    return null;
+  }
+
+  findPeerNameAndColor(peerId: string):{ name: string, color: string } {
+    let peer = PeerCursor.findByPeerId(peerId);
+      return {
+        name: (peer ? peer.name : ''),
+        color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
+      };
+  }
+
+
   constructor() {
     this.localpalette =  new ChatPalette('LocalPalette');
   }

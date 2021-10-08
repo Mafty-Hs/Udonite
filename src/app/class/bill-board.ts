@@ -28,6 +28,7 @@ export class BillBoard  extends ObjectNode implements InnerXml{
      card.setAttribute(key, _card[key]);
     }
     this.appendChild(card);
+    return card;
   }
   
   remove(card: BillBoardCard) {

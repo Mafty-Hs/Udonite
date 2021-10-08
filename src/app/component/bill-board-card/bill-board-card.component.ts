@@ -27,6 +27,9 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   peers:string[] = [];
   peer:string = "";
 
+  get otherPeerName(): { name: string, color: string }[]  {
+    return [];
+  }
   get otherPeers() {
     return this.playerService.otherPeers;
   }
@@ -48,17 +51,18 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   }
 
   create() {
+    let identifier :string;
     if (this.dataType) {
       if (!this.password) {
         this.modalService.open(TextViewComponent, { title: 'パスワードが設定されていません', text: 'パスワードが設定されていません。\n接続が切れたとき・部屋を再作成した時に権限情報は全て失われるため、パスワードが必要になります。' });
         return;
       }
-      this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.getHash(this.password),this.peers);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.getHash(this.password),this.peers);  
     }
     else {
-      this.billBoardService.add(this.title ,this.encode(this.text), this.dataType);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType);  
     } 
-    EventSystem.call('BOARD_UPDATE', null);
+    EventSystem.call('BOARD_NEW', identifier);
     this.close();
   }
 
@@ -82,7 +86,8 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     this.card.dataType = String(this.dataType);
     this.isEdit = false;
     this.panelService.height -= 50 ;
-    EventSystem.call('BOARD_UPDATE', null);
+    EventSystem.call('BOARD_UPDATE', this.card.identifier);
+
   }
 
   addPeer() {

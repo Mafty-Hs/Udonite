@@ -11,16 +11,15 @@ import { GameCharacterService } from 'service/game-character.service';
 })
 export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
-  @Input('isLock') isLock: boolean = false;;
-  @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
-  @Output() sendFromChange = new EventEmitter<string>();
-  get sendFrom(): string { return this._sendFrom };
-  set sendFrom(sendFrom: string) {
-    console.log(sendFrom) 
+  @Input('isLock') isLock: boolean = false;
+  private _sendFrom:string;
+  @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
     this.character = this.gameCharacterService.get(sendFrom) 
     this.sendFromChange.emit(sendFrom); 
   }
+  get sendFrom(): string { return this._sendFrom };
+  @Output() sendFromChange = new EventEmitter<string>();
 
   @Output() chatSetting = new EventEmitter<object>();
   _chatSetting(e) {
@@ -39,8 +38,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
   get imageFile(): ImageFile {
     let image: ImageFile = null;
-    if (this.gameCharacterService.get(this.sendFrom)) {
-      image = this.gameCharacterService.get(this.sendFrom).imageFile;
+    if (this.character) {
+      image = this.character.imageFile;
     } else if (this.myPeer.image) {
       image = this.myPeer.image;
     }

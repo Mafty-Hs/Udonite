@@ -40,14 +40,18 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get isCharacter():boolean { return this.chatData.isCharacter };
   get isUseStandImage():boolean { return this.chatData.isUseStandImage };
   get standName():string { return this.chatData.standName };
-  @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
-  @Output() sendFromChange = new EventEmitter<string>();
+
+
+  _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
+  @Input('sendFrom') set sendFrom(sendFrom: string) {
+    this._sendFrom = sendFrom;
+  }
   get sendFrom(): string { return this._sendFrom };
-  set sendFrom(sendFrom: string) { this._sendFrom = sendFrom; this.sendFromChange.emit(sendFrom); }
-  @Input('text') _text: string = '';
+
+  _text: string = '';
   @Output() textChange = new EventEmitter<string>();
   get text(): string { return this._text };
-  set text(text: string) { this._text = text; this.textChange.emit(text); }
+  @Input('text') set text(text: string) { this._text = text; this.textChange.emit(text); }
 
   @Output() chat = new EventEmitter<{ 
     text: string, gameType: string, sendFrom: string, sendTo: string,

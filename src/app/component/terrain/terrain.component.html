@@ -2,7 +2,7 @@
   [style.width.px]="width * gridSize" [style.height.px]="depth * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" [movable.interact]="isInteract" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-3d is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
-    appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked">
+    appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked || stopRotate">
     <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
       <div *ngIf="isDropShadow && (terreinAltitude != 0 || (isSlope && !hasWall))"
         style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.98); backface-visibility: visible"

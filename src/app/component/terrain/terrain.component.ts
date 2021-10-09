@@ -76,6 +76,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
 
+  stopRotate:boolean = false;
   gridSize: number = 50;
 
   get isWallExist(): boolean {
@@ -177,6 +178,19 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
+      (this.stopRotate
+        ? {
+          name: '☑ 回転を禁止', action: () => {
+            this.stopRotate = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 回転を禁止', action: () => {
+            this.stopRotate = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       (this.isLocked
         ? {
           name: '☑ 固定', action: () => {

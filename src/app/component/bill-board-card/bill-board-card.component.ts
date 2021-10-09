@@ -24,7 +24,10 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   password:string = "";
   title:string = "";
   text:string = "";
+  allowPlayerName :string[];
   peers:string[] = [];
+
+
   peer:string = "";
 
   get otherPeerName(): { name: string, color: string }[]  {
@@ -48,6 +51,10 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
       this.text = this.decode(card.text);
     }
     this.peers = card.allowPeers;
+    this.allowPlayerName = this.peers.map( identifier => {
+      let peer = this.playerService.getPeer(identifier);
+      if (peer) return peer.name;
+    });
   }
 
   create() {
@@ -91,7 +98,10 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   }
 
   addPeer() {
-    this.peers.push(this.peer);
+    if (!this.peers.includes(this.peer)) {
+      this.peers.push(this.peer);
+      this.allowPlayerName.push(this.playerService.getPeer(this.peer).name);
+    }
   }
 
   passwordAuth() {

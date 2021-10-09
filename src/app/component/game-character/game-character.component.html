@@ -3,7 +3,7 @@
   (movable.ondragend)="onMoved()">
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
-      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="stopRotate">
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner" [ngClass]="{'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">

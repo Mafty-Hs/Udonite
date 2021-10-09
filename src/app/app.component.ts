@@ -185,7 +185,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         if (event.data.dice && event.data.dice.url) {
           this.diceBotService.initialize(event.data.dice.url);
         } else {
-          //ダイスボットAPIのURLが存在しない時のエラー処理
+            this.modalService.open(TextViewComponent, { title: '設定エラー', text: 'bcDice-APIサーバの設定がありません。ダイスボットは利用できません。' });
         }
         Network.setApiKey(event.data.webrtc.key);
         Network.open();

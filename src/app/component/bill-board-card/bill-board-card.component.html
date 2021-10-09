@@ -52,7 +52,10 @@
       <button class="control-text" (click)="close()">閉じる</button>
     </div>
   </div>
-  <div class="allowPlayers">
+  <div *ngIf="card" class="allowPlayers">
+    <span>オーナー: {{card.ownerName}}  </span>
+    <span>許可されたプレイヤー:</span>
+    <span *ngFor="let name of allowPlayerName">{{name}}</span>
   </div>
 </div>
 

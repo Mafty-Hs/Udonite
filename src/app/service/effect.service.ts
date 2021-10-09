@@ -53,8 +53,6 @@ export class EffectService {
     '核': {time: 6000, file: "assets/effect/nuke.efk",size: 1.8,isEmotion: false},
     '銃': {time: 1000, file: "assets/effect/gun.efk",size: 1,isEmotion: false},
     '出血': {time: 2000, file: "assets/effect/blood.efk",size: 1,isEmotion: false},
-    '触手1': {time: 2000, file: "assets/effect/tentacle1.efk",size: 1,isEmotion: false},
-    '触手2': {time: 2000, file: "assets/effect/tentacle2.efk",size: 1,isEmotion: false},
     '!': {time: 2000, file: "assets/effect/ex.efk",size: 1,isEmotion: true},
     '?': {time: 2000, file: "assets/effect/question.efk",size: 1,isEmotion: true},
     '♪': {time: 2000, file: "assets/effect/note.efk",size: 1,isEmotion: true},

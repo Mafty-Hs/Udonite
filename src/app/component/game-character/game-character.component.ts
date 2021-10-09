@@ -143,6 +143,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.effectService.canEffect;
   }
 
+  stopRotate:boolean = false;
   gridSize: number = 50;
   math = Math;
   stringUtil = StringUtil;
@@ -601,6 +602,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           name: '☐ 他のキャラクターに乗る', action: () => {
             this.isNotRide = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
+      (this.stopRotate
+        ? {
+          name: '☑ 回転を禁止', action: () => {
+            this.stopRotate = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 回転を禁止', action: () => {
+            this.stopRotate = true;
+            SoundEffect.play(PresetSound.lock);
           }
         }),
       (this.isAltitudeIndicate

@@ -15,7 +15,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
   @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };
-  set sendFrom(sendFrom: string) { 
+  set sendFrom(sendFrom: string) {
+    console.log(sendFrom) 
     this._sendFrom = sendFrom;
     this.character = this.gameCharacterService.get(sendFrom) 
     this.sendFromChange.emit(sendFrom); 

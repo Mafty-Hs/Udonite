@@ -148,7 +148,7 @@ export class SubMenuComponent implements OnInit {
   }
 
   resetRound() {
-    this.counterService.round.count = 0;
+    this.counterService.round.reset();
     this.closeMe.emit();
   }
 

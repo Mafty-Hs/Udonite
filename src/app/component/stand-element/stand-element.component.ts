@@ -214,7 +214,7 @@ export class StandElementComponent implements OnInit {
     });
     EventSystem.trigger('POPUP_CHAT_BALLOON', { 
       characterIdentifier: this.gameCharacter.identifier, 
-      text: 'これはテストです、あなたにだけ見えています。立ち絵の設定を行う際は、メニューの「スタンド設定」から「透明化、自動退去」をオフにすると微調整が行いやすくなります。', 
+      text: 'これはテストです、あなたにだけ見えています。立ち絵の設定を行う際は、メニューの「立ち絵表示設定」を開くと全ての設定状況・表示範囲の確認を行うことができます。', 
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null,
       dialogTest: true
     });

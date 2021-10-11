@@ -10,6 +10,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
+import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 interface chatDataContext {
   sendTo : string;
@@ -30,13 +31,26 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   myWindow:HTMLElement;
   chatData:chatDataContext = {sendTo: "", gameType: "", isCharacter: false ,isUseStandImage: true , standName: ""};
   @Output() chatSetting = new EventEmitter<object>();
+  minimumMode:boolean = false;
+
+  get windowWidth():number {
+    return this.myWindow.getBoundingClientRect().width;
+  }
 
   get gameType(): string { return this.chatData.gameType };
   set gameType(gameType: string) { 
     this.chatData.gameType = gameType;
     this.chatSetting.emit(this.chatData);
-    if (this.character && this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
-      this.character.chatPalette.dicebot = gameType;
+    if (this.character) {
+      if (this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
+        this.character.chatPalette.dicebot = gameType;
+      }
+      if(this.hasStand) {
+        this.setVisible("stand");
+      }
+      else {
+        this.setVisible("standSetting");
+      }
     }
   };
   private _character: GameCharacter;
@@ -51,7 +65,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     }
     else this.chatData.isCharacter = false;
     this.chatSetting.emit(this.chatData);
-    this.canVisible();
+    setTimeout(() => { this.canVisible()}, 500);
   }
   get character(): GameCharacter { return this._character; }
 
@@ -63,15 +77,16 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   get standName(): string { return this.chatData.standName };
   set standName(standName: string) { this.chatData.standName = standName; this.chatSetting.emit(this.chatData); }
 
-  visibleList:string[] = ["sendTo","gameType","stand","standPos","color"];
-  characterVisibleList:string[] = ["stand","standPos","color"];
-  isSendTo:boolean = true;
-  isGameType:boolean = true;
+  visibleList:string[] = ["sendTo","gameType","standSetting","stand","standPos","color"];
+  characterVisibleList:string[] = ["standSetting","stand","standPos","color"];
+  isSendTo:boolean = false;
+  isGameType:boolean = false;
+  isStandSetting:boolean = false;
   isStand:boolean = false;
   isStandPos:boolean = false;
   isColor:boolean = false;
   canVisible() {
-    let canDisplayCount: number = this.myWindow?.offsetWidth < 190 ? 1 : 2;
+    let canDisplayCount: number = this.windowWidth < 190 ? 1 : 2;
     let count: number = 0;
     if (!this.character) this.sortVisible(canDisplayCount);
     for (let item = 0; item < this.visibleList.length ; item++) {
@@ -95,6 +110,9 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
        break;
       case 'gameType':
         this.isGameType = bool;
+       break;
+      case 'standSetting':
+        this.isStandSetting = this.character ?  bool : false;
        break;
       case 'stand':
         this.isStand = this.character ?  bool : false;
@@ -129,15 +147,26 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
      { this.setVisible("gameType"); } });
     if (this.character) {
       if (this.character.standList) {
-        actions.push({ name: 'スタンド', action: () =>
+        actions.push({ name: '立ち絵設定', action: () =>
+         { this.setVisible("standSetting"); } });
+        actions.push({ name: '立ち絵選択', action: () =>
          { this.setVisible("stand"); } });
-        actions.push({ name: 'スタンド位置', action: () =>
+        actions.push({ name: '立ち絵位置', action: () =>
          { this.setVisible("standPos"); } });
       }
       actions.push({ name: '色', action: () =>
        { this.setVisible("color"); } });
     }
     this.contextMenuService.open(position, actions, '現在表示可能な項目');
+  }
+
+  showStandSetting() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = this.character;
+    this.setVisible("stand");
+    this.setVisible("standPos");
   }
 
   get myPeer(): PeerCursor { return this.playerService.myPeer; }
@@ -223,6 +252,13 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
+    setTimeout(() => {
+      this.viewInit();
+    }, 100);
+  }
+
+  viewInit() {
+    if (this.windowWidth < 190) this.minimumMode = true;
     this.canVisible()
   }
 

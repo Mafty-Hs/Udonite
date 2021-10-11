@@ -244,14 +244,27 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
-    if (window.innerWidth < 600) this.minimumMode = true;
-    if (window.innerWidth < 900) StandImageComponent.isShowStand = false;
-    this.standService.leftEnd = (window.innerWidth < 900) ? 200 : 700;
-    this.standService.width = (window.innerWidth < 900) ? (window.innerWidth - 200) : (window.innerWidth - 700);
+    let chatWidth = 700;
+    if (window.innerWidth < 600) {
+      this.minimumMode = true;
+      StandImageComponent.isShowStand = false;
+      chatWidth = 500;
+      this.standService.leftEnd = 200;
+      this.standService.width = 200;
+    }
+    else if (window.innerWidth < 900) { 
+      chatWidth = 500;
+      this.standService.leftEnd = 500;
+      this.standService.width = (window.innerWidth - 700);
+    }
+    else {
+      this.standService.leftEnd = 700;
+      this.standService.width = (window.innerWidth - 700);
+    }
     setTimeout(() => {
-      this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
+      this.panelService.open(ChatWindowComponent, { width: chatWidth, height: 400, left: 0, top: 490 });
       this.panelService.open(PeerMenuComponent, { width: 400, height: 400, left: 0,top: 50 });
-      this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
+      this.modalService.open(LobbyComponent, { width: chatWidth, height: 400, left: 0, top: 400 });
     }, 0);
   }
 

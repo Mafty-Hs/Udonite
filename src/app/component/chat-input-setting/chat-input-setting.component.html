@@ -1,4 +1,4 @@
-<div #setting class="flex-box">
+<div #setting class="flex-box" (contextmenu)="config($event); false">
   <div class="flex-column" *ngIf="isSendTo">
         ➡
         <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
@@ -22,6 +22,9 @@
           </optgroup>
         </select>
   </div>
+  <div class="flex-column" *ngIf="isStandSetting">
+    <button style="height:2em;font-size:14px;padding: 3px 2em;" (click)="showStandSetting()">立ち絵設定</button>
+  </div>
   <div class="flex-column" *ngIf="isStand">
     <b style="font-size: 10px;">立ち絵: </b>
     <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" />
@@ -31,15 +34,15 @@
     </select>
   </div>
   <div class="flex-column" *ngIf="isStandPos">
-    <b style="font-size: 8px;">立ち絵位置: </b>
+    <b style="font-size: 14px;">立ち絵位置: </b>
     <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position">
   </div>
   <div class="flex-column" *ngIf="isColor">
     <b style="font-size: 0.7em;">色: </b>
     <input type="color" style="width:4em;" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
   </div>
-  <button style="padding:0;"(click)="showDicebotHelp()"><img src="./assets/icons/dice_icon.png"></button>
-  <div class="material-icons setting" (click)="config($event)">
+  <button *ngIf="!minimumMode" style="padding:0;"(click)="showDicebotHelp()"><img src="./assets/icons/dice_icon.png"></button>
+  <div *ngIf="!minimumMode" class="material-icons setting" (click)="config($event)">
     settings
   </div>
 </div>

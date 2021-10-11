@@ -9,7 +9,7 @@
   top: 0px;
   position: absolute;
   height: 30px;
-  width: calc(100%-180px);
+  width: calc(100% - 180px);
   margin: 0;
   padding: 0;
 }

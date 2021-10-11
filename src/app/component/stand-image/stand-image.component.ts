@@ -7,6 +7,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandImageService } from 'service/stand-image.service';
+import { StandService } from 'service/stand.service';
 
 @Component({
   selector: 'stand-image',
@@ -54,6 +55,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
   @Input() gameCharacter: GameCharacter;
   @Input() standElement: DataElement;
   @Input() color: string;
+  halfSize:number = this.standService.leftEnd - (this.standService.width / 2);
+  halfWindow:number = document.documentElement.clientWidth/2;
 
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
 
@@ -79,6 +82,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   math = Math;
 
   constructor(
+    private standService: StandService,
     private ngZone: NgZone
   ) { }
 
@@ -175,7 +179,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
   get position(): number {
     if (!this.gameCharacter) return 0;
     let elm = this.standElement.getFirstElementByName('position');
-    return elm && elm.currentValue ? +elm.value :this.gameCharacter.standList.position;
+    let left = this.standService.leftEnd;
+    let grid = (this.standService.width / 100);
+    let pos = elm && elm.currentValue ? +elm.value :this.gameCharacter.standList.position;
+    return left + Math.ceil(grid * pos);
   }
 
   get adjustY(): number {
@@ -205,9 +212,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCSSLeft(): number {
-    return (this.imageWidth * (this.position > 50 ? 0.33 : 0.66) - this.imageWidth / 2 - 12)
-     + (this.position * document.documentElement.clientWidth / 100) 
-     - (this.position > 50 ? this.dialogBoxCSSMaxWidth : 0);
+    return (this.imageWidth * (this.position > this.halfWindow ? 0.33 : 0.66) - this.imageWidth / 2 - 12)
+     + this.position 
+     - (this.position > this.halfWindow ? this.dialogBoxCSSMaxWidth : 0);
   }
 
   get dialogBoxCSSRight(): number {

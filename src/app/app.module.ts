@@ -82,6 +82,7 @@ import { ChatInputSettingComponent } from './component/chat-input-setting/chat-i
 import { ChatTabEaseComponent } from './component/chat-tab-ease/chat-tab-ease.component';
 import { BillBoardComponent } from './component/bill-board/bill-board.component';
 import { BillBoardCardComponent } from './component/bill-board-card/bill-board-card.component';
+import { StandViewSettingComponent } from './component/stand-view-setting/stand-view-setting.component';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { BillBoardCardComponent } from './component/bill-board-card/bill-board-c
     ChatTabEaseComponent,
     BillBoardComponent,
     BillBoardCardComponent,
+    StandViewSettingComponent,
   ],
   imports: [
     BrowserModule,

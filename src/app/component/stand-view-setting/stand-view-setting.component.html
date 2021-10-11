@@ -1,0 +1,13 @@
+<div class="main">
+  <div #menu class="menu">
+    <span class="message">←矢印の範囲に立ち絵が表示されます。このパネルの横幅を変更することで表示範囲を調整できます。
+    </span>
+    <span class="message">→</span>
+  </div>
+  <div class="pos-list">
+    <img *ngFor="let data of posList" class="image"  [ngStyle]="{'left': data.pos + '%' }" [src]="data.image.url | safe: 'resourceUrl'" />
+    <span *ngFor="let pos of scaleList" class="scale" [ngStyle]="{'left': pos + '%' }">
+      {{pos}}
+    </span>
+  </div>
+</div>

@@ -24,6 +24,7 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoundComponent } from 'component/round/round.component';
 import { SubMenuComponent } from 'component/sub-menu/sub-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
 import { LobbyComponent } from 'component/lobby/lobby.component';
 import { NetworkStatusComponent } from 'component/network-status/network-status.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -39,6 +40,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { CounterService } from 'service/counter.service';
 import { EffectService } from 'service/effect.service';
+import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
@@ -76,6 +78,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
     private standImageService: StandImageService,
+    private standService: StandService,
     private cutInService: CutInService,
     private counterService: CounterService,
     private effectService: EffectService
@@ -242,6 +245,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     if (window.innerWidth < 600) this.minimumMode = true;
+    if (window.innerWidth < 900) StandImageComponent.isShowStand = false;
+    this.standService.leftEnd = (window.innerWidth < 900) ? 200 : 700;
+    this.standService.width = (window.innerWidth < 900) ? (window.innerWidth - 200) : (window.innerWidth - 700);
     setTimeout(() => {
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
       this.panelService.open(PeerMenuComponent, { width: 400, height: 400, left: 0,top: 50 });
@@ -267,6 +273,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     return;
   }
 
+  showStandView() {
+    let top = window.innerHeight - 150;
+    
+    let component = this.panelService.open(StandViewSettingComponent, { width: this.standService.width, height: 150, left: this.standService.leftEnd , top: top });
+  }
+
   showViewMenu(left: number) {
 
     const isShowStand = StandImageComponent.isShowStand;
@@ -285,9 +297,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
           { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') },
         ContextMenuSeparator,
-        { name: "スタンド設定" },
+        { name: "立ち絵設定" },
         ContextMenuSeparator,
-          { name: `${ isShowStand ? '☑' : '☐' }スタンド表示`, 
+          { name: '立ち絵表示設定', action: () => this.showStandView()}, 
+          { name: `${ isShowStand ? '☑' : '☐' }立ち絵表示`, 
             action: () => {
               StandImageComponent.isShowStand = !isShowStand;
             }
@@ -302,7 +315,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             StandImageComponent.isCanBeGone = !isCanBeGone;
             }
           },
-          { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }, 
+          { name: '表示中の立ち絵全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }, 
         ContextMenuSeparator,
         { name: "エフェクト設定" },
         ContextMenuSeparator,

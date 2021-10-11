@@ -12,6 +12,9 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 })
 export class StandService {
 
+  leftEnd:number = 0;
+  width:number = 0;
+
   constructor(
    private gameCharacterService: GameCharacterService
   ) { }

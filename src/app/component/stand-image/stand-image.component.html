@@ -1,7 +1,7 @@
 <div [style.visibility]="isShowStand ? 'visible' : 'hidden'" 
   [style.pointer-events]="isShowStand ? 'auto' : 'none'">
   <div [@standInOut]="groupValue" *ngIf="!isFarewell && (isVisible || !isCanBeGone)" class="stand-image-container"
-    [style.left]="position + '%'"
+    [style.left]="position + 'px'"
     [style.height]="height == 0 ? '' : height + 'vh'"
     [style.margin-left.px]="-imageWidth / 2"
     [style.margin-bottom.px]="adjustY"
@@ -37,7 +37,7 @@
     style="pointer-events: none;" 
     [style.color]="color ? color : '#444'" 
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
-    [style.left]="position + '%'"
+    [style.left]="position + 'px'"
     [style.margin-bottom.px]="adjustY > 0 ? adjustY : 0"
     [style.border-color]="color ? color : '#444'"
     [style.margin-left.px]="nameTagCSSMarginLeft"
@@ -51,7 +51,7 @@
     [style.bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? dialogBoxCssBottom : 12"
     [style.max-width.px]="dialogBoxCSSMaxWidth"
     [style.margin-bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? adjustY : 0"
-    [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
-    [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
+    [ngStyle]="{left: (position <= halfWindow ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > halfWindow ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= halfWindow ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
+    [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= halfWindow, 'is-position-left': position > halfWindow}"
     [style.border-color]="color ? color : '#444'"><p style="width: 100%" [@dialogShake]="math.floor(dialogText.length / 2)" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</p></div>
 </div>

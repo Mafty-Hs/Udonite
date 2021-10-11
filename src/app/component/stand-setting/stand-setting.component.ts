@@ -108,7 +108,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePanelTitle() {
-    this.panelService.title = this.character.name + ' のスタンド設定';
+    this.panelService.title = this.character.name + ' の立ち絵設定';
   }
 
   add() {
@@ -121,7 +121,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       characterIdentifier: this.character.identifier,
       identifier: standElement.identifier
     });
-    if (!this.character || !this.character.standList || !window.confirm('スタンド設定を削除しますか？')) return;
+    if (!this.character || !this.character.standList || !window.confirm('立ち絵設定を削除しますか？')) return;
     this.standSettingXML = standElement.toXml();
     let elm = this.character.standList.removeChild(standElement);
     if (elm) {
@@ -174,15 +174,15 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 590 };
     let textView = this.panelService.open(TextViewComponent, option);
-    textView.title = 'スタンド設定ヘルプ';
+    textView.title = '立ち絵設定ヘルプ';
     textView.text = 
-`　キャラクターのスタンドの名前、位置と画像の高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にスタンドが表示される条件を設定できます。
+`　キャラクターの立ち絵の名前、位置と画像の高さ（それぞれ画面サイズに対する相対指定）、チャット送信時に立ち絵が表示される条件を設定できます。
 
-　スタンドに名前を設定した場合、チャットウィンドウ、チャットパネルのリストに表示され、選択可能になります。また、タグを設定した場合、異なるタグでは同じキャラクターであっても登場、退去のアニメーションが行われます。
+　立ち絵に名前を設定した場合、チャットウィンドウ、チャットパネルのリストに表示され、選択可能になります。また、タグを設定した場合、異なるタグでは同じキャラクターであっても登場、退去のアニメーションが行われます。
 
-　画像の位置と高さは個別指定も可能です、位置の個別指定はチェックなし、高さは0とした場合に全体の設定が使用されます。縦位置調整(AdjY)は、スタンド画像の高さに対する相対指定となります（例えば、-50%とすると画像の下半分が画面端より下に隠れます）。
+　画像の位置と高さは個別指定も可能です、位置の個別指定はチェックなし、高さは0とした場合に全体の設定が使用されます。縦位置調整(AdjY)は、立ち絵画像の高さに対する相対指定となります（例えば、-50%とすると画像の下半分が画面端より下に隠れます）。
 
-　条件の「指定画像」はチャット送信時のキャラクター画像あるいは顔ICです。また、特別な条件として常に、チャットテキストの末尾が"@退去"または"@farewell"の場合は、そのキャラクターのスタンドを退去させます。
+　条件の「指定画像」はチャット送信時のキャラクター画像あるいは顔ICです。また、特別な条件として常に、チャットテキストの末尾が"@退去"または"@farewell"の場合は、そのキャラクターの立ち絵を退去させます。
 
 　優先順位は高いものから
 
@@ -196,7 +196,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 　どの条件も満たさない場合「デフォルト」のものが使用され、同じ優先順位の条件が複数ある場合はランダムで1つが選択されます。
 
 　チャット末尾一致を判定する際、全角半角、アルファべットの大文字小文字は区別されません。
-　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、（スタンドの有効無効、条件を満たすかに関わらず）そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。`;
+　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、（立ち絵の有効無効、条件を満たすかに関わらず）そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。`;
   }
 
   private imageElementToFile(dataElm: DataElement): ImageFile {

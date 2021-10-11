@@ -12,7 +12,7 @@
   </div>
 </div>
 <div class="overview-selecter" [style.border-color]="overviewIndex == -1 ? 'red' : 'transparent'" style="padding: 0px; width: 695px;">
-  <label style="font-size: smaller; font-weight: bolder;"><input type="radio" name="{{panelId}}_overviewIndex" value="-1" [checked]="overviewIndex == -1" (click)="overviewIndex = -1"> スタンド画像をオーバービューに使用しない</label>
+  <label style="font-size: smaller; font-weight: bolder;"><input type="radio" name="{{panelId}}_overviewIndex" value="-1" [checked]="overviewIndex == -1" (click)="overviewIndex = -1"> 立ち絵画像をオーバービューに使用しない</label>
 </div>
 <hr>
 <div style="display: flex; flex-direction: row; flex-wrap: wrap">
@@ -33,7 +33,7 @@
     <hr>
   </div>
 </div>
-<button (click)="add()">スタンド設定の追加</button>
+<button (click)="add()">立ち絵設定の追加</button>
 <ng-container *ngIf="standSettingXML">
-  <button (click)="restore()">直前に削除したスタンドを戻す</button>
+  <button (click)="restore()">直前に削除した立ち絵を戻す</button>
 </ng-container>

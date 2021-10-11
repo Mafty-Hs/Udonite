@@ -23,7 +23,7 @@
         </select>
   </div>
   <div class="flex-column" *ngIf="isStand">
-    <b style="font-size: 8px;">Stand: </b>
+    <b style="font-size: 10px;">立ち絵: </b>
     <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" />
     <select style="width: 8em; font-size:12px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}" >
         <option value="" class="not-specified">未選択</option>
@@ -31,7 +31,7 @@
     </select>
   </div>
   <div class="flex-column" *ngIf="isStandPos">
-    <b style="font-size: 8px;">StandPos: </b>
+    <b style="font-size: 8px;">立ち絵位置: </b>
     <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position">
   </div>
   <div class="flex-column" *ngIf="isColor">

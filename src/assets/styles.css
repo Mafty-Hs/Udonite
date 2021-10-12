@@ -239,10 +239,12 @@ input[type="range"]:active::-webkit-slider-thumb {
 }
 
 .toggle {
+  display: inline-block;
   width: 44px;
   border:none;
   padding: 0;
   margin: 0;
+  white-space: nowrap;
 }
 
 .toggle input[type="checkbox"] {

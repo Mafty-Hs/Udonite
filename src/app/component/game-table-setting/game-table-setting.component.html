@@ -76,15 +76,21 @@
       <hr/>
       <div>
         <label class="self-setting">
-          <input type="checkbox" [(ngModel)]="tableGridShow" name="tableGridShow" />
           グリッドを常に表示<sup class="self-only">*</sup>
+          <div class="toggle">
+          <input type="checkbox" [(ngModel)]="tableGridShow" name="tableGridShow" />
+          <div><div></div></div>
+          </div>
         </label>
-        <label style="margin-left: 1em" class="self-setting">
-          <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
+        <label class="self-setting">
           スナップ<sup class="self-only">*</sup>
+          <div class="toggle">
+          <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
+          <div><div></div></div>
+          </div>
         </label>
         <ng-container *ngIf="!isDeleted">
-          <button style="margin-left: 2em" [disabled]="isSaveing" (click)="save()">
+          <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
               <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
               <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>

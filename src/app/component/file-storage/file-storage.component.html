@@ -36,10 +36,12 @@
       <option value="true">いずれか (OR)</option>
       <option value="">すべて (AND)</option>
     </select>
-    <label sytle="white-space: nowrap" title="最近使ったタグの画像を前に">
-      <input name="is-sort" value="Sort" type="checkbox" [(ngModel)]="isSort" checked="{{isSort ? 'checked' : ''}}" (change)="isSort = (isSort ? true : false)">
       <b style="font-size: smaller; margin-right: 3px">ソート</b>
-    </label>
+      <div class="toggle">
+      <label sytle="white-space: nowrap" title="最近使ったタグの画像を前に">
+        <input name="is-sort" value="Sort" type="checkbox" [(ngModel)]="isSort" checked="{{isSort ? 'checked' : ''}}" (change)="isSort = (isSort ? true : false)">
+        <div><div></div></div>
+    </label></div>
   </span>
 </div>
 <div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">

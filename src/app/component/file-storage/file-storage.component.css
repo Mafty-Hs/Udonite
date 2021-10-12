@@ -58,7 +58,7 @@
 .sticky-top {
   position: sticky;
   top: 0;
-  background-color: rgba(240, 218, 189, 0.9);
+  background-color: #212121;
   border-bottom: 1px dotted #666;
   z-index: 100;
 }
@@ -66,7 +66,7 @@
 .sticky-bottom {
   position: sticky;
   bottom: 0;
-  background-color: rgba(240, 218, 189, 0.9);
+  background-color: #212121;
   border-top: 1px dotted #666;
   z-index: 100;
 }

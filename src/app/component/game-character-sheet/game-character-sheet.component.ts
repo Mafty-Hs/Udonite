@@ -94,7 +94,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
-    private playerService: PlayerService,
+    public playerService: PlayerService,
     private modalService: ModalService,
     private pointerDeviceService: PointerDeviceService,
   ) { }

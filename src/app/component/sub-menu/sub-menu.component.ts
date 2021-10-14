@@ -4,6 +4,7 @@ import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { CounterService } from 'service/counter.service';
 import { SaveDataService } from 'service/save-data.service';
+import { PlayerService } from 'service/player.service';
 import { SaveHtmlService } from 'service/save-html.service';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
@@ -16,6 +17,7 @@ import { GameTableSettingComponent } from 'component/game-table-setting/game-tab
 import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { EffectViewComponent } from 'component/effect-view/effect-view.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
+import { RoomControlComponent } from 'component/room-control/room-control.component';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
 
@@ -32,6 +34,10 @@ export class SubMenuComponent implements OnInit {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  get disableAllDataSave() {
+    return this.playerService.disableAllDataSave;
+  }
+
   isOpen(itemType :string):boolean {
     if (itemType == this.selectMenu)
       return true;
@@ -47,13 +53,17 @@ export class SubMenuComponent implements OnInit {
         option.width = 400;
         component = PeerMenuComponent;
         break;
+      case 'RoomControlComponent':
+        option.width = 400;
+        component = RoomControlComponent;
+        break;
       case 'ChatWindowComponent':
         component = ChatWindowComponent;
         option.width = 700;
         break;
       case 'GameTableSettingComponent':
         component = GameTableSettingComponent;
-        option = { width: 610, height: 400, left: 100 };
+        option = { width: 610, height: 420, left: 100 };
         break;
       case 'FileStorageComponent':
         component = FileStorageComponent;
@@ -105,6 +115,7 @@ export class SubMenuComponent implements OnInit {
 
   constructor(
     private panelService: PanelService,
+    private playerService: PlayerService,
     private saveDataService: SaveDataService,
     private saveHtmlService: SaveHtmlService,
     private counterService: CounterService

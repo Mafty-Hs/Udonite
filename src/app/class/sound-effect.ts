@@ -26,6 +26,7 @@ export class PresetSound {
   static puyon: string = '';
   static surprise: string = '';
   static coinToss: string = '';
+  static alarm: string = '';
 }
 
 @SyncObject('sound-effect')

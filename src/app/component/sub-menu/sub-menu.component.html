@@ -17,13 +17,13 @@
           </label>
         </a>
       </li>
-      <li *ngIf="isOpen('file') && !isSaveing" (click)="save()">
+      <li *ngIf="isOpen('file') && !disableAllDataSave && !isSaveing" (click)="save()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">sd_storage</i></div>
           <div>保存</div>
         </a>
       </li>
-      <li *ngIf="isOpen('file')  && isSaveing" style="pointer-events: none;">
+      <li *ngIf="isOpen('file')   && !disableAllDataSave && isSaveing" style="pointer-events: none;">
         <a>
           <div><i class="material-icons vibration-amine">sd_storage</i></div>
           <div>{{progresPercent}}%</div>
@@ -33,6 +33,12 @@
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">web</i></div>
           <div>HTML</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('room')" (click)="open('RoomControlComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">people</i></div>
+          <div>ルーム共通</div>
         </a>
       </li>
       <li *ngIf="isOpen('room')" (click)="open('PeerMenuComponent')">

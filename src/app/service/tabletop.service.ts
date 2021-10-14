@@ -23,6 +23,8 @@ import { TextNote } from '@udonarium/text-note';
 import { CounterList } from '@udonarium/counter-list';
 import { BillBoard } from '@udonarium/bill-board';
 import { Round } from '@udonarium/round';
+import { Room } from '@udonarium/room';
+import { PlayerService } from './player.service';
 import { CounterService } from './counter.service';
 import { BillBoardService } from './bill-board.service';
 
@@ -68,7 +70,8 @@ export class TabletopService {
   constructor(
     private coordinateService: CoordinateService,
     private counterService: CounterService,
-    private billBoardService: BillBoardService
+    private billBoardService: BillBoardService,
+    private playerService: PlayerService
   ) {
     this.initialize();
   }
@@ -102,6 +105,14 @@ export class TabletopService {
       .on('XML_LOADED', event => {
         let xmlElement: Element = event.data.xmlElement;
         // todo:立体地形の上にドロップした時の挙動
+        
+        if (this.playerService.disableTableLoad) {
+          if(xmlElement.nodeName != 'character') return 
+        }
+        if (this.playerService.disableCharacterLoad) {
+          if(xmlElement.nodeName == 'character') return 
+        }
+
         let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
         if (gameObject instanceof TabletopObject) {
           let pointer = this.coordinateService.calcTabletopLocalCoordinate();

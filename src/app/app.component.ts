@@ -3,6 +3,7 @@ import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRe
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { CounterList } from '@udonarium/counter-list';
 import { IRound } from '@udonarium/round';
+import { RoomAdmin } from '@udonarium/room-admin';
 import { BillBoard } from '@udonarium/bill-board';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
@@ -102,6 +103,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     IRound.init();
     BillBoard.init();
+    RoomAdmin.init();
     CounterList.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
@@ -154,6 +156,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PresetSound.puyon = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/puyon1.mp3').identifier;
     PresetSound.surprise = AudioStorage.instance.add('./assets/sounds/otologic/Onmtp-Surprise02-1.mp3').identifier;
     PresetSound.coinToss = AudioStorage.instance.add('./assets/sounds/niconicomons/nc146227.mp3').identifier;
+    PresetSound.alarm = AudioStorage.instance.add('./assets/sounds/alarm.mp3').identifier;
 
     AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
     AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
@@ -173,6 +176,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     AudioStorage.instance.get(PresetSound.puyon).isHidden = true;
     AudioStorage.instance.get(PresetSound.surprise).isHidden = true;
     AudioStorage.instance.get(PresetSound.coinToss).isHidden = true;
+    AudioStorage.instance.get(PresetSound.alarm).isHidden = true;
 
     PeerCursor.createMyCursor();
     if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
@@ -225,6 +229,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       })
       .on('STOP_CUT_IN', -1000, event => {
         this.cutInService.stop(event.data.identifier);
+      })
+      .on('PLAY_ALARM', -1000, event => {
+        if (!event.data.identifier || event.data.identifier == PeerCursor.myCursor.peerId ) {
+          setTimeout(() => {
+            SoundEffect.play(PresetSound.alarm);
+          },event.data.time); 
+        }
       })
       .on('POPUP_STAND_IMAGE', -1000, event => {
         let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);

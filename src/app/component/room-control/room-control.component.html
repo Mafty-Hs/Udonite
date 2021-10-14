@@ -1,0 +1,69 @@
+<div class="flex-box">
+  <div class="flex-item">
+  <div style="font-size:16px">アラーム</div>
+  <input type="number" style="width:4em" name="alarmTime" [(ngModel)]="alarmTime"  />
+  秒後  送信先:
+  <select name="sendTo" style="width:10em" [(ngModel)]="sendTo" >
+      <option value="" class="not-specified">全員</option>
+      <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
+      <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
+    </option>
+  </select>
+  <button (click)="alarmSend()">送信</button>
+  </div>
+  <hr>
+  <div class="flex-item">
+    <div style="font-size:16px">ルーム管理者</div>
+    <div *ngIf="!playerService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
+  </div>
+  <hr>
+  <div class="flex-item">
+    <div style="font-size:16px">ルーム設定</div>
+    <div *ngIf="!adminAuth; else editSetting">
+     現在、下記の制御が有効になっています。
+      <ul>
+        <li *ngIf="playerService.roomAdmin.disableTableLoad">データアップロード禁止(キャラクター以外)</li>
+        <li *ngIf="playerService.roomAdmin.disableCharacterLoad">データアップロード禁止(キャラクター)</li>
+        <li *ngIf="playerService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
+        <li *ngIf="playerService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
+        <li *ngIf="playerService.roomAdmin.disableSeparateDataSave">個別データセーブ禁止</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<ng-template #enablePW>
+  ルームマスター機能有効です
+  <div *ngIf="adminAuth; else auth">
+    ルームマスターとして認証済みです。
+  </div>
+</ng-template>
+<ng-template #auth>
+  <div>
+     <label class="control-text">ルームマスターパスワードを入力することで認証可能です。</label>
+  </div>
+  <input style="height: 1em;width: 8em;" type="text" [(ngModel)]="password">
+  <button (click)="passwordAuth()">認証</button>
+</ng-template>
+<ng-template #editSetting>
+      <div class="toggle"><label>データアップロード禁止(キャラクター以外)
+        <input name="disableTableLoad" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTableLoad">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>データアップロード禁止(キャラクター)
+        <input name="disableCharacterLoad" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableCharacterLoad">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>チャットタブ設定禁止
+        <input name="disableTabSetting" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTabSetting">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>部屋全データセーブ禁止
+        <input name="disableAllDataSave" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableAllDataSave">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>個別データセーブ禁止
+        <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableSeparateDataSave">
+        <div><div></div></div>
+      </label></div><br>
+</ng-template>

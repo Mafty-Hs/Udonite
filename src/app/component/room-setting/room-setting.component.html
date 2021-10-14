@@ -3,6 +3,14 @@
       placeholder="ルームの名前は必須" /></div>
   <div>パスワード: <input class="input" (input)="calcPeerId(roomName, $event.target.value)" [(ngModel)]="password" maxlength="12" #passwordValidation="ngModel" placeholder="空ならパスワードなし"
     /></div>
+<div>
+  <span style="font-size: 12px;">ルームマスター権限を使用する</span>
+  <div class="toggle"><label>
+    <input name="roomAdmin" type="checkbox" [(ngModel)]="roomAdmin">
+    <div><div></div></div>
+  </label></div>
+  <span *ngIf="roomAdmin">ルームマスターパスワード<input [(ngModel)]="adminPassword" maxlength="10" placeholder="入力必須"/></span>
+</div>
   <hr/>
   <div *ngIf="roomNameValidation.errors && (roomNameValidation.dirty || roomNameValidation.touched)">
     <div [hidden]="!roomNameValidation.errors.required">
@@ -23,8 +31,11 @@
   <div *ngIf="!validateLength">
     ルームの名前とパスワードの合計が長すぎるようです。どちらかを少し短くしてみてください。
   </div>
+  <div *ngIf="roomAdmin && adminPassword.length < 1">
+    ルームマスター権限を利用する時はルームマスターパスワードの設定は必須です。
+  </div>
   <div>
-    <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength" (click)="createRoom()">新しいルームを作成</button>
+    <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength || (roomAdmin && adminPassword.length < 1)" (click)="createRoom()">新しいルームを作成</button>
   </div>
 </div>
 <div><span style="font-size: 12px;">※作成したルームは参加者が0人になった時点で解散します。ルームの状態を次回に持ち越したい場合は必ず「保存」してください。</span></div>

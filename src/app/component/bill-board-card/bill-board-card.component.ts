@@ -3,7 +3,6 @@ import { BillBoardCard } from '@udonarium/bill-board-card';
 import { BillBoardService } from 'service/bill-board.service';
 import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
-import * as SHA256 from 'crypto-js/sha256';
 import { ModalService } from 'service/modal.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -123,7 +122,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   }
 
   getHash(password: string) {
-    return SHA256(password).toString();
+    return this.playerService.getHash(password);
   }
 
 

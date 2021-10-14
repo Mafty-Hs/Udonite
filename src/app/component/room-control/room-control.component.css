@@ -1,0 +1,10 @@
+.flex-box {
+  width: 100%;
+  display:flex;
+  flex-flow: column wrap; 
+  justify-content: flex-start;
+}
+
+.flex-item {
+  font-size:14px;
+}

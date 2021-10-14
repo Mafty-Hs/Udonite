@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^12.2.9",
-    "@angular/cli": "^12.2.9",
+    "@angular/cli": "^12.2.10",
     "@angular/common": "^12.2.9",
     "@angular/compiler": "^12.2.9",
     "@angular/core": "^12.2.9",
@@ -54,7 +54,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^12.2.9",
+    "@angular-devkit/build-angular": "^12.2.10",
     "@angular/compiler-cli": "^12.2.9",
     "@angular/language-service": "^12.2.9",
     "@types/crypto-js": "^4.0.2",

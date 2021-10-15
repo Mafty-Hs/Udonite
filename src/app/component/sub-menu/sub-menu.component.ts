@@ -10,7 +10,6 @@ import { PlayerPaletteComponent } from 'component/player-palette/player-palette.
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
-import { GameCharacterGeneratorComponent } from 'component/game-character-generator/game-character-generator.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
@@ -74,10 +73,6 @@ export class SubMenuComponent implements OnInit {
         break;
       case 'JukeboxComponent':
         component = JukeboxComponent;
-        break;
-      case 'GameCharacterGeneratorComponent':
-        component = GameCharacterGeneratorComponent;
-        option = { width: 500, height: 300, left: 100 };
         break;
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;

@@ -2,6 +2,7 @@ import { ChatMessage, ChatMessageContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
+import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
 import { EffectService } from 'service/effect.service';
@@ -28,6 +29,14 @@ export class ChatTab extends ObjectNode implements InnerXml {
       this._unreadLength++;
       EventSystem.trigger('MESSAGE_ADDED', { tabIdentifier: this.identifier, messageIdentifier: child.identifier });
     }
+  }
+
+  getMessage(identifier :string): ChatMessage {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof ChatMessage) {
+      return object;
+    }
+    return null;
   }
 
   addMessage(message: ChatMessageContext): ChatMessage {

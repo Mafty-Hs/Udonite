@@ -148,7 +148,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showTabSetting() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 400 };
+    let option: PanelOption = { left: coordinate.x - 300, top: coordinate.y - 250, width: 500, height: 500 };
     let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
     component.selectedTab = this.chatTab;
     component.identifier = this.identifier;

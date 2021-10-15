@@ -1,60 +1,77 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
+  ChangeDetectorRef,
   Input,
   NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
 } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
-import { setZeroTimeout } from '@udonarium/core/system/util/zero-timeout';
 
 interface easeMessage {
   name :string;
   text: string;
   color: string;
+  identifier: string;
+  isDirect :boolean;
+  isSecret :boolean;
+  isSendFromSelf :boolean;
 }
 
 @Component({
   selector: 'chat-tab-ease',
   templateUrl: './chat-tab-ease.component.html',
   styleUrls: ['./chat-tab-ease.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatTabEaseComponent implements OnInit {
+  @ViewChild('messageContainer') messageContainer: ElementRef;
 
   @Input() localFontsize: number = 14;
-  @Input() bgColor: string = "grey";
-  @Input() chatTab: ChatTab;
-
-  private needUpdate:boolean = true;
+  _bgColor: string = "grey";
+  @Input() set bgColor(bgColor :string){
+    this._bgColor = bgColor;
+    this.needUpdate = true;
+    this.changeDetectorRef.detectChanges();
+  }
+  get bgColor(): string {return this._bgColor;}
+  private _chatTab: ChatTab;
+  @Input() set chatTab(chatTab: ChatTab){
+    this._chatTab = chatTab;
+    this.needUpdate = true;
+  }
+  get chatTab(): ChatTab {return this._chatTab;}
+  get isBlack() {return (this.bgColor == "black")}
+  needUpdate:boolean = true;
 
   private _chatMessages: easeMessage[] = [];
   get chatMessages(): easeMessage[] {
     if (!this.chatTab) return [];
     if (this.needUpdate) {
-      this.needUpdate = false;
       this._chatMessages = this.chatTab ? this.chatTab.chatMessages
        .map(message => {
+         let color:string = message.color;
+         if (message.isDirect || message.isSecret) color = "#DDD";
+         if (message.isSystem) color = "#444444";
+         if (this.isBlack && color == "#444444") color = "#EEE"; 
+         if (message.isDicebot || message.isCalculate) color = this.isBlack ? "#CCF"  : "#22F";
          let newMessage:easeMessage = {
            name: message.name,
            text: message.text,
-           color: message.color
+           color: color,
+           identifier: message.identifier,
+           isDirect: message.isDirect, 
+           isSecret: message.isSecret,
+           isSendFromSelf: message.isSendFromSelf
          };
          return newMessage; 
       }) : [];
+      this.needUpdate = false;
     }
     return this._chatMessages;
   }  
@@ -62,16 +79,38 @@ export class ChatTabEaseComponent implements OnInit {
   ngOnInit(){
   }
 
+  discloseMessage(index :number,identifier :string) {
+    let message = this.chatTab.chatMessages[index];
+    if (message.identifier != identifier) {
+      message = this.chatTab.getMessage(identifier);
+      if(!message) return;
+    }
+    message.tag = message.tag.replace('secret', '');
+    this.needUpdate = true;
+  }
+
   constructor(
     private ngZone: NgZone,
-    private changeDetector: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) { 
     EventSystem.register(this)
       .on('MESSAGE_ADDED', event => {
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!message || !this.chatTab.contains(message)) return;
-          this.changeDetector.detectChanges();
-          this.needUpdate = true;
+        this.needUpdate = true;
+        this.scrollToBottom();
      })
   }
+ 
+  scrollToBottom(){
+    try {
+      this.messageContainer.nativeElement.scroll({
+        top: this.messageContainer.nativeElement.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
+    } catch(err) { 
+    }                 
+  }
+ 
 }

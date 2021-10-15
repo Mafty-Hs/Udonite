@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+
 .white {
   width: 100%;
   overflow-x: hidden;
@@ -20,6 +22,11 @@
 .message {
   margin: 3px;
   padding: 0px 6px;
+  border-bottom:1px dotted #999;
+  font-family: 'Noto Sans JP', sans-serif;
+  text-shadow    :
+       -0.1px  -0.1px 0px #222,
+       0.1px  0.1px 0px #666;
 }
 
 .log {
@@ -36,3 +43,14 @@
 .virtual-scroll-container {
   flex-shrink: 0;
 }
+
+.direct-message {
+  background-color: #555;
+  border-bottom: 1px dotted #CCC;
+}
+
+.is-black.direct-message {
+  background-color: #666;
+  border-bottom: 1px dotted #CCC;
+}
+

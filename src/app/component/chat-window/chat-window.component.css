@@ -1,3 +1,13 @@
+.white {
+  background: #FFF;
+}
+.grey {
+  background: #CCC;
+}
+.black {
+  background: #212121;
+}
+
 .loop-anime {
   -webkit-animation: anime1 1.3s infinite ease-in-out;
   animation: anime1 1.3s infinite ease-in-out;

@@ -1,0 +1,19 @@
+<div class="flex-box">
+  <span>直接個人インベントリに作成されます</span>
+  <div class="flex-item">
+    <div class="imagebox"><img class="image" [src]="imageurl | safe: 'resourceUrl'" /></div>
+    <div class="column">
+      <div><button (click)="changeImage()">画像変更</button><div>
+      <span>名前：<input style="width:8em" [(ngModel)]="name" /></span>
+    </div>
+  </div>
+  <div>
+  立ち絵
+  <div class="toggle"><label>
+    <input name="useStand" type="checkbox" [(ngModel)]="useStand">
+    <div><div></div></div>
+  </label></div>
+  位置 <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position">
+  </div>
+  <button (click)="create()">作成</button>
+</div>

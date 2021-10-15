@@ -21,14 +21,21 @@
   <div #characterSelect class="character-select">
     <label>
       <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
-      <input name="chara-tab" type="radio" value="{{myPeer.identifier}}" [(ngModel)]="sendFrom">
+      <input type="radio" name="chara-tab" [value]="myPeer.identifier + ',-1'" [(ngModel)]="selectCharacter">
       <div>{{myPeer.name}}</div>
     </label>
-    <label *ngFor="let gameCharacter of characterPaletteList; index as i">
-      <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
-      <input name="chara-tab" type="radio" tabindex="{{i}}" value="{{gameCharacter.identifier}}" [(ngModel)]="sendFrom">
-      <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
-    </label>
+    <ng-container *ngFor="let gameCharacter of characterPaletteList">
+      <label>
+        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
+        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',-1'" [(ngModel)]="selectCharacter">
+        <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
+      </label>
+      <label *ngFor="let palette of subPalette(gameCharacter)?.palette; index as i ">
+        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
+        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',' + i" [(ngModel)]="selectCharacter">
+        <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{palette.paletteLines[0].palette}}</div>
+      </label>
+    </ng-container>
   </div>
   <div *ngIf="showPalette && !isEdit" class="chat-pallete">
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
@@ -55,12 +62,19 @@
         <span *ngIf="!isEdit">編集</span>
         <span *ngIf="isEdit">確定</span>
       </button>
+      <button *ngIf="showPalette && character" (click)="addPalette()">
+      追加
+      </button>      
+      <button *ngIf="showPalette && paletteIndex > -1" (click)="removePalette()">
+      削除
+      </button>      
     </div>
     <div class="character-add">
       <div class="control">
         <span>キャラクターリスト</span>
         <select style="width: 10em" [(ngModel)]="selectedCharacter">
           <option value="default">-追加対象の選択-</option>
+          <option value="create">-新規作成(簡易)-</option>
           <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
         </select>
       </div>

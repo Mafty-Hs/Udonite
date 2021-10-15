@@ -6,6 +6,7 @@ import { StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
 
+
 export interface PaletteLine {
   palette: string;
 }
@@ -13,6 +14,10 @@ export interface PaletteLine {
 export interface PaletteVariable {
   name: string;
   value: string;
+}
+
+export class SubPalette extends ObjectNode{
+  @SyncVar() palette: ChatPalette[] = [];
 }
 
 @SyncObject('chat-palette')

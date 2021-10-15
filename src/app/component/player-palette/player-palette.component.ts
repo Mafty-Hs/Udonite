@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ChatPalette } from '@udonarium/chat-palette';
+import { ChatPalette, SubPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -7,6 +7,7 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
+import { SimpleCreateComponent } from 'component/simple-create/simple-create.component';
 import { PlayerPaletteControlComponent } from 'component/player-palette-control/player-palette-control.component';
 import { GameCharacterService } from 'service/game-character.service';
 import { PlayerService } from 'service/player.service';
@@ -40,13 +41,63 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     )
   }
 
-  get palette(): ChatPalette { 
-    if (this.isMine(this.sendFrom)) {
-      return  this.playerService.localpalette; 
+  _selectCharacter:string = this.myPeer.identifier + ',-1';
+  get selectCharacter() :string {return this._selectCharacter};
+  set selectCharacter(select :string) {
+    if (!select) return;
+    this._selectCharacter = select;
+    if (this.isEdit) this.toggleEditMode();
+    let array = select.split(',');
+    this.paletteIndex = Number(array[1]);
+    this.sendFrom = array[0];
+    if (this.isMine(this.sendFrom)){
+      this.disableControl = true;
     }
     else {
-      return this.character.chatPalette;
-   }
+      this.disableControl = false;
+    }  
+  }
+  paletteIndex:number = -1;
+
+  subPalette(character: GameCharacter): SubPalette {
+     for (let child of character.children) {
+      if (child instanceof SubPalette) return child;
+    }
+    return null;
+  }
+  addPalette() {
+    let subPalette:SubPalette = this.subPalette(this.character);
+    if (!subPalette) {
+      subPalette = new SubPalette;
+      subPalette.initialize;
+      this.character.appendChild(subPalette);
+    }
+    let palette = new ChatPalette;
+    palette.initialize;
+    let initPalette:string = this.character.name + 'の追加パレット\n//1行目がタブに表示されるタイトルになります\n'; 
+    palette.setPalette(initPalette);
+    palette.getPalette();
+    subPalette.palette.push(palette);
+  }
+  removePalette() {
+    let tmp = this.paletteIndex;
+    this.paletteIndex = -1;
+    this.subPalette(this.character).palette.splice(tmp,1);
+    this.selectCharacter = this.sendFrom + ',-1';
+  }
+
+  get palette(): ChatPalette { 
+    if (this.paletteIndex == -1) {
+      if (this.isMine(this.sendFrom)) {
+        return  this.playerService.localpalette; 
+      }
+      else {
+        return this.character.chatPalette;
+      }
+    }
+    else {
+      return this.subPalette(this.character).palette[this.paletteIndex];
+    }
   }
   
   _disableControl : boolean = true;
@@ -68,19 +119,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  _sendFrom: string = this.myPeer.identifier;
-  get sendFrom(): string { return this._sendFrom; }
-  set sendFrom(sendFrom: string) {
-    if (!sendFrom) return;
-    this._sendFrom = sendFrom;
-    if (this.isEdit) this.toggleEditMode();
-    if (this.isMine(sendFrom)){
-      this.disableControl = true;
-    }
-    else {
-      this.disableControl = false;
-    }  
-  }
+  sendFrom: string = this.myPeer.identifier;
 
   resizeHeight() {
     if(this.characterSelect.nativeElement.clientHeight > 32
@@ -175,6 +214,13 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   addList() {
     if (this.selectedCharacter == 'default') { return }
+    if (this.selectedCharacter == 'create') { 
+      let coordinate = this.pointerDeviceService.pointers[0];
+      let option: PanelOption = { left: coordinate.x - 200 , top: coordinate.y -200, width: 300, height: 200 };
+      let component = this.panelService.open(SimpleCreateComponent, option);
+      component.panelService.title = "キャラクター簡易作成"
+      return; 
+    }
     this.playerService.addList(this.selectedCharacter);
     this.selectedCharacter = 'default';
     this.resizeHeight();

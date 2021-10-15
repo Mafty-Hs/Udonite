@@ -127,7 +127,7 @@ export class GameCharacterService {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
-        if (!this.locationCheck(this.get(event.data.identifier),true)) {
+        if (!this.locationCheck(this.get(event.data.identifier),false)) {
           this.playerService.removeList(event.data.identifier); 
         }
         this.shouldUpdateCharacterList = true;

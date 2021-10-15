@@ -84,6 +84,7 @@ import { BillBoardComponent } from './component/bill-board/bill-board.component'
 import { BillBoardCardComponent } from './component/bill-board-card/bill-board-card.component';
 import { StandViewSettingComponent } from './component/stand-view-setting/stand-view-setting.component';
 import { RoomControlComponent } from './component/room-control/room-control.component';
+import { SimpleCreateComponent } from './component/simple-create/simple-create.component';
 
 @NgModule({
   declarations: [
@@ -151,6 +152,7 @@ import { RoomControlComponent } from './component/room-control/room-control.comp
     BillBoardCardComponent,
     StandViewSettingComponent,
     RoomControlComponent,
+    SimpleCreateComponent,
   ],
   imports: [
     BrowserModule,

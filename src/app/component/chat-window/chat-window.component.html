@@ -2,7 +2,7 @@
 <div class="component"  [class]="bgColor">
 <div *ngIf="!isEase ; else ease" class="log">
   <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab>
-  <div *ngIf="!chatTab">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
+  <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
 </div>
 <div class="sticky-bottom">
   <div class="set-area">
@@ -27,5 +27,5 @@
 </div>
 <ng-template #ease>
   <chat-tab-ease *ngIf="chatTab" [chatTab]="chatTab" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab-ease>
-  <div *ngIf="!chatTab">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
+  <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
 </ng-template>

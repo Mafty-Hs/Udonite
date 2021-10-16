@@ -26,7 +26,7 @@ import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.c
   templateUrl: './sub-menu.component.html',
   styleUrls: ['./sub-menu.component.css']
 })
-export class SubMenuComponent implements OnInit {
+export class SubMenuComponent implements OnInit,OnDestroy {
   @Input() selectMenu:string;
   @Output() closeMe = new EventEmitter();
   private openPanelCount: number = 0;

@@ -32,7 +32,13 @@ interface easeMessage {
 export class ChatTabEaseComponent implements OnInit {
   @ViewChild('messageContainer') messageContainer: ElementRef;
 
-  @Input() localFontsize: number = 14;
+  _localFontsize: number = 14;
+  @Input() set localFontsize(localFontsize :number){
+    this._localFontsize = localFontsize;
+    this.needUpdate = true;
+    this.changeDetectorRef.detectChanges();
+  }
+  get localFontsize(): number {return this._localFontsize;}
   _bgColor: string = "grey";
   @Input() set bgColor(bgColor :string){
     this._bgColor = bgColor;

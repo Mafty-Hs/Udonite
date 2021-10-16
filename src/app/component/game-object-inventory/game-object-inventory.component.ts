@@ -3,22 +3,22 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
-import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
-import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
-import { ModalService } from 'service/modal.service';
-import { PlayerService } from 'service/player.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { ModalService } from 'service/modal.service';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'game-object-inventory',
@@ -33,7 +33,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   selectedIdentifier: string = '';
 
   isEdit: boolean = false;
-
   stringUtil = StringUtil;
 
   get sortTag(): string { return this.inventoryService.sortTag; }
@@ -44,9 +43,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   set dataTag(dataTag: string) { this.inventoryService.dataTag = dataTag; }
   get dataTags(): string[] { return this.inventoryService.dataTags; }
 
-  get indicateAll(): boolean { return this.inventoryService.indicateAll; }
-  set indicateAll(indicateAll: boolean) { this.inventoryService.indicateAll = indicateAll; }
-
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
@@ -55,10 +51,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private playerService: PlayerService,
+    private modalService: ModalService,
     private inventoryService: GameObjectInventoryService,
     private contextMenuService: ContextMenuService,
-    private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService
+    private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
@@ -119,11 +115,19 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects.filter((tabletopObject) => { return inventoryType != 'table' || this.indicateAll || tabletopObject.isInventoryIndicate });
+    return this.getInventory(inventoryType).tabletopObjects;
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {
     return this.getInventory(gameObject.location.name).dataElementMap.get(gameObject.identifier);
+  }
+
+  openUrl(url, title=null, subTitle=null) {
+    if (StringUtil.sameOrigin(url)) {
+      window.open(url.trim(), '_blank', 'noopener');
+    } else {
+      this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
+    } 
   }
 
   onContextMenu(e: Event, gameObject: GameCharacter) {
@@ -403,6 +407,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   private cloneGameObject(gameObject: TabletopObject) {
     gameObject.clone();
   }
+
   private cloneNumberGameObject(gameObject: TabletopObject) {
     let cloneObject = gameObject.clone();
     cloneObject.name = this.appendCloneNumber(cloneObject.name);
@@ -430,6 +435,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     component.tabletopObject = gameObject;
   }
 
+  private showStandSetting(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = gameObject;
+  }
+
   private showChatPalette(gameObject: GameCharacter) {
     let palette = this.playerService.myPalette;
     this.playerService.addList(gameObject.identifier);
@@ -437,6 +449,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       let option: PanelOption = { left: 200, top: 100 , width: 620, height: 350 };
       palette = this.panelService.open<PlayerPaletteComponent>(PlayerPaletteComponent, option);
     }
+
   }
 
   selectGameObject(gameObject: GameObject) {
@@ -449,22 +462,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.changeDetector.markForCheck();
   }
 
-  private showStandSetting(gameObject: GameCharacter) {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
-    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
-    component.character = gameObject;
-  }
-  
   trackByGameObject(index: number, gameObject: GameObject) {
     return gameObject ? gameObject.identifier : index;
-  }
-
-  openUrl(url, title=null, subTitle=null) {
-    if (StringUtil.sameOrigin(url)) {
-      window.open(url.trim(), '_blank', 'noopener');
-    } else {
-      this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
-    } 
   }
 }

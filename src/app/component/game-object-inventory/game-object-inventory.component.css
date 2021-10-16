@@ -10,12 +10,12 @@
   padding-bottom: 3px;
   box-sizing: border-box;
 
-  border-bottom: 1px dotted #666;
+  border-bottom: 1px dotted #CCC;
 }
 .selected {
   padding: 2px;
   border: 2px dotted #666;
-  border-left: 6px solid #444;
+  border-left: 6px solid #DDD;
 }
 
 .hidden-spacer {
@@ -56,105 +56,6 @@ input[type=number]:hover, input[type=number]:focus {
   -moz-appearance: number-input;
 }
 
-input[type='range'] {
-  --slider-track-color: transparent; /* #ccc */
-  --slider-fill-color: #888; /*#777 */
-  --slider-border-color: #777;
-  --slider-height: 0.8em;
-  --slider-thumb-size: 1.0em;
-  --range: calc(var(--max) - var(--min));
-  --ratio: calc((var(--val) - var(--min))/var(--range));
-  --sx: calc(.5*var(--slider-thumb-size) + var(--ratio)*(100% - var(--slider-thumb-size)));
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  font: 1em/1 arial, sans-serif;
-  outline: 0;
-  appearance: none;
-}
-
-input[type='range'], input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-}
-
-input[type='range']::-webkit-slider-runnable-track {
-  box-sizing: border-box;
-  border-top: solid 1px var(--slider-border-color);
-  border-bottom: solid 1px var(--slider-border-color);
-  border-radius: var(--slider-height);
-  height: var(--slider-height);
-  background: var(--slider-track-color);
-}
-
-input[type='range']::-webkit-slider-runnable-track {
-  background: linear-gradient(var(--slider-fill-color), var(--slider-fill-color)) 0/var(--sx) 100% no-repeat var(--slider-track-color);
-  cursor: pointer;
-}
-
-input[type='range']::-moz-range-track {
-  box-sizing: border-box;
-  border: solid 1px var(--slider-border-color);
-  border-radius: var(--slider-height);
-  height: var(--slider-height);
-  background: var(--slider-track-color);
-}
-
-input[type='range']::-ms-track {
-  box-sizing: border-box;
-  border: solid 1px var(--slider-border-color);
-  border-radius: var(--slider-height);
-  height: var(--slider-height);
-  background: var(--slider-track-color);
-}
-
-input[type='range']::-moz-range-progress {
-  height: var(--slider-height);
-  background: var(--slider-fill-color);
-  border-radius: var(--slider-height);
-}
-
-input[type='range']::-ms-fill-lower {
-  height: var(--slider-height);
-  background: var(--slider-fill-color);
-  border-radius: var(--slider-height);
-}
-
-input[type='range']::-webkit-slider-thumb {
-  margin-top: calc((var(--slider-height) - var(--slider-thumb-size)) / 2 - 1px);
-  width: var(--slider-thumb-size);
-  height: var(--slider-thumb-size);
-  box-sizing: border-box;
-  border: solid 1px var(--slider-border-color);
-  border-radius: 2em;
-  background: #fff;
-  cursor: pointer;
-}
-
-input[type='range']::-moz-range-thumb {
-  width: var(--slider-thumb-size);
-  height: var(--slider-thumb-size);
-  box-sizing: border-box;
-  border: solid 1px var(--slider-border-color);
-  border-radius: 2em;
-  background: #fff;
-  cursor: pointer;
-}
-
-input[type='range']::-ms-thumb {
-  margin-top: 0;
-  width: var(--slider-thumb-size);
-  height: var(--slider-thumb-size);
-  box-sizing: border-box;
-  border: solid 1px  var(--slider-border-color);
-  border-radius: 2em;
-  background: #fff;
-  cursor: pointer;
-}
-
-input[type='range']::-ms-tooltip {
-  display: none;
-}
-
 .tab {
   padding : 5px;
   user-select: none;
@@ -176,7 +77,7 @@ input[type='range']::-ms-tooltip {
   margin: 0px; 
   max-width: 500px;
 
-  background-color: rgba(240,240,240, 0.9);
+  background-color: #EEE;
 }
 
 .tab label {
@@ -186,14 +87,14 @@ input[type='range']::-ms-tooltip {
 }
 
 .tab label:hover {
-  background-color: #888;
-  color: #eee;
-  border-color: #555;
+  background-color: #AAA;
+  color: #FFF;
+  border-color: #444;
 }
 
 .tab label:checked {
-  background: #555;
-  color: #CCC;
+  background: #444;
+  color: #FFF;
 }
 
 .tab input[type="radio"] {
@@ -205,7 +106,7 @@ input[type='range']::-ms-tooltip {
   outline: 0;
   font-size: 0.6em;
   background-color: transparent;
-  color: #444; 
+  color: #222; 
   
   box-sizing: border-box;
 
@@ -222,14 +123,13 @@ input[type='range']::-ms-tooltip {
 }
 
 .tab input[type="radio"]:checked + div {
-  background: #555;
-  color: #CCC;
+  background: #444;
+  color: #FFF;
 }
 
 .is-sticky-top {
   position: sticky;
   top : 0;
-  z-index: 10000;
 }
 
 .tab-setting {
@@ -337,117 +237,4 @@ input[type='range']::-ms-tooltip {
   max-width: 12em;
   text-align: center;
   font-family: inherit;
-}
-
-.tag-value[type=number] {
-  min-width: 3.4em;
-  text-align: right;
-}
-
-.inverse {
-  transform: scaleX(-1);
-}
-.inverser {
-  transition: transform 132ms 0s ease;
-}
-.hollow {
-  opacity: 0.5;
-}
-.black-paint {
-  filter: brightness(0);
-}
-
-.aura {
-  transition: filter 0.3s ease-in-out;
-}
-
-.aura.black {
-  filter: drop-shadow(0 -2px 2px black);
-}
-.aura.blue {
-  filter: drop-shadow(0 -2px 2px #00f);
-}
-.aura.green {
-  filter: drop-shadow(0 -2px 2px #3f3);
-}
-.aura.cyan {
-  filter: drop-shadow(0 -2px 2px #3ff);
-}
-.aura.red {
-  filter: drop-shadow(0 -2px 2px #f00);
-}
-.aura.magenta {
-  filter: drop-shadow(0 -2px 2px #f0f);
-}
-.aura.yellow {
-  filter: drop-shadow(0 -2px 2px #ff3);
-}
-.aura.white {
-  filter: drop-shadow(0 -2px 3px #aaa) drop-shadow(0 -2px 2px #fff);
-}
-
-.material-icons.rotate {
-  transform: rotate(90deg);
-}
-button.indicate:disabled {
-  border-color: transparent;
-}
-button.indicate:disabled .material-icons {
-  color: black;
-}
-button.indicate .material-icons {
-  opacity: 0.5;
-}
-button.is-active {
-  background-color: white;
-}
-button.is-active .material-icons {
-  opacity: 1.0;
-}
-
-button.link {
-  /*.input {*/
-    background: none;
-    border: none;
-    border-radius: 2px;
-    outline: none;
-  
-    color: #444;
-    font-family: Cambria, Georgia;
-    font-size: 1.0em;
-    padding: 2px;
-    box-sizing: border-box;
-  }
-    
-  button.link i {
-    font-size: 1.0rem;
-  }
-  
-  button.link:hover  {
-    background: #444;
-    color: #CCC;
-  }
-  
-  button.link:disabled {
-    color: gray;
-  }
-  button.link:disabled:hover {
-    background-color: transparent;
-  }
-
-.face-icon {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  max-width: 12px;
-  max-height: 12px;
-  vertical-align: middle;
-  overflow: hidden;
-}
-.face-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 0%;
-  border-radius: 0.2rem;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit , ViewChild, ElementRef,AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef,AfterViewInit } from '@angular/core';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { BillBoardService } from 'service/bill-board.service';
@@ -27,7 +27,7 @@ import { EventSystem } from '@udonarium/core/system';
     ]),
   ]
 })
-export class BillBoardComponent implements OnInit {
+export class BillBoardComponent implements OnInit,OnDestroy {
   @ViewChild('handle') _handle:ElementRef;
   handle :HTMLElement;
   @ViewChild('content') _content:ElementRef;
@@ -98,6 +98,11 @@ export class BillBoardComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  ngOnDestroy() {
+    EventSystem.unregister(this);
+  }
+
   ngAfterViewInit() {
     this.handle = this._handle.nativeElement;
     this.content = this._content.nativeElement;

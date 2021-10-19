@@ -24,30 +24,39 @@ interface inventoryContext {
 })
 export class CounterInventoryComponent implements OnInit {
 
-  myList:inventoryContext[] = this.counterService.assignedList().map(
-    list => { 
-      let character = this.character(list.characterIdentifier);
-      let counter = this.getCounter(list.counterIdentifier);
-      let inventory:inventoryContext =
-      {
-        characterIdentifier: list.characterIdentifier,
-        characterImage: character ? character?.imageFile?.url : "" ,
-        characterName:  character ? character?.name : "",
-        name: list.name,
-        desc: counter ? counter.desc : "",
-        age: list.age,
-        isPermanent: list.isPermanent  ,
-        maxAge: counter ? counter.age : 0,
-        comment: list.comment,
-        identifier: list.identifier
-      };
-      return inventory;
-    }
-  ).sort(function(a,b){
+
+  private _myList:inventoryContext[] = []; 
+
+  get myList():inventoryContext[] { 
+    return this._myList
+  }
+
+  updateList() {
+    this._myList = this.counterService.assignedList().map(
+      list => { 
+        let character = this.character(list.characterIdentifier);
+        let counter = this.getCounter(list.counterIdentifier);
+        let inventory:inventoryContext =
+          {
+            characterIdentifier: list.characterIdentifier,
+            characterImage: character ? character?.imageFile?.url : "" ,
+            characterName:  character ? character?.name : "",
+            name: list.name,
+            desc: counter ? counter.desc : "",
+            age: list.age,
+            isPermanent: list.isPermanent  ,
+            maxAge: counter ? counter.age : 0,
+            comment: list.comment,
+            identifier: list.identifier
+        };
+        return inventory;
+      }
+    ).sort(function(a,b){
       if(a.characterIdentifier > b.characterIdentifier) return -1;
       if(a.characterIdentifier < b.characterIdentifier) return 1;
       return 0;
-  });
+    });
+  }
 
   character(identifier :string){
     return this.gameCharacterService.get(identifier)
@@ -75,18 +84,19 @@ export class CounterInventoryComponent implements OnInit {
   remove(identifier: string){
     let counter = this.counterService.getAssign(identifier);
     if (counter)  counter.remove() ;
-    this.changeDetectorRef.detectChanges();
+    this.updateList;
   }
 
   constructor(
     private counterService: CounterService,
-    public gameCharacterService: GameCharacterService,
+    private gameCharacterService: GameCharacterService,
     private panelService: PanelService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
   }
 
   ngOnInit(): void {
+    this.updateList();
   }
 
 }

@@ -23,7 +23,8 @@
         </select>
   </div>
   <div class="flex-column" *ngIf="isStandSetting">
-    <button style="height:2em;font-size:14px;padding: 3px 2em;" (click)="showStandSetting()">立ち絵設定</button>
+    <button *ngIf="!hasStand && hasImage" style="height:2em;font-size:14px;padding: 3px 2em;" (click)="instantStandSetting()">立ち絵簡易設定</button>
+    <button *ngIf="hasStand || !hasImage" style="height:2em;font-size:14px;padding: 3px 2em;" (click)="showStandSetting()">立ち絵設定</button>
   </div>
   <div class="flex-column" *ngIf="isStand">
     <b style="font-size: 10px;">立ち絵: </b>

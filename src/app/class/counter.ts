@@ -79,6 +79,7 @@ export class CounterAssign extends ObjectNode {
   }
 
   remove() {
+    this.parent.removeChild(this);
     this.destroy();
   }
 

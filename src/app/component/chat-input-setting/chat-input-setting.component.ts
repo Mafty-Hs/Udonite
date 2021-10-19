@@ -45,12 +45,6 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
       if (this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
         this.character.chatPalette.dicebot = gameType;
       }
-      if(this.hasStand) {
-        this.setVisible("stand");
-      }
-      else {
-        this.setVisible("standSetting");
-      }
     }
   };
   private _character: GameCharacter;
@@ -61,6 +55,12 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
       this.chatData.isCharacter = true;
       if(!this.gameType && this.diceBotInfos) {
         this.gameType = character.chatPalette?.dicebot;
+      }
+      if(this.hasStand) {
+        this.setVisible("stand");
+      }
+      else {
+        this.setVisible("standSetting");
       }
     }
     else this.chatData.isCharacter = false;
@@ -158,6 +158,17 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
        { this.setVisible("color"); } });
     }
     this.contextMenuService.open(position, actions, '現在表示可能な項目');
+  }
+
+  get hasImage():boolean {
+    if (this.character.imageFile.url && this.character.imageFile.url?.length > 0) return true;
+    return false;
+  }
+
+  instantStandSetting() {
+    this.character.standList.add(this.character.imageFile.identifier);
+    this.setVisible("stand");
+    this.setVisible("standPos");
   }
 
   showStandSetting() {

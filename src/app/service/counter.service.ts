@@ -96,7 +96,8 @@ export class CounterService {
   }
 
   assignedList(): CounterAssign[] {
-    return ObjectStore.instance.getObjects(CounterAssign);
+    let list = ObjectStore.instance.getObjects(CounterAssign);
+    return list;
   }
 
   constructor(

@@ -79,7 +79,6 @@ export class PlayerService {
     return this.roomAdmin.disableAllDataSave as boolean;
   }
   get disableSeparateDataSave():boolean{
-    return true;
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableSeparateDataSave as boolean;
   }

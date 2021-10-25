@@ -1,56 +1,8 @@
-<div class="container">
-  <div id="menu" class="menu">
-    <div id="menu" class="left">
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'file' ? '2px solid #000' : '2px solid #989898'}"  
-        (click)='openSubMenu($event,"file")'>
-          <span *ngIf="!minimumMode; else miniFile">ファイル{{isOpen("file")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'room' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"room")'>
-          <span *ngIf="!minimumMode; else miniRoom">ルーム{{isOpen("room")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'work' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"work")'>
-          <span *ngIf="!minimumMode; else miniWork">機能{{isOpen("work")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'view' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"view")'>
-           <span *ngIf="!minimumMode; else miniView">表示{{isOpen("view")}}
-      </span></button>
-      <div class="select"><round [minimumMode]="this.minimumMode"></round></div>
-    </div>
-    <div class="right">
-      <network-indicator style="width:40px;height:40px;"></network-indicator>
-      <div class="select"><network-status  [minimumMode]="this.minimumMode"></network-status></div>
-      <button class="select" *ngIf="!minimumMode"  (click)='menuHelp()'>？</button>
-    </div>
-  </div>
-  <div id="app-table-layer" class="game-table">
-    <game-table></game-table>
-  </div>
-</div>
-<div #modalLayer></div>
-<div #subMenu class="subMenu"><sub-menu [selectMenu]="this.selectMenu" (closeMe)="closeSub()"></sub-menu></div>
-<div class="bill-board">
-  <bill-board></bill-board>
-</div>
-<ng-template #miniFile>
-  <i class="material-icons">
-    sd_storage
-  </i>
-</ng-template>
-<ng-template #miniRoom>
-  <i class="material-icons">
-    people
-  </i>
-</ng-template>
-<ng-template #miniWork>
-  <i class="material-icons">
-    settings
-  </i>
-</ng-template>
-<ng-template #miniView>
-  <i class="material-icons">
-    emoji_objects
-  </i>
+<ng-container *ngIf="isLobby; else gameTable">
+  <lobby>
+  </lobby>
+</ng-container>
+<ng-template #gameTable>
+  <game-room>
+  </game-room>
 </ng-template>

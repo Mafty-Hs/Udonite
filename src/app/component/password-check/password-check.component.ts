@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input ,Output ,EventEmitter } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
-
-import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'password-check',
@@ -14,8 +12,11 @@ import { PanelService } from 'service/panel.service';
 export class PasswordCheckComponent implements OnInit, OnDestroy {
   password: string = '';
   help: string = '';
+  @Input() isEnterPassword:boolean = true;
+  @Output() isEnterPasswordChange = new EventEmitter<boolean>();
+  @Input() roomId: PeerContext[];
+  get room():PeerContext {return this.roomId[0];}
 
-  private targetPeerContext: PeerContext = null;
   title: string = '';
 
   get peerId(): string { return Network.peerId; }
@@ -24,15 +25,11 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private panelService: PanelService,
-    private modalService: ModalService
+    private roomService: RoomService,
   ) {
-    this.targetPeerContext = modalService.option.peerId ? PeerContext.parse(modalService.option.peerId) : PeerContext.parse('???');
-    this.title = modalService.option.title ? modalService.option.title : '';
   }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = `パスワード〈${this.title}〉`);
     EventSystem.register(this);
   }
 
@@ -40,12 +37,19 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
+  cancel() {
+    this.isEnterPasswordChange.emit(false);
+  }
+
   onInputChange(value: string) {
     this.help = '';
   }
 
   submit() {
-    if (this.targetPeerContext.verifyPassword(this.password)) this.modalService.resolve(this.password);
-    this.help = 'パスワードが違います';
+    if (!this.room.verifyPassword(this.password)) {
+      this.help = 'パスワードが違います';
+      return;
+    }
+    this.roomService.connect(this.roomId,this.password);
   }
 }

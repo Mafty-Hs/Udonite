@@ -84,6 +84,7 @@ import { BillBoardCardComponent } from './component/bill-board-card/bill-board-c
 import { StandViewSettingComponent } from './component/stand-view-setting/stand-view-setting.component';
 import { RoomControlComponent } from './component/room-control/room-control.component';
 import { SimpleCreateComponent } from './component/simple-create/simple-create.component';
+import { GameRoomComponent } from './component/game-room/game-room.component';
 
 @NgModule({
   declarations: [
@@ -151,6 +152,7 @@ import { SimpleCreateComponent } from './component/simple-create/simple-create.c
     StandViewSettingComponent,
     RoomControlComponent,
     SimpleCreateComponent,
+    GameRoomComponent,
   ],
   imports: [
     BrowserModule,
@@ -158,7 +160,7 @@ import { SimpleCreateComponent } from './component/simple-create/simple-create.c
     CommonModule,
     FormsModule,
     YouTubePlayerModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     AppConfigService,

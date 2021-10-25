@@ -1,12 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit ,Input ,Output ,EventEmitter} from '@angular/core';
 
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
-
-import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'room-setting',
@@ -16,6 +14,14 @@ import { PlayerService } from 'service/player.service';
 export class RoomSettingComponent implements OnInit, OnDestroy {
   peers: PeerContext[] = [];
   isReloading: boolean = false;
+
+  @Input() isRoomCreate:boolean = true;
+  @Output() isRoomCreateChange = new EventEmitter<boolean>();  
+
+  cancel() {
+    this.isRoomCreate = false;
+    this.isRoomCreateChange.emit(false);
+  }
 
   roomName: string = 'ふつうの部屋';
   password: string = '';
@@ -29,13 +35,11 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   validateLength: boolean = false;
 
   constructor(
-    private panelService: PanelService,
     private playerService: PlayerService,
-    private modalService: ModalService
+    private roomService: RoomService,
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ルーム作成');
     EventSystem.register(this);
     this.calcPeerId(this.roomName, this.password);
   }
@@ -55,7 +59,6 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
     Network.open(userId, PeerContext.generateId('***'), this.roomName, this.password);
     PeerCursor.myCursor.peerId = Network.peerId;
     if (this.roomAdmin) this.playerService.enableAdmin(this.adminPassword); 
-
-    this.modalService.resolve();
+    this.roomService.isLobby = false;
   }
 }

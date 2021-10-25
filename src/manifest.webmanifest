@@ -1,8 +1,8 @@
 {
-  "name": "Udonarium with Fly 1.4.4f (Powered by Udonarium 1.13.2)",
-  "short_name": "Udonarium with Fly",
+  "name": "Udonite",
+  "short_name": "Udonite",
   "theme_color": "#dd0000",
-  "background_color": "#ffffff",
+  "background_color": "#212121",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

@@ -72,13 +72,7 @@
     <span>他の参加者：{{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
   </div>
 </div>
-<div>
-  <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
-</div>
 <div><span style="font-size: 12px;">{{help}}</span></div>
-<ng-container *ngIf="!networkService.peerContext.isRoom">
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
-</ng-container>
 <ng-template #disconnect>
   <span style="font-weight: bold;">未接続</span>
 </ng-template>

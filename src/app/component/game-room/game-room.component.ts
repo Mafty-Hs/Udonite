@@ -78,6 +78,7 @@ export class GameRoomComponent implements OnInit {
     return;
   }
 
+
   showStandView() {
     let top = window.innerHeight - 150;
     
@@ -105,17 +106,17 @@ export class GameRoomComponent implements OnInit {
         { name: "立ち絵設定" },
         ContextMenuSeparator,
           { name: '立ち絵表示設定', action: () => this.showStandView()}, 
-          { name: `${ isShowStand ? '?' : '?' }立ち絵表示`, 
+          { name: `${ isShowStand ? '☑' : '☐' }立ち絵表示`, 
             action: () => {
               StandImageComponent.isShowStand = !isShowStand;
             }
           },
-          { name: `${ isShowNameTag ? '?' : '?' }ネームタグ表示`, 
+          { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
             action: () => {
               StandImageComponent.isShowNameTag = !isShowNameTag;
             }
           },
-          { name: `${ isCanBeGone ? '?' : '?' }透明化、自動退去`, 
+          { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
             action: () => {
             StandImageComponent.isCanBeGone = !isCanBeGone;
             }
@@ -124,7 +125,7 @@ export class GameRoomComponent implements OnInit {
         ContextMenuSeparator,
         { name: "エフェクト設定" },
         ContextMenuSeparator,
-          { name: `${ canEffect ? '?' : '?' }エフェクト表示`,
+          { name: `${ canEffect ? '☑' : '☐' }エフェクト表示`,
             action: () => {
               this.effectService.canEffect = !canEffect;
             }
@@ -143,6 +144,7 @@ export class GameRoomComponent implements OnInit {
     if (menuName == "view") {
       this.selectMenu = menuName;
       this.showViewMenu(rect.left);
+      this.closeSub();
     }
     else {
       this.subMenu.nativeElement.style.top = "50px";

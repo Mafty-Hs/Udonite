@@ -17,7 +17,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   rooms: { alias: string, roomName: string, peerContexts: PeerContext[] }[] = [];
 
   isReloading: boolean = false;
-  isConnecting: boolean = false;
+  isConnecting: boolean = true;
   isRoomCreate: boolean = false;
   isEnterPassword: boolean = false;
   roomId: PeerContext[];
@@ -35,9 +35,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ) {
     EventSystem.register(this)
       .on('OPEN_NETWORK', event => {
+        this.isConnecting = false;
+        this.reload();
         setTimeout(() => {
           this.ready();
-        }, 500);
+        }, 1000);
       });
   }
 
@@ -49,7 +51,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   ready() {
-    this.isConnecting = false;
     this.reload();
   }
 
@@ -86,10 +87,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   async reload() {
     this.isReloading = true;
-    this.help = '検索中...';
     this.rooms = [];
     let peersOfroom: { [room: string]: PeerContext[] } = {};
     let peerIds = await Network.listAllPeers();
+    console.log(peerIds);
     for (let peerId of peerIds) {
       let context = PeerContext.parse(peerId);
       if (context.isRoom) {

@@ -275,6 +275,51 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       { name: Network.peerId, alias: '個人インベントリへ移動' },
       { name: 'graveyard', alias: '墓場へ移動' }
     ];
+    let aura = ['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {
+                return { name: `${gameObject.aura == i ? '◉' : '○'} ${color}`,
+                action: () => { gameObject.aura = i}} 
+              });
+
+    actions.push({ name: '画像効果', action: null, subActions: [
+        (gameObject.isInverse
+          ? {
+            name: '☑ 反転', action: () => {
+              gameObject.isInverse = false;
+            }
+          } : {
+            name: '☐ 反転', action: () => {
+              gameObject.isInverse = true;
+            }
+          }),
+        (gameObject.isHollow
+          ? {
+            name: '☑ ぼかし', action: () => {
+              gameObject.isHollow = false;
+            }
+          } : {
+            name: '☐ ぼかし', action: () => {
+              gameObject.isHollow = true;
+            }
+          }),
+        (gameObject.isBlackPaint
+          ? {
+            name: '☑ 黒塗り', action: () => {
+              gameObject.isBlackPaint = false;
+            }
+          } : {
+            name: '☐ 黒塗り', action: () => {
+              gameObject.isBlackPaint = true;
+            }
+          }),
+        { name: 'オーラ', 
+          action: null,   
+          subActions: [
+            { name: `${gameObject.aura == -1 ? '◉' : '○'} なし`,
+             action: () => { gameObject.aura = -1} },
+            ContextMenuSeparator]
+            .concat(aura)
+        }
+      ]});
     actions.push(ContextMenuSeparator);
     for (let location of locations) {
       if (gameObject.location.name === location.name) continue;

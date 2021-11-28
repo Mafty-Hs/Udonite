@@ -17,6 +17,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
+  @SyncVar() note:string = "";
 
   text = '';
   isEmote = false;
@@ -30,6 +31,14 @@ export class GameCharacter extends TabletopObject {
       if (child instanceof ChatPalette) return child;
     }
     return null;
+  }
+
+  private _showNote:boolean = false;
+  get showNote():boolean {
+    return this._showNote;
+  }
+  set showNote(showNote :boolean) {
+    this._showNote = showNote;
   }
 
   cloneNumber() :this {

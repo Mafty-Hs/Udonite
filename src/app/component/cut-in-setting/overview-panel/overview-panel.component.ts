@@ -57,13 +57,6 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
 
   @Input() tabletopObject: TabletopObject = null;
 
-  get _character() :GameCharacter {
-    return this.tabletopObject as GameCharacter;
-  }
-  set _character(character :GameCharacter) {
-    this.tabletopObject = character as TabletopObject;
-  }
-
   @Input() left: number = 0;
   @Input() top: number = 0;
 

@@ -85,6 +85,7 @@ import { StandViewSettingComponent } from './component/stand-view-setting/stand-
 import { RoomControlComponent } from './component/room-control/room-control.component';
 import { SimpleCreateComponent } from './component/simple-create/simple-create.component';
 import { GameRoomComponent } from './component/game-room/game-room.component';
+import { InnerNoteComponent } from './component/inner-note/inner-note.component';
 
 @NgModule({
   declarations: [
@@ -153,6 +154,7 @@ import { GameRoomComponent } from './component/game-room/game-room.component';
     RoomControlComponent,
     SimpleCreateComponent,
     GameRoomComponent,
+    InnerNoteComponent,
   ],
   imports: [
     BrowserModule,

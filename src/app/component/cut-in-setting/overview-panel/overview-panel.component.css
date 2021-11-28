@@ -283,25 +283,6 @@
   line-height: 1.8;
 }
 
-.inner-note {
-  width: 100%;
-  height: 100%;
-  font: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  background: none;
-  border: none;
-  border-radius: 2px;
-  outline: none;
-  color: #444;
-  padding: 0;
-  box-sizing: border-box;
-  resize: both;
-  overflow: auto;
-  white-space: nowrap;
-}
-
-
 .textarea {
   width: 100%;
   height: 100%;

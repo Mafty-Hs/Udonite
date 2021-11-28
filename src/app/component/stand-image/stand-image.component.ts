@@ -55,7 +55,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   @Input() gameCharacter: GameCharacter;
   @Input() standElement: DataElement;
   @Input() color: string;
-  halfSize:number = this.standService.leftEnd - (this.standService.width / 2);
   halfWindow:number = document.documentElement.clientWidth/2;
 
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;

@@ -1,11 +1,12 @@
 {
   "name": "udonite",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href=/test/",
+    "prod": "ng build --configuration production --base-href=/kuroudon/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -44,6 +45,7 @@
     "postcss": "^8.3.9",
     "rxjs": "^6.6.7",
     "set-value": "^4.1.0",
+    "socket.io-client": "^4.3.2",
     "ssri": ">=8.0.1",
     "three": "^0.132.2",
     "tslib": "^2.3.1",

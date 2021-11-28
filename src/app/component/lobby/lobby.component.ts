@@ -16,6 +16,9 @@ import { RoomSettingComponent } from 'component/room-setting/room-setting.compon
 export class LobbyComponent implements OnInit, OnDestroy {
   rooms: { alias: string, roomName: string, peerContexts: PeerContext[] }[] = [];
 
+  width:number = 550;
+  height:number = 600;
+
   isReloading: boolean = false;
   isConnecting: boolean = true;
   isRoomCreate: boolean = false;
@@ -41,6 +44,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
           this.ready();
         }, 1000);
       });
+   if (window.innerWidth < 550) { this.width = window.innerWidth }
+   if (window.innerHeight < 600) { this.height = window.innerHeight }
   }
 
   ngOnInit() {
@@ -90,7 +95,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.rooms = [];
     let peersOfroom: { [room: string]: PeerContext[] } = {};
     let peerIds = await Network.listAllPeers();
-    console.log(peerIds);
     for (let peerId of peerIds) {
       let context = PeerContext.parse(peerId);
       if (context.isRoom) {

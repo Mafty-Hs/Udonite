@@ -19,6 +19,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
+import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -639,7 +640,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       },
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
-      { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
+      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) } },
+      { name: 'メモを表示', action: () => { this.showInnerNote()}},
       { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } },
       ContextMenuSeparator,
       {
@@ -747,6 +749,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
+  }
+
+  private showInnerNote() {
+      let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'メモ';
+    if (this.gameCharacter.name.length) title += ' - ' + this.gameCharacter.name;
+    let option: PanelOption = { title: title ,left: coordinate.x - 330, top: coordinate.y - 330, width: 330, height: 330 };
+    let panel = this.panelService.open<InnerNoteComponent>(InnerNoteComponent, option);
+    panel.character = this.gameCharacter;
   }
 
   private showChatPalette(gameObject: GameCharacter) {

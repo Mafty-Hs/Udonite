@@ -21,6 +21,10 @@ export interface AppConfig {
     url?: string,
     api?: number
   }
+  server?: {
+    url?: string,
+    port?: number
+  }
 }
 
 const objectPropertyKeys = Object.getOwnPropertyNames(Object.prototype);
@@ -45,6 +49,10 @@ export class AppConfigService {
     dice: {
       url: '',
       api: 1
+    },
+    server: {
+      url: '',
+      port: 443
     }
   }
 

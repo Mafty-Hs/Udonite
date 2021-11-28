@@ -3,11 +3,11 @@ import { ChatPalette, SubPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
-import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { SimpleCreateComponent } from 'component/simple-create/simple-create.component';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteControlComponent } from 'component/player-palette-control/player-palette-control.component';
 import { GameCharacterService } from 'service/game-character.service';
 import { PlayerService } from 'service/player.service';
@@ -261,6 +261,15 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this.text = line;
   }
 
+  private showDetail(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject;
+  }
+
   displayContextMenu(e: Event , gameObject: GameCharacter) {
     if (document.activeElement instanceof HTMLInputElement && document.activeElement.getAttribute('type') !== 'range') return;
     e.stopPropagation();
@@ -329,6 +338,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
         }
       });
     }
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '詳細を表示', action: () => { this.showDetail(gameObject); } 
+    });
     this.contextMenuService.open(position, actions, gameObject.name);
   }
 

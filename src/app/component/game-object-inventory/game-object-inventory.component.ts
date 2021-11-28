@@ -43,6 +43,9 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   set dataTag(dataTag: string) { this.inventoryService.dataTag = dataTag; }
   get dataTags(): string[] { return this.inventoryService.dataTags; }
 
+  get indicateAll(): boolean { return this.inventoryService.indicateAll; }
+  set indicateAll(indicateAll: boolean) { this.inventoryService.indicateAll = indicateAll; }
+
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
@@ -115,7 +118,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects;
+    return this.getInventory(inventoryType).tabletopObjects.filter((tabletopObject) => { return inventoryType != 'table' || this.indicateAll || tabletopObject.isInventoryIndicate });
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {

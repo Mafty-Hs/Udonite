@@ -81,7 +81,7 @@
 </ng-template>
 
 <ng-template #overviewCharacter let-character="character">
-  <div class="component-content character-grid-container is-large-size">
+  <div class="component-content character-grid-container is-middle-size">
     <div class="title-bg-area title-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     </div>
@@ -119,31 +119,36 @@
             <input name="charaSW" type="checkbox" [(ngModel)]="character.showNote">
             <div><div></div></div>
             </label></div>
+          </div>
         </div>
-        <ng-container *ngIf="!character.showNote ; else overviewCharacterNote">
-            <!--<ng-container *ngFor="let dataElm of dataElms">-->
-            <ng-container *ngFor="let dataElm of inventoryDataElms">
-              <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-                <div class="grid-container">
-                  <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: character.name }"></ng-container>
-                </div>
-              </ng-container>
-            </ng-container>
+        <ng-container *ngTemplateOutlet="!character.showNote ? overviewCharacterResouce : overviewCharacterNote ; context: { character: character }">
         </ng-container>
       </div>
-    </div>
   </div>
 </ng-template>
 
-<ng-template #overviewCharacterNote>
+
+<ng-template #overviewCharacterResouce let-character="character">
+  <div>
+        <!--<ng-container *ngFor="let dataElm of dataElms">-->
+        <ng-container *ngFor="let dataElm of inventoryDataElms">
+          <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+            <div class="grid-container">
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: character.name }"></ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+  </div>>
+</ng-template>
+<ng-template #overviewCharacterNote let-character="character">
   <div class="component-content"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div class="component-background text-note-container">
       <div style="position: relative;">
         <div class="is-fill">
-          <textarea class="inner-note" [(ngModel)]="_character.note" spellcheck="false"></textarea>
+          <textarea class="textarea" [(ngModel)]="character.note" spellcheck="false"></textarea>
         </div>
-        <div class="textarea-spacer">{{_character.note}}</div>
+        <div class="textarea-spacer">{{character.note}}</div>
       </div>
     </div>
   </div>

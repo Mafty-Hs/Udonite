@@ -3,6 +3,7 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { PlayerService } from 'service/player.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,16 @@ export class RoomService {
 
   isLobby:boolean = true;
 
-  constructor() { }
+  constructor(
+    private playerService: PlayerService,
+  ) { }
+
+  create(roomName: string ,password: string ,adminPassword?: string) {
+    let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
+    Network.open(userId, PeerContext.generateId('***'), roomName, password);
+    PeerCursor.myCursor.peerId = Network.peerId;
+    if (adminPassword) this.playerService.enableAdmin(adminPassword); 
+  }
 
   connect(peerContexts :PeerContext[], password? :string) {
     let context = peerContexts[0];

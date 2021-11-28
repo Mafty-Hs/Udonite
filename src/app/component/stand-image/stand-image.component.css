@@ -188,7 +188,7 @@
   }
 }
 
-.inverse {
+  .inverse {
     transform: scaleX(-1);
   }
   .inverser {

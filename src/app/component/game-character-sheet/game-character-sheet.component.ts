@@ -5,7 +5,7 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
-import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
+import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
@@ -335,15 +335,14 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  showChatPalette() {
+  showInnerNote() {
     if (!(this.tabletopObject instanceof GameCharacter)) return;
-    let palette = this.playerService.myPalette;
-    this.playerService.addList(this.tabletopObject.identifier);
-    if (!palette) {
-      let option: PanelOption = { left: 200, top: 100 , width: 620, height: 350 };
-      palette = this.panelService.open<PlayerPaletteComponent>(PlayerPaletteComponent
-, option);
-    }
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'メモ';
+    if (this.tabletopObject.name.length) title += ' - ' + this.tabletopObject.name;
+    let option: PanelOption = { title: title ,left: coordinate.x - 330, top: coordinate.y - 330, width: 330, height: 330 };
+    let panel = this.panelService.open<InnerNoteComponent>(InnerNoteComponent, option);
+    panel.character = this.tabletopObject as GameCharacter;
   }
 
   showStandSetting() {

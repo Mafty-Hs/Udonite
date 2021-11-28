@@ -55,10 +55,7 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   }
 
   createRoom() {
-    let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
-    Network.open(userId, PeerContext.generateId('***'), this.roomName, this.password);
-    PeerCursor.myCursor.peerId = Network.peerId;
-    if (this.roomAdmin) this.playerService.enableAdmin(this.adminPassword); 
+    this.roomService.create(this.roomName, this.password, this.adminPassword);
     this.roomService.isLobby = false;
   }
 }

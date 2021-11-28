@@ -11,6 +11,8 @@ import { PlayerService } from 'service/player.service';
 })
 export class GameCharacterService {
 
+  gameType:string = "";
+
   //基本
   get(identifier: string) :GameCharacter {
     let object = ObjectStore.instance.get(identifier);

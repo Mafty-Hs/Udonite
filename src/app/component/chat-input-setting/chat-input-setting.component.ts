@@ -1,5 +1,4 @@
 import { Component, OnInit,Input ,Output ,EventEmitter, ViewChild, AfterViewInit , ElementRef,ChangeDetectorRef } from '@angular/core';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { PlayerService } from 'service/player.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -37,9 +36,9 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     return this.myWindow.getBoundingClientRect().width;
   }
 
-  get gameType(): string { return this.chatData.gameType };
+  get gameType(): string { return this.gameCharacterService.gameType };
   set gameType(gameType: string) { 
-    this.chatData.gameType = gameType;
+    this.gameCharacterService.gameType = gameType;
     this.chatSetting.emit(this.chatData);
     if (this.character) {
       if (this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
@@ -53,8 +52,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     this._character = character;
     if (character) {
       this.chatData.isCharacter = true;
-      if(!this.gameType && this.diceBotInfos) {
-        this.gameType = character.chatPalette?.dicebot;
+      if(!this.gameType && this.diceBotInfos && character.chatPalette?.dicebot) {
+        this.gameType = character.chatPalette.dicebot;
       }
       if(this.hasStand) {
         this.setVisible("stand");

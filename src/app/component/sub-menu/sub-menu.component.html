@@ -47,7 +47,7 @@
           <div>接続</div>
         </a>
       </li>
-      <li *ngIf="isOpen('room')" (click)="open('GameTableSettingComponent')">
+      <li *ngIf="isOpen('room') && !disableTableSetting" (click)="open('GameTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">layers</i></div>
           <div>テーブル設定</div>

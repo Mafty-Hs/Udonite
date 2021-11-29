@@ -69,7 +69,10 @@ export class PlayerService {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableCharacterLoad as boolean;
   }
-
+  get disableTableSetting():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableTableSetting as boolean;
+  }
   get disableTabSetting():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTabSetting as boolean;

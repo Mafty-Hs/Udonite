@@ -11,6 +11,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() adminPeers:string[];
   @SyncVar() disableTableLoad:boolean;
   @SyncVar() disableCharacterLoad:boolean;
+  @SyncVar() disableTableSetting:boolean;
   @SyncVar() disableTabSetting:boolean;
   @SyncVar() disableAllDataSave:boolean;
   @SyncVar() disableSeparateDataSave:boolean;

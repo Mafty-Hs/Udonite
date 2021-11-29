@@ -37,6 +37,7 @@
       <ul>
         <li *ngIf="playerService.roomAdmin.disableTableLoad">データアップロード禁止(キャラクター以外)</li>
         <li *ngIf="playerService.roomAdmin.disableCharacterLoad">データアップロード禁止(キャラクター)</li>
+        <li *ngIf="playerService.roomAdmin.disableTableSetting">テーブル設定禁止</li>
         <li *ngIf="playerService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
         <li *ngIf="playerService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
         <li *ngIf="playerService.roomAdmin.disableSeparateDataSave">個別データセーブ禁止</li>
@@ -65,6 +66,10 @@
       </label></div><br>
       <div class="toggle"><label>データアップロード禁止(キャラクター)
         <input name="disableCharacterLoad" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableCharacterLoad">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>テーブル設定禁止
+        <input name="disableTableSetting" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTableSetting">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>チャットタブ設定禁止

@@ -37,6 +37,10 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     return this.playerService.disableAllDataSave;
   }
 
+  get disableTableSetting() {
+    return this.playerService.disableTableSetting;
+  }
+
   isOpen(itemType :string):boolean {
     if (itemType == this.selectMenu)
       return true;

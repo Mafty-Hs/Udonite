@@ -15,6 +15,8 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() disableAllDataSave:boolean;
   @SyncVar() disableSeparateDataSave:boolean;
 
+  @SyncVar() gameType:string;
+
   private static _instance:RoomAdmin;
 
   private static defaultSetting = {
@@ -31,6 +33,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
       for (let key in RoomAdmin.defaultSetting) {
         admin.setAttribute(key, RoomAdmin.defaultSetting[key]);
       }
+      admin.gameType = "";
       RoomAdmin._instance.appendChild(admin);
     }
   }

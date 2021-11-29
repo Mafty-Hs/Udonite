@@ -18,3 +18,7 @@
 .input {
   width: 100%;
 }
+
+.not-specified {
+  color: gray;
+}

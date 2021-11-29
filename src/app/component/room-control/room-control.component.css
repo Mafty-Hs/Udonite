@@ -8,3 +8,7 @@
 .flex-item {
   font-size:14px;
 }
+
+.not-specified {
+  color: gray;
+}

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit ,Input ,Output ,EventEmitter} from '@angul
 
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
-import { PeerCursor } from '@udonarium/peer-cursor';
+import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 
@@ -34,8 +34,12 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   get isConnected(): boolean { return Network.peerIds.length <= 1 ? false : true; }
   validateLength: boolean = false;
 
+  get diceBotInfos() { return this.diceBotService.diceBotInfos }
+  get diceBotInfosIndexed() { return this.diceBotService.diceBotInfosIndexed }
+
   constructor(
     private playerService: PlayerService,
+    private diceBotService: DiceBotService,
     private roomService: RoomService,
   ) { }
 

@@ -28,7 +28,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   @ViewChild('setting') settingDOM: ElementRef;
   myWindow:HTMLElement;
-  chatData:chatDataContext = {sendTo: "", gameType: "", isCharacter: false ,isUseStandImage: true , standName: ""};
+  chatData:chatDataContext = {sendTo: "", gameType: this.gameCharacterService.gameType, isCharacter: false ,isUseStandImage: true , standName: ""};
   @Output() chatSetting = new EventEmitter<object>();
   minimumMode:boolean = false;
 
@@ -39,7 +39,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   get gameType(): string { return this.gameCharacterService.gameType };
   set gameType(gameType: string) { 
     this.gameCharacterService.gameType = gameType;
-    this.chatSetting.emit(this.chatData);
+      this.chatSetting.emit(this.chatData);
     if (this.character) {
       if (this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
         this.character.chatPalette.dicebot = gameType;

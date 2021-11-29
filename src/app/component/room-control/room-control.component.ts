@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
+import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { PanelOption, PanelService } from 'service/panel.service';
+import { PanelService } from 'service/panel.service';
 
 @Component({
   selector: 'room-control',
@@ -28,8 +29,12 @@ export class RoomControlComponent implements OnInit {
     EventSystem.call('PLAY_ALARM', {identifier: peer  ,time: this.alarmTime * 1000});
   }
 
+  get diceBotInfos() { return this.diceBotService.diceBotInfos }
+  get diceBotInfosIndexed() { return this.diceBotService.diceBotInfosIndexed }
+
   constructor(
     private panelService: PanelService,
+    private diceBotService: DiceBotService,
     public playerService: PlayerService
   ) { }
 

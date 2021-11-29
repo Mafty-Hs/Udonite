@@ -21,3 +21,7 @@
   box-shadow: 1px 1px 1px 0px black;
   vertical-align: middle;
 }
+
+.not-specified {
+  color: gray;
+}

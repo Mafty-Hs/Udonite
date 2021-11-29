@@ -11,7 +11,14 @@ import { PlayerService } from 'service/player.service';
 })
 export class GameCharacterService {
 
-  gameType:string = "";
+  private _gameType:string = "";
+  get gameType() {
+    if (!this._gameType && this.playerService.roomAdmin.gameType) {
+      this._gameType = this.playerService.roomAdmin.gameType;
+    }
+    return this._gameType;
+  }
+  set gameType(gameType :string) { this._gameType = gameType; }
 
   //基本
   get(identifier: string) :GameCharacter {

@@ -3,12 +3,10 @@ import { DiceBot , DiceBotInfo, DiceBotInfosIndexed, DiceRollResult , api } from
 import { SvcDiceBotSetting } from '@udonarium/service/svc-dice-bot-setting'
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
-import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PromiseQueue } from '@udonarium/core/system/util/promise-queue';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
-import { DataElement } from '@udonarium/data-element';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { StandService } from 'service/stand.service';
 
@@ -22,6 +20,19 @@ export class DiceBotService {
   get api(): api {return DiceBot.instance.api;} 
   set api(_api) {DiceBot.instance.api = _api;}
   private queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
+  private gameType:string = "";
+  private commandPattern:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
+  private commandPatternBase:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
+  private asciiPattern:RegExp = new RegExp('^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$');
+
+  private bcDiceFilter(gameType:string ,rollText:string):boolean {
+    if (gameType === this.gameType) {
+      if (this.commandPattern.test(rollText)) return true;
+      return false;
+    }
+    if (this.commandPatternBase.test(rollText) || !this.asciiPattern.test(rollText)) return true;
+    return false;
+  }
 
   async diceRoll(messageIdentifier: string) {
     const chatMessage = ObjectStore.instance.get<ChatMessage>(messageIdentifier);
@@ -37,32 +48,11 @@ export class DiceBotService {
     let rollText: string = (regArray[4] != null) ? regArray[4] : text;
     rollText = rollText.replace(/Ⅾ/g, 'D');
     if (!rollText || repeat <= 0) return;
-    let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+     let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
 
     if (await this.diceRollTableMatch(rollText, repeat, chatMessage)) return;
-    let isChoice = false;
-    let choiceMatch;
-  if (choiceMatch = /^(S?CHOICE\d*)[ 　]+([^ 　]*)/ig.exec(rollText.trim())) {
-      rollText = rollText.trim().replace(/[　\s]+/g, ' ');
-      isChoice = true;
-  }
-  if (!isChoice) {
-    if ((choiceMatch = /^(S?CHOICE\d*\[[^\[\]]+\])/ig.exec(rollText.trim())) || (choiceMatch = /^(S?CHOICE\d*\([^\(\)]+\))/ig.exec(rollText.trim()))) {
-      if (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() === choiceMatch[1].toUpperCase())) {
-        rollText = choiceMatch[1];
-        isChoice = true;
-      }
-    }
-  } 
-  if (!isChoice) {
-    rollText = rollText.trim().split(/\s+/)[0]
-  }
-    if ( /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText)
-     || isChoice ) {} 
-    else
-     return;
-    //console.log(/choice\d*\[.*\]/i.test(rollText));
+    if (!this.bcDiceFilter(gameType,rollText)) return;
     if (repeat < 1) return;
     try {
       finalResult = await this.bcDice(rollText, gameType, repeat);
@@ -134,7 +124,6 @@ export class DiceBotService {
             throw new Error(response.statusText);
           })
           .then(json => {
-            console.log(JSON.stringify(json))
             return { result: (gameType) + ' ' + (json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
             isEmptyDice: (json.rands && json.rands.length == 0),
             isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
@@ -186,6 +175,8 @@ export class DiceBotService {
         .then(jsons => { 
           return jsons.map(json => {
             if (json.help_message) {
+              this.gameType = gameType;
+              this.commandPattern = new RegExp(json.command_pattern,"i");
               return json.help_message.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';

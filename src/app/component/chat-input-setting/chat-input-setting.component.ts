@@ -39,7 +39,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   get gameType(): string { return this.gameCharacterService.gameType };
   set gameType(gameType: string) { 
     this.gameCharacterService.gameType = gameType;
-      this.chatSetting.emit(this.chatData);
+    this.chatData.gameType = gameType;
+    this.chatSetting.emit(this.chatData);
     if (this.character) {
       if (this.character.chatPalette && (this.character.chatPalette.dicebot != gameType)){
         this.character.chatPalette.dicebot = gameType;
@@ -262,6 +263,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
+    if (this.gameType) this.loadDiceBot(this.gameType);
     setTimeout(() => {
       this.viewInit();
     }, 100);

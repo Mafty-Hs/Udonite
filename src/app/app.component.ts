@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { CounterList } from '@udonarium/counter-list';
@@ -21,34 +21,22 @@ import { DataSummarySetting } from '@udonarium/data-summary-setting';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
-import { ModalComponent } from 'component/modal/modal.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
-import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { AppConfig, AppConfigService } from 'service/app-config.service';
-import { ChatMessageService } from 'service/chat-message.service';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
-import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { DiceBotService } from 'service/dice-bot.service';
-import { CounterService } from 'service/counter.service';
 import { RoomService } from 'service/room.service';
-import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 
 import { ImageTag } from '@udonarium/image-tag';
 import { CutInService } from 'service/cut-in.service';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInList } from '@udonarium/cut-in-list';
-
-import { LobbyComponent } from 'component/lobby/lobby.component';
-import { GameRoomComponent } from 'component/game-room/game-room.component';
 
 @Component({
   selector: 'app-root',
@@ -65,18 +53,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private modalService: ModalService,
-    private panelService: PanelService,
     private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
-    private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
     private ngZone: NgZone,
-    private contextMenuService: ContextMenuService,
     private standImageService: StandImageService,
     private roomService: RoomService,
-    private standService: StandService,
-    private cutInService: CutInService,
-    private counterService: CounterService,
+    private cutInService: CutInService
   ) {
 
     this.ngZone.runOutsideAngular(() => {

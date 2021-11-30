@@ -42,10 +42,11 @@
   font-size: 12px;
 }
 
-.selector {
+.counter {
+  position: relative;
   height:65px;
   width:65px;
-  background:white;
+  background-color:white;
   border:5px;
   border-color: black;
   border-radius:100%;

@@ -52,7 +52,7 @@
   </div>
 <div class="Counter-List">
   <label *ngFor="let item of counterList">
-    <div id="{{item.identifier}}" [ngClass]="{'pointer-events-none': isDrag}" class="selector"  appDraggable (contextmenu)="displayContextMenu($event,item); false" (click)="selectCounter($event,item)"><p>{{item.name}}</p></div>
+    <div id="{{item.identifier}}" [ngClass]="{'pointer-events-none': isDrag}" class="counter"  appDraggable (contextmenu)="displayContextMenu($event,item); false" (click)="selectCounter($event,item)"><p>{{item.name}}</p></div>
   </label>
 </div>
 <div class="Make-Row">

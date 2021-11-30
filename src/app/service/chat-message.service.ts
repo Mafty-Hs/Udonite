@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { GameCharacterService } from 'service/game-character.service';
 import { StandService } from 'service/stand.service';
 
-import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
+import { ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -92,6 +92,7 @@ export class ChatMessageService {
       from: Network.peerContext.userId,
       name: 'System',
       timestamp: this.calcTimeStamp(chatTab),
+      tag: 'system',
       text: StringUtil.cr(text),
       color: '',
     };

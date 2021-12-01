@@ -18,10 +18,6 @@ export class CounterList extends ObjectNode implements InnerXml{
   get list(): Counter[] { 
   return this.children as Counter[]; }
 
-  unique(uniqueIdentifier :string) { 
-    return this.list.find(child => child.uniqueIdentifier == uniqueIdentifier);
-  }
-
   create(_counter :CounterContext) {
     let counter = new Counter();
     counter.initialize();
@@ -47,7 +43,9 @@ export class AssignedCounterList extends ObjectNode implements InnerXml{
     counter.counterIdentifier =  _counter["counterIdentifier"];
     counter.isPermanent = _counter["isPermanent"];
     counter.age = _counter["age"];
+    counter.maxAge = _counter["maxAge"];
     counter.comment = _counter["comment"];
+    counter.desc = _counter["desc"];
     this.appendChild(counter);
   }
 

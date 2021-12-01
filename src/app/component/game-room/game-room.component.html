@@ -17,7 +17,7 @@
         (click)='openSubMenu($event,"view")'>
            <span *ngIf="!minimumMode; else miniView">表示{{isOpen("view")}}
       </span></button>
-      <div class="select"><round [minimumMode]="this.minimumMode"></round></div>
+      <round class="select" style="padding: 0" [minimumMode]="this.minimumMode" (contextmenu)="roundContext($event); false" ></round>
     </div>
     <div class="right">
       <network-indicator style="width:40px;height:40px;"></network-indicator>

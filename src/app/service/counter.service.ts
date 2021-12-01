@@ -44,11 +44,6 @@ export class CounterService {
     return this.nullCounter;
   }
 
-  unique(identifier :string): Counter {
-    let counter = CounterList.instance.unique(identifier);
-    return counter ? counter : this.nullCounter;
-  }
-
   getAssign(identifier :string): CounterAssign {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof CounterAssign) {
@@ -78,6 +73,8 @@ export class CounterService {
       counterIdentifier: counter.uniqueIdentifier,
       isPermanent: counter.isPermanent,
       age: counter.age,
+      maxAge: counter.age,
+      desc: counter.desc,
       comment: _comment
     }); 
   }
@@ -116,7 +113,7 @@ export class CounterService {
 
   loadCounter(object :CounterList){
     for (let counter of object.children as Counter[]) {
-      this.create(counter.name,counter.desc,Boolean(counter.canDuplicate),Boolean(counter.isPermanent),Number(counter.age), counter.uniqueIdentifier) 
+      this.create(counter.name,counter.desc,Boolean(counter._canDuplicate),Boolean(counter._isPermanent),Number(counter.age), counter.uniqueIdentifier) 
     }
   }
 }

@@ -1,6 +1,7 @@
-div {
-  padding: 0px;
+.round {
+  padding: 4px;
   margin: 0px;
   font-size: 14px;
+  background: transparent;
   color: #FFF; 
 }

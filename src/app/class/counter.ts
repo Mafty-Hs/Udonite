@@ -1,5 +1,7 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { GameCharacter } from './game-character';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 export interface CounterContext {
   identifier?: string;
@@ -17,6 +19,8 @@ export interface CounterAssignContext {
   counterIdentifier: string; 
   isPermanent: boolean;
   age: number;
+  maxAge: number;
+  desc: string,
   comment: string;
 }
 
@@ -51,8 +55,21 @@ export class CounterAssign extends ObjectNode {
   @SyncVar() counterIdentifier: string; 
   @SyncVar() _isPermanent: string;
   @SyncVar() _age: string;
+  @SyncVar() _maxAge: string;
+  @SyncVar() desc: string = "";
   @SyncVar() comment: string;
 
+  get characterName() {
+    let character = this.parent.parent as GameCharacter;
+    return character.name;
+  }
+  get characterImage() {
+    let character = this.parent.parent as GameCharacter;
+    if (character.imageFile?.url?.length > 0)
+     return character.imageFile.url;
+    else
+     return ""; 
+  }
   get characterIdentifier() {
     return this.parent.parent.identifier;
   }
@@ -67,6 +84,12 @@ export class CounterAssign extends ObjectNode {
   }
   set age(_age :number) {
     this._age = String(_age);
+  }
+  get maxAge():number {
+    return Number(this._maxAge);
+  }
+  set maxAge(_age :number) {
+    this._maxAge = String(_age);
   }
 
   aging() {

@@ -8,7 +8,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
-
+import { RoundComponent } from 'component/round/round.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ModalComponent } from 'component/modal/modal.component';
@@ -16,8 +16,6 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
-
-
 
 @Component({
   selector: 'game-room',
@@ -27,6 +25,7 @@ import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 export class GameRoomComponent implements OnInit {
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   @ViewChild('subMenu') subMenu: ElementRef;
+  @ViewChild(RoundComponent) round:RoundComponent;
   minimumMode: boolean = false;
   selectMenu:string = "";
 
@@ -157,6 +156,10 @@ export class GameRoomComponent implements OnInit {
   closeSub() {
     this.selectMenu = "";
     this.subMenu.nativeElement.style.display = "none";
+  }
+
+  roundContext(e:Event) {
+    this.round.displayContextMenu(e);
   }
 
   menuHelp(){

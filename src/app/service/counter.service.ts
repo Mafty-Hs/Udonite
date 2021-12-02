@@ -105,7 +105,7 @@ export class CounterService {
 
   loadRound(object :Round) {
     this.round.count = Number(object.count);
-    this.round.isInitiative = Boolean(object.isInitiative);
+    this.round.isInitiative = Boolean(object._isInitiative);
     this.round.currentInitiative = Number(object.currentInitiative);
     this.round.roundState = Number(object.roundState);
     this.round.initName = String(object.initName);

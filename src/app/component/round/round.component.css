@@ -5,3 +5,8 @@
   background: transparent;
   color: #FFF; 
 }
+
+.round:after{
+	content: '';
+	background: transparent;
+}

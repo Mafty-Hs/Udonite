@@ -74,7 +74,6 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.chatMessage);
   }
 
   discloseMessage() {

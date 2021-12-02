@@ -74,7 +74,7 @@ export class ChatMessageService {
       timestamp: this.calcTimeStamp(chatTab),
       tag: chatSet.isUseFaceIcon ? gameType : `${gameType} noface`,
       text: StringUtil.cr(text),
-      color: color ,
+      color: this.colorValidation(color) ,
       isInverseIcon: chatSet.isInverse,
       isHollowIcon:  chatSet.isHollow,
       isBlackPaint:  chatSet.isBlackPaint,
@@ -121,7 +121,7 @@ export class ChatMessageService {
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
       text: StringUtil.cr(text),
-      color: this.myColor,
+      color: this.colorValidation(this.myColor),
       isInverseIcon: 0,
       isHollowIcon:  0,
       isBlackPaint:  0,
@@ -142,6 +142,10 @@ export class ChatMessageService {
       return PeerCursor.myCursor.color;
     }
     return PeerCursor.CHAT_DEFAULT_COLOR;
+  }
+
+  colorValidation(color :string):string {
+    return color !== PeerCursor.CHAT_DEFAULT_COLOR ? color : ""; 
   }
 
   getPeer(identifier: string): PeerCursor {

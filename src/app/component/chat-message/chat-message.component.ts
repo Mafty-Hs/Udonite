@@ -49,7 +49,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
   @Input() localFontsize: number = 14;
-  @Input() bgColor: string = "grey";
+  @Input() bgColor: string = "black";
 
   get isBlack():boolean {
     if (this.bgColor == 'black') 
@@ -74,6 +74,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log(this.chatMessage);
   }
 
   discloseMessage() {

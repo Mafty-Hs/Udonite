@@ -17,6 +17,9 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() disableSeparateDataSave:boolean;
 
   @SyncVar() gameType:string;
+  @SyncVar() chatTab:string;
+  @SyncVar() diceLog:boolean;
+  @SyncVar() cardLog:boolean;
 
   private static _instance:RoomAdmin;
 
@@ -35,6 +38,9 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
         admin.setAttribute(key, RoomAdmin.defaultSetting[key]);
       }
       admin.gameType = "";
+      admin.chatTab = "";
+      admin.diceLog = false;
+      admin.cardLog = false;
       RoomAdmin._instance.appendChild(admin);
     }
   }

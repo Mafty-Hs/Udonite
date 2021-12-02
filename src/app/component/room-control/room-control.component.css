@@ -5,8 +5,17 @@
   justify-content: flex-start;
 }
 
-.flex-item {
+.title {
+  font-weight: bold;
   font-size:14px;
+}
+
+.title::before {
+  content: "・";
+}
+
+.flex-item {
+  font-size:12px;
 }
 
 .not-specified {

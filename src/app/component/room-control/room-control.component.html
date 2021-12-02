@@ -1,6 +1,6 @@
 <div class="flex-box">
   <div class="flex-item">
-    <div style="font-size:16px">デフォルトダイスボット</div>
+    <div class="title">デフォルトダイスボット</div>
   <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 16em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
    　<option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
@@ -11,9 +11,28 @@
      　<option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
     </optgroup>
   </select>
-</div>  
+  </div>  
   <div class="flex-item">
-  <div style="font-size:16px">アラーム</div>
+    <div class="title">操作ログ</div>
+    <div>カード、ダイスの操作ログを出力するタブを指定します。</div>
+    <select style="width: 16em;" [(ngModel)]="playerService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
+      <option value="" class="not-specified">ログを出力しない</option>
+      <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+    </select>
+    <ng-container *ngIf="playerService.roomAdmin.chatTab">
+      <div>出力するデータを指定します</div>
+      <div class="toggle"><label>ダイス操作ログ
+        <input name="diceLog" type="checkbox" [(ngModel)]="playerService.roomAdmin.diceLog">
+        <div><div></div></div>
+      </label></div><br>
+      <div class="toggle"><label>カード操作ログ
+        <input name="cardLog" type="checkbox" [(ngModel)]="playerService.roomAdmin.cardLog">
+        <div><div></div></div>
+      </label></div><br>
+    </ng-container>
+  </div>  
+  <div class="flex-item">
+  <div class="title">アラーム</div>
   <input type="number" style="width:4em" name="alarmTime" [(ngModel)]="alarmTime"  />
   秒後  送信先:
   <select name="sendTo" style="width:10em" [(ngModel)]="sendTo" >
@@ -26,12 +45,12 @@
   </div>
   <hr>
   <div class="flex-item">
-    <div style="font-size:16px">ルーム管理者</div>
+    <div class="title">ルーム管理者</div>
     <div *ngIf="!playerService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
   </div>
   <hr>
   <div class="flex-item">
-    <div style="font-size:16px">ルーム設定</div>
+    <div class="title">ルーム設定</div>
     <div *ngIf="!adminAuth; else editSetting">
      現在、下記の制御が有効になっています。
       <ul>

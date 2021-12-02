@@ -4,6 +4,8 @@ import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelService } from 'service/panel.service';
+import { ChatTab } from '@udonarium/chat-tab';
+import { ChatTabList } from '@udonarium/chat-tab-list';
 
 @Component({
   selector: 'room-control',
@@ -17,6 +19,10 @@ export class RoomControlComponent implements OnInit {
   get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   sendTo:string = "";
   password:string = "";
+
+  get chatTabs():ChatTab[] {
+    return ChatTabList.instance.chatTabs;
+  }
 
   get adminAuth():boolean { return this.playerService.adminAuth;}
 

@@ -2,6 +2,7 @@ import {  AfterViewInit, Component, OnDestroy, OnInit, Input, Output, EventEmitt
 import { EventSystem, Network } from '@udonarium/core/system';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { PanelOption, PanelService } from 'service/panel.service';
+import { ChatMessageService } from 'service/chat-message.service';
 import { CounterService } from 'service/counter.service';
 import { SaveDataService } from 'service/save-data.service';
 import { PlayerService } from 'service/player.service';
@@ -117,7 +118,8 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     private playerService: PlayerService,
     private saveDataService: SaveDataService,
     private saveHtmlService: SaveHtmlService,
-    private counterService: CounterService
+    private counterService: CounterService,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnDestroy() {
@@ -165,6 +167,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   diceAllOpne() {
     if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);
+      this.chatMessageService.sendOperationLog("ダイス一斉公開","dice")
     }
     this.closeMe.emit();
   }

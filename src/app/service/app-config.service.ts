@@ -17,9 +17,9 @@ export interface AppConfig {
     title: string,
     mode: string
   },
-  dice?: {
-    url?: string,
-    api?: number
+  dice: {
+    url: string,
+    api: number
   }
   server?: {
     url?: string,

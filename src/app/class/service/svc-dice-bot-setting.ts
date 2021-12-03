@@ -73,9 +73,9 @@ export class SvcDiceBotSetting {
       for (let info of tempInfos) {
         let index = info.lang == 'Other' ? 'その他' 
          : info.lang == 'ChineseTraditional' ? '正體中文'
-         : info.lang == 'Korean' ? '???'
+         : info.lang == 'Korean' ? '한국어'
          : info.lang == 'English' ? 'English'
-         : info.lang == 'SimplifiedChinese' ? '?体中文'
+         : info.lang == 'SimplifiedChinese' ? '簡体中文'
          : info.normalize.substr(0, 1);
         if (index !== sentinel) {
           sentinel = index;
@@ -93,12 +93,13 @@ export class SvcDiceBotSetting {
   private replaceData: [string, string, string?][] = [
     ['新クトゥルフ', 'シンクトウルフシンワTRPG', '新クトゥルフ神話TRPG'],
     ['クトゥルフ神話TRPG', 'クトウルフシンワTRPG', '(旧) クトゥルフ神話TRPG'],
-    ['???', '???? ?? 6?', '???? ?? 6?'],
+    ['크툴루', '크툴루의 부름 6판', '크툴루의 부름 6판'],
     ['克蘇魯神話', '克蘇魯的呼喚 第六版', '克蘇魯的呼喚 第六版'],
     ['克蘇魯神話第7版', '克蘇魯的呼喚 第7版', '克蘇魯的呼喚 第七版'],
-    ['トーグ', 'トオク', 'TORG'],
+    ['トーグ', 'トオク', 'トーグ（TORG）'],
     ['ワープス', 'ワアフス', 'WARPS'],
-    ['トーグ1.5版', 'トオク1.5ハン', 'TORG 1.5版'],
+    ['トーグ1.5版', 'トオク1.5ハン', 'トーグ（TORG） 1.5版'],
+    ['トーグ エタニティ', 'トオクエタニテイ', 'トーグ（TORG） エタニティ'],
     ['心衝想機TRPGアルトレイズ', 'シンシヨウソウキTRPGアルトレイス', '心衝想機TRPG アルトレイズ'],
     ['犯罪活劇RPGバッドライフ', 'ハンサイカツケキRPGハツトライフ', '犯罪活劇RPGバッドライフ'],
     ['晃天のイルージオ', 'コウテンノイルウシオ', '晃天のイルージオ'],

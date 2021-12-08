@@ -1,3 +1,13 @@
+.sticky-top {
+  position: sticky;
+  z-index: 2;
+  top : 0;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  background-color: #444;
+}
+
 .drop-zone {
   border: 2px dashed #aaa;
   -moz-border-radius: 5px;
@@ -18,6 +28,33 @@
   font-size: 12px;
 }
 
+.player {
+  background-color: #212121;
+  border: solid 3px #000;
+  display: flex;
+  flex-flow: column;
+  font-size: 14px;
+}
+
+.player-control {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+.left {
+  width: 40%;
+}
+.center {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.right {
+  width: 40%;
+}
+
 .box {
   font-size: smaller;
   border-bottom:1px dotted #888;
@@ -35,6 +72,41 @@
 
 input[type=number] {
   text-align: right;
+  background-color: #212121;
+  color: #fff;
+}
+
+input[type=text] {
+  background-color: #212121;
+  color: #fff;
+}
+
+.sound-list {
+  background: transparent;
+  border-collapse:  collapse;
+  table-layout: fixed;
+  border: dotted 1px #aaa;
+  width: 100%;
+}
+
+.sound-list th  {
+  border: dotted 1px #aaa;
+  background-color: #212121;
+  font-size: 14px;
+  vertical-align:text-bottom
+}
+
+.sound-list td  {
+  border: dotted 1px #aaa;
+  font-size: 12px;
+}
+
+.name {
+  font-size: 12px;
+  padding-left: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .self-only {
@@ -46,11 +118,59 @@ button .self-only {
 
 .box button {
   font-size: 12px;
-  height: 26px;
-  width: 5.6em;
+  height: 2em;
+  width: 3em;
+  padding: 4px;
   margin-left: 0px;
   margin-right: 0px;
 }
 button .material-icons {
+  font-size: 14px;
+}
+
+.sw-on{
+  background:linear-gradient(#000,#222);
+	color: #888;
+}
+.sw-on:after{
+	content: '';
+	background: transparent;
+}
+
+.stop {
   font-size: 12px;
+  height: 2.5em;
+  width: 2.5em;
+  padding: 4px;
+  margin-left: 0px;
+  margin-right: 0px;
+  border-radius: 100%;
+}
+
+.stop::after {
+  background: none;
+}
+
+.marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.marquee-text {
+  transform: translateX(100%);
+  animation: marquee 15s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  0% {
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+  100% {
+    -moz-transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
 }

@@ -45,7 +45,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
+    this.sendFromChange.emit(sendFrom); 
   }
+  @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };
 
   _text: string = '';

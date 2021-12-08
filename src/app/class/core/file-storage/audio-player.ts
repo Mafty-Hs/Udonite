@@ -1,9 +1,11 @@
 import { AudioFile, AudioState } from './audio-file';
+import { AudioSetting, AudioInfo } from '@udonarium/audio-setting';
 import { FileReaderUtil } from './file-reader-util';
 
 export enum VolumeType {
   MASTER,
   AUDITION,
+  SE,
 }
 
 declare global {
@@ -16,24 +18,33 @@ declare global {
 type AudioCache = { url: string, blob: Blob };
 
 export class AudioPlayer {
-  private static _audioContext: AudioContext
+  private static _audioContext: AudioContext;
+
+  static calcVolume(identifier :string) :number {
+    let volume = AudioSetting.instance.getInfo(identifier).volume / 400;
+    return volume;
+  }
+
   static get audioContext(): AudioContext {
     if (!AudioPlayer._audioContext) AudioPlayer._audioContext = new (window.AudioContext || window.webkitAudioContext)();
     return AudioPlayer._audioContext;
   }
 
-  private static _volume: number = 0.5;
-  static get volume(): number { return AudioPlayer._volume; }
+  private static _volume: number = 2;
+  static get volume(): number { return AudioPlayer._volume / 4; }
   static set volume(volume: number) {
-    AudioPlayer._volume = volume;
-    AudioPlayer.masterGainNode.gain.setTargetAtTime(AudioPlayer._volume, AudioPlayer.audioContext.currentTime, 0.01);
+    let value = volume *4;
+    AudioPlayer._volume = value;
+    AudioPlayer.masterGainNode.gain.setTargetAtTime(value, AudioPlayer.audioContext.currentTime, 0.01);
+    AudioPlayer.seGainNode.gain.setTargetAtTime(value, AudioPlayer.audioContext.currentTime, 0.01);
   }
 
-  private static _auditionVolume: number = 0.5;
-  static get auditionVolume(): number { return AudioPlayer._auditionVolume; }
+  private static _auditionVolume: number = 2;
+  static get auditionVolume(): number { return AudioPlayer._auditionVolume / 4; }
   static set auditionVolume(auditionVolume: number) {
-    AudioPlayer._auditionVolume = auditionVolume;
-    AudioPlayer.auditionGainNode.gain.setTargetAtTime(AudioPlayer._auditionVolume, AudioPlayer.audioContext.currentTime, 0.01);
+    let value =  auditionVolume *4;
+    AudioPlayer._auditionVolume = value;
+    AudioPlayer.auditionGainNode.gain.setTargetAtTime(value, AudioPlayer.audioContext.currentTime, 0.01);
   }
 
   private static _masterGainNode: GainNode
@@ -57,9 +68,21 @@ export class AudioPlayer {
     }
     return AudioPlayer._auditionGainNode;
   }
+  private static _seGainNode: GainNode
+  private static get seGainNode(): GainNode {
+    if (!AudioPlayer._seGainNode) {
+      let seGain = AudioPlayer.audioContext.createGain();
+      seGain.gain.setValueAtTime(AudioPlayer._volume, AudioPlayer.audioContext.currentTime);
+      seGain.connect(AudioPlayer.audioContext.destination);
+      AudioPlayer._seGainNode = seGain;
+    }
+    return AudioPlayer._seGainNode;
+  }
+
 
   static get rootNode(): AudioNode { return AudioPlayer.masterGainNode; }
   static get auditionNode(): AudioNode { return AudioPlayer.auditionGainNode; }
+  static get seNode(): AudioNode { return AudioPlayer.seGainNode; }
 
   private _audioElm: HTMLAudioElement;
   private get audioElm(): HTMLAudioElement {
@@ -111,10 +134,13 @@ export class AudioPlayer {
         AudioPlayer.createCacheAsync(audio);
       }
     }
-
+    
+    //let gain = this.getConnectingAudioNode() as GainNode;
+    //gain.gain.value = AudioPlayer.calcVolume((this.volumeType !== VolumeType.AUDITION) ? AudioPlayer.volume : AudioPlayer.auditionVolume  ,audio.identifier);
     this.mediaElementSource.connect(this.getConnectingAudioNode());
     this.audioElm.src = url;
     this.audioElm.load();
+    this.volume =  AudioPlayer.calcVolume(audio.identifier);
     this.audioElm.play().catch(reason => { console.warn(reason); });
   }
 
@@ -135,6 +161,8 @@ export class AudioPlayer {
     switch (this.volumeType) {
       case VolumeType.AUDITION:
         return AudioPlayer.auditionNode;
+      case VolumeType.SE:
+        return AudioPlayer.seNode;
       default:
         return AudioPlayer.rootNode;
     }

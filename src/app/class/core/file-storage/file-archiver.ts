@@ -107,7 +107,8 @@ export class FileArchiver {
       return;
     }
     console.log(file.name + ' type:' + file.type);
-    await AudioStorage.instance.addAsync(file);
+    let audio = await AudioStorage.instance.addAsync(file);
+      EventSystem.trigger('ADD_AUDIO', { name: audio.name , identifier: audio.identifier});
   }
 
   private async handleText(file: File): Promise<void> {

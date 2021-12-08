@@ -44,7 +44,7 @@
 
 .set-area {
   display:flex; 
-  flex-diretion: row; 
+  flex-direction: row; 
   justify-content:space-between;
 }
 

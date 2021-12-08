@@ -1,32 +1,64 @@
-<div>
-  <b>試聴音量<sup class="self-only">*</sup>：</b>
-  <i class="material-icons" style="font-size: 22px">{{ auditionVolume == 0 ? 'volume_off' : auditionVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
-  <input [(ngModel)]="auditionVolume" type="range" title="{{percentAuditionVolume + '%'}}" min="0" max="1" step="0.01" style="width:53%" /> 
-  <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentAuditionVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
-</div>
-<div>
-  <b>再生音量<sup class="self-only">*</sup>：</b>
-  <i class="material-icons" style="font-size: 22px">{{ volume == 0 ? 'volume_off' : volume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
-  <input [(ngModel)]="volume" type="range" min="0" title="{{percentVolume + '%'}}" max="1" step="0.01" style="width:53%" /> 
-  <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
-</div>
-<hr/>
-<div style="margin-bottom: 3px">
-  <div *ngFor="let audio of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}">
-    <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady"><i class="material-icons">play_arrow</i>試聴<sup style="font-size: larger" class="self-only">*</sup></button>
-    <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady"><i class="material-icons">stop</i>試聴<sup style="font-size: larger" class="self-only">*</sup></button>
-    <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady"><i class="material-icons">loop</i>ＢＧＭ</button>
-    <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady"><i class="material-icons">stop</i>ＢＧＭ</button>
-    <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused && audio != jukebox?.audio" style="padding-left: 2px"><b>【試聴中】</b></span>
-    <ng-container *ngIf="audio === jukebox?.audio">
-      <span *ngIf="audio != auditionPlayer?.audio || (audio == auditionPlayer?.audio && auditionPlayer?.paused)" style="padding-left: 2px"><b>【ＢＧＭ】</b></span>
-      <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" style="padding-left: 2px"><b>【試聴/BGM】</b></span>
-    </ng-container>
-    <span style="font-size: smaller" style="padding-left: 2px">{{audio.name}}</span>
+<div class="sticky-top">
+  <div>
+    <b>試聴音量<sup class="self-only">*</sup>：</b>
+    <i class="material-icons" style="font-size: 22px">{{ auditionVolume == 0 ? 'volume_off' : auditionVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
+    <input [(ngModel)]="auditionVolume" type="range" title="{{percentAuditionVolume + '%'}}" min="0" max="1" step="0.001" style="width:53%" /> 
+    <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentAuditionVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
   </div>
-  <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div>
+  <div>
+    <b>再生音量<sup class="self-only">*</sup>：</b>
+    <i class="material-icons" style="font-size: 22px">{{ volume == 0 ? 'volume_off' : volume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
+    <input [(ngModel)]="volume" type="range" min="0" title="{{percentVolume + '%'}}" max="1" step="0.001" style="width:53%" /> 
+    <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
+  </div>
+  <hr/>
+  <div class="player" *ngIf="jukeboxIdentifier && !auditionIdentifier">
+    <div class="player-control"><div class="left"><b>再生中</b></div><div class="center"><button class="stop" (click)="stopBGM()"><i class="material-icons">stop</i></button></div><div class="right"> </div></div>
+    <div class="marquee"><div class="marquee-text">{{jukeboxName}}</div></div>
+  </div>
+  <div class="player" *ngIf="auditionIdentifier">
+    <div class="player-control"><div class="left"><b>試聴中</b></div><div class="center"><button class="stop" (click)="stop()"><i class="material-icons">stop</i></button></div><div class="right"> </div></div>
+    <div class="marquee"><div class="marquee-text">{{auditionPlayerName}}</div></div>
+  </div>
+  <hr/>
+</div>
+<div style="margin-bottom: 3px; width: 100%">
+  <table class="sound-list">
+    <tr>
+      <th style="width:3em">試聴<sup style="font-size: larger" class="self-only">*</sup></th>
+      <th style="width:3em">BGM</th>
+      <th style="width:3em">SE</th>
+      <th style="width:5em">音量</th>
+      <th >名前</th>
+    <tr>
+    <tr *ngFor="let info of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}">
+      <td>
+        <button (click)="play(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == auditionIdentifier}"><i class="material-icons">play_arrow</i></button>
+     </td>
+      <td>
+        <button (click)="playBGM(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == jukeboxIdentifier}"><i class="material-icons">loop</i></button>
+      </td>
+      <td>
+        <button (click)="playSE(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == effectIdentifier}"><i class="material-icons">play_arrow</i></button>
+      </td>
+      <td><input type="number" min="0" max="400" step="1" style="width: 4em" [(ngModel)]="info.volume">%</td>
+      <td (click)="toggleName($event,info.audioIdentifier)" class="name">
+        <ng-container *ngIf="info.audioIdentifier !== nameIdentifier">
+           {{info.name}}
+        </ng-container>
+        <ng-container *ngIf="info.audioIdentifier === nameIdentifier">
+          <input type="text" width="18em" [(ngModel)]="info.name" />
+          <button (click)="toggleName($event,'')">OK</button>
+        </ng-container>
+      </td>
+    </tr>
+    <tr>
+      <td></td><td></td><td></td><td></td><td (click)="toggleName($event,'')">-</td>
+    <tr>
+  </table>
 </div>
 
+  
 <label>
   <div class="drop-zone">
     <div>
@@ -41,4 +73,5 @@
 </label>
 <div style="font-size: 12px; margin-top: 3px">※「試聴<sup class="self-only">*</sup>」は自分のスピーカーだけで音楽を1回再生します。</div>
 <div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
-<div style="font-size: 12px;">※現行バージョンのセーブデータ（zip）には音楽ファイルは含まれません。（毎回アップロードが必要です）</div>
+<div style="font-size: 12px;">※「SE」はルーム内の全員で1つの音楽を一回再生します。BGMと同時に再生することができます。</div>
+<div style="font-size: 12px;">セーブデータ（zip）には音楽ファイルは含まれません。（毎回アップロードが必要です）</div>

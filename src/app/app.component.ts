@@ -5,7 +5,6 @@ import { CounterList } from '@udonarium/counter-list';
 import { IRound } from '@udonarium/round';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { BillBoard } from '@udonarium/bill-board';
-import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
@@ -18,10 +17,10 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ObjectSynchronizer } from '@udonarium/core/synchronize-object/object-synchronizer';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DataSummarySetting } from '@udonarium/data-summary-setting';
-import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { AudioService } from 'service/audio.service';
 import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -52,6 +51,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
+    private audioService: AudioService,
     private modalService: ModalService,
     private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
@@ -77,19 +77,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
-
+    this.audioService.initialize();
     IRound.init();
     BillBoard.init();
     RoomAdmin.init();
     CounterList.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
-
-    let jukebox: Jukebox = new Jukebox('Jukebox');
-    jukebox.initialize();
-
-    let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
-    soundEffect.initialize();
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
@@ -113,47 +107,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     fileContext.url = './assets/images/nc96424.png';
     let standNoIconImage = ImageStorage.instance.add(fileContext);
     ImageTag.create(standNoIconImage.identifier).tag = '*default スタンド';
-
-    AudioPlayer.resumeAudioContext();
-    PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
-    PresetSound.dicePut = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/book-stack1.mp3').identifier;
-    PresetSound.diceRoll1 = AudioStorage.instance.add('./assets/sounds/on-jin/spo_ge_saikoro_teburu01.mp3').identifier;
-    PresetSound.diceRoll2 = AudioStorage.instance.add('./assets/sounds/on-jin/spo_ge_saikoro_teburu02.mp3').identifier;
-    PresetSound.cardDraw = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/card-turn-over1.mp3').identifier;
-    PresetSound.cardPick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
-    PresetSound.cardPut = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/book-stack1.mp3').identifier;
-    PresetSound.cardShuffle = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/card-open1.mp3').identifier;
-    PresetSound.piecePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
-    PresetSound.piecePut = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/book-stack1.mp3').identifier;
-    PresetSound.blockPick = AudioStorage.instance.add('./assets/sounds/tm2/tm2_pon002.wav').identifier;
-    PresetSound.blockPut = AudioStorage.instance.add('./assets/sounds/tm2/tm2_pon002.wav').identifier;
-    PresetSound.lock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
-    PresetSound.unlock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
-    PresetSound.sweep = AudioStorage.instance.add('./assets/sounds/tm2/tm2_swing003.wav').identifier;
-    PresetSound.puyon = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/puyon1.mp3').identifier;
-    PresetSound.surprise = AudioStorage.instance.add('./assets/sounds/otologic/Onmtp-Surprise02-1.mp3').identifier;
-    PresetSound.coinToss = AudioStorage.instance.add('./assets/sounds/niconicomons/nc146227.mp3').identifier;
-    PresetSound.alarm = AudioStorage.instance.add('./assets/sounds/alarm.mp3').identifier;
-
-    AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
-    AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
-    AudioStorage.instance.get(PresetSound.diceRoll1).isHidden = true;
-    AudioStorage.instance.get(PresetSound.diceRoll2).isHidden = true;
-    AudioStorage.instance.get(PresetSound.cardDraw).isHidden = true;
-    AudioStorage.instance.get(PresetSound.cardPick).isHidden = true;
-    AudioStorage.instance.get(PresetSound.cardPut).isHidden = true;
-    AudioStorage.instance.get(PresetSound.cardShuffle).isHidden = true;
-    AudioStorage.instance.get(PresetSound.piecePick).isHidden = true;
-    AudioStorage.instance.get(PresetSound.piecePut).isHidden = true;
-    AudioStorage.instance.get(PresetSound.blockPick).isHidden = true;
-    AudioStorage.instance.get(PresetSound.blockPut).isHidden = true;
-    AudioStorage.instance.get(PresetSound.lock).isHidden = true;
-    AudioStorage.instance.get(PresetSound.unlock).isHidden = true;
-    AudioStorage.instance.get(PresetSound.sweep).isHidden = true
-    AudioStorage.instance.get(PresetSound.puyon).isHidden = true;
-    AudioStorage.instance.get(PresetSound.surprise).isHidden = true;
-    AudioStorage.instance.get(PresetSound.coinToss).isHidden = true;
-    AudioStorage.instance.get(PresetSound.alarm).isHidden = true;
 
     PeerCursor.createMyCursor();
     if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';

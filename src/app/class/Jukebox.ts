@@ -1,6 +1,7 @@
 import { AudioFile } from './core/file-storage/audio-file';
-import { AudioPlayer } from './core/file-storage/audio-player';
+import { AudioPlayer, VolumeType } from './core/file-storage/audio-player';
 import { AudioStorage } from './core/file-storage/audio-storage';
+import { AudioInfo , AudioSetting } from '@udonarium/audio-setting';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { EventSystem } from './core/system';
@@ -11,10 +12,19 @@ export class Jukebox extends GameObject {
   @SyncVar() startTime: number = 0;
   @SyncVar() isLoop: boolean = false;
   @SyncVar() isPlaying: boolean = false;
+  @SyncVar() seIdentifier: string = '';
+  @SyncVar() seStartTime: number = 0;
+  @SyncVar() seIsLoop: boolean = false;
+  @SyncVar() seIsPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
-
+  get se(): AudioFile { return AudioStorage.instance.get(this.seIdentifier); }
   private audioPlayer: AudioPlayer = new AudioPlayer();
+  private sePlayer: AudioPlayer = new AudioPlayer();
+
+  seInit() {
+    this.sePlayer.volumeType = VolumeType.SE;
+  }
 
   // GameObject Lifecycle
   onStoreAdded() {
@@ -37,6 +47,15 @@ export class Jukebox extends GameObject {
     this._play();
   }
 
+  sePlay(identifier: string, isLoop: boolean = false) {
+    let audio = AudioStorage.instance.get(identifier);
+    if (!audio || !audio.isReady) return;
+    this.seIdentifier = identifier;
+    this.seIsPlaying = true;
+    this.seIsLoop = isLoop;
+    this._sePlay();
+  }
+
   private _play() {
     this._stop();
     if (!this.audio || !this.audio.isReady) {
@@ -47,15 +66,36 @@ export class Jukebox extends GameObject {
     this.audioPlayer.play(this.audio);
   }
 
+  private _sePlay() {
+    this._seStop();
+    if (!this.se || !this.se.isReady) {
+      console.log(this.seIdentifier);
+      console.log(this.se);
+      return;
+    }
+    this.sePlayer.loop = false;
+    this.sePlayer.play(this.se);
+  }
+
   stop() {
     this.audioIdentifier = '';
     this.isPlaying = false;
     this._stop();
   }
 
+  seStop() {
+    this.seIdentifier = '';
+    this.seIsPlaying = false;
+    this._seStop();
+  }
+
   private _stop() {
     this.unregisterEvent();
     this.audioPlayer.stop();
+  }
+
+  private _seStop() {
+    this.sePlayer.stop();
   }
 
   private playAfterFileUpdate() {

@@ -18,13 +18,13 @@ body, input[text], button {
 button{
 	position: relative;
 	display: inline-block;
-        margin: 0;
+  margin: 0;
 	padding: 0.6em 1em;
-        background:linear-gradient(#222,#666);
+  background:linear-gradient(#222,#666);
 	text-decoration: none;
 	color: #EEE;
 	font-weight: 100;
-        border: solid 2px #111;
+  border: solid 2px #111;
 	border-radius: 3px;
 	box-shadow: 0px 1px 4px -2px #333;
 	text-shadow: 0px -1px #333;
@@ -43,7 +43,14 @@ button:hover{
 	background: linear-gradient(#000,#444);
 }
 
-
+button:disabled{
+  background:linear-gradient(#000,#222);
+	color: #888;
+}
+button:disabled:after{
+	content: '';
+	background: transparent;
+}
 
 /* everywhere else */
 /*

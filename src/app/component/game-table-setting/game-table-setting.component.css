@@ -31,6 +31,25 @@
   display: flex;
 }
 
+input {
+  background-color: #212121;
+  color: #fff;  
+}
+
+select {
+  background-color: #212121;
+  color: #fff;
+}
+
+textarea {
+  background-color: #212121;
+  color: #fff;
+}
+
+::placeholder {
+  color: #AAA;
+}
+
 input[type='number'] {
   text-align: right;
 }

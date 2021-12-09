@@ -76,12 +76,12 @@ export class GameCharacter extends TabletopObject {
     let gameCharacter: GameCharacter = new GameCharacter();
     gameCharacter.createDataElements();
     gameCharacter.initialize();
-    gameCharacter.createTestGameDataElement(name, size, imageIdentifier);
+    gameCharacter.createCommonGameDataElement(name, size, imageIdentifier);
 
     return gameCharacter;
   }
 
-  createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
+  createCommonGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);

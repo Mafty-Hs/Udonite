@@ -4,7 +4,6 @@ import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { AudioFile } from './core/file-storage/audio-file';
 import { AudioStorage } from './core/file-storage/audio-storage';
-import { EventSystem } from './core/system';
 
 @SyncObject('audio-setting')
 export class AudioSetting extends ObjectNode implements InnerXml{

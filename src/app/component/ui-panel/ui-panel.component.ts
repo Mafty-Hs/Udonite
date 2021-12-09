@@ -1,7 +1,7 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
-import { PanelService } from 'service/panel.service';
+import { PanelService , PanelSize } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
@@ -28,6 +28,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class UIPanelComponent implements OnInit {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('scrollablePanel', { static: true }) scrollablePanel: ElementRef<HTMLDivElement>;
+  @ViewChild('titleBar', { static: true }) titleBar: ElementRef<HTMLDivElement>;
   @ViewChild('content', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
 
   @Input() set title(title: string) { this.panelService.title = title; }
@@ -40,14 +41,17 @@ export class UIPanelComponent implements OnInit {
     this.panelService.height = height ;
   }
   @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
+  @Input() set isAbleMinimizeButton(isAbleMinimizeButton: boolean) { this.panelService.isAbleMinimizeButton = isAbleMinimizeButton; }
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
 
+  get fullPanelSize():PanelSize {return this.panelService.fullPanelSize}
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
   get top() { return this.panelService.top; }
   get width() { return this.panelService.width; }
   get height() { return this.panelService.height; }
   get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
+  get isAbleMinimizeButton() { return this.panelService.isAbleMinimizeButton; }
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
 
   private preLeft: number = 0
@@ -55,7 +59,8 @@ export class UIPanelComponent implements OnInit {
   private preWidth: number = 100;
   private preHeight: number = 100;
 
-  private isFullScreen: boolean = false;
+  isFullScreen: boolean = false;
+  isMinimized: boolean = false;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -74,6 +79,7 @@ export class UIPanelComponent implements OnInit {
   }
 
   toggleFullScreen() {
+    if (this.isMinimized) return;
     let panel = this.draggablePanel.nativeElement;
     panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
     setTimeout(() => {
@@ -81,8 +87,8 @@ export class UIPanelComponent implements OnInit {
     }, 100);
     if (panel.offsetLeft <= 0
       && panel.offsetTop <= 50
-      && panel.offsetWidth >= window.innerWidth
-      && panel.offsetHeight >= window.innerHeight) {
+      && panel.offsetWidth >= this.fullPanelSize.width
+      && panel.offsetHeight >= this.fullPanelSize.height) {
       this.isFullScreen = false;
     } else {
       this.isFullScreen = true;
@@ -96,8 +102,8 @@ export class UIPanelComponent implements OnInit {
 
       this.left = 0;
       this.top = 50;
-      this.width = window.innerWidth;
-      this.height = window.innerHeight - 50;
+      this.width = this.fullPanelSize.width;
+      this.height = this.fullPanelSize.height;
 
       panel.style.left = this.left + 'px';
       panel.style.top = this.top + 'px';
@@ -110,6 +116,25 @@ export class UIPanelComponent implements OnInit {
       this.height = this.preHeight;
     }
   }
+
+  toggleMinimize() {
+    if (this.isFullScreen) return;
+ 
+    let body  = this.scrollablePanel.nativeElement;
+    let panel = this.draggablePanel.nativeElement;
+    if (this.isMinimized) {
+      this.isMinimized = false;
+      body.style.display = null;
+      this.height = this.preHeight;
+    } else {
+      this.preHeight = panel.offsetHeight;
+
+      this.isMinimized = true;
+      body.style.display = 'none';
+      this.height = this.titleBar.nativeElement.offsetHeight;
+    }
+  }
+
 
   close() {
     if (this.panelService) this.panelService.close();

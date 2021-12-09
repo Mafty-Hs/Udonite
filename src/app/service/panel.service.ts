@@ -13,11 +13,23 @@ export interface PanelOption {
   height?: number;
 }
 
+export interface PanelSize {
+  width: number;
+  height: number;
+}
+
 @Injectable()
 export class PanelService {
   /* Todo */
   static defaultParentViewContainerRef: ViewContainerRef;
   static UIPanelComponentClass: { new(...args: any[]): any } = null;
+
+  get fullPanelSize():PanelSize {
+    return { 
+      width: window.innerWidth ,
+      height: (window.innerHeight - 50)
+    };
+  }
 
   private panelComponentRef: ComponentRef<any>
   title: string = '無名のパネル';
@@ -35,9 +47,10 @@ export class PanelService {
     return this._height;
   }
   set height(_height:number) {
-    this._height = _height > (window.innerHeight - 50) ? (window.innerHeight - 50) : _height;
+     this._height = ( _height > this.fullPanelSize.height ) ? this.fullPanelSize.height : _height;
   }
   isAbleFullScreenButton: boolean = true;
+  isAbleMinimizeButton: boolean = true;
   isAbleCloseButton: boolean = true;
 
   scrollablePanel: HTMLDivElement = null;

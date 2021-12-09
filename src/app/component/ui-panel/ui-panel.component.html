@@ -1,10 +1,12 @@
 <div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging}" class="draggable-panel"
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
+  [resizable.disable]="isMinimized || isFullScreen"
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel>
-  <div class="title">
+  <div class="title"  #titleBar>
     <div class="title-button">
-      <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
-      <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      <button class="panel-button" [disabled]="isFullScreen" *ngIf="isAbleMinimizeButton" (click)="toggleMinimize()"><i class="material-icons" style="font-size: 14px;">minimize</i></button>
+      <button class="panel-button" [disabled]="isMinimized" *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
+      <button class="panel-button" *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
     </div>
     <span class="title-text">{{panelService.title}}</span>
   </div>

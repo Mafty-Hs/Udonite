@@ -59,7 +59,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
     private standImageService: StandImageService,
     private roomService: RoomService,
-    private cutInService: CutInService
+    private cutInService: CutInService,
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -112,7 +112,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
-    EventSystem.register(this)
+     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('SYNCHRONIZE_AUDIO_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })

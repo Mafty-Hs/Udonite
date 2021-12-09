@@ -62,32 +62,36 @@
 
 .title-button {
   position: absolute;
-  right: 0;
+  right: 2px;
   top: 0;
-}
-
-.title button {
-  background: none;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  color: #CCC;
+  padding: 2px;
 }
 
 .pointer-events-none {
   pointer-events: none;
 }
 
-button {
-  background-color: #eee;
-  color: #444;
-  border: solid 1px #444;
-  padding: 0.35em 0.7em;
-  margin: 0 2px;
-  border-radius: 4px;
-  cursor: pointer;
-  cursor: hand;
+.panel-button {
+  background: #333;
+  color: #FFF;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0px 1px 4px -2px inset #000;
+  text-shadow: none;
+  padding: 0.05em 0.5em;
+  margin: 2px 5px;
 }
-button:hover {
-  background-color: #cfd8dc;
+
+.panel-button:hover {
+  background: #222;
+  color: #CCC;
+}
+
+.panel-button:disabled {
+  color: #999;
+}
+
+.panel-button:after{
+	content: '';
+	background: transparent;
 }

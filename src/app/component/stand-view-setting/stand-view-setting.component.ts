@@ -2,7 +2,7 @@ import { Component,AfterViewInit,OnInit,OnDestroy,ViewChild, ElementRef } from '
 import { GameCharacterService } from 'service/game-character.service';
 import { StandService } from 'service/stand.service';
 import { GameCharacter } from '@udonarium/game-character';
-import { PanelOption, PanelService } from 'service/panel.service';
+import { PanelService } from 'service/panel.service';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { DataElement } from '@udonarium/data-element';
 
@@ -91,6 +91,7 @@ export class StandViewSettingComponent implements OnInit {
      private standService: StandService
   ) { 
     this.panelService.isAbleFullScreenButton = false;
+    this.panelService.isAbleMinimizeButton = false;
     this.panelService.title = "立ち絵表示設定";
   }
 

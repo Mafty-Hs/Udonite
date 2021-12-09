@@ -3,7 +3,6 @@ import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { DataElement } from '@udonarium/data-element';
-import { PanelOption, PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 
 @Injectable({
@@ -130,8 +129,7 @@ export class GameCharacterService {
   }
 
   constructor(
-    private panelService: PanelService,
-    private playerService: PlayerService
+     private playerService: PlayerService,
   ) { 
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {

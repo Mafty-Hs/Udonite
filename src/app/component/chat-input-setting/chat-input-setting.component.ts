@@ -251,6 +251,14 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
     this.character.chatPalette.color = color ? color : PeerCursor.CHAT_TRANSPARENT_COLOR;
   }
 
+  waitLoadDiceBot() {
+    if (this.gameType) {
+      this.loadDiceBot(this.gameType);
+      this.chatData.gameType = this.gameType;
+      this.chatSetting.emit(this.chatData);
+    }
+  }
+
   constructor(
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
@@ -264,6 +272,11 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
     if (this.gameType) this.loadDiceBot(this.gameType);
+    else {
+      setTimeout(() => {
+        this.waitLoadDiceBot();
+      }, 2000);
+    }
     setTimeout(() => {
       this.viewInit();
     }, 100);

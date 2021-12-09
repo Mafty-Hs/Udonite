@@ -25,13 +25,21 @@ export class DiceBotService {
   private commandPatternBase:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
   private asciiPattern:RegExp = new RegExp('^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$');
 
-  private bcDiceFilter(gameType:string ,rollText:string):boolean {
+  private bcDiceFilter(gameType:string ,rollText:string):string {
+    console.log(rollText);
+    rollText = this.textFilter(rollText);
+    console.log(rollText);
     if (gameType === this.gameType) {
-      if (this.commandPattern.test(rollText)) return true;
-      return false;
+      if (this.commandPattern.test(rollText)) return rollText;
+      return "";
     }
-    if (this.commandPatternBase.test(rollText) || !this.asciiPattern.test(rollText)) return true;
-    return false;
+    if (this.commandPatternBase.test(rollText) || !this.asciiPattern.test(rollText)) return rollText;
+    return "";
+  }
+
+  private textFilter(text :string):string {
+    text = text.replace(/　/g," ");
+    return text;
   }
 
   async diceRoll(messageIdentifier: string) {
@@ -52,7 +60,8 @@ export class DiceBotService {
      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
 
     if (await this.diceRollTableMatch(rollText, repeat, chatMessage)) return;
-    if (!this.bcDiceFilter(gameType,rollText)) return;
+    rollText = this.bcDiceFilter(gameType,rollText);
+    if (!rollText) return;
     if (repeat < 1) return;
     try {
       finalResult = await this.bcDice(rollText, gameType, repeat);

@@ -6,6 +6,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelService } from 'service/panel.service';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
+import { GameCharacterService } from 'service/game-character.service';
 
 @Component({
   selector: 'room-control',
@@ -41,6 +42,7 @@ export class RoomControlComponent implements OnInit {
   constructor(
     private panelService: PanelService,
     private diceBotService: DiceBotService,
+    public gameCharacterService: GameCharacterService,
     public playerService: PlayerService
   ) { }
 

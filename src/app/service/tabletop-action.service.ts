@@ -13,6 +13,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
+import { GameCharacterService } from './game-character.service';
 
 import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
@@ -24,10 +25,12 @@ import { ImageTag } from '@udonarium/image-tag';
 })
 export class TabletopActionService {
 
-  constructor() { }
+  constructor(
+    private gameCharacterService: GameCharacterService
+  ) { }
 
   createGameCharacter(position: PointerCoordinate): GameCharacter {
-    let character = GameCharacter.create('新しいキャラクター', 1, '');
+    let character = this.gameCharacterService.create('新しいキャラクター','');
     character.location.x = position.x - 25;
     character.location.y = position.y - 25;
     character.posZ = position.z;

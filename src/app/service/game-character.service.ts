@@ -1,14 +1,32 @@
 import { Injectable } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
+import { ObjectTemplate } from '@udonarium/object-template';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { DataElement } from '@udonarium/data-element';
 import { PlayerService } from 'service/player.service';
+import { StandList } from '@udonarium/stand-list';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameCharacterService {
+
+  get template():string{
+    return ObjectTemplate.instance.character;
+  }
+  set template(identifier :string) {
+    ObjectTemplate.instance.character = identifier;
+  }
+
+  get CharacterTemplate():GameCharacter {
+    let character = this.get(ObjectTemplate.instance.character);
+    if (character) {
+      return character;
+    }
+    ObjectTemplate.instance.character = "";
+    return null;
+  }
 
   private _gameType:string = "";
   get gameType() {
@@ -18,6 +36,36 @@ export class GameCharacterService {
     return this._gameType;
   }
   set gameType(gameType :string) { this._gameType = gameType; }
+
+  create(name:string ,imageIdentifier:string):GameCharacter {
+    let character:GameCharacter
+    let template = this.CharacterTemplate;
+    if (template) {
+      character = template.clone();
+      character.name = name;
+      character.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
+      if (character.faceIcon) character.faceIcon.destroy();
+      if (character.shadowImageFile) {
+        const garbages = character.imageDataElement.getElementsByName('shadowImageIdentifier');
+          for (const garbage of garbages) {
+            character.imageDataElement.removeChild(garbage);
+          }
+      }
+      character.setLocation('table');
+      let oldStand = character.standList;
+      character.removeChild(oldStand);
+      oldStand.destroy();
+      let newStand = new StandList('StandList_' + character.identifier);
+      newStand.initialize();
+      character.appendChild(newStand);
+    }
+    else {
+      character = GameCharacter.create(name ,imageIdentifier);
+      character.createTestGameDataElement();
+      console.log(character);
+    }
+    return character;
+  }
 
   //基本
   get(identifier: string) :GameCharacter {
@@ -43,7 +91,11 @@ export class GameCharacterService {
   }
 
   dataElements(identifier :string) :DataElement[] {
-    return this.get(identifier).detailDataElement.children as DataElement[];
+    return this.getDetail(this.get(identifier));
+  }
+
+  getDetail(character :GameCharacter):DataElement[] {
+    return  character.detailDataElement.children as DataElement[];
   }
 
   //チャット用

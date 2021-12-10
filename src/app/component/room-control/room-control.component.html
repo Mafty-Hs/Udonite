@@ -13,6 +13,18 @@
   </select>
   </div>  
   <div class="flex-item">
+    <div class="title">デフォルトキャラクター</div>
+    <div>
+      新規キャラクターを作成するとき、<br>指定したキャラクターのデータを引き継ぎます。<br>
+      画像・立ち絵は初期化されます。
+    </div>
+    <select name="template" style="width: 16em;" [(ngModel)]="gameCharacterService.template">
+       <option *ngFor="let gameCharacter of gameCharacterService.list(false)"  
+         value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
+       </option>
+    </select>
+  </div>
+  <div class="flex-item">
     <div class="title">操作ログ</div>
     <div>カード、ダイスの操作ログを出力するタブを指定します。</div>
     <select style="width: 16em;" [(ngModel)]="playerService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
@@ -43,12 +55,10 @@
   </select>
   <button (click)="alarmSend()">送信</button>
   </div>
-  <hr>
   <div class="flex-item">
     <div class="title">ルーム管理者</div>
     <div *ngIf="!playerService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
   </div>
-  <hr>
   <div class="flex-item">
     <div class="title">ルーム設定</div>
     <div *ngIf="!adminAuth; else editSetting">

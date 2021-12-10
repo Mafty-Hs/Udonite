@@ -3,6 +3,7 @@ import { Network } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
+import { GameCharacterService } from 'service/game-character.service';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
@@ -33,7 +34,7 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
 
   create() {
     if (this.name == "") return;
-    let character = GameCharacter.create(this.name ,1 ,this.imageIdentifier)
+    let character = this.gameCharacterService.create(this.name ,this.imageIdentifier)
     character.setLocation(Network.peerId);
     if (this.useStand) character.standList.add(this.imageIdentifier);
     character.standList.position = this.position;
@@ -42,6 +43,7 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
   }
 
   constructor(
+     private gameCharacterService: GameCharacterService,
      public panelService: PanelService,
      private playerService: PlayerService,
      private modalService: ModalService

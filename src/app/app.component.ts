@@ -5,6 +5,7 @@ import { CounterList } from '@udonarium/counter-list';
 import { IRound } from '@udonarium/round';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { BillBoard } from '@udonarium/bill-board';
+import { ObjectTemplate } from '@udonarium/object-template';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
@@ -81,6 +82,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     IRound.init();
     BillBoard.init();
     RoomAdmin.init();
+    ObjectTemplate.init();
     CounterList.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();

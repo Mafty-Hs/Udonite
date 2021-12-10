@@ -5,7 +5,6 @@ import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-ser
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
-import { EffectService } from 'service/effect.service';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {

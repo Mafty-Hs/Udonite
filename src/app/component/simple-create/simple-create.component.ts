@@ -39,7 +39,7 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
     if (this.useStand) character.standList.add(this.imageIdentifier);
     character.standList.position = this.position;
     this.playerService.addList(character.identifier);
-    this.panelService.close;
+    this.modalService.resolve();
   }
 
   constructor(

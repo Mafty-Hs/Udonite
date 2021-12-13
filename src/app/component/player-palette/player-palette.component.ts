@@ -13,6 +13,7 @@ import { GameCharacterService } from 'service/game-character.service';
 import { PlayerService } from 'service/player.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
+import { ModalService } from 'service/modal.service';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -215,10 +216,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   addList() {
     if (this.selectedCharacter == 'default') { return }
     if (this.selectedCharacter == 'create') { 
-      let coordinate = this.pointerDeviceService.pointers[0];
-      let option: PanelOption = { left: coordinate.x - 200 , top: coordinate.y -200, width: 300, height: 200 };
-      let component = this.panelService.open(SimpleCreateComponent, option);
-      component.panelService.title = "キャラクター簡易作成"
+      this.modalService.open(SimpleCreateComponent);
       return; 
     }
     this.playerService.addList(this.selectedCharacter);
@@ -238,6 +236,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     private playerService: PlayerService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit() {

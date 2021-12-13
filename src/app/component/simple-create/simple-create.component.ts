@@ -50,10 +50,11 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラクター簡易作成');
   }
 
   ngAfterViewInit() {
   }
+
 
 }

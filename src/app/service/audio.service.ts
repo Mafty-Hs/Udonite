@@ -33,6 +33,7 @@ export class AudioService {
     PresetSound.surprise = AudioStorage.instance.add('./assets/sounds/otologic/Onmtp-Surprise02-1.mp3').identifier;
     PresetSound.coinToss = AudioStorage.instance.add('./assets/sounds/niconicomons/nc146227.mp3').identifier;
     PresetSound.alarm = AudioStorage.instance.add('./assets/sounds/alarm.mp3').identifier;
+    PresetSound.pikon = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/pikon.mp3').identifier;
 
     AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
     AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
@@ -53,6 +54,7 @@ export class AudioService {
     AudioStorage.instance.get(PresetSound.surprise).isHidden = true;
     AudioStorage.instance.get(PresetSound.coinToss).isHidden = true;
     AudioStorage.instance.get(PresetSound.alarm).isHidden = true;
+    AudioStorage.instance.get(PresetSound.pikon).isHidden = true;
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();

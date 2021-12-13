@@ -24,6 +24,7 @@ import { CounterList } from '@udonarium/counter-list';
 import { BillBoard } from '@udonarium/bill-board';
 import { Round } from '@udonarium/round';
 import { Room } from '@udonarium/room';
+import { Popup } from '@udonarium/popup';
 import { PlayerService } from './player.service';
 import { CounterService } from './counter.service';
 import { BillBoardService } from './bill-board.service';
@@ -57,6 +58,9 @@ export class TabletopService {
   });
   private textNoteCache = new TabletopCache<TextNote>(() => ObjectStore.instance.getObjects(TextNote));
   private diceSymbolCache = new TabletopCache<DiceSymbol>(() => ObjectStore.instance.getObjects(DiceSymbol));
+  private popupCache = new TabletopCache<Popup>(() => {
+    return ObjectStore.instance.getObjects(Popup);
+  });
 
   get characters(): GameCharacter[] { return this.characterCache.objects; }
   get cards(): Card[] { return this.cardCache.objects; }
@@ -66,6 +70,9 @@ export class TabletopService {
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
   get peerCursors(): PeerCursor[] { return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor); }
+  get popups(): Popup[] { 
+      return this.popupCache.objects;
+  }
 
   constructor(
     private coordinateService: CoordinateService,
@@ -153,6 +160,8 @@ export class TabletopService {
         return this.textNoteCache;
       case DiceSymbol.aliasName:
         return this.diceSymbolCache;
+      case Popup.aliasName:
+        return this.popupCache;
       default:
         return null;
     }
@@ -171,7 +180,7 @@ export class TabletopService {
     this.terrainCache.refresh();
     this.textNoteCache.refresh();
     this.diceSymbolCache.refresh();
-
+    this.popupCache.refresh();
     this.clearMap();
   }
 

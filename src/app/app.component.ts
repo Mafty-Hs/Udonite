@@ -79,6 +79,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
     this.audioService.initialize();
+    
     IRound.init();
     BillBoard.init();
     RoomAdmin.init();

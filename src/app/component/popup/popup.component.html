@@ -1,0 +1,17 @@
+<div class="component is-3d"
+  appMovable [movable.option]="movableOption" [movable.disable]="true"
+  [style.width.px]="50" [style.height.px]="50">
+  <div class="component-content is-3d">
+    <div class="upright-transform is-fit-width is-3d">
+      <div class="rotate-frame is-3d" [style.width.px]="50" [style.height.px]="50">
+        <div class="rotate-inner is-3d">
+          <div class="name-tag is-nowrap is-black-background is-3d">
+            <div class="fornt-tag is-3d">{{text}}</div>
+            <div class="back-tag is-3d">{{text}}</div>
+          </div>
+          <img class="image" src="assets/images/arrow.gif" >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

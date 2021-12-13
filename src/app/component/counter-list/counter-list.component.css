@@ -100,3 +100,22 @@
   background: #DDD;
   color: #222;
 }
+
+input {
+  background-color: #212121;
+  color: #fff;  
+}
+
+select {
+  background-color: #212121;
+  color: #fff;
+}
+
+textarea {
+  background-color: #212121;
+  color: #fff;
+}
+
+::placeholder {
+  color: #AAA;
+}

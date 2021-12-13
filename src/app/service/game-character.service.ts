@@ -62,7 +62,6 @@ export class GameCharacterService {
     else {
       character = GameCharacter.create(name ,imageIdentifier);
       character.createTestGameDataElement();
-      console.log(character);
     }
     return character;
   }

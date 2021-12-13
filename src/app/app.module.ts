@@ -86,6 +86,8 @@ import { RoomControlComponent } from './component/room-control/room-control.comp
 import { SimpleCreateComponent } from './component/simple-create/simple-create.component';
 import { GameRoomComponent } from './component/game-room/game-room.component';
 import { InnerNoteComponent } from './component/inner-note/inner-note.component';
+import { PopupEditComponent } from './component/popup-edit/popup-edit.component';
+import { PopupComponent } from './component/popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -155,6 +157,8 @@ import { InnerNoteComponent } from './component/inner-note/inner-note.component'
     SimpleCreateComponent,
     GameRoomComponent,
     InnerNoteComponent,
+    PopupEditComponent,
+    PopupComponent,
   ],
   imports: [
     BrowserModule,

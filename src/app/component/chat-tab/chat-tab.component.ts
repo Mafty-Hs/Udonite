@@ -204,7 +204,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   editMessage(message :ChatMessage) {
-    if (message.isSendFromSelf) {
+    if (message.isSendFromSelf && message.isEditable) {
       this.edit.emit({ chatMessage: message });
     }
   }

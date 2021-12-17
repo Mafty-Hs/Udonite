@@ -96,7 +96,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isEmptyDice(): boolean { return !this.isDicebot || -1 < this.tags.indexOf('empty'); }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
-  get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
+  get isEditable(): boolean { return !this.isSystem && !this.isDicebot }
   get isFaceIcon(): boolean { return !this.isSystem && (!this.characterIdentifier || this.tags.indexOf('noface') < 0); }
 
   get isSuccess(): boolean { return this.isDicebot && -1 < this.tags.indexOf('success'); }

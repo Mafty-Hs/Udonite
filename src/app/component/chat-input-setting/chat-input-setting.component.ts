@@ -87,7 +87,13 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   isStandPos:boolean = false;
   isColor:boolean = false;
   canVisible() {
-    let canDisplayCount: number = this.windowWidth < 190 ? 1 : 2;
+    let canDisplayCount: number;
+    if (this.myWindow || this.settingDOM?.nativeElement) {
+        this.myWindow = this.settingDOM.nativeElement as HTMLElement;
+        canDisplayCount = this.windowWidth < 190 ? 1 : 2;
+    }
+    else canDisplayCount = 2;      
+    
     let count: number = 0;
     if (!this.character) this.sortVisible(canDisplayCount);
     for (let item = 0; item < this.visibleList.length ; item++) {

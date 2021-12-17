@@ -6,13 +6,11 @@
   </div>
   <div class="rightObject">
     <div class="chatSend">
-      <form>
-         <textarea class="chat-input" [(ngModel)]="text"
-         [ngModelOptions]="{standalone: true}" (keydown.enter)="save()" (keydown.esc)="cancel()" #textArea>
-        </textarea>
-        <button class="send" (click)="save()"><b>SAVE</b></button>
-        <button class="send" (click)="cancel()"><b>CANCEL</b></button>
-      </form>
+      <textarea class="chat-input" [(ngModel)]="text"
+        [ngModelOptions]="{standalone: true}" (keydown.enter)="save()" (keydown.esc)="cancel()" #textArea>
+      </textarea>
+      <button class="send" (click)="save()"><b>SAVE</b></button>
+      <button class="send" (click)="cancel()"><b>CANCEL</b></button>
     </div>
   </div>
 </div>

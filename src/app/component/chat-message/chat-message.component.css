@@ -32,32 +32,20 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   border-bottom:1px dotted #999;
-}
-
-.is-mine.message {
   border-left: 4px solid #555;
-}
-.is-others.message {
-  border-right: 4px solid #555;
 }
 
 .direct-message {
   background-color: #555;
   color: #DDD;
   border-bottom: 1px dotted #CCC;
+  border-left: 4px solid #555;
 }
 
 .is-black.direct-message {
   background-color: #666;
   color: #DDD;
   border-bottom: 1px dotted #CCC;
-}
-
-.is-mine.direct-message {
-  border-left: 4px solid #555;
-}
-.is-others.direct-message {
-  border-right: 4px solid #555;
 }
 
 .message .image {
@@ -93,15 +81,6 @@
 }
 .black-paint {
   filter: brightness(0);
-}
-
-.message .ease {
-  vertical-align: top;
-  font-family: 'Noto Sans JP', sans-serif;
-  text-shadow    :
-       -0.1px  -0.1px 0px #222,
-       0.1px  0.1px 0px #666;
-  padding: 0 12px 0 12px;
 }
 
 .message .text {
@@ -147,22 +126,6 @@
 
 .dicebot-message {
   border-left: 4px transparent;
-}
-
-.is-others .title {
-  text-align: right;
-}
-
-.is-others .msg-ease {
-}
-
-.is-others .msg-text {
-  text-align: right;
-}
-.is-others .msg-text span {
-  display: inline-block;
-  text-align: left;
-  max-width: 100%
 }
 
 .aura {

@@ -1,7 +1,7 @@
 <!--<h2>チャットシステム</h2>-->
 <div class="component"  [class]="bgColor">
 <div *ngIf="!isEase ; else ease" class="log">
-  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab>
+  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab>
   <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
 </div>
 <div class="sticky-bottom">
@@ -18,12 +18,13 @@
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>チャット設定</button>
     </div>
   </div>
-  <div *ngIf="isLogOnly">
+  <div *ngIf="isLogOnly && !isEdit">
     <div *ngIf="!disableControl && noControl" class="Character-Control">
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
     </div>
     <chat-input [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
   </div>
+  <chat-edit *ngIf="isLogOnly && isEdit" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>
 </div>
 <ng-template #ease>
   <chat-tab-ease *ngIf="chatTab" [chatTab]="chatTab" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab-ease>

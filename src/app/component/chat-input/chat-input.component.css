@@ -80,6 +80,10 @@
     -webkit-radial-gradient( 50% 50%, 200% 50%, hsla(0,0%,90%,1) 5%, hsla(0,0%,85%,1) 30%, hsla(0,0%,60%,1) 100%);
 }
 
+.send::after {
+  background:none;
+}
+
 .writing-info {
   font-size: 8px;
   height: 20px;

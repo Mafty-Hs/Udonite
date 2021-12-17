@@ -88,6 +88,7 @@ import { GameRoomComponent } from './component/game-room/game-room.component';
 import { InnerNoteComponent } from './component/inner-note/inner-note.component';
 import { PopupEditComponent } from './component/popup-edit/popup-edit.component';
 import { PopupComponent } from './component/popup/popup.component';
+import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
 
 @NgModule({
   declarations: [
@@ -159,6 +160,7 @@ import { PopupComponent } from './component/popup/popup.component';
     InnerNoteComponent,
     PopupEditComponent,
     PopupComponent,
+    ChatEditComponent,
   ],
   imports: [
     BrowserModule,

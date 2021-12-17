@@ -45,7 +45,8 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     { from: 'System', to: '???', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル ➡ プレイヤー', text: 'また、過去のダイレクトメッセージはあなたのIDが更新されると同じルーム内であっても見えなくなります。注意してください。' },
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: '動作推奨環境はデスクトップChromeです。今のところ、スマホからだと上手く操作できません。' },
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'チュートリアルは以上です。このチュートリアルは最初のチャットを入力すると非表示になります。' },
-  ];
+  ]
+  @Output() edit = new EventEmitter<{ chatMessage : ChatMessage}>();
 
   private topTimestamp = 0;
   private botomTimestamp = 0;
@@ -200,6 +201,12 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this.ngZone.run(() => this.onAddMessage.emit());
       }, 0);
     });
+  }
+
+  editMessage(message :ChatMessage) {
+    if (message.isSendFromSelf) {
+      this.edit.emit({ chatMessage: message });
+    }
   }
 
   resetMessages() {

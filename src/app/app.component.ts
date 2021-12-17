@@ -1,13 +1,8 @@
 import { AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
 
-import { ChatTabList } from '@udonarium/chat-tab-list';
-import { CounterList } from '@udonarium/counter-list';
-import { IRound } from '@udonarium/round';
-import { RoomAdmin } from '@udonarium/room-admin';
-import { BillBoard } from '@udonarium/bill-board';
-import { ObjectTemplate } from '@udonarium/object-template';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
+import { EventSystem, Network } from '@udonarium/core/system';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageSharingSystem } from '@udonarium/core/file-storage/image-sharing-system';
@@ -16,27 +11,27 @@ import { ObjectFactory } from '@udonarium/core/synchronize-object/object-factory
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ObjectSynchronizer } from '@udonarium/core/synchronize-object/object-synchronizer';
-import { EventSystem, Network } from '@udonarium/core/system';
+
+import { BillBoard } from '@udonarium/bill-board';
+import { ChatTabList } from '@udonarium/chat-tab-list';
+import { CounterList } from '@udonarium/counter-list';
+import { CutInList } from '@udonarium/cut-in-list';
 import { DataSummarySetting } from '@udonarium/data-summary-setting';
-import { PeerCursor } from '@udonarium/peer-cursor';
-import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { TextViewComponent } from 'component/text-view/text-view.component';
-import { AudioService } from 'service/audio.service';
-import { AppConfig, AppConfigService } from 'service/app-config.service';
-import { ModalService } from 'service/modal.service';
-import { PointerDeviceService } from 'service/pointer-device.service';
-import { DiceBotService } from 'service/dice-bot.service';
-import { RoomService } from 'service/room.service';
-import { StandImageService } from 'service/stand-image.service';
-import { GameCharacter } from '@udonarium/game-character';
-import { DataElement } from '@udonarium/data-element';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-
 import { ImageTag } from '@udonarium/image-tag';
-import { CutInService } from 'service/cut-in.service';
-import { CutIn } from '@udonarium/cut-in';
-import { CutInList } from '@udonarium/cut-in-list';
+import { IRound } from '@udonarium/round';
+import { ObjectTemplate } from '@udonarium/object-template';
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { RoomAdmin } from '@udonarium/room-admin';
+
+import { AppConfig, AppConfigService } from 'service/app-config.service';
+import { DiceBotService } from 'service/dice-bot.service';
+import { ModalService } from 'service/modal.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
+import { RoomService } from 'service/room.service';
+
+import { TextViewComponent } from 'component/text-view/text-view.component';
 
 @Component({
   selector: 'app-root',
@@ -51,16 +46,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     return this.roomService.isLobby;
   }
 
-  constructor(
-    private audioService: AudioService,
+  constructor(  
     private modalService: ModalService,
     private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
     private appConfigService: AppConfigService,
     private ngZone: NgZone,
-    private standImageService: StandImageService,
     private roomService: RoomService,
-    private cutInService: CutInService,
+ 
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -78,7 +71,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
-    this.audioService.initialize();
     
     IRound.init();
     BillBoard.init();
@@ -155,34 +147,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       })
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
-      })
-      .on('PLAY_CUT_IN', -1000, event => {
-        let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
-        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
-      })
-      .on('STOP_CUT_IN', -1000, event => {
-        this.cutInService.stop(event.data.identifier);
-      })
-      .on('PLAY_ALARM', -1000, event => {
-        if (!event.data.identifier || event.data.identifier == PeerCursor.myCursor.peerId ) {
-          setTimeout(() => {
-            SoundEffect.play(PresetSound.alarm);
-          },event.data.time); 
-        }
-      })
-      .on('POPUP_STAND_IMAGE', -1000, event => {
-        let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
-        let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
-        this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null, event.data.secret);
-      })
-      .on('FAREWELL_STAND_IMAGE', -1000, event => {
-        this.standImageService.farewell(event.data.characterIdentifier);
-      })
-      .on('DELETE_STAND_IMAGE', -1000, event => {
-        this.standImageService.destroy(event.data.characterIdentifier, event.data.identifier);
-      })
-      .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
-        this.standImageService.destroyAll();
       });
   }
 

@@ -1,21 +1,30 @@
 import { OnInit ,AfterViewInit, Component, OnDestroy, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { CutIn } from '@udonarium/cut-in';
+import { DataElement } from '@udonarium/data-element';
+import { EventSystem } from '@udonarium/core/system';
+import { GameCharacter } from '@udonarium/game-character';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { AudioService } from 'service/audio.service';
 import { CutInService } from 'service/cut-in.service';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { EffectService } from 'service/effect.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
-import { PointerDeviceService } from 'service/pointer-device.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
-import { RoundComponent } from 'component/round/round.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ModalComponent } from 'component/modal/modal.component';
+import { RoundComponent } from 'component/round/round.component';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
 import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
+
+
+
 
 @Component({
   selector: 'game-room',
@@ -30,14 +39,16 @@ export class GameRoomComponent implements OnInit {
   selectMenu:string = "";
 
   constructor(
+    private audioService: AudioService,
+    private cutInService: CutInService,
     private contextMenuService: ContextMenuService,
     private effectService: EffectService,
-    private modalService: ModalService,
     private panelService: PanelService,
-    private pointerDeviceService: PointerDeviceService,
     private standService: StandService,
     private standImageService: StandImageService,
-  ) { }
+  ) {
+    this.audioService.initialize();
+   }
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
@@ -181,9 +192,38 @@ export class GameRoomComponent implements OnInit {
       textView.text = gameHelp;
   }
 
-  
+    
 
   ngOnInit(): void {
+    EventSystem.register(this)
+      .on('PLAY_CUT_IN', -1000, event => {
+        let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
+        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
+      })
+      .on('STOP_CUT_IN', -1000, event => {
+        this.cutInService.stop(event.data.identifier);
+      })
+      .on('PLAY_ALARM', -1000, event => {
+        if (!event.data.identifier || event.data.identifier == PeerCursor.myCursor.peerId ) {
+          setTimeout(() => {
+            SoundEffect.play(PresetSound.alarm);
+          },event.data.time); 
+        }
+      })
+      .on('POPUP_STAND_IMAGE', -1000, event => {
+        let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
+        let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
+        this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null, event.data.secret);
+      })
+      .on('FAREWELL_STAND_IMAGE', -1000, event => {
+        this.standImageService.farewell(event.data.characterIdentifier);
+      })
+      .on('DELETE_STAND_IMAGE', -1000, event => {
+        this.standImageService.destroy(event.data.characterIdentifier, event.data.identifier);
+      })
+      .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
+        this.standImageService.destroyAll();
+      });
   }
 
 }

@@ -1,4 +1,4 @@
-<div class="flex-container">
+<div class="flex-container no-grow">
   <div class="window-setting">
       <div>チャットウィンドウ設定</div>
       <div class="comment">元のチャットウィンドウのみ変更されます</div>
@@ -62,7 +62,7 @@
       </div>
   </div>
   <div><HR /></div>
-  <div *ngIf="!disableTabSetting" class="tab-setting">
+  <div *ngIf="!disableTabSetting" class="tab-setting no-grow">
     <div style="width:100%;">チャットタブ設定</div>
     <div class="tab-master">
     <div class="flex-item no-grow">
@@ -73,7 +73,7 @@
         <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
       </select>
     </div>
-    <div class="flex-item">
+    <div class="flex-item" style="max-width: 300px;">
       <ng-container *ngIf="!isEmpty && selectedTab">
         <div>タブ名 :
           <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
@@ -86,7 +86,7 @@
             </label></div>
         </div>
         <hr/>
-        <div>
+        <div class="buttons">
           <ng-container *ngIf="!isDeleted">
             <button (click)="upTabIndex()">↑</button>
             <button (click)="downTabIndex()">↓</button>
@@ -98,6 +98,7 @@
             </button>
             <button (click)="htmlsave()">HTML保存
             </button>
+            <button class="danger" (click)="logClear()">ログのクリア</button>
             <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
           </ng-container>
           <ng-container *ngIf="isDeleted">

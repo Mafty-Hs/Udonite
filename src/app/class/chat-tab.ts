@@ -63,6 +63,13 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return chat;
   }
 
+  clearAll() {
+    this.chatMessages.forEach( chatMessage => {
+      chatMessage.destroy();
+    })
+    EventSystem.trigger('REMOVE_MESSAGE', this.identifier);
+  }
+
   markForRead() {
     this._unreadLength = 0;
   }

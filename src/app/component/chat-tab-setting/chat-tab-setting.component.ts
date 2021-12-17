@@ -104,6 +104,13 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       this.progresPercent = 0;
     }, 500);
   }
+  logClear() {
+    if (!this.isEmpty && this.selectedTab) {
+      if (confirm('選択したタブのログを全て削除します。このまま続行すると復活できません。\nよろしいですか？')) {
+        this.selectedTab.clearAll();
+      }
+    }
+  }
 
   delete() {
     if (!this.isEmpty && this.selectedTab) {

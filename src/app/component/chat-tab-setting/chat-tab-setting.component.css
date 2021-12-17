@@ -71,6 +71,12 @@
   max-width: 100%;
 }
 
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .no-grow{
   -webkit-flex-grow: 0; /* Safari */
   flex-grow: 0;

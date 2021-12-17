@@ -5,7 +5,6 @@ import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { PromiseQueue } from '@udonarium/core/system/util/promise-queue';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { StandService } from 'service/stand.service';
@@ -26,7 +25,6 @@ export class DiceBotService {
   get isConnect():boolean { return DiceBot.instance.api.isConnect;}
   get api(): api {return DiceBot.instance.api;} 
   set api(_api) {DiceBot.instance.api = _api;}
-  private queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
   private gameType:string = "";
   private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i")
   private repeatPattern:RegExp = new RegExp('^S?((repeat|rep|x)\\d+)',"i");
@@ -76,17 +74,19 @@ export class DiceBotService {
 
   private repeatFilter(text :string): [string ,string] {
     let secret :string = "";
-    if (this.secretPattern.test(text)) {
-      text = text.substring(1)
+    let rollText :string = text;
+    if (this.secretPattern.test(rollText)) {
+      rollText = rollText.substring(1)
       secret = "s"
     }
-    let repeat :string = text.split("\u{20}")[0].trim();
-    if (!isNaN(Number(repeat))) {
+     let repeat :string = rollText.split("\u{20}")[0].trim();
+     if (!isNaN(Number(repeat))) {
+      rollText = "x" + rollText;
       repeat = "x" + repeat;
     }
-    repeat = secret + repeat;
     if (this.repeatPattern.test(repeat)) {
-      let rollText = text.substring(repeat.length).trim();
+      rollText = rollText.substring(repeat.length).trim();
+      repeat = secret + repeat;
       return [rollText, repeat];
     }
     else {
@@ -102,6 +102,7 @@ export class DiceBotService {
       's' + _diceRollTable.command.trim().toLowerCase()
        === rollData.rollText.trim().toLowerCase()
     );
+
     if (!diceRollTable) return rollData;
     rollData.isDiceRollTable = true;
     if ('s' + diceRollTable.command.trim().toLowerCase()
@@ -231,8 +232,10 @@ export class DiceBotService {
         .then(jsons => { 
           return jsons.map(json => {
             if (json.help_message) {
-              this.gameType = gameType;
-              this.commandPattern = new RegExp(json.command_pattern,"i");
+              if (gameType && gameType != 'DiceBot') {
+                this.gameType = gameType;
+                this.commandPattern = new RegExp(json.command_pattern,"i");
+              }
               return json.help_message.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
@@ -252,7 +255,7 @@ export class DiceBotService {
       }
     }
     catch {
-      throw new Error(response.statusText);
+     console.log(response.statusText);
     }
     return this.commandPatternBase;
   }
@@ -286,14 +289,13 @@ export class DiceBotService {
       imageIdentifier: '',
       tag: tag,
       name: rollResult.isDiceRollTable ? 
-        isSecret ? '<' + rollResult.tableName + ' (Secret)：' + originalMessage.name + '>' : '<' + rollResult.tableName + '：' + originalMessage.name + '>' :
+        isSecret ? '<Dice-Roll Table (Secret)：' + originalMessage.name + '>' : '<Dice-Roll Table：' + originalMessage.name + '>' :
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
       text: result,
       color: originalMessage.color,
       isUseStandImage: originalMessage.isUseStandImage
     };
 
-    let matchMostLongText = '';
     // ダイスボットへのスタンドの反応
     if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
       this.standService.diceBotShowStand(result,originalMessage.characterIdentifier,originalMessage.to,originalMessage.color,originalMessage.imageIdentifier);

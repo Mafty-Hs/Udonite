@@ -155,8 +155,6 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         }
       })
       .on('REMOVE_MESSAGE', event => {
-        console.log(event);
-        console.log(this.chatTab.identifier);
         if (this.chatTab.identifier === event.data) {
           this.resetMessages()
         }        

@@ -1,4 +1,4 @@
-import { Component, OnInit,Input ,Output ,EventEmitter, ViewChild, AfterViewInit , ElementRef,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { PlayerService } from 'service/player.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -10,6 +10,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { EventSystem } from '@udonarium/core/system';
 
 interface chatDataContext {
   sendTo : string;
@@ -24,7 +25,7 @@ interface chatDataContext {
   templateUrl: './chat-input-setting.component.html',
   styleUrls: ['./chat-input-setting.component.css']
 })
-export class ChatInputSettingComponent implements OnInit,AfterViewInit {
+export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestroy {
 
   @ViewChild('setting') settingDOM: ElementRef;
   myWindow:HTMLElement;
@@ -252,11 +253,9 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   }
 
   waitLoadDiceBot() {
-    if (this.gameType) {
-      this.loadDiceBot(this.gameType);
-      this.chatData.gameType = this.gameType;
-      this.chatSetting.emit(this.chatData);
-    }
+    this.loadDiceBot(this.gameType);
+    this.chatData.gameType = this.gameType;
+    this.chatSetting.emit(this.chatData);
   }
 
   constructor(
@@ -272,11 +271,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
     if (this.gameType) this.loadDiceBot(this.gameType);
-    else {
-      setTimeout(() => {
-        this.waitLoadDiceBot();
-      }, 2000);
-    }
+     EventSystem.register(this)
+      .on('DICEBOT_LOAD', event => { this.waitLoadDiceBot() });
     setTimeout(() => {
       this.viewInit();
     }, 100);
@@ -288,6 +284,10 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    EventSystem.unregister(this);
   }
 
 }

@@ -10,6 +10,13 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { StandService } from 'service/stand.service';
 
+interface rollDataContext {
+  rollText:string;
+  repeatText:string;
+  isSecret:boolean;
+  isDiceRollTable:boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,141 +28,181 @@ export class DiceBotService {
   set api(_api) {DiceBot.instance.api = _api;}
   private queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
   private gameType:string = "";
+  private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i")
+  private repeatPattern:RegExp = new RegExp('^S?((repeat|rep|x)\\d+)',"i");
   private commandPattern:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
   private commandPatternBase:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
+  private choicePattern:RegExp = new RegExp('^S?choice[\u{20}\[\(]',"i");
+  private choicePattern1:RegExp = new RegExp('^S?choice\(.*\)',"i");
+  private choicePattern2:RegExp = new RegExp('^S?choice\[.*\]',"i");
   private asciiPattern:RegExp = new RegExp('^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$');
+  private symbolPattern:RegExp = new RegExp('（）［］',"g");
 
-  private bcDiceFilter(gameType:string ,rollText:string):string {
-    console.log(rollText);
-    rollText = this.textFilter(rollText);
-    console.log(rollText);
+  private async bcDiceFilter(gameType:string ,rollText:string):Promise<string> {
     if (gameType === this.gameType) {
       if (this.commandPattern.test(rollText)) return rollText;
       return "";
     }
-    if (this.commandPatternBase.test(rollText) || !this.asciiPattern.test(rollText)) return rollText;
-    return "";
+    else if (gameType === "DiceBot") {
+      if (this.commandPatternBase.test(rollText)) return rollText;
+      return "";
+    }
+    else {
+      let newCommandPattern:RegExp = await this.getCommandPattern(gameType);
+      if (newCommandPattern.test(rollText)) return rollText;
+      return "";
+    }
   }
 
   private textFilter(text :string):string {
-    text = text.replace(/　/g," ");
-    return text;
+    let newText = text.split("\u{20}")[0];
+    return newText.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    }).trim();
+  }
+
+  private choiceFilter(rollText :string): [string ,boolean] {
+    let choiceText = rollText.replace(this.symbolPattern, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    })
+    if (this.choicePattern.test(choiceText)) {
+      if (this.textFilter(choiceText).toLocaleLowerCase() === "choice" ||
+      this.textFilter(choiceText).toLocaleLowerCase() === "schoice" ) return [choiceText ,true];
+      else if (this.choicePattern1.test(choiceText)) return [choiceText.replace(/\).*$/,')') ,true];
+      else if (this.choicePattern2.test(choiceText)) return [choiceText.replace(/\].*$/,']') ,true];
+    } 
+    return [rollText ,false]
+  }
+
+  private repeatFilter(text :string): [string ,string] {
+    let secret :string = "";
+    if (this.secretPattern.test(text)) {
+      text = text.substring(1)
+      secret = "s"
+    }
+    let repeat :string = text.split("\u{20}")[0].trim();
+    if (!isNaN(Number(repeat))) {
+      repeat = "x" + repeat;
+    }
+    repeat = secret + repeat;
+    if (this.repeatPattern.test(repeat)) {
+      let rollText = text.substring(repeat.length).trim();
+      return [rollText, repeat];
+    }
+    else {
+      return [text,"" ];
+    }
+  }
+
+  private rollTableFilter(rollData :rollDataContext): rollDataContext {
+    let diceRollTable = DiceRollTableList.instance.diceRollTables.find(
+      (_diceRollTable) => 
+      _diceRollTable.command.trim().toLowerCase()
+       === rollData.rollText.trim().toLowerCase() ||
+      's' + _diceRollTable.command.trim().toLowerCase()
+       === rollData.rollText.trim().toLowerCase()
+    );
+    if (!diceRollTable) return rollData;
+    rollData.isDiceRollTable = true;
+    if ('s' + diceRollTable.command.trim().toLowerCase()
+    === rollData.rollText.trim().toLowerCase()) rollData.isSecret = true;
+    rollData.rollText = diceRollTable.requestText;
+    return rollData
+  }
+
+  private async rollFilter(gameType :string ,text :string):Promise<rollDataContext> {
+    let isChoice:boolean = false;
+    let resultRollData:rollDataContext = 
+      {rollText: "",repeatText: "",isSecret: false,isDiceRollTable: false};
+
+    [resultRollData.rollText ,resultRollData.repeatText] = this.repeatFilter(text);
+    [resultRollData.rollText ,isChoice] = this.choiceFilter(resultRollData.rollText);
+    if (isChoice) return resultRollData;
+
+    resultRollData.rollText = this.textFilter(resultRollData.rollText).toLocaleLowerCase();
+    if (!this.asciiPattern.test(resultRollData.rollText)) {
+      resultRollData.rollText = "";
+      return resultRollData;
+    };
+    resultRollData = this.rollTableFilter(resultRollData);
+    if (resultRollData.isDiceRollTable) return resultRollData;
+
+    resultRollData.rollText = await this.bcDiceFilter(gameType ,resultRollData.rollText)
+    return resultRollData;
   }
 
   async diceRoll(messageIdentifier: string) {
     const chatMessage = ObjectStore.instance.get<ChatMessage>(messageIdentifier);
-    if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
-
-    const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", ''); //ゼロ幅スペース削除
+    if (!this.isConnect || !chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
+    let text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", '')
+      .replace(/Ⅾ/g, 'D')
+      .replace(/\s/g,"\u{20}").trim();
     let gameType: string = chatMessage.tag.replace('noface', '').trim();
     gameType = gameType ? gameType : 'DiceBot';
-    const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?[ 　]+)?([^\n]*)?/ig.exec(text);
-    const repCommand = regArray[2];
-    const isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
-    const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
-    let rollText: string = (regArray[4] != null) ? regArray[4] : text;
-    rollText = rollText.replace(/Ⅾ/g, 'D');
-    if (!rollText || repeat <= 0) return;
-     let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+    let rollData:rollDataContext = await this.rollFilter(gameType ,text);
+    let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
+    if (!rollData.rollText) return;
 
-    if (await this.diceRollTableMatch(rollText, repeat, chatMessage)) return;
-    rollText = this.bcDiceFilter(gameType,rollText);
-    if (!rollText) return;
-    if (repeat < 1) return;
     try {
-      finalResult = await this.bcDice(rollText, gameType, repeat);
+      if (rollData.isDiceRollTable) {
+        finalResult = await this.rollTable(rollData.rollText, rollData.repeatText);
+        finalResult.isSecret = rollData.isSecret;
+      }
+      else {
+        finalResult = await this.bcDice(rollData.rollText, gameType, rollData.repeatText);
+      }
     }
     catch(e) {
 
     }
-    finalResult.isSecret = finalResult.isSecret || isRepSecret;
     this.sendResultMessage(finalResult, chatMessage);
     return;
   }
 
-  async diceRollTableMatch(rollText: string ,repeat ,chatMessage): Promise<boolean>{
-    let diceRollTable = DiceRollTableList.instance.diceRollTables.find(
-      (_diceRollTable) => 
-      _diceRollTable.command.trim().toUpperCase()
-       === rollText.trim().toUpperCase() ||
-      'S' + _diceRollTable.command.trim().toUpperCase()
-       === rollText.trim().toUpperCase()
-    );
-    if (!diceRollTable) return false;
-    let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
-            isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
-    let isSecret = false;
-    if ('S' + diceRollTable.command.trim().toUpperCase()
-       === rollText.trim().toUpperCase()) isSecret = true;
-    finalResult.isDiceRollTable = true;
-    finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : '(無名のダイスボット表)';
-    finalResult.isSecret = isSecret 
-    const diceRollTableRows = diceRollTable.parseText();
-
-   for (let i = 0; i < repeat && i < 32; i++) {
-     let rollResult = await this.bcDice(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
-     finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
-     if (rollResult.result) rollResult.result = rollResult.result.replace('DiceBot : ', '').replace(/[＞]/g, s => '→').trim();
-     let rollResultNumber = 0;
-     let match = null;
-     if (rollResult.result.length > 0 && (match = rollResult.result.match(/\s→\s(?:成功数)?(\-?\d+)$/))) {
-       rollResultNumber = +match[1];
-     }
-     let isRowMatch = false;
-     for (const diceRollTableRow of diceRollTableRows) {
-       if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber) 
-         && (diceRollTableRow.range.end === null || rollResultNumber <= diceRollTableRow.range.end)) {
-         finalResult.result += ('🎲 ' + rollResult.result + "\n" + StringUtil.cr(diceRollTableRow.result));
-       isRowMatch = true;
-        break;
-      }
-    }
-    if (!isRowMatch) finalResult.result += ('🎲 ' + rollResult.result + "\n" + '(結果なし)');
-      if (1 < repeat) finalResult.result += ` #${i + 1}`;
-      if (i < repeat - 1) finalResult.result += "\n";
-    }
-    this.sendResultMessage(finalResult, chatMessage);
-    return true;
-  }
-
-  bcDice(message: string, gameType: string, repeat: number = 1): Promise<DiceRollResult> {
+  async bcDice(message: string, gameType: string, repeatText?: string): Promise<DiceRollResult> {
     gameType = gameType ? gameType : 'DiceBot';
+    message = repeatText ? repeatText + " " + message : message;
     const request = `${this.api.url}/v2/game_system/${(gameType ? encodeURIComponent(gameType) : 'DiceBot')}/roll?command=${encodeURIComponent(message)}`;
-    const promisise = [];
-    for (let i = 1; i <= repeat; i++) {
-      promisise.push(
-        fetch(request, {mode: 'cors'})
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error(response.statusText);
-          })
-          .then(json => {
-            return { result: (gameType) + ' ' + (json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
+    let dataResult:DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
+
+    let response:Response = await fetch(request, {mode: 'cors'})
+      if (response.ok) {
+        let json = await response.json()
+        let text = String(json.text);
+        if (repeatText) {
+          text = text.replace(/\n\n/g,"\t").replace(/\n/g," ").replace(/\t/g,"\n")
+        }
+        return { result: text, isSecret: json.secret, 
             isEmptyDice: (json.rands && json.rands.length == 0),
             isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
-          })
-          .catch(e => {
-            return { result: '', isSecret: false,  isEmptyDice: true };
-          })
-      );
-    }
-      return this.queue.add(
-      Promise.all(promisise)
-        .then(results => { return results.reduce((ac, cv) => {
-          let result = ac.result + cv.result;
-          let isSecret = ac.isSecret || cv.isSecret;
-          let isEmptyDice = ac.isEmptyDice && cv.isEmptyDice;
-          let isSuccess = ac.isSuccess || cv.isSuccess;
-          let isFailure = ac.isFailure && cv.isFailure;
-          let isCritical = ac.isCritical || cv.isCritical;
-          let isFumble = ac.isFumble || cv.isFumble;
-          return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
-            isSuccess: isSuccess, isFailure: isFailure, isCritical: isCritical, isFumble: isFumble };
-        }, { result: '', isSecret: false, isEmptyDice: true, isSuccess: false, isFailure: true, isCritical: false, isFumble: false }) })
-      );
+      }
+      else {
+        throw new Error(response.statusText);
+      }
+
+    return dataResult; 
+  }
+
+  async rollTable(message: string, repeatText?: string): Promise<DiceRollResult> {
+    const request = `${this.api.url}/v2/original_table`;
+    let dataResult:DiceRollResult = { result: '', isSecret: false, isDiceRollTable: true, isEmptyDice: true,
+      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
+    const postMessage = new URLSearchParams;
+    postMessage.append('table' ,message)
+    let response:Response = await fetch(request, {method: 'POST', body: postMessage , mode: 'cors'})
+      if (response.ok) {
+        let json = await response.json()
+        dataResult.isEmptyDice = (json.rands && json.rands.length == 0),
+        dataResult.result = String(json.text); 
+        return dataResult;
+      }
+      else {
+        throw new Error(response.statusText);
+      }
+
+    return dataResult; 
   }
 
   initialize(apiUrl:string) {
@@ -173,7 +220,7 @@ export class DiceBotService {
      const promisise = [
         fetch(`${this.api.url}/v2/game_system/DiceBot`, {mode: 'cors'})
           .then(response => { return response.json() })
-      ];
+    ];
       if (gameType && gameType != 'DiceBot') {
         promisise.push(
           fetch(`${this.api.url}/v2/game_system/${encodeURIComponent(gameType)}`, {mode: 'cors'})
@@ -192,7 +239,23 @@ export class DiceBotService {
             }                
           }) 
         });
-    } 
+  }
+  
+  async getCommandPattern(gameType: string): Promise<RegExp> {
+    gameType = gameType ? gameType : 'DiceBot';
+    let response:Response;
+    try {
+      response = await fetch(`${this.api.url}/v2/game_system/${encodeURIComponent(gameType)}`, {mode: 'cors'})
+      if (response.ok) {
+        let regtxt = response.json()[0].command_pattern;
+        return new RegExp(regtxt,"i");
+      }
+    }
+    catch {
+      throw new Error(response.statusText);
+    }
+    return this.commandPatternBase;
+  }
 
    private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
     let result: string = rollResult.result;

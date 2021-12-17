@@ -12,6 +12,13 @@ export class DiceRollTable extends ObjectNode {
   @SyncVar() command: string = '';
   @SyncVar() dice: string = '';
 
+  get requestText() :string{
+    if (!this.value) return ""
+    let Text :string = this.name + "\n";
+    Text = Text + this.dice + "\n";
+    return Text + String(this.value) + "\n";
+  }
+
   parseText(): DiceRollTableRow[] {
     if (!this.value) return [];
     return (<string>this.value).split(/[\r\n]+/).map(row => {

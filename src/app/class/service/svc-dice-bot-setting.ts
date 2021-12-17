@@ -10,25 +10,26 @@ export class SvcDiceBotSetting {
     const controller = new AbortController();
     const timer = setTimeout(() => { controller.abort() }, 30000);
 
-    try {
       fetch(this.api.url + '/v2/game_system', {mode: 'cors'})
-        .then(response => { return response.json() })
+        .then(response => { 
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json() 
+        })
         .then(infos => {
+          console.log("diceBot Load END")
+          clearTimeout(timer); 
           this.normalizeDiceInfo(infos);
-        });
-    }
-    catch {
-      console.log("diceBot INFO Load ERROR!")
-      if (this.api.retry <= 3) {
-        this.api.retry += 1;
-        let nexttime:number = this.api.retry * 30 * 1000;
-        setTimeout(() => { this.loadDiceInfo() }, nexttime);
-      }
-    }
-    finally {
-      clearTimeout(timer); 
-    } 
-    console.log("diceBot Load END")
+        })
+        .catch(error => {
+          console.log("diceBot INFO Load ERROR!")
+          if (this.api.retry <= 3) {
+            this.api.retry += 1;
+            let nexttime:number = this.api.retry * 30 * 1000;
+            setTimeout(() => { this.loadDiceInfo() }, nexttime);
+          }
+        });   
   }
 
   normalizeDiceInfo(infos :any) {

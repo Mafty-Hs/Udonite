@@ -32,6 +32,7 @@ export class GameCharacterService {
   get gameType() {
     if (!this._gameType && this.playerService.roomAdmin.gameType) {
       this._gameType = this.playerService.roomAdmin.gameType;
+      EventSystem.trigger('DICEBOT_LOAD', null);
     }
     return this._gameType;
   }

@@ -22,9 +22,9 @@
     <div *ngIf="!disableControl && noControl" class="Character-Control">
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
     </div>
-    <chat-input [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+    <chat-input [isBlack]="isBlack" [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
   </div>
-  <chat-edit *ngIf="isLogOnly && isEdit" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>
+  <chat-edit *ngIf="isLogOnly && isEdit" [isBlack]="isBlack" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>
 </div>
 <ng-template #ease>
   <chat-tab-ease *ngIf="chatTab" [chatTab]="chatTab" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab-ease>

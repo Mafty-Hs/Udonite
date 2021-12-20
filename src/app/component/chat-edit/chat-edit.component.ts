@@ -11,6 +11,7 @@ export class ChatEditComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor() { }
   text: string = "";
   @Input() chatMessage: ChatMessage;
+  @Input() isBlack: boolean = true;
   @Output() toggleEdit = new EventEmitter();
 
 

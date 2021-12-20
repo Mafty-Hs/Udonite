@@ -1,11 +1,11 @@
 <div class="box" [ngClass]="{ 'direct-message': isDirect }">
   <div class="sendFrom">
-    <chat-input-sendfrom [(sendFrom)]="sendFrom" [isLock]="isPalette" (chatSetting)='chatSetting($event)'></chat-input-sendfrom>
+    <chat-input-sendfrom [(sendFrom)]="sendFrom" [isLock]="isPalette" [isBlack]="isBlack" (chatSetting)='chatSetting($event)'></chat-input-sendfrom>
   </div>
   <div class="rightObject">
     <div class="chatSend">
       <form>
-         <textarea class="chat-input" [(ngModel)]="text"
+         <textarea class="chat-input" [(ngModel)]="text" [ngClass]="{'nonblack': !isBlack}"
          placeholder='Enterで送信　Shift+Enterで改行　チャットパレットの色を優先' 
          [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)" #textArea>
         </textarea>

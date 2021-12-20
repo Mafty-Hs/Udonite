@@ -41,7 +41,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get isUseStandImage():boolean { return this.chatData.isUseStandImage };
   get standName():string { return this.chatData.standName };
 
-
+  @Input() isBlack: boolean = true;
+  
   _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;

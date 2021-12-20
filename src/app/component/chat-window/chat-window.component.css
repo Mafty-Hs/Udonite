@@ -33,13 +33,9 @@
   margin: 0px;
 
   border-top: none;
-  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
-    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
-    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
-    linear-gradient(180deg, hsl(0,0%,78%)  0%, 
-    hsl(0,0%,90%) 47%, 
-    hsl(0,0%,78%) 53%,
-    hsl(0,0%,70%)100%);
+  background: linear-gradient(
+    -45deg, rgba(34,35,38,1) 0%,rgba(51,56,58,1) 5%,rgba(74,79,84,1) 21%,rgba(52,55,58,1) 47%,rgba(69,72,77,1) 71%,rgba(41,42,45,1) 90%,rgba(20,20,20,1) 100%);
+
 }
 
 .set-area {
@@ -147,6 +143,7 @@ button {
 .Character-Control {
   height : 45px; 
   overflow: auto;
+  color: #FFF;
 }
 .Character-Control::-webkit-scrollbar {
   height: 5px;

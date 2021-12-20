@@ -41,6 +41,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   isLogOnly:boolean = true;
   localFontsize:number = 14;
   bgColor:string = "black";
+  get isBlack():boolean {
+    return (this.bgColor === 'black')
+  }
+
   noControl = true;
   _disableControl : boolean = false;
   get disableControl(): boolean { return this._disableControl };
@@ -48,6 +52,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.noControl) this._disableControl = true;
     this._disableControl = control;
   };
+
   isEdit:boolean = false;
   editMessage:ChatMessage = null;
 

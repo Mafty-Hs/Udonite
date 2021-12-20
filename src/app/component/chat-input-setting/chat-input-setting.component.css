@@ -2,7 +2,7 @@
   padding: 0px;
   margin: 0px;
   display:flex; 
-  flex-diretion: row; 
+  flex-direction: row; 
   justify-content: flex-start;
 }
 
@@ -10,13 +10,11 @@
   width: 160px;
   border: solid 1px black;
   box-shadow: 1px 1px 1px 0px black;
-  color: black;
   vertical-align: middle;
   white-space: nowrap;
 }
 
 .setting {
-  color: black;
   border: solid 1px black;
   box-shadow: 1px 1px 1px 0px black;
   vertical-align: middle;

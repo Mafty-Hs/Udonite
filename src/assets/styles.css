@@ -99,6 +99,25 @@ a.outer-link::after {
   color: #99D;
 }
 
+input {
+  background-color: #212121;
+  color: #fff;  
+}
+
+select {
+  background-color: #212121;
+  color: #fff;
+}
+
+textarea {
+  background-color: #212121;
+  color: #fff;
+}
+
+::placeholder {
+  color: #AAA;
+}
+
 input[type="range"] {
   appearance: none;
   cursor: pointer; 

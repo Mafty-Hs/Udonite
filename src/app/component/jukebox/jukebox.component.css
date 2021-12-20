@@ -72,13 +72,6 @@
 
 input[type=number] {
   text-align: right;
-  background-color: #212121;
-  color: #fff;
-}
-
-input[type=text] {
-  background-color: #212121;
-  color: #fff;
 }
 
 .sound-list {

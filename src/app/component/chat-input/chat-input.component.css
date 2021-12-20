@@ -55,6 +55,15 @@
   vertical-align: bottom;
 }
 
+.chat-input.nonblack {
+  background-color: #FFF;
+  color: #000;
+}
+
+.nonblack::placeholder {
+  color: #777;
+}
+
 .send {
   height: 2.5em;
   text-align: center;

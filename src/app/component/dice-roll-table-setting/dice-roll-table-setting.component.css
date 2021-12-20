@@ -42,22 +42,3 @@
   right: 0;
   font-size: 0.9em;
 }
-
-input {
-  background-color: #212121;
-  color: #fff;  
-}
-
-select {
-  background-color: #212121;
-  color: #fff;
-}
-
-textarea {
-  background-color: #212121;
-  color: #fff;
-}
-
-::placeholder {
-  color: #AAA;
-}

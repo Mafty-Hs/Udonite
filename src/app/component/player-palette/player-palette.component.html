@@ -41,13 +41,13 @@
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
-          <option value="{{palette}}" [style.color]="color">{{palette}}</option>
+          <option value="{{palette}}" [style.color]="color === '#444444' ? '#ddd' : color">{{palette}}</option>
         </ng-container>
       </ng-container>
     </select>
   </div>
   <div *ngIf="showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea class="palette" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div class="bottom">
     <div class="control">

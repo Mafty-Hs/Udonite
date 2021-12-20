@@ -129,7 +129,7 @@
               [attr.disabled]="cutInIsVideo || !isEditable || isPlaying ? '' : null"
               (change)="onAudioFileChange($event.target.value)">
               <option value="" class="not-specified">効果音なし</option>
-              <option style="color: black" *ngFor="let audio of audios" value="{{audio.identifier}}">{{ audio.name }}</option>
+              <option *ngFor="let audio of audios" value="{{audio.identifier}}">{{ audio.name }}</option>
             </select>
             <ng-container *ngIf="isEditable && this.cutInAudioFileName.length > 0">
               <span *ngIf="isValidAudio" style="margin-left: 0.6em"><i class="material-icons" style="font-size: 14px">check</i> <span style="color: blue">Link OK</span></span>

@@ -12,6 +12,7 @@ import { GameCharacterService } from 'service/game-character.service';
 export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
   @Input('isLock') isLock: boolean = false;
+  @Input('isBlack') isBlack: boolean = true;
   private _sendFrom:string;
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
@@ -57,7 +58,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
   getColor():string {
     if(this.character) {
-      return this.gameCharacterService.color(this.sendFrom);
+      return this.gameCharacterService.color(this.sendFrom) 
     }
     else return this.myColor;
   }

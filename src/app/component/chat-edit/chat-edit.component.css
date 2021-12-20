@@ -30,8 +30,8 @@
 .info {
   position: absolute;
   left: 60px;
-  background-color: #DDD;
-  color: black;
+  background-color: #222;
+  color: white;
   font-size: 12px;
   padding: 5px;
 }
@@ -55,6 +55,11 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   vertical-align: bottom;
+}
+
+.chat-input.nonblack {
+  background-color: #FFF;
+  color: #000;
 }
 
 .send {

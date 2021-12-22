@@ -29,6 +29,7 @@ import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -52,6 +53,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private pointerDeviceService: PointerDeviceService,
     private appConfigService: AppConfigService,
     private ngZone: NgZone,
+    private playerService: PlayerService,
     private roomService: RoomService,
  
   ) {
@@ -103,9 +105,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let standNoIconImage = ImageStorage.instance.add(fileContext);
     ImageTag.create(standNoIconImage.identifier).tag = '*default スタンド';
 
-    PeerCursor.createMyCursor();
-    if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
-    PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
+    this.playerService.playerCreate(noneIconImage.identifier);
 
      EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })

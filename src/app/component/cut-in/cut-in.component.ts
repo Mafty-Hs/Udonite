@@ -354,7 +354,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (!this.sender) return ret;
     let object = PeerCursor.findByPeerId(this.sender);
     if (object instanceof PeerCursor) {
-      ret = object.name;
+      ret = object.player.name;
     }
     return ret;
   }
@@ -368,7 +368,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (!this.sender) return ret;
     let object = PeerCursor.findByPeerId(this.sender);
     if (object instanceof PeerCursor) {
-      ret = object.color;
+      ret = object.player.color;
     }
     return ret;
   }
@@ -508,35 +508,6 @@ export class CutInComponent implements OnInit, OnDestroy {
         action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
       },
-            /*
-      (!this.videoId ? null : ContextMenuSeparator),
-      (!this.videoId ? null :
-        {
-          name: 'YouTubeで開く',
-          action: () => { 
-            this.modalService.open(OpenUrlComponent, { url: `https://www.youtube.com/watch?v=${this.cutIn.videoId}`, title: this.cutIn.name });
-          },
-          //disabled: !StringUtil.validUrl(url),
-          //error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-          isOuterLink: true
-        }
-      )
-      ContextMenuSeparator,
-      {
-        name: '効果音の開始／最初から',
-        action: () => { this.audioPlayer.play() },
-        disabled: !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
-        selfOnly: true,
-        materialIcon: 'play_arrow'
-      },
-      {
-        name: '効果音の停止',
-        action: () => { this.audioPlayer.stop() },
-        disabled: !this.audioPlayer.paused && !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
-        selfOnly: true,
-        materialIcon: 'stop'
-      }
-      */
     ], this.cutIn.name);
   }
 }

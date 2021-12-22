@@ -4,7 +4,6 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { SimpleCreateComponent } from 'component/simple-create/simple-create.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -16,6 +15,8 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { Player } from '@udonarium/player';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 
 @Component({
   selector: 'player-palette',
@@ -42,7 +43,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     )
   }
 
-  _selectCharacter:string = this.myPeer.identifier + ',-1';
+  _selectCharacter:string = this.myIdentifier + ',-1';
   get selectCharacter() :string {return this._selectCharacter};
   set selectCharacter(select :string) {
     if (!select) return;
@@ -113,14 +114,23 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   private doubleClickTimer: NodeJS.Timer = null;
   private selectedPaletteIndex = -1;
 
+  get myImage():ImageFile {
+    return this.playerService.myImage;
+  }
+  get myPlayer():Player {
+    return this.playerService.myPlayer;
+  }
+  get myIdentifier(): string {
+    return this.myPlayer.peerIdentifier;
+  }
   private isMine(identifier: string):boolean {
-    if (identifier == this.myPeer.identifier) {
+    if (identifier == this.myIdentifier) {
       return true;
     }
     return false;
   }
 
-  sendFrom: string = this.myPeer.identifier;
+  sendFrom: string = this.myIdentifier;
 
   resizeHeight() {
     if(this.characterSelect.nativeElement.clientHeight > 32
@@ -132,8 +142,6 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   }
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
   chatTabidentifier: string = '';

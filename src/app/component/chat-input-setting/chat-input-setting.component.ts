@@ -192,7 +192,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   get sendToColor(): string {
     let object = ObjectStore.instance.get(this.sendTo);
     if (object instanceof PeerCursor) {
-      return object.color;
+      return object.player.color;
     }
     return PeerCursor.CHAT_DEFAULT_COLOR;
   }

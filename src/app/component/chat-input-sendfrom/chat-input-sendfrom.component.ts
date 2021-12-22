@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter} from '@angular/core';
 import { GameCharacter } from '@udonarium/game-character';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';
+import { PlayerService } from 'service/player.service';
+import { Player } from '@udonarium/player';
 
 @Component({
   selector: 'chat-input-sendfrom',
@@ -32,17 +33,18 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     this.touched = true;
   }
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
   isUseFaceIcon: boolean = true;  
   character: GameCharacter; 
+  get player():Player {
+    return this.playerService.myPlayer;
+  }
 
   get imageFile(): ImageFile {
     let image: ImageFile = null;
     if (this.character) {
       image = this.character.imageFile;
-    } else if (this.myPeer.image) {
-      image = this.myPeer.image;
+    } else if (this.playerService.myImage) {
+      image = this.playerService.myImage
     }
     return image ? image : ImageFile.Empty;
   }
@@ -64,16 +66,12 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }
 
   get myColor(): string {
-    if (PeerCursor.myCursor
-      && PeerCursor.myCursor.color
-      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
-      return PeerCursor.myCursor.color;
-    }
-    return PeerCursor.CHAT_DEFAULT_COLOR;
-  }
+    return this.playerService.myColor;
+   }
 
   constructor(
-    private gameCharacterService: GameCharacterService
+    private gameCharacterService: GameCharacterService,
+    private playerService: PlayerService
   ) {     
     
   }

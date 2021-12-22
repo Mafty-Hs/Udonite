@@ -4,7 +4,7 @@
       プレイヤーアイコン
     </div>
     <div class="item-data">
-      <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
+      <div *ngIf="player.image" class="image cover" [style.background-image]="'url(' + player.image.url + ')' | safe: 'style' "
       (click)="changeIcon()">
       </div>
       <button (click)="changeIcon()">変更</button>
@@ -15,7 +15,7 @@
       あなたの色
     </div>
     <div class="item-data">
-      <input type="color" style="width:2em; height:2.5em;" [(ngModel)]="myPeerColor">
+      <input type="color" style="width:2em; height:2.5em;" [(ngModel)]="myColor">
       <button (click)="colorReset()" >初期化</button>
     </div>
   </div>
@@ -24,7 +24,7 @@
       ニックネーム
     </div>
     <div class="item-data">
-      <input [(ngModel)]="myPeerName" [style.color]="myPeerColor" style="font-weight: bolder;" placeholder="ニックネーム" />
+      <input [(ngModel)]="myName" [style.color]="myColor" style="font-weight: bolder;" placeholder="ニックネーム" />
     </div>
   </div>
   <div class="flex-item">

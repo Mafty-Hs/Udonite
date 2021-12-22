@@ -1,8 +1,8 @@
 <div class="selecter">
   <div *ngIf="!touched && !isLock ;else images">
     <select name="sendFrom" class="select" (change)="touch()" [(ngModel)]="sendFrom"
-     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': (getColor() === '#444444') && isBlack  ? '#FFF' : getColor() , 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
-       <option value="{{myPeer?.identifier}}" [style.color]=" (myColor === '#444444') && isBlack  ? '#FFF' : myColor" style="font-weight: bolder;">{{myPeer?.name}}（あなた）</option>
+     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': (getColor() === '#444444') && isBlack  ? '#FFF' : getColor() , 'font-weight': (sendFrom != player?.peerIdentifier ? 'normal' : 'bolder')}">
+       <option value="{{player?.peerIdentifier}}" [style.color]=" (myColor === '#444444') && isBlack  ? '#FFF' : myColor" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
        <option *ngFor="let gameCharacter of gameCharacters" 
           [style.color]="(this.gameCharacterService.color(gameCharacter.identifier) === '#444444') && isBlack  ? '#FFF' : this.gameCharacterService.color(gameCharacter.identifier)" 
          value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
@@ -19,7 +19,7 @@
   </div>
   <div class="text-space" (click)="canSelect()">
     <div *ngIf="!character;else characterName"><span class="name" [style.color]="getColor()">
-      {{myPeer?.name}}
+      {{player?.name}}
     </span><span class="tag">▼</span></div>
   </div>
     <ng-template #isCharacter>

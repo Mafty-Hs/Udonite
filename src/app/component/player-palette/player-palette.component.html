@@ -20,9 +20,9 @@
   </div>
   <div #characterSelect class="character-select">
     <label>
-      <img *ngIf="myPeer.image" class="imgicon" [src]="myPeer.image.url | safe: 'resourceUrl'" />
-      <input type="radio" name="chara-tab" [value]="myPeer.identifier + ',-1'" [(ngModel)]="selectCharacter">
-      <div>{{myPeer.name}}</div>
+      <img *ngIf="myImage" class="imgicon" [src]="myImage.url | safe: 'resourceUrl'" />
+      <input type="radio" name="chara-tab" [value]="myIdentifier + ',-1'" [(ngModel)]="selectCharacter">
+      <div>{{myPlayer.name}}</div>
     </label>
     <ng-container *ngFor="let gameCharacter of characterPaletteList">
       <label>

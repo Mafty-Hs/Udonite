@@ -52,7 +52,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     this.peers = card.allowPeers;
     this.allowPlayerName = this.peers.map( identifier => {
       let peer = this.playerService.getPeer(identifier);
-      if (peer) return peer.name;
+      if (peer) return peer.player.name;
     });
   }
 
@@ -99,7 +99,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   addPeer() {
     if (!this.peers.includes(this.peer)) {
       this.peers.push(this.peer);
-      this.allowPlayerName.push(this.playerService.getPeer(this.peer).name);
+      this.allowPlayerName.push(this.playerService.getPeer(this.peer).player.name);
     }
   }
 

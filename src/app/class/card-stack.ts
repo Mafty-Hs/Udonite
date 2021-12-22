@@ -18,11 +18,11 @@ export class CardStack extends TabletopObject {
   get name(): string { return this.getCommonValue('name', ''); }
   get ownerName(): string {
     let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.name : '';
+    return object ? object.player.name : '';
   }
   get ownerColor(): string {
     let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.color : '#444444';
+    return object ? object.player.color : '#444444';
   }
   get hasOwner(): boolean { return 0 < this.owner.length; }
 

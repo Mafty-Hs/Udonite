@@ -14,12 +14,16 @@ export class Player extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
   @SyncVar() color: string = Player.CHAT_DEFAULT_COLOR;
-  @SyncVar() userId: string = '';
+  @SyncVar() peerIdentifier: string = '';
+  @SyncVar() playerId: string = '';
   @SyncVar() authType: AuthType = AuthType.NONE;
   @SyncVar() password: string
+
 
   isInitial :boolean = false;
   static readonly CHAT_DEFAULT_COLOR = '#444444';
   static readonly CHAT_TRANSPARENT_COLOR = '#ffffff';
+
+  get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
 
 }

@@ -1,5 +1,3 @@
-import { ImageFile } from './core/file-storage/image-file';
-import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectStore } from './core/synchronize-object/object-store';
@@ -14,10 +12,11 @@ type ObjectIdentifier = string;
 export class PeerCursor extends GameObject {
   @SyncVar() userId: UserId = '';
   @SyncVar() peerId: PeerId = '';
-  @SyncVar() name: string = '';
-  @SyncVar() imageIdentifier: string = '';
-  @SyncVar() color: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  @SyncVar() playerIdentifier: string ;
   
+  get player() :Player {
+    return ObjectStore.instance.get(this.playerIdentifier)
+  }
 
   static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
   static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
@@ -39,7 +38,7 @@ export class PeerCursor extends GameObject {
   }
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
-  get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+  
 
 
 
@@ -87,20 +86,16 @@ export class PeerCursor extends GameObject {
     return null;
   }
 
-  static createMyCursor(): PeerCursor {
+  static createMyCursor(playerIdentifier :string): PeerCursor {
     if (PeerCursor.myCursor) {
       console.warn('It is already created.');
       return PeerCursor.myCursor;
     }
     PeerCursor.myCursor = new PeerCursor();
     PeerCursor.myCursor.peerId = Network.peerId;
+    PeerCursor.myCursor.playerIdentifier = playerIdentifier;
     PeerCursor.myCursor.initialize();
-    if (window.localStorage && localStorage.getItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY)) {
-      PeerCursor.myCursor.name = localStorage.getItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY);
-    }
-    if (window.localStorage && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) {
-      PeerCursor.myCursor.color = localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
-    }
+    PeerCursor.myCursor.player.peerIdentifier = PeerCursor.myCursor.identifier;
     return PeerCursor.myCursor;
   }
 

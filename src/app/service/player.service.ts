@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
-
 import { Player } from '@udonarium/player';
+import { RoomAdmin } from '@udonarium/room-admin';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
@@ -42,18 +43,40 @@ export class PlayerService {
     return false; 
   }
 
-  playerCreate(isInit :boolean ,imageIdentifier :string) {
+  playerCreate(imageIdentifier :string) {
     let player = new Player();
     player.initialize();
-    player.isInitial = isInit;
+    player.isInitial = true;
     player.name = "プレイヤー";
     player.color = Player.CHAT_DEFAULT_COLOR;
     player.imageIdentifier = imageIdentifier;
+    RoomAdmin.instance.appendChild(player);
+    PeerCursor.createMyCursor(player.identifier);
+    this.myPlayer = player;
     return player;
   }
 
 
   //ユーザー管理
+
+  get myImage():ImageFile {
+    if (this.myPlayer
+      && this.myPlayer.image
+      && this.myPlayer.image.url.length > 0) {
+      return this.myPlayer.image;
+    }  
+    return ImageFile.Empty;
+  }
+
+  get myColor():string {
+    if (this.myPlayer
+      && this.myPlayer.color
+      && this.myPlayer.color != Player.CHAT_TRANSPARENT_COLOR) {
+      return this.myPlayer.color;
+    }
+    return Player.CHAT_DEFAULT_COLOR;
+  }
+
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
   getPeer(identifier :string): PeerCursor {
@@ -75,8 +98,8 @@ export class PlayerService {
   findPeerNameAndColor(peerId: string):{ name: string, color: string } {
     let peer = PeerCursor.findByPeerId(peerId);
       return {
-        name: (peer ? peer.name : ''),
-        color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
+        name: (peer ? peer.player.name : ''),
+        color: (peer ? peer.player.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
       };
   }
 

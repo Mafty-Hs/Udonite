@@ -6,6 +6,7 @@ import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-seri
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
+import { PlayerService } from 'service/player.service';
 import { SaveDataService } from 'service/save-data.service';
 import { EventSystem } from '@udonarium/core/system';
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -144,18 +145,13 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   get myColor(): string {
-    if (PeerCursor.myCursor
-      && PeerCursor.myCursor.color
-      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
-      return PeerCursor.myCursor.color;
-    }
-    return PeerCursor.CHAT_DEFAULT_COLOR;
+   return this.playerService.myColor;
   }
 
   get sendToColor(): string {
     let object = ObjectStore.instance.get(this.sendTo);
     if (object instanceof PeerCursor) {
-      return object.color;
+      return object.player.color;
     }
     return PeerCursor.CHAT_DEFAULT_COLOR;
   }
@@ -170,6 +166,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     private saveDataService: SaveDataService
   ) { }
 

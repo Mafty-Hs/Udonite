@@ -6,12 +6,13 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { PlayerService } from 'service/player.service';
 import { DiceBotService } from 'service/dice-bot.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { Player } from '@udonarium/player';
 
 @Component({
   selector: 'peer-menu',
@@ -36,48 +37,40 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   help: string = '';
   isCopied = false;
 
+  get player():Player {
+    return this.playerService.myPlayer;
+  }
   private _timeOutId;
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
-  get myPeerName(): string {
-    if (!PeerCursor.myCursor) return null;
-    return PeerCursor.myCursor.name;
+  get myName(): string {
+    return this.player.name;
   }
-  set myPeerName(name: string) {
-    if (window.localStorage) {
-      localStorage.setItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY, name);
-    }
-    if (PeerCursor.myCursor) PeerCursor.myCursor.name = name;
+  set myName(name: string) {
+    this.player.name = name;
   }
 
-  get myPeerColor(): string {
-    if (!PeerCursor.myCursor) return PeerCursor.CHAT_DEFAULT_COLOR;
-    return PeerCursor.myCursor.color;
+  get myColor(): string {
+    return this.player.color;
   }
-  set myPeerColor(color: string) {
-    if (PeerCursor.myCursor) {
-      PeerCursor.myCursor.color = (color == PeerCursor.CHAT_TRANSPARENT_COLOR) ? PeerCursor.CHAT_DEFAULT_COLOR : color;
-    }
-    if (window.localStorage) {
-      localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, PeerCursor.myCursor.color);
-    }
+  set myColor(color: string) {
+    this.player.color = color;
   }
 
   colorReset() {
-    this.myPeerColor = PeerCursor.CHAT_DEFAULT_COLOR;
+    this.myColor = Player.CHAT_DEFAULT_COLOR;
   }
 
   constructor(
     private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     public diceBotService: DiceBotService,
     public appConfigService: AppConfigService
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => { this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false });
+    Promise.resolve().then(() => { this.panelService.title = 'プレイヤー情報'; this.panelService.isAbleFullScreenButton = false });
   }
 
   ngAfterViewInit() {
@@ -95,7 +88,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   peerStatus(peerID: string) :string {
-    let count = this.myPeer.keepalive[this.findUserId(peerID)]
+    let count = PeerCursor.myCursor.keepalive[this.findUserId(peerID)]
     if (count < -5) return '#F00';
     if (count < -1) return '#FF0';
     return '#0F0';
@@ -103,10 +96,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   changeIcon() {
     let currentImageIdentifires: string[] = [];
-    if (this.myPeer && this.myPeer.imageIdentifier) currentImageIdentifires = [this.myPeer.imageIdentifier];
+    if (this.player.imageIdentifier) currentImageIdentifires = [this.player.imageIdentifier];
     this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
-      if (!this.myPeer || !value) return;
-      this.myPeer.imageIdentifier = value;
+      if (!value) return;
+      this.player.imageIdentifier = value;
     });
   }
 
@@ -176,11 +169,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   findPeerName(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.name : '';
+    return peerCursor ? peerCursor.player.name : '';
   }
 
   findPeerColor(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.color : '';
+    return peerCursor ? peerCursor.player.color : '';
   }
 }

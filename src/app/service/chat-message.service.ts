@@ -110,10 +110,10 @@ export class ChatMessageService {
     let name,newTo :string;
     if (sendTo) {
       newTo = this.findId(sendTo);
-      name = this.makeMessageName(PeerCursor.myCursor.name , sendTo);
+      name = this.makeMessageName(this.playerService.myPlayer.name , sendTo);
     }
     else {
-      name = PeerCursor.myCursor.name;
+      name = this.playerService.myPlayer.name ;
       newTo = "";
     }
     this.standService.cutIn(text,sendTo);
@@ -121,7 +121,7 @@ export class ChatMessageService {
       from: Network.peerContext.userId,
       to: newTo,
       name: name,
-      imageIdentifier: PeerCursor.myCursor?.imageIdentifier,
+      imageIdentifier: this.playerService.myImage.identifier,
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
       text: StringUtil.cr(text),
@@ -140,12 +140,7 @@ export class ChatMessageService {
   }
 
   get myColor(): string {
-    if (PeerCursor.myCursor
-      && PeerCursor.myCursor.color
-      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
-      return PeerCursor.myCursor.color;
-    }
-    return PeerCursor.CHAT_DEFAULT_COLOR;
+     return this,this.playerService.myColor;
   }
 
   colorValidation(color :string):string {
@@ -161,7 +156,7 @@ export class ChatMessageService {
   }
 
   private makeMessageName(name: string, sendTo: string): string {
-    return name + ' ➡ ' + this.getPeer(sendTo)?.name;
+    return name + ' ➡ ' + this.getPeer(sendTo)?.player.name;
   }
 
   sendOperationLog(text: string, logType: string) {

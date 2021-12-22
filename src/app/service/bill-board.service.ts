@@ -22,7 +22,7 @@ export class BillBoardService {
         title: _title,
         text: _text,
         dataType:String(_dataType),
-        ownerName: this.playerService.myPeer.name,
+        ownerName: this.playerService.myPlayer.name,
         ownerPeers: [this.playerService.myPeer.identifier],
         ownerPassword: _ownerPassword,
         allowPeers: _allowPeers

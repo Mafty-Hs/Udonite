@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { GameCharacterService } from 'service/game-character.service';
 import { StandService } from 'service/stand.service';
 import { PlayerService } from 'service/player.service';
+import { RoomService } from './room.service';
 
 import { ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -24,7 +25,8 @@ export class ChatMessageService {
   constructor(
     private gameCharacterService:  GameCharacterService,
     private standService:  StandService,
-    private playerService:  PlayerService
+    private playerService:  PlayerService,
+    private roomService: RoomService
   ) { }
 
   get chatTabs(): ChatTab[] {
@@ -165,16 +167,16 @@ export class ChatMessageService {
   sendOperationLog(text: string, logType: string) {
     switch (logType) {
       case "dice":
-        if (!this.playerService.roomAdmin.diceLog) return;
+        if (!this.roomService.roomAdmin.diceLog) return;
         break;
       case "card":
-        if (!this.playerService.roomAdmin.cardLog) return;
+        if (!this.roomService.roomAdmin.cardLog) return;
         break;
       default:
         return;
         break;
     }
-    let chatTab = ObjectStore.instance.get<ChatTab>(this.playerService.roomAdmin.chatTab)
+    let chatTab = ObjectStore.instance.get<ChatTab>(this.roomService.roomAdmin.chatTab)
     if (chatTab) 
      this.playerSend(chatTab ,text , "", Network.peerContext.userId ,"");
   }

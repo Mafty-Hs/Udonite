@@ -4,11 +4,11 @@
 <div class="flex-box">
   <div class="flex-item">
     <div class="title">デフォルトダイスボット</div>
-  <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 16em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
+  <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 16em;" [(ngModel)]="roomService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
     <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
   </select>
-  <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 16em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
+  <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 16em;" [(ngModel)]="roomService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
     <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
       <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
@@ -27,18 +27,18 @@
   <div class="flex-item">
     <div class="title">操作ログ</div>
     <div>カード、ダイスの操作ログを出力するタブを指定します。</div>
-    <select style="width: 16em;" [(ngModel)]="playerService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
+    <select style="width: 16em;" [(ngModel)]="roomService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
       <option value="" class="not-specified">ログを出力しない</option>
       <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
     </select>
-    <ng-container *ngIf="playerService.roomAdmin.chatTab">
+    <ng-container *ngIf="roomService.roomAdmin.chatTab">
       <div>出力するデータを指定します</div>
       <div class="toggle"><label>ダイス操作ログ
-        <input name="diceLog" type="checkbox" [(ngModel)]="playerService.roomAdmin.diceLog">
+        <input name="diceLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.diceLog">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>カード操作ログ
-        <input name="cardLog" type="checkbox" [(ngModel)]="playerService.roomAdmin.cardLog">
+        <input name="cardLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.cardLog">
         <div><div></div></div>
       </label></div><br>
     </ng-container>
@@ -57,19 +57,19 @@
   </div>
   <div class="flex-item">
     <div class="title">ルーム管理者</div>
-    <div *ngIf="!playerService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
+    <div *ngIf="!roomService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
   </div>
   <div class="flex-item">
     <div class="title">ルーム設定</div>
     <div *ngIf="!adminAuth; else editSetting">
      現在、下記の制御が有効になっています。
       <ul>
-        <li *ngIf="playerService.roomAdmin.disableTableLoad">データアップロード禁止(キャラクター以外)</li>
-        <li *ngIf="playerService.roomAdmin.disableCharacterLoad">データアップロード禁止(キャラクター)</li>
-        <li *ngIf="playerService.roomAdmin.disableTableSetting">テーブル設定禁止</li>
-        <li *ngIf="playerService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
-        <li *ngIf="playerService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
-        <li *ngIf="playerService.roomAdmin.disableSeparateDataSave">個別データセーブ禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableTableLoad">データアップロード禁止(キャラクター以外)</li>
+        <li *ngIf="roomService.roomAdmin.disableCharacterLoad">データアップロード禁止(キャラクター)</li>
+        <li *ngIf="roomService.roomAdmin.disableTableSetting">テーブル設定禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableSeparateDataSave">個別データセーブ禁止</li>
       </ul>
     </div>
   </div>
@@ -90,27 +90,27 @@
 </ng-template>
 <ng-template #editSetting>
       <div class="toggle"><label>データアップロード禁止(キャラクター以外)
-        <input name="disableTableLoad" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTableLoad">
+        <input name="disableTableLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableLoad">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>データアップロード禁止(キャラクター)
-        <input name="disableCharacterLoad" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableCharacterLoad">
+        <input name="disableCharacterLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableCharacterLoad">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>テーブル設定禁止
-        <input name="disableTableSetting" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTableSetting">
+        <input name="disableTableSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableSetting">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>チャットタブ設定禁止
-        <input name="disableTabSetting" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableTabSetting">
+        <input name="disableTabSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabSetting">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>部屋全データセーブ禁止
-        <input name="disableAllDataSave" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableAllDataSave">
+        <input name="disableAllDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAllDataSave">
         <div><div></div></div>
       </label></div><br>
       <div class="toggle"><label>個別データセーブ禁止
-        <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="playerService.roomAdmin.disableSeparateDataSave">
+        <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableSeparateDataSave">
         <div><div></div></div>
       </label></div><br>
 </ng-template>

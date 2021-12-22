@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
-import { RoomAdmin } from '@udonarium/room-admin';
+
+import { Player } from '@udonarium/player';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import * as SHA256 from 'crypto-js/sha256';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +12,17 @@ import * as SHA256 from 'crypto-js/sha256';
 export class PlayerService {
   //パレットバインダー
   //最終的にはプレイヤークラスを作ってそこで管理すべき
+  myPlayer:Player;
   localpalette: ChatPalette;
-  paletteList: string[] = [];
+  _paletteList: string[] = [];
   myPalette = null;
+  
+  get paletteList() {
+    return this._paletteList;
+  }
+  set paletteList(paletteList :string[]) {
+    this._paletteList = paletteList;
+  }
 
   addList(identifier: string) {
     if (this.checkList(identifier)) { return }
@@ -34,58 +42,15 @@ export class PlayerService {
     return false; 
   }
 
-  //権限管理 将来的にこれも独立したほうがいいかも
-
-  getHash(password: string) {
-    return SHA256(password).toString();
+  playerCreate(isInit :boolean ,imageIdentifier :string) {
+    let player = new Player();
+    player.initialize();
+    player.isInitial = isInit;
+    player.name = "プレイヤー";
+    player.color = Player.CHAT_DEFAULT_COLOR;
+    player.imageIdentifier = imageIdentifier;
+    return player;
   }
-
-  enableAdmin(text :string) {
-    RoomAdmin.instance.adminPassword = this.getHash(text);
-    RoomAdmin.instance.adminPeers.push(this.myPeer.identifier);
-  }
-
-  adminPasswordAuth(text :string) {
-   if (this.roomAdmin.adminPassword == this.getHash(text)) {
-     RoomAdmin.instance.adminPeers.push(this.myPeer.identifier);
-   }
-  } 
-
-  get roomAdmin():RoomAdmin {
-    return RoomAdmin.instance;
-  }
-
-  get adminAuth():boolean {
-    if (this.roomAdmin.adminPeers.includes(this.myPeer.identifier)) return true;
-    return false;
-  }
-
-  get disableTableLoad():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableTableLoad as boolean;
-  }
-
-  get disableCharacterLoad():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableCharacterLoad as boolean;
-  }
-  get disableTableSetting():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableTableSetting as boolean;
-  }
-  get disableTabSetting():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableTabSetting as boolean;
-  }
-  get disableAllDataSave():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableAllDataSave as boolean;
-  }
-  get disableSeparateDataSave():boolean{
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableSeparateDataSave as boolean;
-  }
-
 
 
   //ユーザー管理

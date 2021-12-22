@@ -5,6 +5,7 @@ import { ObjectTemplate } from '@udonarium/object-template';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { DataElement } from '@udonarium/data-element';
 import { PlayerService } from 'service/player.service';
+import { RoomService } from './room.service';
 import { StandList } from '@udonarium/stand-list';
 
 @Injectable({
@@ -30,8 +31,8 @@ export class GameCharacterService {
 
   private _gameType:string = "";
   get gameType() {
-    if (!this._gameType && this.playerService.roomAdmin.gameType) {
-      this._gameType = this.playerService.roomAdmin.gameType;
+    if (!this._gameType && this.roomService.roomAdmin.gameType) {
+      this._gameType = this.roomService.roomAdmin.gameType;
       EventSystem.trigger('DICEBOT_LOAD', null);
     }
     return this._gameType;
@@ -182,6 +183,7 @@ export class GameCharacterService {
 
   constructor(
      private playerService: PlayerService,
+     private roomService: RoomService
   ) { 
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {

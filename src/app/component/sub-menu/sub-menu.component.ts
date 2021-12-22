@@ -5,7 +5,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { CounterService } from 'service/counter.service';
 import { SaveDataService } from 'service/save-data.service';
-import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { SaveHtmlService } from 'service/save-html.service';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
@@ -35,11 +35,11 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   progresPercent: number = 0;
 
   get disableAllDataSave() {
-    return this.playerService.disableAllDataSave;
+    return this.roomService.disableAllDataSave;
   }
 
   get disableTableSetting() {
-    return this.playerService.disableTableSetting;
+    return this.roomService.disableTableSetting;
   }
 
   isOpen(itemType :string):boolean {
@@ -115,7 +115,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
 
   constructor(
     private panelService: PanelService,
-    private playerService: PlayerService,
+    private roomService: RoomService,
     private saveDataService: SaveDataService,
     private saveHtmlService: SaveHtmlService,
     private counterService: CounterService,

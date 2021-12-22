@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelService , PanelOption } from 'service/panel.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -26,7 +27,7 @@ export class RoomControlComponent implements OnInit {
     return ChatTabList.instance.chatTabs;
   }
 
-  get adminAuth():boolean { return this.playerService.adminAuth;}
+  get adminAuth():boolean { return this.roomService.adminAuth;}
 
   alarmSend() {
     let peer:string = ""
@@ -44,7 +45,8 @@ export class RoomControlComponent implements OnInit {
     private panelService: PanelService,
     private diceBotService: DiceBotService,
     public gameCharacterService: GameCharacterService,
-    public playerService: PlayerService
+    public playerService: PlayerService,
+    public roomService: RoomService
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +58,7 @@ export class RoomControlComponent implements OnInit {
   }
 
   passwordAuth() {
-    this.playerService.adminPasswordAuth(this.password);
+    this.roomService.adminPasswordAuth(this.password);
     this.panelService.close;
   }
 

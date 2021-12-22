@@ -23,7 +23,7 @@ import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
-import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { TabletopService } from 'service/tabletop.service';
 
 import { GridLineRender } from './grid-line-render';
@@ -89,7 +89,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
     private imageService: ImageService,
-    private playerService: PlayerService,
+    private roomService: RoomService,
     private tabletopService: TabletopService,
     private tabletopActionService: TabletopActionService,
     private modalService: ModalService,
@@ -273,7 +273,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z);
       }
     });
-    if (!this.playerService.disableTableSetting) {
+    if (!this.roomService.disableTableSetting) {
       menuActions.push(ContextMenuSeparator);
       menuActions.push({
         name: 'テーブル設定', action: () => {

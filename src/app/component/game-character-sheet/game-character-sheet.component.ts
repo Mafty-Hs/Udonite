@@ -8,7 +8,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
-import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
@@ -94,7 +94,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
-    public playerService: PlayerService,
+    public roomService: RoomService,
     private modalService: ModalService,
     private pointerDeviceService: PointerDeviceService,
   ) { }

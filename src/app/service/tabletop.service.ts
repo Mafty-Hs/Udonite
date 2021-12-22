@@ -25,7 +25,7 @@ import { BillBoard } from '@udonarium/bill-board';
 import { Round } from '@udonarium/round';
 import { Room } from '@udonarium/room';
 import { Popup } from '@udonarium/popup';
-import { PlayerService } from './player.service';
+import { RoomService } from './room.service';
 import { CounterService } from './counter.service';
 import { BillBoardService } from './bill-board.service';
 
@@ -78,7 +78,7 @@ export class TabletopService {
     private coordinateService: CoordinateService,
     private counterService: CounterService,
     private billBoardService: BillBoardService,
-    private playerService: PlayerService
+    private roomService: RoomService
   ) {
     this.initialize();
   }
@@ -113,10 +113,10 @@ export class TabletopService {
         let xmlElement: Element = event.data.xmlElement;
         // todo:立体地形の上にドロップした時の挙動
         
-        if (this.playerService.disableTableLoad) {
+        if (this.roomService.disableTableLoad) {
           if(xmlElement.nodeName != 'character') return 
         }
-        if (this.playerService.disableCharacterLoad) {
+        if (this.roomService.disableCharacterLoad) {
           if(xmlElement.nodeName == 'character') return 
         }
 

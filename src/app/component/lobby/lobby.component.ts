@@ -59,32 +59,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.reload();
   }
 
-   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
-  get myPeerName(): string {
-    if (!PeerCursor.myCursor) return null;
-    return PeerCursor.myCursor.name;
-  }
-  set myPeerName(name: string) {
-    if (window.localStorage) {
-      localStorage.setItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY, name);
-    }
-    if (PeerCursor.myCursor) PeerCursor.myCursor.name = name;
-  }
-
-  get myPeerColor(): string {
-    if (!PeerCursor.myCursor) return PeerCursor.CHAT_DEFAULT_COLOR;
-    return PeerCursor.myCursor.color;
-  }
-  set myPeerColor(color: string) {
-    if (PeerCursor.myCursor) {
-      PeerCursor.myCursor.color = (color == PeerCursor.CHAT_TRANSPARENT_COLOR) ? PeerCursor.CHAT_DEFAULT_COLOR : color;
-    }
-    if (window.localStorage) {
-      localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, PeerCursor.myCursor.color);
-    }
-  }
-
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   standalone() {
     this.roomService.isLobby = false;

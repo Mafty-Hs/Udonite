@@ -5,7 +5,7 @@ import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 import { ModalService } from 'service/modal.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
-import { PeerCursor } from '@udonarium/peer-cursor';
+import { RoomService } from 'service/room.service';
 import { EventSystem } from '@udonarium/core/system';
 import { Buffer } from 'buffer';
 
@@ -122,7 +122,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   }
 
   getHash(password: string) {
-    return this.playerService.getHash(password);
+    return this.roomService.getHash(password);
   }
 
 
@@ -137,6 +137,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
+    private roomService: RoomService,
     private billBoardService: BillBoardService
   ) { 
   }

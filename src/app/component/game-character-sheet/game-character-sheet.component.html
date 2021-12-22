@@ -24,7 +24,7 @@
   </ng-container>
 </ng-container>
 <button (click)="clone()">コピーを作る</button>
-<button *ngIf="!playerService.disableSeparateDataSave" [disabled]="isSaveing" (click)="saveToXML()">
+<button *ngIf="!roomService.disableSeparateDataSave" [disabled]="isSaveing" (click)="saveToXML()">
   <div style="position: relative;">
     <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
     <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>

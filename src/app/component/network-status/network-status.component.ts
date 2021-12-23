@@ -40,7 +40,7 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
     EventSystem.register(this)
       .on('KEEPALIVE', event => {
           this.countUserID();
-          if (event.data == Network.peerContext.userId) {
+          if (event.data == PeerCursor.myCursor.peerId) {
             this.myKeepalive -= 1;
             PeerCursor.myCursor.keepaliveAging();
             if (this.myKeepalive < -5 && this.UserCount > 1) {
@@ -63,7 +63,7 @@ export class NetworkStatusComponent implements OnInit,OnDestroy{
 
   startKeepAlive(): void {
     this.timer = setInterval(() => {
-      EventSystem.call('KEEPALIVE', Network.peerContext.userId);
+      EventSystem.call('KEEPALIVE', PeerCursor.myCursor.peerId);
     },10000);
   }
 

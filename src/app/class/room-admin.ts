@@ -72,4 +72,11 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
     ) as Player[];
   }
 
+  static findPlayerById(playerId: string): Player {
+    return RoomAdmin.players.find( player =>
+      player.playerId === playerId
+    );
+  }
+
+
 }

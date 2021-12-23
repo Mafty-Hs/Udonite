@@ -25,7 +25,6 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
@@ -377,7 +376,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get dialogColor(): string {
-    return (this.dialog && this.dialog.color) ? this.dialog.color : PeerCursor.CHAT_DEFAULT_COLOR;
+    return (this.dialog && this.dialog.color) ? this.dialog.color : this.playerService.CHAT_DEFAULT_COLOR;
   }
 
   movableOption: MovableOption = {};

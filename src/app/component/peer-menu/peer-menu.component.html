@@ -32,9 +32,7 @@
     あなたのID
     </div>
     <div class="item-data">
-      <div *ngIf="networkService.isOpen; else disconnect">
-        <span>{{ networkService.peerContext.userId }}</span>
-      </div>
+    {{player.playerId}}
     </div>
   </div>
   <div class="flex-item">

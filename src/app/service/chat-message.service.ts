@@ -10,7 +10,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Network } from '@udonarium/core/system';
-import { PeerCursor } from '@udonarium/peer-cursor';
+//import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 const HOURS = 60 * 60 * 1000;
@@ -57,13 +57,11 @@ export class ChatMessageService {
   {
     let chatSet = this.gameCharacterService.chatSet(sendFrom,isUseFaceIcon,text,standName);
     let color = chatSet.color ? chatSet.color : this.myColor; 
-    let name,newTo :string;
+    let name :string;
     if (sendTo) {
-      newTo = this.findId(sendTo);
       name = this.makeMessageName(chatSet.name , sendTo);
     }
     else {
-      newTo = "";
       name = chatSet.name;
     } 
     if (isUseStandImage && chatSet.standInfo) {
@@ -71,8 +69,8 @@ export class ChatMessageService {
     }
     this.standService.cutIn(text,sendTo);
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
-      to: newTo,
+      from: this.playerService.myPlayer.playerId,
+      to: sendTo,
       name: name,
       imageIdentifier: chatSet.imageIdentifier,
       timestamp: this.calcTimeStamp(chatTab),
@@ -93,7 +91,7 @@ export class ChatMessageService {
 
   systemSend(chatTab: ChatTab, text: string) {
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
+      from: this.playerService.myPlayer.playerId,
       name: 'System',
       timestamp: this.calcTimeStamp(chatTab),
       tag: 'system',
@@ -107,19 +105,17 @@ export class ChatMessageService {
    sendTo?: string)
   {
     if (sendFrom === 'System') return this.systemSend(chatTab, text);
-    let name,newTo :string;
+    let name :string;
     if (sendTo) {
-      newTo = this.findId(sendTo);
       name = this.makeMessageName(this.playerService.myPlayer.name , sendTo);
     }
     else {
       name = this.playerService.myPlayer.name ;
-      newTo = "";
     }
     this.standService.cutIn(text,sendTo);
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
-      to: newTo,
+      from: this.playerService.myPlayer.playerId,
+      to: sendTo,
       name: name,
       imageIdentifier: this.playerService.myImage.identifier,
       timestamp: this.calcTimeStamp(chatTab),
@@ -144,19 +140,11 @@ export class ChatMessageService {
   }
 
   colorValidation(color :string):string {
-    return color !== PeerCursor.CHAT_DEFAULT_COLOR ? color : ""; 
-  }
-
-  getPeer(identifier: string): PeerCursor {
-    return ObjectStore.instance.get(identifier) as PeerCursor;
-  }
-
-  findId(identifier: string): string {
-    return this.getPeer(identifier)?.userId;
+    return color !== this.playerService.CHAT_DEFAULT_COLOR ? color : ""; 
   }
 
   private makeMessageName(name: string, sendTo: string): string {
-    return name + ' ➡ ' + this.getPeer(sendTo)?.player.name;
+    return name + ' ➡ ' + this.playerService.getPlayerById(sendTo).name;
   }
 
   sendOperationLog(text: string, logType: string) {

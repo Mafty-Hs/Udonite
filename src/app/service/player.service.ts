@@ -11,6 +11,13 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
   providedIn: 'root'
 })
 export class PlayerService {
+  //定義
+  static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
+  static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+  
+  CHAT_DEFAULT_COLOR = Player.CHAT_DEFAULT_COLOR;
+  CHAT_TRANSPARENT_COLOR = Player.CHAT_TRANSPARENT_COLOR;
+
   //パレットバインダー
   //最終的にはプレイヤークラスを作ってそこで管理すべき
   myPlayer:Player;
@@ -50,6 +57,7 @@ export class PlayerService {
     player.name = "プレイヤー";
     player.color = Player.CHAT_DEFAULT_COLOR;
     player.imageIdentifier = imageIdentifier;
+    player.playerId = PeerContext.generateId();
     RoomAdmin.instance.appendChild(player);
     PeerCursor.createMyCursor(player.identifier);
     this.myPlayer = player;
@@ -78,7 +86,15 @@ export class PlayerService {
   }
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  get myPeerIdentifier(): string { return this.myPeer.identifier; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+
+  get otherPlayers(): Player[] {
+    return this.otherPeers.map(peer => {
+      return peer.player;
+    });
+  }
+
   getPeer(identifier :string): PeerCursor {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof PeerCursor) {
@@ -86,6 +102,13 @@ export class PlayerService {
     }
     return null;
   }
+ 
+  getPlayerById(playerId :string): Player {
+    return this.otherPeers.find( peer => 
+      peer.player.playerId === playerId
+    ).player;
+  }
+
   getPeerId(identifier :string): string {
     let peer = this.getPeer(identifier);
     if (peer) {
@@ -99,7 +122,7 @@ export class PlayerService {
     let peer = PeerCursor.findByPeerId(peerId);
       return {
         name: (peer ? peer.player.name : ''),
-        color: (peer ? peer.player.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
+        color: (peer ? peer.player.color : this.CHAT_TRANSPARENT_COLOR),
       };
   }
 

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, O
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
-import { PeerCursor } from '@udonarium/peer-cursor';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'context-menu',
@@ -15,7 +15,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
-  @Input() titleColor: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  @Input() titleColor: string = this.playerService.CHAT_DEFAULT_COLOR;
   @Input() titleBold = false;
 
   @Input() isSubmenu: boolean = false;
@@ -46,7 +46,8 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     public contextMenuService: ContextMenuService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private playerService: PlayerService
   ) { }
 
   ngOnInit() {

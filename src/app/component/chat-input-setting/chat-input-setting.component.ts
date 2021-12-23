@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { PlayerService } from 'service/player.service';
+import { Player } from '@udonarium/player';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
+import { PlayerService } from 'service/player.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { EventSystem } from '@udonarium/core/system';
 
@@ -187,14 +187,10 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
     this.setVisible("standPos");
   }
 
-  get myPeer(): PeerCursor { return this.playerService.myPeer; }
-  get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
+  get myPlayer(): Player { return this.playerService.myPlayer; }
+  get otherPlayers(): Player[] { return this.playerService.otherPlayers; }
   get sendToColor(): string {
-    let object = ObjectStore.instance.get(this.sendTo);
-    if (object instanceof PeerCursor) {
-      return object.player.color;
-    }
-    return PeerCursor.CHAT_DEFAULT_COLOR;
+    return this.playerService.getPlayerById(this.sendTo).color
   }
 
 
@@ -251,11 +247,11 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
       && this.character.chatPalette.paletteColor) {
       return this.character.chatPalette.paletteColor;
     }
-    return PeerCursor.CHAT_TRANSPARENT_COLOR; 
+    return this.playerService.CHAT_TRANSPARENT_COLOR; 
   }
 
   set paletteColor(color: string) {
-    this.character.chatPalette.color = color ? color : PeerCursor.CHAT_TRANSPARENT_COLOR;
+    this.character.chatPalette.color = color ? color : this.playerService.CHAT_TRANSPARENT_COLOR;
   }
 
   waitLoadDiceBot() {

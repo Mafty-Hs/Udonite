@@ -31,7 +31,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('idInput') idInput: ElementRef;
   @ViewChild('idSpacer') idSpacer: ElementRef;
 
-  targetUserId: string = '';
   networkService = Network
   gameRoomService = ObjectStore.instance;
   help: string = '';
@@ -88,7 +87,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   peerStatus(peerID: string) :string {
-    let count = PeerCursor.myCursor.keepalive[this.findUserId(peerID)]
+    let count = PeerCursor.myCursor.keepalive[peerID];
     if (count < -5) return '#F00';
     if (count < -1) return '#FF0';
     return '#0F0';
@@ -160,11 +159,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
         Network.connect(context.peerId);
       }
     });
-  }
-
-  findUserId(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.userId : '';
   }
 
   findPeerName(peerId: string) {

@@ -3,8 +3,8 @@
         ➡
         <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
           <option value="" class="not-specified">全員</option>
-          <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
-            <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
+          <option *ngFor="let player of otherPlayers" value="{{player.playerId}}" [style.color]="player.color" style="font-weight: bolder;">{{player.name}}
+            <ng-container *ngIf="player === myPlayer">（あなた）</ng-container>
           </option>
         </select>
   </div>

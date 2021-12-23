@@ -30,12 +30,7 @@ export class ChatPalette extends ObjectNode {
     if (this.paletteColor && this.paletteColor != '#ffffff') {
       return this.paletteColor;
     }
-    if (window.localStorage 
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) 
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
-    }
-    return PeerCursor.CHAT_DEFAULT_COLOR;
+    return PeerCursor.myCursor.player.color;
   }
   set color(color: string) {
     this.paletteColor = color;

@@ -1,7 +1,7 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { PeerCursor } from '@udonarium/peer-cursor';
+import { Player } from '@udonarium/player';
 
 interface ContextMenuPoint {
   x: number,
@@ -45,7 +45,7 @@ export class ContextMenuService {
   title: string = '';
   actions: ContextMenuAction[] = [];
   position: ContextMenuPoint = { x: 0, y: 0 };
-  titleColor: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  titleColor: string = Player.CHAT_DEFAULT_COLOR;
   titleBold: boolean = false;
 
   constructor(
@@ -82,7 +82,7 @@ export class ContextMenuService {
     if (titleColor) {
       childPanelService.titleColor = titleColor;
     } else {
-      childPanelService.titleColor = PeerCursor.CHAT_DEFAULT_COLOR;
+      childPanelService.titleColor = Player.CHAT_DEFAULT_COLOR;
     }
     childPanelService.titleBold = titleBold;
 

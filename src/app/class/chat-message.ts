@@ -2,9 +2,9 @@ import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { Network } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
+import { Player } from './player';
 import { PeerCursor } from './peer-cursor';
 import { formatDate } from '@angular/common';
 
@@ -87,8 +87,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
   get index(): number { return this.minorIndex + this.timestamp; }
   get isDirect(): boolean { return 0 < this.sendTo.length ? true : false; }
-  get isSendFromSelf(): boolean { return this.from === Network.peerContext.userId || this.originFrom === Network.peerContext.userId; }
-  get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(Network.peerContext.userId)) || this.isSendFromSelf ? true : false; }
+  get isSendFromSelf(): boolean { return this.from === this.getMyId || this.originFrom === this.getMyId; }
+  get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(this.getMyId)) || this.isSendFromSelf ? true : false; }
   get isDisplayable(): boolean { return this.isDirect ? this.isRelatedToMe : true; }
   get isSystem(): boolean { return -1 < this.tags.indexOf('system') ? true : false; }
   get isDicebot(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
@@ -106,6 +106,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 
   //とりあえず
   private locale = 'en-US';
+  private getMyId = PeerCursor.myCursor.player.playerId;
   
   logFragment(logForamt: number, tabName: string=null, dateFormat='HH:mm', noImage=true) {
     if (logForamt == 0) {
@@ -147,7 +148,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       if (this.isFumble) messageTextClassNames.push('is-fumble');
     }
 
-    const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
+    const color = StringUtil.escapeHtml(this.color ? this.color : Player.CHAT_DEFAULT_COLOR);
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
     let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 

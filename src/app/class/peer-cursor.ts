@@ -13,16 +13,16 @@ export class PeerCursor extends GameObject {
   @SyncVar() userId: UserId = '';
   @SyncVar() peerId: PeerId = '';
   @SyncVar() playerIdentifier: string ;
-  
-  get player() :Player {
-    return ObjectStore.instance.get(this.playerIdentifier)
-  }
 
-  static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
-  static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
-  
-  static readonly CHAT_DEFAULT_COLOR = '#444444';
-  static readonly CHAT_TRANSPARENT_COLOR = '#ffffff';
+  _player: Player;
+  needUpdate: boolean = true;
+  get player() :Player {
+    if (this.needUpdate) {
+      this._player = ObjectStore.instance.get(this.playerIdentifier)
+      this.needUpdate = false;
+    }
+    return this._player;
+  }
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
@@ -32,7 +32,6 @@ export class PeerCursor extends GameObject {
   keepaliveAging() {
     Object.keys(this.keepalive).forEach(key => {
       this.keepalive[key] -= 1;
-      if (this.keepalive[key] < -180 ) delete this.keepalive[key];
     });  
     
   }
@@ -48,6 +47,7 @@ export class PeerCursor extends GameObject {
     if (!this.isMine) {
       EventSystem.register(this)
         .on('DISCONNECT_PEER', -1000, event => {
+          if (this.keepalive[event.data.peerId]) delete this.keepalive[event.data.peerId] ;
           if (event.data.peerId !== this.peerId) return;
           PeerCursor.userIdMap.delete(this.userId);
           PeerCursor.peerIdMap.delete(this.peerId);
@@ -114,7 +114,4 @@ export class PeerCursor extends GameObject {
     super.apply(context);
   }
 
-  isPeerAUdon(): boolean {
-    return /u.*d.*o.*n/ig.exec(this.peerId) != null;
-  }
 }

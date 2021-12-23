@@ -8,6 +8,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { PlayerService } from 'service/player.service';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -129,6 +130,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   constructor(
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService,
+    private playerService: PlayerService,
     private ngZone: NgZone
   ) { }
 
@@ -364,7 +366,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get senderColor() {
-    let ret = PeerCursor.CHAT_DEFAULT_COLOR;
+    let ret = this.playerService.CHAT_DEFAULT_COLOR;
     if (!this.sender) return ret;
     let object = PeerCursor.findByPeerId(this.sender);
     if (object instanceof PeerCursor) {

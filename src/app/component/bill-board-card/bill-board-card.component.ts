@@ -1,10 +1,9 @@
-import { Component, OnInit , ViewChild, ElementRef,AfterViewInit } from '@angular/core';
+import { Component, OnInit , AfterViewInit } from '@angular/core';
 import { BillBoardCard } from '@udonarium/bill-board-card';
 import { BillBoardService } from 'service/bill-board.service';
 import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 import { ModalService } from 'service/modal.service';
-import { TextViewComponent } from 'component/text-view/text-view.component';
 import { RoomService } from 'service/room.service';
 import { EventSystem } from '@udonarium/core/system';
 import { Buffer } from 'buffer';

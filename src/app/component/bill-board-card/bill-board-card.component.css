@@ -14,14 +14,8 @@
   flex-direction: row;
 }
 
-.password-box {
-  width:180px;
-  display: flex;
-  flex-direction: row;
-}
-
 .peer-select {
- 
+  width : 100%;
   font-size: 12px;
 }
 

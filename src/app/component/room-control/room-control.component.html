@@ -57,7 +57,7 @@
   </div>
   <div class="flex-item">
     <div class="title">ルーム管理者</div>
-    <div *ngIf="!roomService.roomAdmin.adminPassword; else enablePW">ルームマスター機能は無効になっています。</div>
+    <div *ngIf="!roomService.adminAuth; else admin">一般ユーザーとしてログインしています</div>
   </div>
   <div class="flex-item">
     <div class="title">ルーム設定</div>
@@ -75,18 +75,8 @@
   </div>
 </div>
 
-<ng-template #enablePW>
-  ルームマスター機能有効です
-  <div *ngIf="adminAuth; else auth">
-    ルームマスターとして認証済みです。
-  </div>
-</ng-template>
-<ng-template #auth>
-  <div>
-     <label class="control-text">ルームマスターパスワードを入力することで認証可能です。</label>
-  </div>
-  <input style="height: 1em;width: 8em;" type="text" [(ngModel)]="password">
-  <button (click)="passwordAuth()">認証</button>
+<ng-template #admin>
+  ルーム管理者としてログインしています。
 </ng-template>
 <ng-template #editSetting>
       <div class="toggle"><label>データアップロード禁止(キャラクター以外)

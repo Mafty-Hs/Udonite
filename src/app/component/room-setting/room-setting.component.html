@@ -9,7 +9,6 @@
       <input name="roomAdmin" type="checkbox" [(ngModel)]="roomAdmin">
       <div><div></div></div>
     </label></div>
-    <span *ngIf="roomAdmin">ルームマスターパスワード<input [(ngModel)]="adminPassword" maxlength="10" placeholder="入力必須"/></span>
   </div>
   <div>デフォルトダイスボット:<br>   
     <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 20em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
@@ -43,11 +42,8 @@
   <div *ngIf="!validateLength">
     ルームの名前とパスワードの合計が長すぎるようです。どちらかを少し短くしてみてください。
   </div>
-  <div *ngIf="roomAdmin && adminPassword.length < 1">
-    ルームマスター権限を利用する時はルームマスターパスワードの設定は必須です。
-  </div>
   <div>
-    <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength || (roomAdmin && adminPassword.length < 1)" (click)="createRoom()">新しいルームを作成</button>
+    <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength" (click)="createRoom()">新しいルームを作成</button>
     <button (click)="cancel()">キャンセル</button>
   </div>
 </div>

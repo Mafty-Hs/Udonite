@@ -28,7 +28,6 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   isPrivate: boolean = false;
 
   roomAdmin:boolean = false;
-  adminPassword:string = "";
 
   get peerId(): string { return Network.peerId; }
   get isConnected(): boolean { return Network.peerIds.length <= 1 ? false : true; }
@@ -59,7 +58,7 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   }
 
   createRoom() {
-    this.roomService.create(this.roomName, this.password, this.adminPassword);
+    this.roomService.create(this.roomName, this.password, this.roomAdmin);
     this.roomService.isLobby = false;
   }
 }

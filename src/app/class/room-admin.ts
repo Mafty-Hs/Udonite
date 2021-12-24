@@ -8,8 +8,7 @@ import { Player } from './player';
 export class RoomAdmin extends ObjectNode implements InnerXml{
 
 //この情報は個別の部屋に紐付け保存させない
-  @SyncVar() adminPassword:string;
-  @SyncVar() adminPeers:string[];
+  @SyncVar() adminPlayer:string[];
   @SyncVar() disableTableLoad:boolean;
   @SyncVar() disableCharacterLoad:boolean;
   @SyncVar() disableTableSetting:boolean;
@@ -25,8 +24,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   private static _instance:RoomAdmin;
 
   private static defaultSetting = {
-    adminPassword: "", 
-    adminPeers: [], 
+    adminPlayer: [], 
     disableTableLoad: false,
     disableCharacterLoad: false,
     disableTableSetting: false,
@@ -70,6 +68,10 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
     return RoomAdmin.instance.getchild.filter(object => 
       (object instanceof Player)
     ) as Player[];
+  }
+
+  static auth(playerId :string) :boolean{
+    return RoomAdmin.instance.adminPlayer.includes(playerId);
   }
 
   static findPlayerById(playerId: string): Player {

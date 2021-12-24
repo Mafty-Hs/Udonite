@@ -24,24 +24,16 @@ export class RoomService {
     return SHA256(password).toString();
   }
   
-  enableAdmin(text :string) {
-    this.roomAdmin.adminPassword = this.getHash(text);
-    this.roomAdmin.adminPeers.push(this.playerService.myPeer.identifier);
+  enableAdmin() {
+    this.roomAdmin.adminPlayer.push(this.playerService.myPlayer.playerId);
   }
-  
-  adminPasswordAuth(text :string) {
-   if (this.roomAdmin.adminPassword == this.getHash(text)) {
-    this.roomAdmin.adminPeers.push(this.playerService.myPeer.identifier);
-   }
-  } 
-  
+   
   get roomAdmin():RoomAdmin {
     return RoomAdmin.setting;
   }
   
   get adminAuth():boolean {
-    if (this.roomAdmin.adminPeers.includes(this.playerService.myPeer.identifier)) return true;
-    return false;
+    return RoomAdmin.auth(this.playerService.myPlayer.playerId);
   }
   
   get disableTableLoad():boolean {
@@ -71,11 +63,11 @@ export class RoomService {
   }
  
    //ルーム作成
-  create(roomName: string ,password: string ,adminPassword?: string) {
+  create(roomName: string ,password: string ,admin?: boolean) {
     let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
     Network.open(userId, PeerContext.generateId('***'), roomName, password);
     PeerCursor.myCursor.peerId = Network.peerId;
-    if (adminPassword) this.enableAdmin(adminPassword); 
+    if (admin) this.enableAdmin(); 
   }
 
   connect(peerContexts :PeerContext[], password? :string) {

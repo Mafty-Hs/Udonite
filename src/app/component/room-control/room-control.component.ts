@@ -57,12 +57,7 @@ export class RoomControlComponent implements OnInit {
     EventSystem.unregister(this);
   }
 
-  passwordAuth() {
-    this.roomService.adminPasswordAuth(this.password);
-    this.panelService.close;
-  }
-
-  helpRoomControl() {
+    helpRoomControl() {
       let gameHelp:string[] =
       [
       'デフォルトダイスボット\n  プレイヤーがログインしたときのデフォルトのダイスボットを変更します。\n  ログイン中のプレイヤーには反映されません。',

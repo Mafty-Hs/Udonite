@@ -7,9 +7,8 @@ export interface BillBoardCardContext {
   text: string;
   dataType:string;
   ownerName: string;
-  ownerPeers: string[];
-  ownerPassword?: string;
-  allowPeers?: string[];
+  ownerPlayer: string[];
+  allowPlayers?: string[];
 }
 
 @SyncObject('bill-board-card')
@@ -18,7 +17,6 @@ export class BillBoardCard extends ObjectNode {
   @SyncVar() text: string;
   @SyncVar() dataType:string;
   @SyncVar() ownerName: string;
-  @SyncVar() ownerPeers: string[];
-  @SyncVar() ownerPassword: string;
-  @SyncVar() allowPeers: string[];
+  @SyncVar() ownerPlayer: string[];
+  @SyncVar() allowPlayers: string[];
 }

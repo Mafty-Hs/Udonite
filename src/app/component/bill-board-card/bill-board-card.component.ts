@@ -23,18 +23,11 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   password:string = "";
   title:string = "";
   text:string = "";
-  allowPlayerName :string[];
-  peers:string[] = [];
+  allowPlayerName :string[] = [];
+  players:string[] = [];
 
+  player:string = "";
 
-  peer:string = "";
-
-  get otherPeerName(): { name: string, color: string }[]  {
-    return [];
-  }
-  get otherPeers() {
-    return this.playerService.otherPeers;
-  }
   _card:BillBoardCard;
   get card():BillBoardCard { return this._card;}
   set card(card :BillBoardCard) {
@@ -49,21 +42,20 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     else {
       this.text = this.decode(card.text);
     }
-    this.peers = card.allowPeers;
-    this.allowPlayerName = this.peers.map( identifier => {
-      let peer = this.playerService.getPeer(identifier);
-      if (peer) return peer.player.name;
-    });
+    this.players = card.allowPlayers;
+    this.allowPlayerName = this.playerService.otherPlayers
+      .filter( player => 
+        this.players.includes(player.playerId)
+      )
+      .map( player => {
+        return player.name
+      });
   }
 
   create() {
     let identifier :string;
     if (this.dataType) {
-      if (!this.password) {
-        this.modalService.open(TextViewComponent, { title: 'パスワードが設定されていません', text: 'パスワードが設定されていません。\n接続が切れたとき・部屋を再作成した時に権限情報は全て失われるため、パスワードが必要になります。' });
-        return;
-      }
-      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.getHash(this.password),this.peers);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.players);  
     }
     else {
       identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType);  
@@ -96,35 +88,17 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
 
   }
 
-  addPeer() {
-    if (!this.peers.includes(this.peer)) {
-      this.peers.push(this.peer);
-      this.allowPlayerName.push(this.playerService.getPeer(this.peer).player.name);
+  addPlayer() {
+    if (!this.players.includes(this.player)) {
+      this.players.push(this.player);
+      this.allowPlayerName.push(this.playerService.getPlayerById(this.player).name);
     }
-  }
-
-  passwordAuth() {
-    if (this.card.ownerPassword == this.getHash(this.password)) {
-      this.readOnly = false;
-      this.isSecret = false;
-      this.text = this.decode(this.card.text);
-      this.card.ownerPeers.push(this.playerService.myPeer.identifier);
-    }
-    else {
-      this.modalService.open(TextViewComponent, { title: '認証失敗', text: 'パスワードが違います' });
-    }
-    this.password = '';
   }
 
   auth():boolean {
-    return ( (this.card.ownerPeers.includes(this.playerService.myPeer.identifier)) 
-     || (this.card.allowPeers.includes(this.playerService.myPeer.identifier)) );
+    return ( (this.card.ownerPlayer.includes(this.playerService.myPlayer.playerId)) 
+     || (this.card.allowPlayers.includes(this.playerService.myPlayer.playerId)) );
   }
-
-  getHash(password: string) {
-    return this.roomService.getHash(password);
-  }
-
 
   encode(text: string):string {
     return Buffer.from(text).toString('base64') ;

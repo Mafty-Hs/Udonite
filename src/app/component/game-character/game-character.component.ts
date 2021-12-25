@@ -14,7 +14,7 @@ import {
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -687,7 +687,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         {
           name: '個人インベントリ', action: () => {
             EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
-            this.gameCharacter.setLocation(Network.peerId);
+            this.gameCharacter.setLocation(this.playerService.myPlayer.playerId);
             SoundEffect.play(PresetSound.piecePut);
           }
         },

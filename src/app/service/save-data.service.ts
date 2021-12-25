@@ -19,6 +19,7 @@ import * as Beautify from 'vkbeautify';
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { ChatTab } from '@udonarium/chat-tab';
 import { CutInList } from '@udonarium/cut-in-list';
+import { RoomAdmin } from '@udonarium/room-admin';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -32,11 +33,11 @@ export class SaveDataService {
     private ngZone: NgZone
   ) { }
 
-  saveRoomAsync(fileName: string = 'fly_ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+  saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveRoomAsync(fileName, updateCallback)));
   }
 
-  private _saveRoomAsync(fileName: string = 'fly_ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+  private _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
@@ -46,6 +47,7 @@ export class SaveDataService {
     let cutInXml = this.convertToXml(CutInList.instance);
     let billBoardXml = this.convertToXml(BillBoard.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
+    let roomAdmin = this.convertToXml(RoomAdmin.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
     files.push(new File([roundXml], 'round.xml', { type: 'text/plain' }));
@@ -54,6 +56,7 @@ export class SaveDataService {
     files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
     files.push(new File([cutInXml], 'cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
+    files.push(new File([roomAdmin], 'roomAdmin.xml', { type: 'text/plain' }));
 
     //files = files.concat(this.searchImageFiles(roomXml));
     //files = files.concat(this.searchImageFiles(chatXml));

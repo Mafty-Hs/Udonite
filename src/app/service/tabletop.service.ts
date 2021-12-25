@@ -30,6 +30,7 @@ import { CounterService } from './counter.service';
 import { BillBoardService } from './bill-board.service';
 
 import { CoordinateService } from './coordinate.service';
+import { RoomAdmin } from '@udonarium/room-admin';
 
 type ObjectIdentifier = string;
 type LocationName = string;
@@ -140,7 +141,9 @@ export class TabletopService {
           this.counterService.loadCounter(gameObject);
         } else if (gameObject instanceof BillBoard) {
           this.billBoardService.loadCard(gameObject);
-        }
+        } else if (gameObject instanceof RoomAdmin) {
+          this.roomService.loadRoom(gameObject);
+        };
       });
   }
 

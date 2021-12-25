@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem} from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
@@ -74,14 +74,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       })
       .on('UPDATE_INVENTORY', event => {
         if (event.isSendFromSelf) this.changeDetector.markForCheck();
-      })
-      .on('OPEN_NETWORK', event => {
-        this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
-        if (!this.inventoryTypes.includes(this.selectTab)) {
-          this.selectTab = Network.peerId;
-        }
       });
-    this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
+    this.inventoryTypes = ['table', 'common', this.playerService.myPlayer.playerId, 'graveyard'];
   }
 
   ngAfterViewInit() {
@@ -95,7 +89,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     switch (inventoryType) {
       case 'table':
         return 'テーブル';
-      case Network.peerId:
+      case this.playerService.myPlayer.playerId:
         return '個人';
       case 'graveyard':
         return '墓場';
@@ -108,7 +102,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     switch (inventoryType) {
       case 'table':
         return this.inventoryService.tableInventory;
-      case Network.peerId:
+      case this.playerService.myPlayer.playerId:
         return this.inventoryService.privateInventory;
       case 'graveyard':
         return this.inventoryService.graveyardInventory;
@@ -335,7 +329,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     let locations = [
       { name: 'table', alias: 'テーブル' },
       { name: 'common', alias: '共有インベントリ' },
-      { name: Network.peerId, alias: '個人インベントリ' },
+      { name: this.playerService.myPlayer.playerId, alias: '個人インベントリ' },
       { name: 'graveyard', alias: '墓場' }
     ];
     actions.push({

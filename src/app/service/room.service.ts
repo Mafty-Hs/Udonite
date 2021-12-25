@@ -6,6 +6,8 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PlayerService } from 'service/player.service';
 import * as SHA256 from 'crypto-js/sha256';
+import { GameObject } from '@udonarium/core/synchronize-object/game-object';
+import { Player } from '@udonarium/player';
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +114,35 @@ export class RoomService {
       Network.open();
       PeerCursor.myCursor.peerId = Network.peerId;
     }
+  }
+
+  //部屋の読み込み
+  loadRoom(roomData :RoomAdmin) {
+    let dataHasPlayer:boolean = false;
+    for (let data of roomData.children) {
+      if (data instanceof RoomAdmin) {
+        RoomAdmin.setting.chatTab = data.chatTab;
+        RoomAdmin.setting.cardLog = data.cardLog;
+        RoomAdmin.setting.diceLog = data.diceLog;
+      }
+      else if (data instanceof Player){
+        dataHasPlayer = true;
+        let player = new Player();
+        player.initialize();
+        for (let key in data) {
+          if (key === 'identifier') continue;
+          if (key === 'authType') {
+            player.setAttribute(key, Number(data[key]));
+          }
+          if (data[key] == null || data[key] === '') continue;
+          else {
+            player.setAttribute(key, data[key]);
+          }
+        }
+        RoomAdmin.instance.appendChild(player);
+      }
+    }
+    if (dataHasPlayer) EventSystem.call('PLAYER_LOADED',null)
   }
 
 }

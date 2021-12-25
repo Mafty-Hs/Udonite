@@ -3,6 +3,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
+import { PlayerService } from './player.service';
 import { DataSummarySetting, SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
 import { TabletopObject } from '@udonarium/tabletop-object';
@@ -16,6 +17,8 @@ type ElementName = string;
 })
 export class GameObjectInventoryService {
   private get summarySetting(): DataSummarySetting { return DataSummarySetting.instance; }
+  private get myPlayerId():string { return this.playerService.myPlayer.playerId}
+  
 
   get sortTag(): string { return this.summarySetting.sortTag; }
   set sortTag(sortTag: string) { this.summarySetting.sortTag = sortTag; }
@@ -27,7 +30,7 @@ export class GameObjectInventoryService {
 
   tableInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'table'; });
   commonInventory: ObjectInventory = new ObjectInventory(object => { return !this.isAnyLocation(object.location.name); });
-  privateInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === Network.peerId; });
+  privateInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === this.myPlayerId; });
   graveyardInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'graveyard'; });
 
   indicateAll: boolean = false;
@@ -38,7 +41,9 @@ export class GameObjectInventoryService {
   readonly newLineString: string = '/';
   readonly newLineDataElement: DataElement = DataElement.create(this.newLineString);
 
-  constructor() {
+  constructor(
+    private playerService: PlayerService
+  ) {
     this.initialize();
   }
 
@@ -132,13 +137,10 @@ export class GameObjectInventoryService {
   }
 
   private isAnyLocation(location: string): boolean {
-    if (location === 'table' || location === Network.peerId || location === 'graveyard') return true;
-    for (let conn of Network.peerContexts) {
-      if (conn.isOpen && location === conn.peerId) {
-        return true;
-      }
-    }
-    return false;
+    if (location === 'table' || location === this.myPlayerId || location === 'graveyard') return true;
+    return  Boolean(this.playerService.otherPlayers.find(player =>
+      location === player.playerId  
+    ));
   }
 }
 

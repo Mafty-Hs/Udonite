@@ -9,6 +9,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { ChatMessageService } from 'service/chat-message.service';
+import { PlayerService } from 'service/player.service';
 
 import { PanelOption, PanelService } from 'service/panel.service';
 
@@ -21,12 +22,13 @@ import { PanelOption, PanelService } from 'service/panel.service';
 export class CardStackListComponent implements OnInit, OnDestroy {
   @Input() cardStack: CardStack = null;
 
-  owner: string = Network.peerContext.userId;
+  owner: string = this.playerService.myPlayer.playerId;
 
   constructor(
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private playerService: PlayerService,
   ) { }
 
   ngOnInit() {

@@ -2,7 +2,6 @@ import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { Network } from './core/system';
 import { DataElement } from './data-element';
-import { PeerCursor } from './peer-cursor';
 import { TabletopObject } from './tabletop-object';
 import { moveToTopmost } from './tabletop-object-util';
 
@@ -15,7 +14,6 @@ export enum CardState {
 export class Card extends TabletopObject {
   @SyncVar() state: CardState = CardState.FRONT;
   @SyncVar() rotate: number = 0;
-  @SyncVar() owner: string = '';
   @SyncVar() zindex: number = 0;
 
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
@@ -50,19 +48,8 @@ export class Card extends TabletopObject {
     return this.getCommonValue('color', '#555555');
   }
   set color(color: string) { this.setCommonValue('color', color); }
-
-  get ownerName(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.name : '';
-  }
-
-  get ownerColor(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.color : '#444444';
-  }
-  
-  get hasOwner(): boolean { return 0 < this.owner.length; }
-  get isHand(): boolean { return Network.peerContext.userId === this.owner; }
+ 
+  get isHand(): boolean { return this.isMine; }
   get isFront(): boolean { return this.state === CardState.FRONT; }
   get isVisible(): boolean { return this.isHand || this.isFront; }
 

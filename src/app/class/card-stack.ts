@@ -4,7 +4,6 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { EventSystem } from './core/system';
 import { DataElement } from './data-element';
-import { PeerCursor } from './peer-cursor';
 import { TabletopObject } from './tabletop-object';
 import { moveToTopmost } from './tabletop-object-util';
 
@@ -12,19 +11,9 @@ import { moveToTopmost } from './tabletop-object-util';
 export class CardStack extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() zindex: number = 0;
-  @SyncVar() owner: string = '';
   @SyncVar() isShowTotal: boolean = true;
 
   get name(): string { return this.getCommonValue('name', ''); }
-  get ownerName(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.name : '';
-  }
-  get ownerColor(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.color : '#444444';
-  }
-  get hasOwner(): boolean { return 0 < this.owner.length; }
 
   private get cardRoot(): ObjectNode {
     for (let node of this.children) {

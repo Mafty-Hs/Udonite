@@ -28,6 +28,7 @@ import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'ser
 import { ModalService } from 'service/modal.service';
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
+import { PlayerService } from 'service/player.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { ChatMessageService } from 'service/chat-message.service';
 
@@ -186,6 +187,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
+    private playerService: PlayerService,
     private imageService: ImageService,
     private modalService: ModalService,
     private chatMessageService: ChatMessageService
@@ -207,7 +209,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
           || (object instanceof ObjectNode && this.diceSymbol.contains(object))
-          || (object instanceof PeerCursor && object.userId === this.diceSymbol.owner)) {
+          || (object instanceof PeerCursor && object.player.playerId === this.diceSymbol.owner)) {
           this.changeDetector.markForCheck();
         }
       })
@@ -230,10 +232,6 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
-      })
-      .on('DISCONNECT_PEER', event => {
-        let cursor = PeerCursor.findByPeerId(event.data.peerId);
-        if (!cursor || this.diceSymbol.owner === cursor.userId) this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.diceSymbol,
@@ -334,7 +332,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isMine) {
       actions.push({
         name: `${this.isCoin ? 'コイン' : 'ダイス'}を伏せる`, action: () => {
-          this.owner = Network.peerContext.userId;
+          this.owner = this.playerService.myPlayer.playerId;;
           this.chatMessageService.sendOperationLog(`${this.diceSymbol.name} を伏せた`,"dice");
           SoundEffect.play(PresetSound.lock);
         }

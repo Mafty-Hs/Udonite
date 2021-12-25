@@ -19,7 +19,6 @@ export enum DiceType {
 @SyncObject('dice-symbol')
 export class DiceSymbol extends TabletopObject {
   @SyncVar() face: string = '0';
-  @SyncVar() owner: string = '';
   @SyncVar() rotate: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isLock: boolean = false;
@@ -45,18 +44,7 @@ export class DiceSymbol extends TabletopObject {
   }
   get nothingFaces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue == 'nothing').map(element => (element as DataElement).name); }
 
-  get ownerName(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.name : '';
-  }
-
-  get ownerColor(): string {
-    let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.player.color : '#444444';
-  }
-  
   get hasOwner(): boolean { return 0 < this.owner.length; }
-  get isMine(): boolean { return Network.peerContext.userId === this.owner; }
   get isVisible(): boolean { return !this.hasOwner || this.isMine; }
   get isCoin(): boolean { return this.faces.length === 2; }
 

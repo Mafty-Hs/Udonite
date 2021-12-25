@@ -128,7 +128,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('OPEN_NETWORK', event => {
         console.log('OPEN_NETWORK', event.data.peerId);
         PeerCursor.myCursor.peerId = Network.peerContext.peerId;
-        PeerCursor.myCursor.userId = Network.peerContext.userId;
       })
       .on('CLOSE_NETWORK', event => {
         console.log('CLOSE_NETWORK', event.data.peerId);

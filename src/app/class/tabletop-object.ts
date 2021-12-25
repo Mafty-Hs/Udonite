@@ -4,6 +4,8 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { DataElement } from './data-element';
+import { PeerCursor } from './peer-cursor';
+import { RoomAdmin } from './room-admin';
 
 export interface TabletopLocation {
   name: string;
@@ -13,6 +15,7 @@ export interface TabletopLocation {
 
 @SyncObject('TabletopObject')
 export class TabletopObject extends ObjectNode {
+  @SyncVar() owner?:string = '';
   @SyncVar() location: TabletopLocation = {
     name: 'table',
     x: 0,
@@ -29,6 +32,17 @@ export class TabletopObject extends ObjectNode {
   private _shadowImageFile: ImageFile = ImageFile.Empty;
   //private _faceIcon: ImageFile = null;
   private _dataElements: { [name: string]: string } = {};
+
+  get ownerName(): string {
+    let object = RoomAdmin.findPlayerById(this.owner);
+     return object ? object.name : '';
+  }
+  get ownerColor(): string {
+    let object = RoomAdmin.findPlayerById(this.owner);
+    return object ? object.color : '#444444';
+  }
+  get hasOwner(): boolean { return 0 < this.owner.length; }
+  get isMine(): boolean { return PeerCursor.myCursor.player.playerId === this.owner; }
 
   // GameDataElement getter/setter
   get rootDataElement(): DataElement {

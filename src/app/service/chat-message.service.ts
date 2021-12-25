@@ -161,7 +161,7 @@ export class ChatMessageService {
     }
     let chatTab = ObjectStore.instance.get<ChatTab>(this.roomService.roomAdmin.chatTab)
     if (chatTab) 
-     this.playerSend(chatTab ,text , "", Network.peerContext.userId ,"");
+     this.playerSend(chatTab ,text , "", this.playerService.myPlayer.playerId ,"");
   }
 
 }

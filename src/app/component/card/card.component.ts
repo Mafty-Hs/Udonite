@@ -29,6 +29,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { PlayerService } from 'service/player.service';
 import { TabletopService } from 'service/tabletop.service';
 import { ModalService } from 'service/modal.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -129,6 +130,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private tabletopService: TabletopService,
     private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService,
+    private playerService: PlayerService,
     private modalService: ModalService,
     private chatMessageService: ChatMessageService
   ) { }
@@ -140,7 +142,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.card || !object) return;
         if ((this.card === object)
           || (object instanceof ObjectNode && this.card.contains(object))
-          || (object instanceof PeerCursor && object.userId === this.card.owner)) {
+          || (object instanceof PeerCursor && object.player.playerId === this.card.owner)) {
           this.changeDetector.markForCheck();
         }
       })
@@ -149,10 +151,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
-      })
-      .on('DISCONNECT_PEER', event => {
-        let cursor = PeerCursor.findByPeerId(event.data.peerId);
-        if (!cursor || this.card.owner === cursor.userId) this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.card,
@@ -276,7 +274,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             SoundEffect.play(PresetSound.cardDraw);
             this.chatMessageService.sendOperationLog(`${this.card.isFront ? this.card.name : '伏せたカード'} を自分だけ見た`,"card");
             this.card.faceDown();
-            this.owner = Network.peerContext.userId;
+            this.owner = this.playerService.myPlayer.playerId;
           }
         }),
       ContextMenuSeparator,

@@ -12,24 +12,24 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 })
 export class PlayerService {
   //定義
-  static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
-  static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+  CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
+  CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
   
   CHAT_DEFAULT_COLOR = Player.CHAT_DEFAULT_COLOR;
   CHAT_TRANSPARENT_COLOR = Player.CHAT_TRANSPARENT_COLOR;
 
-  //パレットバインダー
-  //最終的にはプレイヤークラスを作ってそこで管理すべき
+  
   myPlayer:Player;
+  
+  //プレイヤーパレット
   localpalette: ChatPalette;
-  _paletteList: string[] = [];
   myPalette = null;
   
   get paletteList() {
-    return this._paletteList;
+    return this.myPlayer.paletteList;
   }
   set paletteList(paletteList :string[]) {
-    this._paletteList = paletteList;
+    this.myPlayer.paletteList = paletteList;
   }
 
   addList(identifier: string) {
@@ -54,8 +54,12 @@ export class PlayerService {
     let player = new Player();
     player.initialize();
     player.isInitial = true;
-    player.name = "プレイヤー";
-    player.color = Player.CHAT_DEFAULT_COLOR;
+    player.name =  (window.localStorage && localStorage.getItem(this.CHAT_MY_NAME_LOCAL_STORAGE_KEY)) ?
+      localStorage.getItem(this.CHAT_MY_NAME_LOCAL_STORAGE_KEY) :
+      "プレイヤー" ;
+    player.color = (window.localStorage && localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) ?
+      localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) :
+      Player.CHAT_DEFAULT_COLOR ;
     player.imageIdentifier = imageIdentifier;
     player.playerId = PeerContext.generateId();
     RoomAdmin.instance.appendChild(player);

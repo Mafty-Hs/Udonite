@@ -18,6 +18,7 @@ export class Player extends ObjectNode {
   @SyncVar() playerId: string = '';
   @SyncVar() authType: AuthType = AuthType.NONE;
   @SyncVar() password: string
+  @SyncVar() paletteList: string[] = [];
 
 
   isInitial :boolean = false;

@@ -40,7 +40,7 @@
       bcdiceサーバ
     </div>
     <div class="item-data">
-      <span *ngIf="this.diceBotService.isConnect; else disconnect">接続済み</span>
+      <span *ngIf="diceBotService.isConnect; else disconnect">version {{diceBotService.api.bcDiceVersion}}</span>
     </div>
   </div>
   <div class="flex-item" *ngIf="networkService.peerContext.isRoom">
@@ -61,15 +61,16 @@
   </div>
 </div>
 <hr/>
-<div *ngFor="let context of networkService.peerContexts">
-  <div>
-    <span *ngIf="!context.isOpen">[接続中]</span>
-    <span style="font-size: 12px;" [ngStyle]="{'color':peerStatus(context.peerId)}" class="material-icons">
-      light_mode
-    </span>
-    <span>他の参加者：{{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
+<ng-container *ngIf="networkService.peerContext.isRoom"> 
+  <div *ngFor="let peer of otherPeers">
+    <div>
+      <span style="font-size: 12px;" [ngStyle]="{'color':peerStatus(peer.peerId)}" class="material-icons">
+        light_mode
+      </span>
+      <span>他の参加者：{{peer.player.playerId}} [<b [style.color]="peer.player.color">{{peer.player.name}}</b>]</span>
+    </div>
   </div>
-</div>
+</ng-container>
 <div><span style="font-size: 12px;">{{help}}</span></div>
 <ng-template #disconnect>
   <span style="font-weight: bold;">未接続</span>

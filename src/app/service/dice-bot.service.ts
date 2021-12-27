@@ -211,6 +211,7 @@ export class DiceBotService {
     this.api.url = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
     this.api.version = 2
     let svcDiceBotSetting = new SvcDiceBotSetting;
+    svcDiceBotSetting.getBcDiceVersion();
     svcDiceBotSetting.loadDiceInfo();
     EventSystem.register(this)
       .on('SEND_MESSAGE', event => { this.diceRoll(event.data.messageIdentifier) });

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
@@ -28,18 +27,14 @@ import { Player } from '@udonarium/player';
   ]
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('idInput') idInput: ElementRef;
-  @ViewChild('idSpacer') idSpacer: ElementRef;
 
-  networkService = Network
-  gameRoomService = ObjectStore.instance;
+  networkService = Network;
   help: string = '';
   isCopied = false;
 
   get player():Player {
     return this.playerService.myPlayer;
   }
-  private _timeOutId;
 
   get myName(): string {
     return this.player.name;
@@ -60,7 +55,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(
-    private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
@@ -73,16 +67,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    EventSystem.register(this)
-      .on('OPEN_NETWORK', event => {
-        this.ngZone.run(() => { });
-        if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
-      });
-    if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px' 
   }
 
   ngOnDestroy() {
-    clearTimeout(this._timeOutId);
     EventSystem.unregister(this);
   }
 
@@ -101,73 +88,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       this.player.imageIdentifier = value;
     });
   }
-
-  private resetPeerIfNeeded() {
-    if (Network.peerContexts.length < 1) {
-      Network.open();
-      PeerCursor.myCursor.peerId = Network.peerId;
-    }
-  }
-
-  async connectPeerHistory() {
-    this.help = '';
-    let conectPeers: PeerContext[] = [];
-    let roomId: string = '';
-
-    for (let peerId of this.appConfigService.peerHistory) {
-      let context = PeerContext.parse(peerId);
-      if (context.isRoom) {
-        if (roomId !== context.roomId) conectPeers = [];
-        roomId = context.roomId;
-        conectPeers.push(context);
-      } else {
-        if (roomId !== context.roomId) conectPeers = [];
-        conectPeers.push(context);
-      }
-    }
-
-    if (roomId.length) {
-      console.warn('connectPeerRoom <' + roomId + '>');
-      let conectPeers: PeerContext[] = [];
-      let peerIds = await Network.listAllPeers();
-      for (let peerId of peerIds) {
-        console.log(peerId);
-        let context = PeerContext.parse(peerId);
-        if (context.roomId === roomId) {
-          conectPeers.push(context);
-        }
-      }
-      if (conectPeers.length < 1) {
-        this.help = '前回接続していたルームが見つかりませんでした。既に解散しているかもしれません。';
-        console.warn('Room is already closed...');
-        return;
-      }
-      Network.open(PeerContext.generateId(), conectPeers[0].roomId, conectPeers[0].roomName, conectPeers[0].password);
-    } else {
-      console.warn('connectPeers ' + conectPeers.length);
-      Network.open();
-    }
-
-    PeerCursor.myCursor.peerId = Network.peerId;
-
-    let listener = EventSystem.register(this);
-    listener.on('OPEN_NETWORK', event => {
-      console.log('OPEN_NETWORK', event.data.peerId);
-      EventSystem.unregisterListener(listener);
-      ObjectStore.instance.clearDeleteHistory();
-      for (let context of conectPeers) {
-        Network.connect(context.peerId);
-      }
-    });
-  }
-
-  findPeerName(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.player.name : '';
-  }
-
-  findPeerColor(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.player.color : '';
+  
+  get otherPeers():PeerCursor[] {
+    return this.playerService.otherPeers
   }
 }

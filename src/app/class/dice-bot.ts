@@ -29,6 +29,7 @@ export interface DiceRollResult {
 export interface api {
   url: string;
   version: number;
+  bcDiceVersion: string;
   retry:number;
   isConnect: boolean;
 }
@@ -47,5 +48,5 @@ export class DiceBot extends ObjectNode implements InnerXml {
 
   public diceBotInfos: DiceBotInfo[] = [];
   public diceBotInfosIndexed: DiceBotInfosIndexed[] = [];
-  public api:api = { url: "" ,version: 2 ,retry: 0 ,isConnect: false };  
+  public api:api = { url: '',version: 2, bcDiceVersion: '',retry: 0,isConnect: false };  
 }

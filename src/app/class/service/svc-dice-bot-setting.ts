@@ -6,6 +6,20 @@ export class SvcDiceBotSetting {
   private diceBotInfos = DiceBot.instance.diceBotInfos;
   private diceBotInfosIndexed = DiceBot.instance.diceBotInfosIndexed;
 
+  async getBcDiceVersion() {
+    let response:Response;
+    try {
+      response = await fetch(`${this.api.url}/v2/version`, {mode: 'cors'})
+      if (response.ok) {
+        let json = await response.json()
+        this.api.bcDiceVersion = json.bcdice;
+      }
+    }
+    catch {
+     console.log(response.statusText);
+    }
+  }
+
   async loadDiceInfo() {
     const controller = new AbortController();
     const timer = setTimeout(() => { controller.abort() }, 30000);

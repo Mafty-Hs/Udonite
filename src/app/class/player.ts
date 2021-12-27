@@ -17,7 +17,7 @@ export class Player extends ObjectNode {
   @SyncVar() peerIdentifier: string = '';
   @SyncVar() playerId: string = '';
   @SyncVar() authType: AuthType = AuthType.NONE;
-  @SyncVar() password: string
+  @SyncVar() password: string = ''
   @SyncVar() paletteList: string[] = [];
 
 

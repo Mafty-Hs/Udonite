@@ -89,6 +89,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
       this.playerService.myPlayer = this.selectedPlayer;
       PeerCursor.myCursor.playerIdentifier = this.selectedPlayer.identifier;
       PeerCursor.myCursor.needUpdate = true;
+      PeerCursor.myCursor.player.peerIdentifier = PeerCursor.myCursor.identifier;
       this.myPlayer.destroy();
     }
     this.roomService.roomState = RoomState.PLAY;

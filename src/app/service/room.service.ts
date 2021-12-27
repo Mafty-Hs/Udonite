@@ -160,8 +160,8 @@ export class RoomService {
         RoomAdmin.instance.appendChild(player);
       }
     }
-    console.log(this.allPlayers)
-    if (dataHasPlayer) EventSystem.call('PLAYER_LOADED',null)
+    roomData.destroy;
+    //if (dataHasPlayer) EventSystem.call('PLAYER_LOADED',null)
   }
 
 }

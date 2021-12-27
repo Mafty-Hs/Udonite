@@ -109,11 +109,13 @@ export class CounterService {
     this.round.currentInitiative = Number(object.currentInitiative);
     this.round.roundState = Number(object.roundState);
     this.round.initName = String(object.initName);
+    object.destroy;
   }
 
   loadCounter(object :CounterList){
     for (let counter of object.children as Counter[]) {
       this.create(counter.name,counter.desc,Boolean(counter._canDuplicate),Boolean(counter._isPermanent),Number(counter.age), counter.uniqueIdentifier) 
     }
+    object.destroy;
   }
 }

@@ -45,6 +45,7 @@ export class BillBoardService {
         allowPlayers: card.allowPlayers ? card.allowPlayers  : []
       });
     }
+    gameObject.destroy;
   }
   constructor(
     private playerService: PlayerService,

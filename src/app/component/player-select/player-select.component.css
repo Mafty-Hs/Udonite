@@ -1,0 +1,56 @@
+.box {
+  width: 100%;
+  font-size: 14px;
+  display:flex; 
+  flex-direction: column;
+  padding: 6px; 
+}
+
+.box-item {
+  margin: 0.6em;
+}
+
+.player {
+  width: 100%;
+  display:flex;
+  flex-flow: column nowrap; 
+  justify-content: flex-start;
+}
+
+.flex-item {
+  width: 100%;
+  display:flex; 
+  flex-flow: row wrap; 
+  justify-content:flex-start;
+  font-size: 14px;
+}
+.item-name {
+  width: 10em;
+}
+.item-data {
+  display:flex; 
+  flex-flow: row wrap; 
+  justify-content:flex-start;
+
+}
+
+.icon {
+  display: inline-block;
+  cursor: pointer; 
+  transition: 0.2s;
+}
+
+.image {
+  padding: 0px;
+  width: 64px;
+  height: 64px;
+  display: table-cell;
+  vertical-align: top;
+  border-radius: 0.6rem;
+}
+
+.cover {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

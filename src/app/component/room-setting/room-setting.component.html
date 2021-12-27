@@ -11,16 +11,20 @@
     </label></div>
   </div>
   <div>デフォルトダイスボット:<br>   
-    <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 20em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
+    <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 20em;" [(ngModel)]="roomService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
-   　<option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+    <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
   </select>
-  <select *ngIf="diceBotInfosIndexed.length > 0" style="width:20em;" [(ngModel)]="playerService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
+  <select *ngIf="diceBotInfosIndexed.length > 0" style="width:20em;" [(ngModel)]="roomService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
     <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
-     　<option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+      <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
     </optgroup>
   </select></div>
+  <div> 
+    <span style="font-size: 12px;">ルームデータのロード</span><br/>
+    <input type="file" name="roomdata" (change)="handleFileSelect($event)" accept="application/zip" />
+  </div>
   <div>
   <hr/>
   <div *ngIf="roomNameValidation.errors && (roomNameValidation.dirty || roomNameValidation.touched)">
@@ -44,6 +48,6 @@
   </div>
   <div>
     <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength" (click)="createRoom()">新しいルームを作成</button>
-    <button (click)="cancel()">キャンセル</button>
+    <button (click)="close()">キャンセル</button>
   </div>
 </div>

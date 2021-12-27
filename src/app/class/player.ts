@@ -3,11 +3,11 @@ import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 
-const AuthType = {
+export const AuthType = {
   NONE: 0,
   PASSWORD: 1
 } as const;
-type AuthType = typeof AuthType[keyof typeof AuthType]; 
+export type AuthType = typeof AuthType[keyof typeof AuthType]; 
 
 @SyncObject('player')
 export class Player extends ObjectNode {

@@ -27,6 +27,7 @@ import { RoomAdmin } from '@udonarium/room-admin';
 
 import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { DiceBotService } from 'service/dice-bot.service';
+import { LoadDataService } from 'service/load-data.service';
 import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PlayerService } from 'service/player.service';
@@ -44,7 +45,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   get isLobby():boolean {
-    return this.roomService.isLobby;
+    return this.roomService.roomAdmin.isLobby;
   }
 
   constructor(  
@@ -55,7 +56,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
     private playerService: PlayerService,
     private roomService: RoomService,
- 
+    private loadDataService: LoadDataService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -73,7 +74,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
-    
+    this.loadDataService.initialize();    
+
     IRound.init();
     BillBoard.init();
     RoomAdmin.init();

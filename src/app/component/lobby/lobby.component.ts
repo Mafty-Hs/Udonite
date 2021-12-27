@@ -3,10 +3,7 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { RoomService } from 'service/room.service';
-
-import { PasswordCheckComponent } from 'component/password-check/password-check.component';
-import { RoomSettingComponent } from 'component/room-setting/room-setting.component';
+import { RoomService , RoomState } from 'service/room.service';
 
 @Component({
   selector: 'lobby',
@@ -21,8 +18,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   isReloading: boolean = false;
   isConnecting: boolean = true;
-  isRoomCreate: boolean = false;
-  isEnterPassword: boolean = false;
   roomId: PeerContext[];
 
   help: string = '「一覧を更新」ボタンを押すと接続可能なルーム一覧を表示します。';
@@ -33,7 +28,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     return Network.peerIds.length <= 1 ? false : true;
   }
   constructor(
-    private roomService: RoomService,
+    public roomService: RoomService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     EventSystem.register(this)
@@ -62,7 +57,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   standalone() {
-    this.roomService.isLobby = false;
+    this.roomService.roomState = RoomState.PLAY;
+    this.roomService.isStandalone = true;
   }
 
   async reload() {
@@ -97,13 +93,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.roomId = peerContexts;
 
     if (context.hasPassword) {
-      this.isEnterPassword = true;
+      this.roomService.roomState = RoomState.PASSWORD;
       return;
     }
     this.roomService.connect(this.roomId,"");
   }
 
   showRoomSetting() {
-    this.isRoomCreate = true;
+    this.roomService.roomState = RoomState.CREATE;
   }
 }

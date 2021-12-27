@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, Input ,Output ,EventEmitter } from '@angu
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
-import { RoomService } from 'service/room.service';
+import { RoomService, RoomState } from 'service/room.service';
 
 @Component({
   selector: 'password-check',
@@ -12,8 +12,6 @@ import { RoomService } from 'service/room.service';
 export class PasswordCheckComponent implements OnInit, OnDestroy {
   password: string = '';
   help: string = '';
-  @Input() isEnterPassword:boolean = true;
-  @Output() isEnterPasswordChange = new EventEmitter<boolean>();
   @Input() roomId: PeerContext[];
   get room():PeerContext {return this.roomId[0];}
 
@@ -38,7 +36,7 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.isEnterPasswordChange.emit(false);
+    this.roomService.roomState = RoomState.LOBBY
   }
 
   onInputChange(value: string) {

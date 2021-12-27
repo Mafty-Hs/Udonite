@@ -7,6 +7,7 @@ import { AudioStorage } from './audio-storage';
 import { FileReaderUtil } from './file-reader-util';
 import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
+import { RoomAdmin } from '../../room-admin';
 
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
@@ -69,7 +70,7 @@ export class FileArchiver {
 
   private onDrop(event: DragEvent) {
     event.preventDefault();
-
+    if (RoomAdmin.setting.isLobby) return;
     console.log('onDrop', event.dataTransfer);
     let files = event.dataTransfer.files
     this.load(files);

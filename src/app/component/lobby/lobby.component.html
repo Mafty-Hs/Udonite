@@ -8,36 +8,23 @@
     </div>
     <div class="room-select">
       <ng-container *ngIf="!isConnecting; else connecting">
-      <ng-container *ngIf="!isRoomCreate; else roomCreate">
-      <ng-container *ngIf="!isEnterPassword; else password">
-        <table class="room-list">
-        <tr class="title">
-          <th style="width:5em">ルームID</th>
-          <th class="room-name">ルーム名</th>
-          <th style="width:5em">パスワード</th>
-          <th style="width:4em">参加者</th>
-          <th style="width:5em"></th>
-        </tr>
-        <ng-container *ngFor="let room of rooms">
-          <tr>
-            <td class="is-small-font">{{room.peerContexts[0]?.roomId}}</td>
-            <td class="room-name">{{room.roomName}}</td>
-            <td *ngIf="room.peerContexts[0].hasPassword">
-              <i class="material-icons" style="vertical-align: middle; font-size:0.9rem;">lock</i>
-            </td>
-            <td *ngIf="!room.peerContexts[0].hasPassword">-</td>
-            <td>{{room.peerContexts.length}}人</td>
-            <td>
-              <button [disabled]="room.peerContexts[0]?.roomId === currentRoom" *ngIf="0 < room.alias.length" type="submit" (click)="connect(room.peerContexts)">接続</button>
-            </td>
-          </tr>
-        </ng-container>
-      </table>
-    </ng-container>
-    </ng-container>
-    </ng-container>
+        <ng-container [ngSwitch]="roomService.roomState">
+          <ng-container *ngSwitchCase="0">
+            <ng-container *ngTemplateOutlet="roomList"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="1">
+            <ng-container *ngTemplateOutlet="password"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <ng-container *ngTemplateOutlet="roomCreate"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="3">
+            <ng-container *ngTemplateOutlet="playerSelect"></ng-container>
+          </ng-container>
+        </ng-container> 
+      </ng-container>
     </div>
-    <div *ngIf='!isConnecting && !isRoomCreate && !isEnterPassword' >
+    <div *ngIf='!isConnecting && roomService.roomState == 0' >
       <button (click)="reload()" [disabled]="isReloading">一覧を更新</button>
       <button (click)="showRoomSetting()">新規ルーム作成</button>
       <button (click)="standalone()">単独接続</button>
@@ -45,5 +32,32 @@
   </div>
 </div>
 <ng-template #connecting><span style="font-size: 12px;">現在接続中です。少々お待ち下さい</span></ng-template>
-<ng-template #roomCreate><room-setting [(isRoomCreate)]="isRoomCreate"></room-setting></ng-template>
-<ng-template #password><password-check [roomId]="roomId" [(isEnterPassword)]="isEnterPassword" ></password-check></ng-template>
+<ng-template #password><password-check [roomId]="roomId"></password-check></ng-template>
+<ng-template #roomList>
+  <table class="room-list">
+    <tr class="title">
+      <th style="width:5em">ルームID</th>
+      <th class="room-name">ルーム名</th>
+      <th style="width:5em">パスワード</th>
+      <th style="width:4em">参加者</th>
+      <th style="width:5em"></th>
+    </tr>
+    <ng-container *ngFor="let room of rooms">
+      <tr>
+        <td class="is-small-font">{{room.peerContexts[0]?.roomId}}</td>
+        <td class="room-name">{{room.roomName}}</td>
+        <td *ngIf="room.peerContexts[0].hasPassword">
+          <i class="material-icons" style="vertical-align: middle; font-size:0.9rem;">lock</i>
+        </td>
+        <td *ngIf="!room.peerContexts[0].hasPassword">-</td>
+        <td>{{room.peerContexts.length}}人</td>
+        <td>
+          <button [disabled]="room.peerContexts[0]?.roomId === currentRoom" *ngIf="0 < room.alias.length" type="submit" (click)="connect(room.peerContexts)">接続</button>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</ng-template>
+<ng-template #roomCreate><room-setting ></room-setting></ng-template>
+<ng-template #playerSelect><player-select></player-select></ng-template>
+

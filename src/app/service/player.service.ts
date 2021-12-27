@@ -14,6 +14,7 @@ export class PlayerService {
   //定義
   CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
   CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+  KEY_PHRASE_LOCAL_STORAGE_KEY = 'kake-udon-keyphrase-local-storage';
   
   CHAT_DEFAULT_COLOR = Player.CHAT_DEFAULT_COLOR;
   CHAT_TRANSPARENT_COLOR = Player.CHAT_TRANSPARENT_COLOR;

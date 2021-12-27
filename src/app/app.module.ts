@@ -89,6 +89,7 @@ import { InnerNoteComponent } from './component/inner-note/inner-note.component'
 import { PopupEditComponent } from './component/popup-edit/popup-edit.component';
 import { PopupComponent } from './component/popup/popup.component';
 import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
+import { PlayerSelectComponent } from './component/player-select/player-select.component';
 
 @NgModule({
   declarations: [
@@ -161,6 +162,7 @@ import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
     PopupEditComponent,
     PopupComponent,
     ChatEditComponent,
+    PlayerSelectComponent,
   ],
   imports: [
     BrowserModule,

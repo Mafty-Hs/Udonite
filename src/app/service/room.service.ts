@@ -6,19 +6,37 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PlayerService } from 'service/player.service';
 import * as SHA256 from 'crypto-js/sha256';
-import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { Player } from '@udonarium/player';
+
+export const RoomState = {
+  LOBBY: 0,
+  PASSWORD: 1,
+  CREATE: 2,
+  PLAYER_SELECT: 3,
+  PLAY: 4
+} as const;
+export type RoomState = typeof RoomState[keyof typeof RoomState]; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
 
-  isLobby:boolean = true;
+  _roomState:RoomState = RoomState.LOBBY;
+  get roomState():RoomState {return this._roomState}
+  set roomState(roomState :RoomState) {
+    if (roomState === RoomState.PLAY) RoomAdmin.setting.isLobby = false;
+    this._roomState = roomState;
+  }
+  isStandalone:boolean = false;
 
   constructor(
     private playerService: PlayerService,
   ) { }
+
+  get allPlayers():Player[] {
+    return RoomAdmin.players;
+  }
 
   //権限管理
 
@@ -91,7 +109,7 @@ export class RoomService {
             console.log('接続成功！', event.data.peerId);
             triedPeer.push(event.data.peerId);
             console.log('接続成功 ' + triedPeer.length + '/' + peerContexts.length);
-            this.isLobby = false;
+            this.roomState = RoomState.PLAYER_SELECT;
             if (peerContexts.length <= triedPeer.length) {
               this.resetNetwork();
               EventSystem.unregister(triedPeer);
@@ -142,6 +160,7 @@ export class RoomService {
         RoomAdmin.instance.appendChild(player);
       }
     }
+    console.log(this.allPlayers)
     if (dataHasPlayer) EventSystem.call('PLAYER_LOADED',null)
   }
 

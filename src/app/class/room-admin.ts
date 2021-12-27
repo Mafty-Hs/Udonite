@@ -7,7 +7,6 @@ import { Player } from './player';
 @SyncObject('room-admin')
 export class RoomAdmin extends ObjectNode implements InnerXml{
 
-//この情報は個別の部屋に紐付け保存させない
   @SyncVar() adminPlayer:string[];
   @SyncVar() disableTableLoad:boolean;
   @SyncVar() disableCharacterLoad:boolean;
@@ -20,6 +19,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() chatTab:string;
   @SyncVar() diceLog:boolean;
   @SyncVar() cardLog:boolean;
+  isLobby:boolean = true;
 
   private static _instance:RoomAdmin;
 

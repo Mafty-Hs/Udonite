@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
-import { ChatTab } from '@udonarium/chat-tab';
-import { ChatTabList } from '@udonarium/chat-tab-list';
-import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { CutIn } from '@udonarium/cut-in';
-import { CutInList } from '@udonarium/cut-in-list';
-import { DiceRollTable } from '@udonarium/dice-roll-table';
-import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
@@ -20,17 +13,10 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
-import { CounterList } from '@udonarium/counter-list';
-import { BillBoard } from '@udonarium/bill-board';
-import { Round } from '@udonarium/round';
-import { Room } from '@udonarium/room';
 import { Popup } from '@udonarium/popup';
 import { RoomService } from './room.service';
-import { CounterService } from './counter.service';
-import { BillBoardService } from './bill-board.service';
 
 import { CoordinateService } from './coordinate.service';
-import { RoomAdmin } from '@udonarium/room-admin';
 
 type ObjectIdentifier = string;
 type LocationName = string;
@@ -77,8 +63,6 @@ export class TabletopService {
 
   constructor(
     private coordinateService: CoordinateService,
-    private counterService: CounterService,
-    private billBoardService: BillBoardService,
     private roomService: RoomService
   ) {
     this.initialize();
@@ -110,40 +94,14 @@ export class TabletopService {
           this.refreshCache(garbage.aliasName);
         }
       })
-      .on('XML_LOADED', event => {
-        let xmlElement: Element = event.data.xmlElement;
-        // todo:立体地形の上にドロップした時の挙動
-        
-        if (this.roomService.disableTableLoad) {
-          if(xmlElement.nodeName != 'character') return 
-        }
-        if (this.roomService.disableCharacterLoad) {
-          if(xmlElement.nodeName == 'character') return 
-        }
-
-        let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
-        if (gameObject instanceof TabletopObject) {
+      .on('TABLETOP_OBJECT_LOADED', event => {
+          let gameObject = ObjectStore.instance.get(event.data) as TabletopObject;
           let pointer = this.coordinateService.calcTabletopLocalCoordinate();
           gameObject.location.x = pointer.x - 25;
           gameObject.location.y = pointer.y - 25;
           gameObject.posZ = pointer.z;
           this.placeToTabletop(gameObject);
           SoundEffect.play(PresetSound.piecePut);
-        } else if (gameObject instanceof ChatTab) {
-          ChatTabList.instance.addChatTab(gameObject);
-        } else if (gameObject instanceof DiceRollTable) {
-          DiceRollTableList.instance.addDiceRollTable(gameObject);
-        }  else if (gameObject instanceof CutIn) {
-          CutInList.instance.addCutIn(gameObject);
-        } else if (gameObject instanceof Round) {
-          this.counterService.loadRound(gameObject);
-        } else if (gameObject instanceof CounterList) {
-          this.counterService.loadCounter(gameObject);
-        } else if (gameObject instanceof BillBoard) {
-          this.billBoardService.loadCard(gameObject);
-        } else if (gameObject instanceof RoomAdmin) {
-          this.roomService.loadRoom(gameObject);
-        };
       });
   }
 

@@ -153,7 +153,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (object instanceof PeerCursor) {
       return object.player.color;
     }
-    return this.playerService.CHAT_DEFAULT_COLOR;
+    return this.playerService.CHAT_BLACKTEXT_COLOR;
   }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }

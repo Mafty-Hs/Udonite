@@ -366,7 +366,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get senderColor() {
-    let ret = this.playerService.CHAT_DEFAULT_COLOR;
+    let ret = this.playerService.CHAT_BLACKTEXT_COLOR
     if (!this.sender) return ret;
     let object = PeerCursor.findByPeerId(this.sender);
     if (object instanceof PeerCursor) {

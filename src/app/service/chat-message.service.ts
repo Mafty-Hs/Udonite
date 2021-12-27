@@ -140,7 +140,7 @@ export class ChatMessageService {
   }
 
   colorValidation(color :string):string {
-    return color !== this.playerService.CHAT_DEFAULT_COLOR ? color : ""; 
+    return color !== this.playerService.CHAT_WHITETEXT_COLOR ? color : ""; 
   }
 
   private makeMessageName(name: string, sendTo: string): string {

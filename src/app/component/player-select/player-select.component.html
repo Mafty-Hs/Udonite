@@ -68,14 +68,14 @@
         プレイヤーを選択
       </div>
       <div class="item-data">
-        <select name="saved" style="width:10em"  [ngStyle]="{'color': selectedPlayer.color }" [(ngModel)]="selectedPlayer" >
+        <select name="saved" style="width:10em"  [ngStyle]="{'color': selectecPlayer ? selectedPlayer.color : '#FFF' }" [(ngModel)]="selectedPlayer" >
           <option *ngFor="let player of allPlayers" value="player" [style.color]="player.color" style="font-weight: bolder;">
             {{player.name}}
           </option>
         </select>
       </div>
     </div>
-    <div class="flex-item" *ngIf="selectedPlayer.authType == 1">
+    <div class="flex-item" *ngIf="selectecPlayer && selectedPlayer.authType == 1">
       <div class="item-name">
         パスワード認証が必要です
       </div>

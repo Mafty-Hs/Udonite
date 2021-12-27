@@ -58,11 +58,17 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     return this.gameCharacterService.list(onlyTable);
   }  
 
+  colorValication(color :string) :string {
+    return (color == Player.CHAT_WHITETEXT_COLOR && !this.isBlack) ? Player.CHAT_BLACKTEXT_COLOR : color;
+  }
+
   getColor():string {
+    let color:string = Player.CHAT_WHITETEXT_COLOR;
     if(this.character) {
-      return this.gameCharacterService.color(this.sendFrom) 
+      color = this.gameCharacterService.color(this.sendFrom) 
     }
-    else return this.myColor;
+    else color = this.myColor;
+    return this.colorValication(color);
   }
 
   get myColor(): string {

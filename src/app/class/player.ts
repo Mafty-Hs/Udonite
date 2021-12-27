@@ -13,7 +13,7 @@ export type AuthType = typeof AuthType[keyof typeof AuthType];
 export class Player extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
-  @SyncVar() color: string = Player.CHAT_DEFAULT_COLOR;
+  @SyncVar() color: string = Player.CHAT_WHITETEXT_COLOR;
   @SyncVar() peerIdentifier: string = '';
   @SyncVar() playerId: string = '';
   @SyncVar() authType: AuthType = AuthType.NONE;
@@ -22,8 +22,8 @@ export class Player extends ObjectNode {
 
 
   isInitial :boolean = false;
-  static readonly CHAT_DEFAULT_COLOR = '#444444';
-  static readonly CHAT_TRANSPARENT_COLOR = '#ffffff';
+  static readonly CHAT_BLACKTEXT_COLOR = '#444444';
+  static readonly CHAT_WHITETEXT_COLOR = '#ffffff';
 
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
 

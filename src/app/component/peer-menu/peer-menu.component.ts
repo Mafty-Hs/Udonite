@@ -56,7 +56,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   colorReset() {
-    this.myColor = Player.CHAT_DEFAULT_COLOR;
+    this.myColor = this.playerService.CHAT_WHITETEXT_COLOR;
   }
 
   constructor(

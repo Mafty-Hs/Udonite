@@ -16,8 +16,8 @@ export class PlayerService {
   CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
   KEY_PHRASE_LOCAL_STORAGE_KEY = 'kake-udon-keyphrase-local-storage';
   
-  CHAT_DEFAULT_COLOR = Player.CHAT_DEFAULT_COLOR;
-  CHAT_TRANSPARENT_COLOR = Player.CHAT_TRANSPARENT_COLOR;
+  CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
+  CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
 
   
   myPlayer:Player;
@@ -60,7 +60,7 @@ export class PlayerService {
       "プレイヤー" ;
     player.color = (window.localStorage && localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) ?
       localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) :
-      Player.CHAT_DEFAULT_COLOR ;
+      this.CHAT_WHITETEXT_COLOR ;
     player.imageIdentifier = imageIdentifier;
     player.playerId = PeerContext.generateId();
     RoomAdmin.instance.appendChild(player);
@@ -83,11 +83,10 @@ export class PlayerService {
 
   get myColor():string {
     if (this.myPlayer
-      && this.myPlayer.color
-      && this.myPlayer.color != Player.CHAT_TRANSPARENT_COLOR) {
+      && this.myPlayer.color) {
       return this.myPlayer.color;
     }
-    return Player.CHAT_DEFAULT_COLOR;
+    return this.CHAT_WHITETEXT_COLOR;
   }
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -127,7 +126,7 @@ export class PlayerService {
     let peer = PeerCursor.findByPeerId(peerId);
       return {
         name: (peer ? peer.player.name : ''),
-        color: (peer ? peer.player.color : this.CHAT_TRANSPARENT_COLOR),
+        color: (peer ? peer.player.color : this.CHAT_WHITETEXT_COLOR),
       };
   }
 

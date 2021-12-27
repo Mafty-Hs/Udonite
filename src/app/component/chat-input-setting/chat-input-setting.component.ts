@@ -247,11 +247,11 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
       && this.character.chatPalette.paletteColor) {
       return this.character.chatPalette.paletteColor;
     }
-    return this.playerService.CHAT_TRANSPARENT_COLOR; 
+    return this.playerService.CHAT_WHITETEXT_COLOR;
   }
 
   set paletteColor(color: string) {
-    this.character.chatPalette.color = color ? color : this.playerService.CHAT_TRANSPARENT_COLOR;
+    this.character.chatPalette.color = color ? color : this.playerService.CHAT_WHITETEXT_COLOR;
   }
 
   waitLoadDiceBot() {

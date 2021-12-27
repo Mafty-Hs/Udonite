@@ -36,7 +36,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     return this.playerService.myPlayer.color;
   }
   set myColor(color: string) {
-    this.playerService.myPlayer.color = (color == this.playerService.CHAT_TRANSPARENT_COLOR) ? this.playerService.CHAT_DEFAULT_COLOR : color;
+    this.playerService.myPlayer.color = color;
     if (window.localStorage) {
       localStorage.setItem(this.playerService.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, this.playerService.myPlayer.color);
     }

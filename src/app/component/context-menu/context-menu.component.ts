@@ -15,7 +15,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
-  @Input() titleColor: string = this.playerService.CHAT_DEFAULT_COLOR;
+  @Input() titleColor: string = this.playerService.CHAT_BLACKTEXT_COLOR;
   @Input() titleBold = false;
 
   @Input() isSubmenu: boolean = false;

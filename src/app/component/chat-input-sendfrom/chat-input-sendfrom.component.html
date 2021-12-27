@@ -1,10 +1,10 @@
 <div class="selecter">
   <div *ngIf="!touched && !isLock ;else images">
     <select name="sendFrom" class="select" (change)="touch()" [(ngModel)]="sendFrom"
-     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': (getColor() === '#444444') && isBlack  ? '#FFF' : getColor() , 'font-weight': (sendFrom != player?.peerIdentifier ? 'normal' : 'bolder')}">
-       <option value="{{player?.peerIdentifier}}" [style.color]=" (myColor === '#444444') && isBlack  ? '#FFF' : myColor" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
+     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': getColor() , 'font-weight': (sendFrom != player?.peerIdentifier ? 'normal' : 'bolder')}">
+       <option value="{{player?.peerIdentifier}}" [style.color]="colorValication(myColor)" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
        <option *ngFor="let gameCharacter of gameCharacters" 
-          [style.color]="(this.gameCharacterService.color(gameCharacter.identifier) === '#444444') && isBlack  ? '#FFF' : this.gameCharacterService.color(gameCharacter.identifier)" 
+          [style.color]="colorValication(this.gameCharacterService.color(gameCharacter.identifier))" 
          value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
        </option>
     </select>
@@ -31,7 +31,7 @@
     </ng-template>
 </ng-template>
 <ng-template #characterName>
-  <span class="name" [style.color]="(getColor() === '#444444') && isBlack  ? '#FFF' : getColor()"  [ngStyle]="{'background-color':isBlack ? 'rgba(30,30,30,0.8)' : 'rgba(200,200,200,0.8)' }">
+  <span class="name" [style.color]="getColor()"  [ngStyle]="{'background-color':isBlack ? 'rgba(30,30,30,0.8)' : 'rgba(200,200,200,0.8)' }">
     {{character.name}}
   </span>
   <span class="tag">▼</span>

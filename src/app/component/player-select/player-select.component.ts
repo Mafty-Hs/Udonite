@@ -13,8 +13,7 @@ import { PlayerService } from 'service/player.service';
   styleUrls: ['./player-select.component.css']
 })
 export class PlayerSelectComponent implements OnInit, AfterViewInit {
-  PlayerType = PlayerType;
-  playerType :PlayerType = PlayerType.NEW_PLAYER;
+  playerType :string = 'NEW';
   myPlayer :Player = this.playerService.myPlayer;
   selectedPlayer :string = this.myPlayer.identifier;
   password :string = '';
@@ -52,10 +51,20 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     return this.roomService.allPlayers
   }
 
+  get needAuth() :boolean {
+    return (this.getPlayer(this.selectedPlayer).authType == AuthType.PASSWORD);
+  }
+
+  get authSuccess() :boolean {
+    if (this.getPlayer(this.selectedPlayer).authType != AuthType.PASSWORD) return true;
+    if (this.getPlayer(this.selectedPlayer).password == this.roomService.getHash(this.password)) return true;
+    return false;
+  }
+
   get canConnect():boolean {
-    if (this.playerType === PlayerType.SAVED_PLAYER) {
+    if (this.playerType == 'SAVE') {
       if (this.selectedPlayer == this.myPlayer.identifier) return false;
-      if (this.getPlayer(this.selectedPlayer).authType == AuthType.PASSWORD && this.getPlayer(this.selectedPlayer).password !== this.roomService.getHash(this.password)) return false;
+      return this.authSuccess;
     }
     return true;
   }
@@ -82,7 +91,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
   }
 
   login() {
-    if (this.playerType == PlayerType.NEW_PLAYER) {
+    if (this.playerType == 'NEW') {
       if (this.password.length > 0) {
         this.playerService.myPlayer.authType = AuthType.PASSWORD;
         this.playerService.myPlayer.password = this.roomService.getHash(this.password);
@@ -91,7 +100,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
         }
       }
     }
-    else if (this.playerType == PlayerType.SAVED_PLAYER) {
+    else if (this.playerType == 'SAVE') {
       this.playerService.myPlayer = this.getPlayer(this.selectedPlayer);
       PeerCursor.myCursor.playerIdentifier = this.selectedPlayer;
       PeerCursor.myCursor.needUpdate = true;
@@ -102,9 +111,3 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
   }
 
 }
-
-const PlayerType = {
-  NEW_PLAYER: 1,
-  SAVED_PLAYER: 2
-} as const;
-type PlayerType = typeof PlayerType[keyof typeof PlayerType]; 

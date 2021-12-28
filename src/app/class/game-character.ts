@@ -17,7 +17,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
-  @SyncVar() _note:string = "";
 
   text = '';
   isEmote = false;
@@ -26,11 +25,19 @@ export class GameCharacter extends TabletopObject {
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
+  private get innerNote():InnerNote {
+    let note = this.children.find(child => child.getAttribute('name') == 'inner-note');
+    if (!note) {
+      note = this.appendChild(InnerNote.create('inner-note', '', { type: 'note', value: '' }, 'innernote_' + this.identifier));
+    }
+    return note as InnerNote;
+  }
+
   get note():string {
-    return this._note.replace('\\n','\n');
+    return this.innerNote.value + '';
   }
   set note(note :string) {
-    this._note = note.replace('\n','\\n');
+    this.innerNote.value = note;
   }
 
   get chatPalette(): ChatPalette {
@@ -151,4 +158,8 @@ export class GameCharacter extends TabletopObject {
     //敏捷A=10
     //格闘＝１`);
   }
+}
+
+class InnerNote extends DataElement {
+
 }

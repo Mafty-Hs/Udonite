@@ -2,12 +2,12 @@
   <div class="box-item">プレイ中に使用するプレイヤー情報を設定します。</div>
   <div class="box-item">
     <form name="playerType">
-      <input name="playerType" type="radio"  value={{PlayerType.NEW_PLAYER}} [(ngModel)]="playerType" >新規プレイヤー
-      <input name="playerType" type="radio"  value={{PlayerType.SAVED_PLAYER}} [(ngModel)]="playerType" >既存のプレイヤー
+      <input name="playerType" type="radio"  value="NEW" [(ngModel)]="playerType" >新規プレイヤー
+      <input name="playerType" type="radio"  value="SAVE" [(ngModel)]="playerType" >既存のプレイヤー
     </form>
   </div>
   <div class="box-item">
-    <div *ngIf="playerType == 1 ;else savedPlayer" class="player">
+    <div *ngIf="playerType == 'NEW' ;else savedPlayer" class="player">
       <div class="flex-item">
         <div class="item-name">
           プレイヤーアイコン
@@ -75,12 +75,12 @@
         </select>
       </div>
     </div>
-    <div class="flex-item" *ngIf="selectecPlayer != myPlayer && selectedPlayer.authType == 1">
+    <div class="flex-item" *ngIf="needAuth">
       <div class="item-name">
-        パスワード認証が必要です
+        パスワード
       </div>
-      <div class="item-data">
-        <input [(ngModel)]="password"/>
+      <div class="item-data" *ngIf="!authSuccess ;else Success">
+        <input [(ngModel)]="password"/><span style="color: red;font-size: 12px;">必須！</span>
       </div>
     </div>
   </div>
@@ -92,4 +92,9 @@
 </ng-template>
 <ng-template #self >
   プレイヤーを選択
+</ng-template>
+<ng-template #Success >
+  <div class="item-data">
+    認証に成功しました
+  </div>
 </ng-template>

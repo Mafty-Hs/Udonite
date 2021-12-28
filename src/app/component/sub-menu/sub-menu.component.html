@@ -38,13 +38,13 @@
       <li *ngIf="isOpen('room')" (click)="open('RoomControlComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">edit_attributes</i></div>
-          <div>ルーム共通</div>
+          <div>ルーム設定</div>
         </a>
       </li>
       <li *ngIf="isOpen('room')" (click)="open('PeerMenuComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">people</i></div>
-          <div>接続</div>
+          <div>プレイヤー情報</div>
         </a>
       </li>
       <li *ngIf="isOpen('room') && !disableTableSetting" (click)="open('GameTableSettingComponent')">

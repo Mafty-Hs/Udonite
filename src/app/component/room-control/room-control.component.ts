@@ -50,7 +50,7 @@ export class RoomControlComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.panelService.title = 'ルーム共通設定');
+    Promise.resolve().then(() => this.panelService.title = 'ルーム設定');
   }
 
   ngOnDestry() {

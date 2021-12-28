@@ -59,7 +59,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }  
 
   colorValication(color :string) :string {
-    return (color == Player.CHAT_WHITETEXT_COLOR && !this.isBlack) ? Player.CHAT_BLACKTEXT_COLOR : color;
+    return (color == Player.CHAT_BLACKTEXT_COLOR && !this.isBlack) ? Player.CHAT_BLACKTEXT_COLOR : color;
   }
 
   getColor():string {

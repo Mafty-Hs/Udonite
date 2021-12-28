@@ -2,8 +2,8 @@
   <div class="box-item">プレイ中に使用するプレイヤー情報を設定します。</div>
   <div class="box-item">
     <form name="playerType">
-      <input type="radio" name="playerType" [(ngModel)]="playerType" value=1 [checked]="playerType == 1">新規プレイヤー
-      <input type="radio" name="playerType" [(ngModel)]="playerType" value=2 [checked]="playerType == 2">既存のプレイヤー
+      <input name="playerType" type="radio"  value={{PlayerType.NEW_PLAYER}} [(ngModel)]="playerType" >新規プレイヤー
+      <input name="playerType" type="radio"  value={{PlayerType.SAVED_PLAYER}} [(ngModel)]="playerType" >既存のプレイヤー
     </form>
   </div>
   <div class="box-item">
@@ -62,20 +62,20 @@
 </div>
 
 <ng-template #savedPlayer >
-  <div class="player">
+  <div *ngIf="allPlayers.length > 1 ;else noPlayer" class="player">
     <div class="flex-item">
       <div class="item-name">
         プレイヤーを選択
       </div>
       <div class="item-data">
-        <select name="saved" style="width:10em"  [ngStyle]="{'color': selectecPlayer ? selectedPlayer.color : '#FFF' }" [(ngModel)]="selectedPlayer" >
-          <option *ngFor="let player of allPlayers" value="player" [style.color]="player.color" style="font-weight: bolder;">
-            {{player.name}}
+        <select name="saved" style="width:10em"  [ngStyle]="{'color': selectedPlayer.color }" [(ngModel)]="selectedPlayer" >
+          <option *ngFor="let player of allPlayers" value="{{player.identifier}}" [style.color]="player.color" style="font-weight: bolder;">
+            <span *ngIf="player != myPlayer ;else self">{{player.name}}</span> 
           </option>
         </select>
       </div>
     </div>
-    <div class="flex-item" *ngIf="selectecPlayer && selectedPlayer.authType == 1">
+    <div class="flex-item" *ngIf="selectecPlayer != myPlayer && selectedPlayer.authType == 1">
       <div class="item-name">
         パスワード認証が必要です
       </div>
@@ -84,4 +84,12 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #noPlayer >
+  保存されたプレイヤー情報がありません。<br>
+  データの読み込みに時間がかかっている可能性があります。<br>
+</ng-template>
+<ng-template #self >
+  プレイヤーを選択
 </ng-template>

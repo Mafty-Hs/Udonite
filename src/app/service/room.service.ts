@@ -149,6 +149,7 @@ export class RoomService {
         player.initialize();
         for (let key in data) {
           if (key === 'identifier') continue;
+          if (key === 'paletteList') continue;
           if (key === 'authType') {
             player.setAttribute(key, Number(data[key]));
           }

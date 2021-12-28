@@ -66,8 +66,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
     }
     else this.chatData.isCharacter = false;
     this.chatSetting.emit(this.chatData);
-    setTimeout(() => { this.canVisible()}, 500);
-  }
+    this.canVisible();
+  };
   get character(): GameCharacter { return this._character; }
 
   get sendTo(): string { return this.chatData.sendTo };

@@ -17,7 +17,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
-  @SyncVar() note:string = "";
+  @SyncVar() _note:string = "";
 
   text = '';
   isEmote = false;
@@ -25,6 +25,13 @@ export class GameCharacter extends TabletopObject {
   set name(value:string) { this.setCommonValue('name', value); }
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
+
+  get note():string {
+    return this._note.replace('\\n','\n');
+  }
+  set note(note :string) {
+    this._note = note.replace('\n','\\n');
+  }
 
   get chatPalette(): ChatPalette {
     for (let child of this.children) {

@@ -14,8 +14,21 @@ export class TextNote extends TabletopObject {
   @SyncVar() isOnlyPreview: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
-  get viewWidth(): number { return this.getCommonValue('viewWidth', 1); }
-  get height(): number { return this.getCommonValue('height', 1); }
+  
+  get viewWidth(): number { 
+    let element = this.getCommonValue('viewWidth', 1);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.appendChild(DataElement.create('viewWidth',  0, {}, 'viewWidth_' + this.identifier));
+    }
+    return element ? element  : 0;
+  }
+  get height(): number { 
+    let element = this.getCommonValue('height', 1);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.appendChild(DataElement.create('height',  0, {}, 'height_' + this.identifier));
+    }
+    return element ? element  : 0;
+  }
   get fontSize(): number { return this.getCommonValue('fontsize', 1); }
   get title(): string { return this.getCommonValue('title', ''); }
   get text(): string { return this.getCommonValue('text', ''); }

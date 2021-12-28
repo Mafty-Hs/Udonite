@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Player , AuthType} from '@udonarium/player';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { RoomService , RoomState } from 'service/room.service';
@@ -12,14 +13,19 @@ import { PlayerService } from 'service/player.service';
   styleUrls: ['./player-select.component.css']
 })
 export class PlayerSelectComponent implements OnInit, AfterViewInit {
-
+  PlayerType = PlayerType;
   playerType :PlayerType = PlayerType.NEW_PLAYER;
   myPlayer :Player = this.playerService.myPlayer;
-  selectedPlayer :Player;
+  selectedPlayer :string = this.myPlayer.identifier;
   password :string = '';
   savePW :boolean = false;
   get image() :ImageFile {
     return this.myPlayer.image;
+  }
+  getPlayer(identifier :string):Player {
+   let player = ObjectStore.instance.get(identifier)
+   if (player instanceof Player) return player;
+   return null;
   }
 
   get myName(): string {
@@ -48,8 +54,8 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
 
   get canConnect():boolean {
     if (this.playerType === PlayerType.SAVED_PLAYER) {
-      if (!this.selectedPlayer) return false;
-      if (this.selectedPlayer.authType == AuthType.PASSWORD && this.selectedPlayer.password !== this.roomService.getHash(this.password)) return false;
+      if (this.selectedPlayer == this.myPlayer.identifier) return false;
+      if (this.getPlayer(this.selectedPlayer).authType == AuthType.PASSWORD && this.getPlayer(this.selectedPlayer).password !== this.roomService.getHash(this.password)) return false;
     }
     return true;
   }
@@ -86,11 +92,11 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
       }
     }
     else if (this.playerType == PlayerType.SAVED_PLAYER) {
-      this.playerService.myPlayer = this.selectedPlayer;
-      PeerCursor.myCursor.playerIdentifier = this.selectedPlayer.identifier;
+      this.playerService.myPlayer = this.getPlayer(this.selectedPlayer);
+      PeerCursor.myCursor.playerIdentifier = this.selectedPlayer;
       PeerCursor.myCursor.needUpdate = true;
       PeerCursor.myCursor.player.peerIdentifier = PeerCursor.myCursor.identifier;
-      this.myPlayer.destroy();
+      if (this.myPlayer.isInitial) this.myPlayer.destroy();
     }
     this.roomService.roomState = RoomState.PLAY;
   }

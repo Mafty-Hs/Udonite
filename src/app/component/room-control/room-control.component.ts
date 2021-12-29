@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem ,Network } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
@@ -17,11 +17,26 @@ import { GameCharacterService } from 'service/game-character.service';
 })
 export class RoomControlComponent implements OnInit {
 
+  networkService = Network;
   alarmTime:number = 0;
   get myPeer(): PeerCursor { return this.playerService.myPeer; }
   get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   sendTo:string = "";
   password:string = "";
+
+  get isStandalone():boolean {
+    return this.roomService.isStandalone;
+  }
+  get enableAdmin():boolean {
+    return (this.roomService.roomAdmin.adminPlayer.length > 0);
+  } 
+
+  get adminPlayer():string {
+    let name:string = "";
+    for (let playerId of this.roomService.roomAdmin.adminPlayer)
+      name += this.playerService.getPlayerById(playerId).name + ' ';
+    return name;
+  }
 
   get chatTabs():ChatTab[] {
     return ChatTabList.instance.chatTabs;
@@ -51,6 +66,7 @@ export class RoomControlComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.resolve().then(() => this.panelService.title = 'ルーム設定');
+    this.panelService.isAbleFullScreenButton = false;
   }
 
   ngOnDestry() {
@@ -60,18 +76,16 @@ export class RoomControlComponent implements OnInit {
     helpRoomControl() {
       let gameHelp:string[] =
       [
-      'デフォルトダイスボット\n  プレイヤーがログインしたときのデフォルトのダイスボットを変更します。\n  ログイン中のプレイヤーには反映されません。',
-      'デフォルトキャラクター\n  新規キャラクターを作成するとき、指定したキャラクターのデータを引き継ぎます。\n  画像・立ち絵は初期化されます。',
-      '操作ログ\n  カード、ダイスの操作ログを出力するタブを指定します。',
-      'アラーム\n  通知音を鳴らします。',
-      'ルーム管理者\n  全プレイヤー共通の権限に加え、特別な権限をもったプレイヤーです。\n  この機能はルーム作成時にのみ有効化可能で、プレイヤーのピアIDで認証します。\n  接続が切れた場合、ルーム作成時に設定したパスワードでもう一度ルーム管理者になることができます。',
-      'ルーム管理権限でできること\n  データアップロード禁止(キャラクター以外)\n  データアップロード禁止(キャラクター)\n  テーブル設定禁止\n  チャットタブ設定禁止\n  部屋全データセーブ禁止\n  個別データセーブ禁止\n',
+        'ルーム基本情報\n  ログイン中のルーム情報です',
+        'ルーム設定\n  アラーム\n   通知音を鳴らします。\n  操作ログ\n   カード、ダイスの操作ログを出力するタブを指定します。\n  キャラクターテンプレート\n   新規キャラクターを作成するとき、指定したキャラクターのデータを引き継ぎます。\n   画像・立ち絵は初期化されます。',
+        'ルーム権限\n  ルームマスター以外のプレイヤーの操作を制限します。',
+        'ルーム権限でできること\n  データアップロード禁止(キャラクター以外)\n  データアップロード禁止(キャラクター)\n  テーブル設定禁止\n  チャットタブ設定禁止\n  部屋全データセーブ禁止\n  個別データセーブ禁止\n',
       ];     
 
       let coordinate = { x: 100, y: 100 };
       let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
       let textView = this.panelService.open(TextViewComponent, option);
-      textView.title = "ルーム共通設定説明";
+      textView.title = "ルーム設定説明";
       textView.text = gameHelp;
   }
 

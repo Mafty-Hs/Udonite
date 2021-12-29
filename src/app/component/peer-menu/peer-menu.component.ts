@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
@@ -32,8 +31,12 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   help: string = '';
   isCopied = false;
 
-  get player():Player {
+  get player():Player { 
     return this.playerService.myPlayer;
+  }
+
+  get myPeer():string {
+    return PeerCursor.myCursor.peerId;
   }
 
   get myName(): string {

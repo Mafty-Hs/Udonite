@@ -71,7 +71,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   }
 
   static auth(playerId :string) :boolean{
-    return RoomAdmin.instance.adminPlayer.includes(playerId);
+    return RoomAdmin.setting.adminPlayer.includes(playerId);
   }
 
   static findPlayerById(playerId: string): Player {

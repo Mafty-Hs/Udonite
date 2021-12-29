@@ -1,8 +1,21 @@
 .flex-box {
+  width: 97%;
+  display:flex;
+  flex-flow: column wrap; 
+  justify-content: flex-start;
+  font-size: 12px;
+  padding: 3px;
+
+}
+
+.room-info {
   width: 100%;
   display:flex;
   flex-flow: column wrap; 
   justify-content: flex-start;
+  margin: 3px 0;
+  border: dotted 2px #999;
+  border-radius: 5px;
 }
 
 .title {
@@ -15,8 +28,27 @@
 }
 
 .flex-item {
-  font-size:12px;
-  margin: 0.4em 0;
+  width: 100%;
+  display:flex; 
+  flex-flow: row nowrap; 
+  justify-content:flex-start;
+}
+.item-name {
+  width: 11em;
+}
+.item-data {
+  display:flex; 
+  flex-flow: column wrap; 
+  justify-content:flex-start;
+
+}
+
+.help {
+  width: 100%;
+  display:flex; 
+  flex-flow: row nowrap; 
+  margin: 6px;
+  justify-content:flex-end
 }
 
 .not-specified {

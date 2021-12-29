@@ -124,11 +124,12 @@ export class RoomService {
             console.log('接続成功！', event.data.peerId);
             triedPeer.push(event.data.peerId);
             console.log('接続成功 ' + triedPeer.length + '/' + peerContexts.length);
-            this.roomState = RoomState.PLAYER_SELECT;
             if (peerContexts.length <= triedPeer.length) {
               this.resetNetwork();
+              this.roomState = RoomState.LOBBY;
               EventSystem.unregister(triedPeer);
             }
+            this.roomState = RoomState.PLAYER_SELECT;
           })
           .on('DISCONNECT_PEER', event => {
             console.warn('接続失敗', event.data.peerId);
@@ -136,6 +137,7 @@ export class RoomService {
             console.warn('接続失敗 ' + triedPeer.length + '/' + peerContexts.length);
             if (peerContexts.length <= triedPeer.length) {
               this.resetNetwork();
+              this.roomState = RoomState.LOBBY;
               EventSystem.unregister(triedPeer);
             }
           });

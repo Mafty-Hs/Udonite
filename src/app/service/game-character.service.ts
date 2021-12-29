@@ -80,9 +80,9 @@ export class GameCharacterService {
   color(identifier: string) :string {
     let gameCharacter = this.get(identifier);
     if(gameCharacter) {
-      if(gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff')
+      if(gameCharacter.chatPalette && gameCharacter.chatPalette.color)
         return gameCharacter.chatPalette.color;
-      return '#444';
+      return this.playerService.CHAT_WHITETEXT_COLOR;
     }
     return null
   }

@@ -15,7 +15,7 @@
         <div class="item-data">
           <label class="icon">
             <img class="image covor" [src]="image.url | safe: 'resourceUrl'" />
-            <input type="file" name="icondata" (change)="changeIcon($event)" style="display: none;" accept=".gif, .png, .jpg, .jpeg">
+            <input type="file" name="icondata" (change)="changeIcon($event)" style="display: none;" accept="image/*">
           </label>
         </div>
       </div>

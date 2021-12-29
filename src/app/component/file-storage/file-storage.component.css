@@ -75,7 +75,7 @@
   font-size: smaller;
   margin-right: 3px;
   display: inline-block;
-  color: black;
+  color: white;
   font-weight: bolder;
 }
 .word-tag::before {

@@ -71,6 +71,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   }
 
   static auth(playerId :string) :boolean{
+    if (RoomAdmin.setting.adminPlayer.length < 1) return true;
     return RoomAdmin.setting.adminPlayer.includes(playerId);
   }
 

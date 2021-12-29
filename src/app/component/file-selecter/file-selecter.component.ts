@@ -11,6 +11,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { RoomService } from 'service/room.service';
 
 import { ImageTag } from '@udonarium/image-tag';
 import { ImageTagList } from '@udonarium/image-tag-list';
@@ -100,6 +101,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
+    public roomService: RoomService,
     private modalService: ModalService
   ) {
     this.isAllowedEmpty = this.modalService.option && this.modalService.option.isAllowedEmpty ? true : false;
@@ -203,7 +205,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
-      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+      if (window.confirm("非表示設定の画像を表示します。\nよろしいですか？")) {
         this.isShowHideImages = true;
       } else {
         this.isShowHideImages = false;

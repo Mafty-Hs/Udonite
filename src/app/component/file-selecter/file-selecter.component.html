@@ -1,6 +1,6 @@
 <div class="sticky-top">
   <div style="float: right; margin-top: 3px; margin-right: 3px">
-    <label sytle="white-space: nowrap">
+    <label *ngIf="roomService.adminAuth" sytle="white-space: nowrap">
       <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
       <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
     </label>

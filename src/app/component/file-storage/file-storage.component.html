@@ -18,7 +18,7 @@
     </label>
   </div>
   <span class="word-selecter">
-    <label>
+    <label *ngIf="roomService.adminAuth"> 
       <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
       <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
     </label>

@@ -6,6 +6,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem, Network } from '@udonarium/core/system';
 
 import { PanelService } from 'service/panel.service';
+import { RoomService } from 'service/room.service';
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { ImageTag } from '@udonarium/image-tag';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
@@ -106,11 +107,12 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private panelService: PanelService
+    private panelService: PanelService,
+    public roomService: RoomService,
   ) { }
   
   ngOnInit() {
-    Promise.resolve().then(() => this.panelService.title = 'ファイル一覧');
+    Promise.resolve().then(() => this.panelService.title = '画像一覧');
     this.searchWords = this.allImagesOwnWords;
     //FileStorageComponent.sortOrder = [null].concat(this.searchWords);
     this.panelId = UUID.generateUuid();
@@ -252,7 +254,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
-      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+      if (window.confirm("非表示設定の画像を表示します。\nよろしいですか？")) {
         this.isShowHideImages = true;
       } else {
         this.isShowHideImages = false;
@@ -262,7 +264,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setectedImagesToHidden(toHidden: boolean) {
-    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません）" : ''}。\nよろしいですか？`)) return;
+    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（ルーム管理権限が有効の場合、ルームマスターだけが表示可能です。無効の場合、誰でもチェックを有効にすることによって表示されます。）" : ''}。\nよろしいですか？`)) return;
     for (const image of this.selectedImageFiles) {
       const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
       imageTag.hide = toHidden;

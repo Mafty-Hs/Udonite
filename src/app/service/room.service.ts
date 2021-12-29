@@ -7,6 +7,8 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PlayerService } from 'service/player.service';
 import * as SHA256 from 'crypto-js/sha256';
 import { Player } from '@udonarium/player';
+import { GameTable } from '@udonarium/game-table';
+import { TableSelecter } from '@udonarium/table-selecter';
 
 export const RoomState = {
   LOBBY: 0,
@@ -83,6 +85,19 @@ export class RoomService {
   }
  
    //ルーム作成
+  roomInit() {
+    let tableSelecter = new TableSelecter('tableSelecter');
+    tableSelecter.initialize();
+    let gameTable = new GameTable('gameTable');
+    gameTable.name = '最初のテーブル';
+    gameTable.imageIdentifier = "testTableBackgroundImage_image";
+    gameTable.width = 20;
+    gameTable.height = 15;
+    gameTable.initialize();
+
+    tableSelecter.viewTableIdentifier = gameTable.identifier;
+  }
+
   create(roomName: string ,password: string ,admin?: boolean) {
     let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
     Network.open(userId, PeerContext.generateId('***'), roomName, password);

@@ -107,6 +107,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let standNoIconImage = ImageStorage.instance.add(fileContext);
     ImageTag.create(standNoIconImage.identifier).tag = '*default スタンド';
 
+    
+    fileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
+    fileContext.url = './assets/images/BG10a_80.jpg';
+    let testBgFile: ImageFile = ImageStorage.instance.add(fileContext);
+    ImageTag.create(testBgFile.identifier).tag = '*default テーブル';
+
     this.playerService.playerCreate(noneIconImage.identifier);
 
      EventSystem.register(this)
@@ -152,6 +158,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.roomService.roomInit();
   }
 
   ngOnDestroy() {

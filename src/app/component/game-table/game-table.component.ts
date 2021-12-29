@@ -130,8 +130,6 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 50);
         this.removeFocus();
       });
-    this.tabletopActionService.makeDefaultTable();
-    this.tabletopActionService.makeDefaultTabletopObjects();
   }
 
   private _rightRotate(rotate: number, just: boolean=false): number {

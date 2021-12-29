@@ -15,6 +15,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() disableAllDataSave:boolean;
   @SyncVar() disableSeparateDataSave:boolean;
 
+  @SyncVar() roomLoad:boolean; 
   @SyncVar() gameType:string;
   @SyncVar() chatTab:string;
   @SyncVar() diceLog:boolean;
@@ -31,6 +32,7 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
     disableTabSetting: false,
     disableAllDataSave: false,
     disableSeparateDataSave: false,
+    roomLoad: true,
     gameType: "",
     chatTab: "",
     diceLog: false,

@@ -172,31 +172,6 @@ export class TabletopActionService {
     return cardStack;
   }
 
-  makeDefaultTable() {
-    let tableSelecter = new TableSelecter('tableSelecter');
-    tableSelecter.initialize();
-
-    let gameTable = new GameTable('gameTable');
-    let testBgFile: ImageFile = null;
-    let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
-    bgFileContext.url = './assets/images/BG10a_80.jpg';
-    testBgFile = ImageStorage.instance.add(bgFileContext);
-    ImageTag.create(testBgFile.identifier).tag = '*default テーブル';
-    gameTable.name = '最初のテーブル';
-    gameTable.imageIdentifier = testBgFile.identifier;
-    gameTable.width = 20;
-    gameTable.height = 15;
-    gameTable.initialize();
-
-    tableSelecter.viewTableIdentifier = gameTable.identifier;
-  }
-
-  makeDefaultTabletopObjects() {
-    let testCharacter: GameCharacter = null;
-    let testFile: ImageFile = null;
-    let fileContext: ImageContext = null;
-  }
-
   makeDefaultContextMenuActions(position: PointerCoordinate): ContextMenuAction[] {
     return [
       this.getCreateCharacterMenu(position),

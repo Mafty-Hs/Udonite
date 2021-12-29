@@ -19,6 +19,7 @@ import { GameTableMask } from '@udonarium/game-table-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { PopupEditComponent } from 'component/popup-edit/popup-edit.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -235,6 +236,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       },
       ContextMenuSeparator,
+      { name: 'メッセージを送信', action: () => {this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z) }}, 
       { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
     ], this.name);
   }
@@ -245,6 +247,11 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onMoved() {
     SoundEffect.play(PresetSound.cardPut);
+  }
+
+  private showPopup(x: number , y: number , z: number) {
+    let modal = this.modalService.open(PopupEditComponent, { x: x ,y: y,z: z});
+    
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

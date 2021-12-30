@@ -60,7 +60,7 @@
 
   
 <label>
-  <div class="drop-zone">
+  <div class="drop-zone" *ngIf="!roomService.disableAudioLoad">
     <div>
       <i class="material-icons large-font">playlist_add</i>
     </div>

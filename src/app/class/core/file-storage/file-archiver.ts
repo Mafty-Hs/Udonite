@@ -93,23 +93,27 @@ export class FileArchiver {
 
   private async handleImage(file: File) {
     if (file.type.indexOf('image/') < 0) return;
-    if (this.maxImageSize < file.size) {
-      console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
-      return;
+    if (!RoomAdmin.setting.disableImageLoad || RoomAdmin.auth) {
+      if (this.maxImageSize < file.size) {
+        console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        return;
+      }
+      console.log(file.name + ' type:' + file.type);
+      await ImageStorage.instance.addAsync(file);
     }
-    console.log(file.name + ' type:' + file.type);
-    await ImageStorage.instance.addAsync(file);
   }
 
   private async handleAudio(file: File) {
     if (file.type.indexOf('audio/') < 0) return;
-    if (this.maxAudioeSize < file.size) {
-      console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
-      return;
+    if (!RoomAdmin.setting.disableAudioLoad || RoomAdmin.auth) {
+       if (this.maxAudioeSize < file.size) {
+        console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        return;
+      }
+      console.log(file.name + ' type:' + file.type);
+      let audio = await AudioStorage.instance.addAsync(file);
+        EventSystem.trigger('ADD_AUDIO', { name: audio.name , identifier: audio.identifier});
     }
-    console.log(file.name + ' type:' + file.type);
-    let audio = await AudioStorage.instance.addAsync(file);
-      EventSystem.trigger('ADD_AUDIO', { name: audio.name , identifier: audio.identifier});
   }
 
   private async handleText(file: File): Promise<void> {

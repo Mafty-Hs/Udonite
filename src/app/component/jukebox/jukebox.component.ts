@@ -10,6 +10,7 @@ import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'app-jukebox',
@@ -59,6 +60,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+    public roomService: RoomService,
     private ngZone: NgZone
   ) { }
 

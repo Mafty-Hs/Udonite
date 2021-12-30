@@ -101,11 +101,14 @@
   </div>
   <div class="item-data">
     <div class="title">ルーム権限</div>
-    <div *ngIf="!adminAuth; else editSetting">
+    <div *ngIf="!adminAuth || roomService.roomAdmin.adminPlayer.length < 1; else editSetting">
      現在、下記の制御が有効になっています。
       <ul>
-        <li *ngIf="roomService.roomAdmin.disableTableLoad">データアップロード禁止(キャラクター以外)</li>
-        <li *ngIf="roomService.roomAdmin.disableCharacterLoad">データアップロード禁止(キャラクター)</li>
+        <li *ngIf="roomService.roomAdmin.disableRoomLoad">ルームデータアップロード禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableTabletopLoad">データアップロード禁止(オブジェクト)</li>
+        <li *ngIf="roomService.roomAdmin.disableObjectLoad">データアップロード禁止(その他)</li>
+        <li *ngIf="roomService.roomAdmin.disableImageLoad">画像アップロード禁止</li>
+        <li *ngIf="roomService.roomAdmin.disableAudioLoad">音楽アップロード禁止</li>
         <li *ngIf="roomService.roomAdmin.disableTableSetting">テーブル設定禁止</li>
         <li *ngIf="roomService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
         <li *ngIf="roomService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
@@ -123,29 +126,41 @@
 </ng-template>
 <ng-template #editSetting>
   <div>
-      <div class="toggle"><label>データアップロード禁止(キャラクター以外)
-        <input name="disableTableLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableLoad">
-        <div><div></div></div>
-      </label></div><br>
-      <div class="toggle"><label>データアップロード禁止(キャラクター)
-        <input name="disableCharacterLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableCharacterLoad">
-        <div><div></div></div>
-      </label></div><br>
-      <div class="toggle"><label>テーブル設定禁止
-        <input name="disableTableSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableSetting">
-        <div><div></div></div>
-      </label></div><br>
-      <div class="toggle"><label>チャットタブ設定禁止
-        <input name="disableTabSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabSetting">
-        <div><div></div></div>
-      </label></div><br>
-      <div class="toggle"><label>部屋全データセーブ禁止
-        <input name="disableAllDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAllDataSave">
-        <div><div></div></div>
-      </label></div><br>
-      <div class="toggle"><label>個別データセーブ禁止
-        <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableSeparateDataSave">
-        <div><div></div></div>
-      </label></div><br>
+    <div class="toggle"><label>ルームデータアップロード禁止
+      <input name="disableRoomLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableRoomLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>データアップロード禁止(オブジェクト)
+      <input name="disableTabletopLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabletopLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>データアップロード禁止(その他)
+      <input name="disableObjectLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableObjectLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>画像アップロード禁止
+      <input name="disableImageLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableImageLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>音楽アップロード禁止
+      <input name="disableAudioLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAudioLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>テーブル設定禁止
+      <input name="disableTableSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableSetting">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>チャットタブ設定禁止
+      <input name="disableTabSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabSetting">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>部屋全データセーブ禁止
+      <input name="disableAllDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAllDataSave">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>個別データセーブ禁止
+      <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableSeparateDataSave">
+      <div><div></div></div>
+    </label></div><br>
   </div>
 </ng-template>

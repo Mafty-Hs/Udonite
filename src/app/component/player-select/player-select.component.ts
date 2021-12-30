@@ -101,7 +101,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
       }
     }
     else if (this.playerType == 'SAVE') {
-      if (this.roomService.adminAuth) this.roomService.roomAdmin.adminPlayer = [this.getPlayer(this.selectedPlayer).playerId];
+      if (this.roomService.roomAdmin.adminPlayer.includes(this.myPlayer.playerId)) this.roomService.roomAdmin.adminPlayer = [this.getPlayer(this.selectedPlayer).playerId];
       this.playerService.myPlayer = this.getPlayer(this.selectedPlayer);
       PeerCursor.myCursor.playerIdentifier = this.selectedPlayer;
       PeerCursor.myCursor.needUpdate = true;

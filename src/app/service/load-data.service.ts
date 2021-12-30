@@ -40,10 +40,6 @@ export class LoadDataService {
     'summary-setting'
   ];
   tableTopNodeList:string[] = [
-    'game-table',
-    'chat-tab',
-    'cut-in',
-    'dice-roll-table',
     'character',
     'table-mask',
     'terrain',
@@ -52,20 +48,25 @@ export class LoadDataService {
     'card',
     'dice-symbol'
   ];
+  otherNodeList:string[] = [
+    'game-table',
+    'chat-tab',
+    'cut-in',
+    'dice-roll-table'
+  ];
 
   loadData(xmlElement :Element) {
     let nodeName = xmlElement.nodeName;
-    if (this.roomService.disableTableLoad) {
-      if(nodeName != 'character') return 
+    if (this.tableTopNodeList.includes(nodeName)) {
+      if (!this.roomService.disableTabletopLoad)
+        this.tabletopDataLoad(xmlElement ,nodeName);
     }
-    if (this.roomService.disableCharacterLoad) {
-      if(nodeName == 'character') return 
-    }
-    if (this.roomNodeList.includes(nodeName)) {
-      //if (this.roomService.isLobby || this.roomService.standalone)
+    else if (this.roomNodeList.includes(nodeName)) {
+      if (this.roomService.roomAdmin.isLobby || this.roomService.isStandalone || !this.roomService.roomAdmin.disableRoomLoad)
         this.roomDataLoad(xmlElement ,nodeName);
     }
-    else if (this.tableTopNodeList.includes(nodeName)) {
+    else if (this.otherNodeList.includes(nodeName)) {
+      if (!this.roomService.disableObjectLoad)
         this.tabletopDataLoad(xmlElement ,nodeName);
     }    
     return;

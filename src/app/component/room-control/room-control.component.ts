@@ -65,8 +65,7 @@ export class RoomControlComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.panelService.title = 'ルーム設定');
-    this.panelService.isAbleFullScreenButton = false;
+    Promise.resolve().then(() => { this.panelService.title = 'ルーム設定'; this.panelService.isAbleFullScreenButton = false });
   }
 
   ngOnDestry() {

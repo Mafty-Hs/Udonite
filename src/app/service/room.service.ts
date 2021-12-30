@@ -55,18 +55,33 @@ export class RoomService {
   }
   
   get adminAuth():boolean {
-    return RoomAdmin.auth(this.playerService.myPlayer.playerId);
+    return RoomAdmin.auth;
   }
   
-  get disableTableLoad():boolean {
-    if  (this.adminAuth) return false;
-    return this.roomAdmin.disableTableLoad as boolean;
+  get disableRoomLoad():boolean {
+     return this.roomAdmin.disableRoomLoad as boolean;
   }
   
-  get disableCharacterLoad():boolean {
+  get disableObjectLoad():boolean {
     if  (this.adminAuth) return false;
-    return this.roomAdmin.disableCharacterLoad as boolean;
+    return this.roomAdmin.disableObjectLoad as boolean;
   }
+
+  get disableTabletopLoad():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableTabletopLoad as boolean;
+  }
+  
+  get disableImageLoad():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableImageLoad as boolean;
+  }
+
+  get disableAudioLoad():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableAudioLoad as boolean;
+  }
+  
   get disableTableSetting():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTableSetting as boolean;

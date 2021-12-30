@@ -8,8 +8,11 @@ import { Player } from './player';
 export class RoomAdmin extends ObjectNode implements InnerXml{
 
   @SyncVar() adminPlayer:string[];
-  @SyncVar() disableTableLoad:boolean;
-  @SyncVar() disableCharacterLoad:boolean;
+  @SyncVar() disableRoomLoad:boolean;
+  @SyncVar() disableObjectLoad:boolean;
+  @SyncVar() disableTabletopLoad:boolean;
+  @SyncVar() disableImageLoad:boolean;
+  @SyncVar() disableAudioLoad:boolean;
   @SyncVar() disableTableSetting:boolean;
   @SyncVar() disableTabSetting:boolean;
   @SyncVar() disableAllDataSave:boolean;
@@ -21,13 +24,16 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() diceLog:boolean;
   @SyncVar() cardLog:boolean;
   isLobby:boolean = true;
-
+  myPlayerID:string = '';
   private static _instance:RoomAdmin;
 
   private static defaultSetting = {
     adminPlayer: [], 
-    disableTableLoad: false,
-    disableCharacterLoad: false,
+    disableRoomLoad: true,
+    disableObjectLoad: false,
+    disableTabletopLoad: false,
+    disableImageLoad: false,
+    disableAudioLoad: false,
     disableTableSetting: false,
     disableTabSetting: false,
     disableAllDataSave: false,
@@ -72,9 +78,9 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
     ) as Player[];
   }
 
-  static auth(playerId :string) :boolean{
+  static get auth() :boolean{
     if (RoomAdmin.setting.adminPlayer.length < 1) return true;
-    return RoomAdmin.setting.adminPlayer.includes(playerId);
+    return RoomAdmin.setting.adminPlayer.includes(RoomAdmin.setting.myPlayerID);
   }
 
   static findPlayerById(playerId: string): Player {

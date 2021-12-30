@@ -12,6 +12,8 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { EffectService } from 'service/effect.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
+import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -45,6 +47,8 @@ export class GameRoomComponent implements OnInit {
     private effectService: EffectService,
     private panelService: PanelService,
     private standService: StandService,
+    private playerService: PlayerService,
+    private roomService: RoomService,
     private standImageService: StandImageService,
   ) {
     this.audioService.initialize();
@@ -174,7 +178,7 @@ export class GameRoomComponent implements OnInit {
   }
 
   menuHelp(){
-　　　let gameHelp:string[] =
+    let gameHelp:string[] =
       [
       'ファイル\n  画像の管理、部屋データの保存、チャットログの保存ができます。',
       'ルーム\n  接続の管理、テーブルの管理ができます。',
@@ -195,6 +199,7 @@ export class GameRoomComponent implements OnInit {
     
 
   ngOnInit(): void {
+    this.roomService.roomAdmin.myPlayerID = this.playerService.myPlayer.playerId;
     EventSystem.register(this)
       .on('PLAY_CUT_IN', -1000, event => {
         let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);

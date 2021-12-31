@@ -64,6 +64,7 @@ export class SaveDataService {
     images = images.concat(this.searchImageFiles(roomXml));
     images = images.concat(this.searchImageFiles(chatXml));
     images = images.concat(this.searchImageFiles(cutInXml));
+    images = images.concat(this.searchImageFiles(billBoardXml));
     for (const image of images) {
       if (image.state === ImageState.COMPLETE) {
         files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
@@ -71,19 +72,19 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
 
-    files.push(new File([imageTagXml], 'fly_imageTag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
-  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'fly_xml_data', updateCallback?: UpdateCallback): Promise<void> {
+  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
   }
 
-  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'fly_xml_data', updateCallback?: UpdateCallback): Promise<void> {
+  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let xml: string = this.convertToXml(gameObject);
 
-    files.push(new File([xml], 'fly_data.xml', { type: 'text/plain' }));
+    files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
     //files = files.concat(this.searchImageFiles(xml));
     
     let images: ImageFile[] = [];
@@ -95,7 +96,7 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
     
-    files.push(new File([imageTagXml], 'fly_imageTag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 

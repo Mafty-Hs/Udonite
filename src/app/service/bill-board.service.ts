@@ -17,14 +17,15 @@ export class BillBoardService {
 
   } 
 
-  add(_title:string ,_text:string, _dataType: number, _allowPlayers?: string[]){
+  add(_title:string ,_text:string, _dataType: number, _allowPlayers?: string[], _imageIdentifier?: string){
     let result = this.billBoard.create({
         title: _title,
         text: _text,
         dataType:String(_dataType),
         ownerName: this.playerService.myPlayer.name,
         ownerPlayer: [this.playerService.myPlayer.playerId],
-        allowPlayers: _allowPlayers
+        allowPlayers: _allowPlayers,
+        imageIdentifier: _imageIdentifier? _imageIdentifier : ""
     });
     return result.identifier;
   }
@@ -42,7 +43,8 @@ export class BillBoardService {
         dataType:card.dataType,
         ownerName: card.ownerName,
         ownerPlayer: card.ownerPlayer ? card.ownerPlayer  : [],
-        allowPlayers: card.allowPlayers ? card.allowPlayers  : []
+        allowPlayers: card.allowPlayers ? card.allowPlayers  : [],
+        imageIdentifier: card.imageIdentifier ? card.imageIdentifier : "",
       });
     }
     gameObject.destroy;

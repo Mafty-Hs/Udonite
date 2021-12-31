@@ -9,6 +9,7 @@ export interface BillBoardCardContext {
   ownerName: string;
   ownerPlayer: string[];
   allowPlayers?: string[];
+  imageIdentifier: string;
 }
 
 @SyncObject('bill-board-card')
@@ -19,4 +20,9 @@ export class BillBoardCard extends ObjectNode {
   @SyncVar() ownerName: string;
   @SyncVar() ownerPlayer: string[];
   @SyncVar() allowPlayers: string[];
+  @SyncVar() imageIdentifier: string;
+
+  get isImage():boolean{
+    return this.imageIdentifier.length > 0;
+  }
 }

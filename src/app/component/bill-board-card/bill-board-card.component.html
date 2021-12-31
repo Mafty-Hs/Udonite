@@ -21,12 +21,20 @@
       </select>
       <button class="control-text" (click)="addPlayer()">追加</button>
     </div>
+    <div class="type-select">
+      <label>
+        <input name="type-select" type="checkbox" [(ngModel)]="isImage">
+        <div><div></div></div>
+      </label>
+    </div>
   </div>
-  <div class="item">
-    <form>
-      <textarea name="textArea" rows="20" cols="65" [readOnly]="!isEdit"  placeholder="本文" [(ngModel)]="text"></textarea>
-    </form>
-  </div>
+  <ng-container *ngIf="!isImage ;else imageBox">
+    <div class="item">
+      <form>
+        <textarea name="textArea" rows="20" cols="65" [readOnly]="!isEdit"  placeholder="本文" [(ngModel)]="text"></textarea>
+      </form>
+    </div>
+  </ng-container>
   <div class="control">
     <div>
       <p></p>
@@ -52,4 +60,14 @@
 </ng-template>
 <ng-template #showAuthority>
   <span style="font-size:14px">{{authType[dataType]}}</span>
+</ng-template>
+<ng-template #imageBox>
+  <div class="imageEdit" *ngIf="isEdit ;else image" [style.background-image]="'url(' + imageurl + ')' | safe: 'style' ">
+    <button (click)="changeImage()">変更</button>
+  </div>
+</ng-template>
+<ng-template #image>
+  <div class="image-area">
+    <img class="image" [src]="imageurl | safe: 'resourceUrl'" />
+  </div>
 </ng-template>

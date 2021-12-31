@@ -1,5 +1,8 @@
 import { Component, OnInit , AfterViewInit } from '@angular/core';
 import { BillBoardCard } from '@udonarium/bill-board-card';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { BillBoardService } from 'service/bill-board.service';
 import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
@@ -16,6 +19,7 @@ import { Buffer } from 'buffer';
 export class BillBoardCardComponent implements OnInit,AfterViewInit {
   isSecret:boolean = false;
   isEdit:boolean = false;
+  isImage:boolean = false;
   dataType:number = 0;
   authType:string[] = ['全体に公開','全体に公開(編集不可)','公開範囲を制限'];
   readOnly:boolean = false;
@@ -24,6 +28,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   text:string = "";
   allowPlayerName :string[] = [];
   players:string[] = [];
+  imageIdentifier:string = ""
 
   player:string = "";
 
@@ -49,15 +54,34 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
       .map( player => {
         return player.name
       });
+    if (card.isImage) {
+      this.isImage = true;
+      this.imageIdentifier = card.imageIdentifier
+    }
+  }
+
+  get imageurl(): string { 
+    let imagefile = ImageStorage.instance.get(this.imageIdentifier)
+    if (imagefile)  return imagefile.url;
+    return ""
+  }
+
+  changeImage() {
+    let currentImageIdentifires: string[] = [];
+    if (this.imageIdentifier) currentImageIdentifires = [this.imageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
+      if (!value) return;
+      this.imageIdentifier = value;
+    });
   }
 
   create() {
     let identifier :string;
     if (this.dataType) {
-      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.players);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.players,this.imageIdentifier);  
     }
     else {
-      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,[],this.imageIdentifier);  
     } 
     EventSystem.call('BOARD_NEW', identifier);
     this.close();
@@ -81,6 +105,8 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     this.card.title = this.title;
     this.card.text = this.encode(this.text);
     this.card.dataType = String(this.dataType);
+    if (this.isImage) this.card.imageIdentifier = this.imageIdentifier;
+    else this.imageIdentifier = ""; 
     this.isEdit = false;
     this.panelService.height -= 50 ;
     EventSystem.call('BOARD_UPDATE', this.card.identifier);

@@ -229,6 +229,7 @@ export class GameRoomComponent implements OnInit {
       .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
         this.standImageService.destroyAll();
       });
+    this.roomService.adminAuth;
   }
 
 }

@@ -72,7 +72,7 @@ export class TabletopActionService {
   }
 
   createTextNote(position: PointerCoordinate): TextNote {
-    let textNote = TextNote.create('共有メモ', 'テキストを入力してください', 5, 4, 3);
+    let textNote = TextNote.create('共有メモ', 'テキストを入力してください', 5, 4, 3,0);
     textNote.location.x = position.x;
     textNote.location.y = position.y;
     textNote.posZ = position.z;

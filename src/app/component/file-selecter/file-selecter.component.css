@@ -44,9 +44,9 @@
 .sticky-top {
   position: sticky;
   top: 0;
-  background-color: #CCC;
-  border-top: 1px dotted #666;
-  border-bottom: 1px dotted #666;
+  background-color: #444;
+  border-top: 1px dotted #888;
+  border-bottom: 1px dotted #888;
   z-index: 100;
 }
 

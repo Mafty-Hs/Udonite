@@ -31,9 +31,9 @@
   box-sizing: border-box;
   overflow: hidden;
 
-  color: #444;
-  background: linear-gradient(-30deg, rgba(200,200,200, 0.9), rgba(220, 220, 220, 0.9));
-  border:solid 1px #999;
+  color: #FFF;
+  background: linear-gradient(-30deg, rgba(60,60,60, 0.9), rgba(100, 100, 100, 0.9));
+  border:solid 1px #444;
 
   height: auto;
   max-height: calc(100% - 10px);
@@ -50,8 +50,8 @@
   height: 25px;
   padding: 2px 5px;
   width: 100%;
-  background-color: #CCC;
-  color: #444;
+  background-color: #222;
+  color: #FFF;
 }
 
 .title-button {
@@ -65,7 +65,12 @@
   border: none;
   border-radius: 0;
   outline: none;
-  color: #444;
+  color: #FFF;
+  padding: 0.4em;
+}
+
+.title button::after {
+  background: none;
 }
 
 .header, .content, footer{

@@ -1,6 +1,6 @@
 <div class="component">
   <div [@bgInOut]="'in'" class="modal-background" (click)="clickBackground($event)"></div>
-  <div [@flyInOut]="'in'" class="modal-panel">
+  <div [@flyInOut]="'in'" class="modal-panel" [style.width.px]="width ? width : 800" [style.height]="height ? height + 'px' : 'auto'">
     <div class="title">
       <div class="title-button">
         <button (click)="resolve()"><i class="material-icons" style="font-size: 14px;">close</i></button>

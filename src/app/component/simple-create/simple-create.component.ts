@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Network } from '@udonarium/core/system';
-import { PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
 import { GameCharacterService } from 'service/game-character.service';
@@ -44,13 +43,12 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
 
   constructor(
      private gameCharacterService: GameCharacterService,
-     public panelService: PanelService,
      private playerService: PlayerService,
      private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラクター簡易作成');
+    Promise.resolve().then(() => {this.modalService.title = 'キャラクター簡易作成' ; this.modalService.width = 300; });
   }
 
   ngAfterViewInit() {

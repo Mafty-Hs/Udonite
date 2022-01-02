@@ -32,6 +32,9 @@ import { ModalService } from 'service/modal.service';
 export class ModalComponent {
   @ViewChild('content', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
 
+  get width() { return this.modalService.width; }
+  get height() { return this.modalService.height; }
+
   constructor(
     public modalService: ModalService) { }
 

@@ -29,6 +29,8 @@ export class ModalService {
   private count = 0;
 
   title: string = '無名のモーダル';
+  width: number = 800;
+  height: number = 0;
 
   /* Todo */
   static defaultParentViewContainerRef: ViewContainerRef;

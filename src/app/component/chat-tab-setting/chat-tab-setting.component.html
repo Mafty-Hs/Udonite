@@ -98,8 +98,8 @@
             </button>
             <button (click)="htmlsave()">HTML保存
             </button>
-            <button class="danger" (click)="logClear()">ログのクリア</button>
-            <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
+            <button *ngIf="roomService.adminAuth" class="danger" (click)="logClear()">ログのクリア</button>
+            <button *ngIf="roomService.adminAuth" class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
           </ng-container>
           <ng-container *ngIf="isDeleted">
             <button (click)="restore()">元に戻す</button>

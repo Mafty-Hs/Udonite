@@ -8,6 +8,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 
 @Component({
@@ -45,6 +46,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
+    public roomService: RoomService,
     private saveDataService: SaveDataService
   ) { }
 

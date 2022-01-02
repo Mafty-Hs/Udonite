@@ -52,7 +52,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
-    private roomService: RoomService,
+    public roomService: RoomService,
     private chatMessageService: ChatMessageService,
     private saveDataService: SaveDataService,
     private saveHtmlService: SaveHtmlService

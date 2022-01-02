@@ -7,6 +7,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
+import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 import { EventSystem } from '@udonarium/core/system';
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -167,6 +168,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
+    public roomService: RoomService,
     private saveDataService: SaveDataService
   ) { }
 

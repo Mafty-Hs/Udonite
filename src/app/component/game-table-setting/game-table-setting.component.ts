@@ -11,6 +11,7 @@ import { FileSelecterComponent } from 'component/file-selecter/file-selecter.com
 import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 
 @Component({
@@ -80,7 +81,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     private modalService: ModalService,
     private saveDataService: SaveDataService,
     private imageService: ImageService,
-    private panelService: PanelService
+    private panelService: PanelService,
+    public roomService: RoomService,
   ) { }
 
   ngOnInit() {

@@ -90,6 +90,7 @@ import { PopupEditComponent } from './component/popup-edit/popup-edit.component'
 import { PopupComponent } from './component/popup/popup.component';
 import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
 import { PlayerSelectComponent } from './component/player-select/player-select.component';
+import { ImageViewComponent } from './component/image-view/image-view.component';
 
 @NgModule({
   declarations: [
@@ -163,6 +164,7 @@ import { PlayerSelectComponent } from './component/player-select/player-select.c
     PopupComponent,
     ChatEditComponent,
     PlayerSelectComponent,
+    ImageViewComponent,
   ],
   imports: [
     BrowserModule,

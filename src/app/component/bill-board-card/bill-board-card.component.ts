@@ -2,6 +2,7 @@ import { Component, OnInit , AfterViewInit } from '@angular/core';
 import { BillBoardCard } from '@udonarium/bill-board-card';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageViewComponent } from 'component/image-view/image-view.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { BillBoardService } from 'service/bill-board.service';
 import { PanelService } from 'service/panel.service';
@@ -132,6 +133,11 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   decode(text: string):string {
     return Buffer.from(text, 'base64').toString(); ;
   }
+
+  viewImg() {
+    this.modalService.open<string>(ImageViewComponent, { title: this.title,imageIdentifier: this.imageIdentifier })
+  }
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,

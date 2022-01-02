@@ -67,7 +67,7 @@
   </div>
 </ng-template>
 <ng-template #image>
-  <div class="image-area">
+  <div class="image-area" (click)="viewImg()">
     <img class="image" [src]="imageurl | safe: 'resourceUrl'" />
   </div>
 </ng-template>

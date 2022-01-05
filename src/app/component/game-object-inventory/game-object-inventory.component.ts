@@ -119,14 +119,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     return this.getInventory(gameObject.location.name).dataElementMap.get(gameObject.identifier);
   }
 
-  openUrl(url, title=null, subTitle=null) {
-    if (StringUtil.sameOrigin(url)) {
-      window.open(url.trim(), '_blank', 'noopener');
-    } else {
-      this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
-    } 
-  }
-
   onContextMenu(e: Event, gameObject: GameCharacter) {
     if (document.activeElement instanceof HTMLInputElement && document.activeElement.getAttribute('type') !== 'range') return;
     e.stopPropagation();

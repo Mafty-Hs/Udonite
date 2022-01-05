@@ -3,6 +3,7 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { GameCharacterService } from 'service/game-character.service';
+import { data } from 'browserslist';
 
 @Component({
   selector: 'player-palette-control',
@@ -33,8 +34,13 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   get newLineString(): string { return this.inventoryService.newLineString; }
 
   isEdit : boolean = false;
+
+  invalidcr:string[] = [ 'note' , 'checkProperty' , 'url' ];
   
   setDataElm(dataElm: DataElement){
+    if ((dataElm.value && Number.isNaN(dataElm.value)) ||
+    (dataElm.currentValue && Number.isNaN(dataElm.currentValue)) ||
+    this.invalidcr.includes(dataElm.type)) return;
     this.isEdit = true;
     this.selectElm = dataElm;
   }

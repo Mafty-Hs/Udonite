@@ -1,0 +1,45 @@
+<ng-container [ngSwitch]="type">
+  <ng-container *ngSwitchCase="'note'">
+      <div class="tag" [attr.title]="name">{{name}}</div>
+      <div class="note" style="position: relative;">
+        <div class="textarea-spacer">{{value}}</div>
+      </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'simpleNumber'">
+      <div class="tag" [attr.title]="name" >{{name}}</div>
+      <div class="value">
+        <input type="{{isNumber ? 'number' : 'text'}}" size="1" [(ngModel)]="value" />
+      </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'numberResource'">
+    <div class="tag" [attr.title]="name">{{name}}</div>
+    <div class="value">
+      <input type="number" size="1" [(ngModel)]="currentValue" />/{{!+value ? '???' : value}}
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'checkProperty'">
+    <div class="tag" [attr.title]="name">{{name}}</div>
+    <div class="value">
+      <input type="checkbox" style="width: 2em;" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'abilityScore'">
+    <div class="tag" [attr.title]="name">{{name}}</div>
+    <div class="value">
+        <input type="{{isNumber ? 'number' : 'text'}}" size="1" [(ngModel)]="value" />
+        <span style="font-size: smaller;">({{ (dataElement.calcAbilityScore() >= 0 ? '+' : '') + dataElement.calcAbilityScore() }})</span>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'url'">
+    <div class="tag">{{name}}</div>
+    <div class="value">
+      <button class="link" style="width: 1.6rem;padding: 0;" [attr.disabled]="!stringUtil.validUrl(value) ? '' : null" (click)="stringUtil.validUrl(value) ? openUrl(value, name) : false"><i class="material-icons" style="font-size: 1.0rem">
+        {{ !stringUtil.validUrl(value) ? 'link_off' : (stringUtil.sameOrigin(value) ? 'link' : 'open_in_new') }}</i></button>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <div *ngIf="name" class="tag" [attr.title]="name">{{name}}</div>
+    <div class="value">{{value}}</div>
+  </ng-container>
+</ng-container>
+

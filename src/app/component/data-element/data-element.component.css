@@ -1,0 +1,42 @@
+
+
+.tag {
+  height: 1.5em;
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.value {
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: top;
+  padding: 0px;
+}
+
+input[type="number"]  {
+  max-width: 2.5em;
+  font-size: 1em;
+  text-align: right;
+  background: none;
+  border: none;
+  padding: 0px;
+  border-radius: 0px;
+  outline: none;
+  box-sizing: border-box;
+  -moz-appearance:textfield;
+}
+
+input:hover {
+  background: #222;
+}
+
+input:focus {
+  background: #000;
+}
+
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

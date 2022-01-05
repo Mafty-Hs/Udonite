@@ -91,6 +91,7 @@ import { PopupComponent } from './component/popup/popup.component';
 import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
 import { PlayerSelectComponent } from './component/player-select/player-select.component';
 import { ImageViewComponent } from './component/image-view/image-view.component';
+import { DataElementComponent } from './component/data-element/data-element.component';
 
 @NgModule({
   declarations: [
@@ -165,6 +166,7 @@ import { ImageViewComponent } from './component/image-view/image-view.component'
     ChatEditComponent,
     PlayerSelectComponent,
     ImageViewComponent,
+    DataElementComponent,
   ],
   imports: [
     BrowserModule,

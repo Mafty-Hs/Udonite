@@ -20,49 +20,13 @@
     </div>
   </ng-template>
   <ng-template #elseBlock>
-    <ng-container [ngSwitch]="dataElm.type">
-      <ng-container *ngSwitchCase="'note'">
-          <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
-          <div class="note" style="position: relative;">
-            <div class="textarea-spacer">{{dataElm.value}}</div>
-          </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'simpleNumber'">
-          <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
-          <div class="value">
-            <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
-          </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'numberResource'">
-        <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
-        <div class="value">
-          <input type="number" size="1" [(ngModel)]="dataElm.currentValue" />/{{!+dataElm.value ? '???' : dataElm.value}}
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'checkProperty'">
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
-        <div class="value">
-          <input type="checkbox" style="width: 2em;" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'abilityScore'">
-        <div class="tag" [attr.title]="dataElm.name" (click)="setDataElm(dataElm)">{{dataElm.name}}</div>
-        <div class="value">
-            <input type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
-            <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchDefault>
-        <div *ngIf="dataElm.name" class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
-        <div class="value">{{dataElm.value}}</div>
-      </ng-container>
-    </ng-container>
+    <data-element [dataElement]="dataElm" (click)="setDataElm(dataElm)"></data-element>
   </ng-template>
 </ng-template>
 
 <ng-template #edit>
   <div class="edit">
-    <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: selectElm }"></ng-container>
+    <data-element [dataElement]="selectElm"></data-element>
     <div>
     <textarea class="rc" style="height:1.6em;width:30em;" placeholder='文頭に+で加算、-で減算、他は計算後の数値で置き換え' [(ngModel)]="innerText" (keydown.enter)="sendCalc($event)"
           #textArea></textarea>

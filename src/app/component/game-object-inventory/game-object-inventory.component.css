@@ -40,22 +40,6 @@
   box-sizing: border-box;
 }
 
-.input:hover {
-  background: #111;
-}
-
-.input:focus {
-  background: #000;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-input[type=number]:hover, input[type=number]:focus {
-  -moz-appearance: number-input;
-}
-
 .tab {
   padding : 5px;
   user-select: none;
@@ -63,7 +47,7 @@ input[type=number]:hover, input[type=number]:focus {
 
 .tab {
   padding : 0px;
-  border: solid 1px #555;
+  border: solid 1px #000;
   border-radius: 0.3em;
   overflow: hidden;
 
@@ -77,7 +61,7 @@ input[type=number]:hover, input[type=number]:focus {
   margin: 0px; 
   max-width: 500px;
 
-  background-color: #EEE;
+  background-color: #666;
 }
 
 .tab label {
@@ -104,9 +88,9 @@ input[type=number]:hover, input[type=number]:focus {
 .tab input[type="radio"] + div {
   vertical-align: middle;
   outline: 0;
-  font-size: 0.6em;
+  font-size: 0.8em;
   background-color: transparent;
-  color: #222; 
+  color: #FFF; 
   
   box-sizing: border-box;
 
@@ -117,14 +101,15 @@ input[type=number]:hover, input[type=number]:focus {
 }
 
 .tab input[type="radio"] + div:hover {
-  background-color: #888;
+  background-color: #444;
   color: #eee;
   border-color: #555;
 }
 
 .tab input[type="radio"]:checked + div {
-  background: #444;
+  background: #222;
   color: #FFF;
+  font-size: 0.85em;
 }
 
 .is-sticky-top {
@@ -158,13 +143,15 @@ input[type=number]:hover, input[type=number]:focus {
 }
 
 .table-cell {
-  display: table-cell;
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: row;
 }
 
 .image-box {
   padding: 0px;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: table-cell;
   vertical-align: top;
 }
@@ -190,51 +177,14 @@ input[type=number]:hover, input[type=number]:focus {
 }
 
 .object-tags-box {
-  display: table;
-  table-layout: fixed;
+  width:100%;
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .object-tag {
-  display: inline-block;
-  padding: 0 0.25em;
-  vertical-align: middle;
+  max-width: 8em;
+  margin: 0 4px;
 }
 
-.resource-tag {
-  text-align: center;
-  vertical-align: bottom;
-  overflow: hidden;
-  white-space: nowrap;
-}
 
-.resource-value {
-  font-weight: bold;
-  width: 4em;
-  text-align: right;
-  font-family: inherit;
-}
-
-.tag-name {
-  font-size: 0.8em;
-  text-align: left;
-  vertical-align: bottom;
-  min-width:1em;
-  max-width: 12em;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.tag-value-box{
-  display: table-cell;
-  width: 10px;
-}
-
-.tag-value {
-  font-size: 1.0em;
-  font-weight: bold;
-  width: 100%;
-  min-width: 1em;
-  max-width: 12em;
-  text-align: center;
-  font-family: inherit;
-}

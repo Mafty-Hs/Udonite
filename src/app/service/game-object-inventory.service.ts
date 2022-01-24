@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { PlayerService } from './player.service';
@@ -28,18 +28,18 @@ export class GameObjectInventoryService {
   set dataTag(dataTag: string) { this.summarySetting.dataTag = dataTag; }
   get dataTags(): string[] { return this.summarySetting.dataTags; }
 
-  tableInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'table'; });
-  commonInventory: ObjectInventory = new ObjectInventory(object => { return !this.isAnyLocation(object.location.name); });
-  privateInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === this.myPlayerId; });
-  graveyardInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'graveyard'; });
+  readonly newLineString: string = '/';
+  readonly newLineDataElement: DataElement =  DataElement.create(this.newLineString,this.newLineString,{},"newLineDataElement");
+
+  tableInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'table'; },this.newLineDataElement);
+  commonInventory: ObjectInventory = new ObjectInventory(object => { return !this.isAnyLocation(object.location.name); },this.newLineDataElement);
+  privateInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === this.myPlayerId; },this.newLineDataElement);
+  graveyardInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'graveyard'; },this.newLineDataElement);
 
   indicateAll: boolean = false;
 
   private locationMap: Map<ObjectIdentifier, LocationName> = new Map();
   private tagNameMap: Map<ObjectIdentifier, ElementName> = new Map();
-
-  readonly newLineString: string = '/';
-  readonly newLineDataElement: DataElement = DataElement.create(this.newLineString);
 
   constructor(
     private playerService: PlayerService
@@ -146,7 +146,7 @@ export class GameObjectInventoryService {
 
 class ObjectInventory {
   newLineString: string = '/';
-  private newLineDataElement: DataElement = DataElement.create(this.newLineString);
+  private newLineDataElement: DataElement;
 
   private get summarySetting(): DataSummarySetting { return DataSummarySetting.instance; }
 
@@ -202,8 +202,11 @@ class ObjectInventory {
   private needsSort: boolean = true;
 
   constructor(
-    readonly classifier: (object: TabletopObject) => boolean
-  ) { }
+    readonly classifier: (object: TabletopObject) => boolean,
+    newLineDataElement:DataElement
+  ) { 
+    this.newLineDataElement =  newLineDataElement
+  }
 
   refreshObjects() {
     this.needsRefreshObjects = true;

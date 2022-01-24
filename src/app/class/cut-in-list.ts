@@ -3,6 +3,7 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
 import { StringUtil } from './core/system/util/string-util';
 import { CutIn } from './cut-in';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 export interface CutInInfo {
   identifiers: string[],
@@ -14,8 +15,14 @@ export class CutInList extends ObjectNode implements InnerXml {
   private static _instance: CutInList;
   static get instance(): CutInList {
     if (!CutInList._instance) {
+      let cutInList = ObjectStore.instance.get('CutInList')
+      if (cutInList && cutInList instanceof CutInList) {
+         CutInList._instance = cutInList;
+      }
+      else {
         CutInList._instance = new CutInList('CutInList');
         CutInList._instance.initialize();
+      }
     }
     return CutInList._instance;
   }

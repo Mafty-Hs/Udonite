@@ -1,7 +1,7 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
@@ -19,6 +19,7 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'game-character-sheet',
@@ -78,7 +79,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   @Input() tabletopObject: TabletopObject = null;
   isEdit: boolean = false;
 
-  networkService = Network;
   MAX_IMAGE_ICON_COUNT = 5;
 
   isSaveing: boolean = false;
@@ -95,6 +95,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     private saveDataService: SaveDataService,
     private panelService: PanelService,
     public roomService: RoomService,
+    public playerService: PlayerService,
     private modalService: ModalService,
     private pointerDeviceService: PointerDeviceService,
   ) { }

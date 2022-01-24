@@ -21,7 +21,7 @@
   <div #characterSelect class="character-select">
     <label>
       <img *ngIf="myImage" class="imgicon" [src]="myImage.url | safe: 'resourceUrl'" />
-      <input type="radio" name="chara-tab" [value]="myIdentifier + ',-1'" [(ngModel)]="selectCharacter">
+      <input type="radio" name="chara-tab" [value]="myPlayerId + ',-1'" [(ngModel)]="selectCharacter">
       <div>{{myPlayer.name}}</div>
     </label>
     <ng-container *ngFor="let gameCharacter of characterPaletteList">

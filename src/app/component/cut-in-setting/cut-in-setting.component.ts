@@ -13,7 +13,6 @@ import { EventSystem } from '@udonarium/core/system';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { ImageTag } from '@udonarium/image-tag';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { CutInService } from 'service/cut-in.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -142,17 +141,17 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.selectedCutIn.isValidAudio;
   }
   
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+  get myPeer(): PeerCursor { return this.playerService.myPeer; }
+  get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
 
   get myColor(): string {
    return this.playerService.myColor;
   }
 
   get sendToColor(): string {
-    let object = ObjectStore.instance.get(this.sendTo);
-    if (object instanceof PeerCursor) {
-      return object.player.color;
+    let peer = this.playerService.findByPeerId(this.sendTo);
+    if (peer){
+      return peer.player.color;
     }
     return this.playerService.CHAT_BLACKTEXT_COLOR;
   }
@@ -254,8 +253,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getHidden(image: ImageFile): boolean {
-    const imageTag = ImageTag.get(image.identifier);
-    return imageTag ? imageTag.hide : false;
+    return ( image.owner == this.playerService.myPlayer.playerId ); 
   }
 
   upTabIndex() {
@@ -309,7 +307,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       sender: PeerCursor.myCursor.peerId
     };
     if (sendObj.secret) {
-      const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+      const targetPeer = this.playerService.findByPeerId(this.sendTo); 
       if (targetPeer) {
         if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, targetPeer.peerId);
         EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
@@ -327,7 +325,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       sender: PeerCursor.myCursor.peerId
     };
     if (sendObj.secret) {
-      const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+      const targetPeer = this.playerService.findByPeerId(this.sendTo); 
       if (targetPeer) {
         if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('STOP_CUT_IN', sendObj, targetPeer.peerId);
         EventSystem.call('STOP_CUT_IN', sendObj, PeerCursor.myCursor.peerId);

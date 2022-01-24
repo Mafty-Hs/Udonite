@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit, Input ,Output ,EventEmitter } from '@angular/core';
-
-import { EventSystem, Network } from '@udonarium/core/system';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { RoomList } from '@udonarium/core/system/socketio/netowrkContext';
 import { RoomService, RoomState } from 'service/room.service';
 
 @Component({
@@ -10,17 +8,13 @@ import { RoomService, RoomState } from 'service/room.service';
   styleUrls: ['./password-check.component.css']
 })
 export class PasswordCheckComponent implements OnInit, OnDestroy {
-  password: string = '';
   help: string = '';
-  @Input() roomId: PeerContext[];
-  get room():PeerContext {return this.roomId[0];}
+  @Input() room: RoomList;
+  @Input() deleteMode: boolean = false;
+  @Output() deleteModeChange:EventEmitter<boolean> = new EventEmitter();
+  inputPassword:string;
 
   title: string = '';
-
-  get peerId(): string { return Network.peerId; }
-  get isConnected(): boolean {
-    return Network.peerIds.length <= 1 ? false : true;
-  }
 
   constructor(
     private roomService: RoomService,
@@ -28,11 +22,9 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    EventSystem.register(this);
   }
 
   ngOnDestroy() {
-    EventSystem.unregister(this);
   }
 
   cancel() {
@@ -44,10 +36,11 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (!this.room.verifyPassword(this.password)) {
+    if (this.room.password != this.inputPassword) {
       this.help = 'パスワードが違います';
       return;
     }
-    this.roomService.connect(this.roomId,this.password);
+    if (this.deleteMode) {this.roomService.delete(this.room.roomId,this.room.password); this.deleteModeChange.emit(false);}
+    else this.roomService.connect(this.room.roomId,this.room.password);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EventSystem ,Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
@@ -17,16 +17,12 @@ import { GameCharacterService } from 'service/game-character.service';
 })
 export class RoomControlComponent implements OnInit {
 
-  networkService = Network;
   alarmTime:number = 0;
   get myPeer(): PeerCursor { return this.playerService.myPeer; }
   get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   sendTo:string = "";
   password:string = "";
 
-  get isStandalone():boolean {
-    return this.roomService.isStandalone;
-  }
   get enableAdmin():boolean {
     return (this.roomService.roomAdmin.adminPlayer.length > 0);
   } 
@@ -45,10 +41,10 @@ export class RoomControlComponent implements OnInit {
   get adminAuth():boolean { return this.roomService.adminAuth;}
 
   alarmSend() {
-    let peer:string = ""
+    let peer:string = "";
     if (this.sendTo) {
-      peer = this.playerService.getPeerId(this.sendTo);
-      if (!peer) peer = '';
+      peer = this.sendTo;
+      this.sendTo = "";
     }
     EventSystem.call('PLAY_ALARM', {identifier: peer  ,time: this.alarmTime * 1000});
   }

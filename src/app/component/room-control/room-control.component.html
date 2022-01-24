@@ -1,13 +1,13 @@
 <div class="flex-box">
   <div class="room-info">
     <div class="title">ルーム基本情報</div>
-    <ng-container *ngIf="!isStandalone ;else standalone">
+    <ng-container>
       <div class="flex-item">
         <div class="item-name">
           ルーム名
         </div>
         <div class="item-data">
-          <span style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.roomId}}</span>
+          <span style="font-weight: bold;">{{roomService.roomData.roomName}}</span>
         </div>
       </div>
       <div class="flex-item">
@@ -15,7 +15,7 @@
           パスワード
         </div>
         <div class="item-data">
-          {{networkService.peerContext.password}}
+          {{roomService.roomData.password}}
         </div>
       </div>
       <div class="flex-item">
@@ -57,7 +57,7 @@
         <div>送信先:
         <select name="sendTo" style="width:10em" [(ngModel)]="sendTo" >
           <option value="" class="not-specified">全員</option>
-          <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
+          <option *ngFor="let peer of otherPeers" value="{{peer.peerId}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.player.name}}
             <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
           </option>
         </select>
@@ -121,9 +121,6 @@
   </div>  
 </div>
 
-<ng-template #standalone>
-  単独接続モードでログインしています
-</ng-template>
 <ng-template #editSetting>
   <div>
     <div class="toggle"><label>ルームデータアップロード禁止

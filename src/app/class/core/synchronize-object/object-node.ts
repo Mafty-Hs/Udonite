@@ -140,7 +140,7 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
     child.minorIndex = Math.random();
 
     this.updateChildren(child);
-
+ 
     return child;
   }
 

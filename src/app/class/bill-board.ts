@@ -3,20 +3,24 @@ import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { BillBoardCard , BillBoardCardContext } from './bill-board-card';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('bill-board')
 export class BillBoard  extends ObjectNode implements InnerXml{
   private static _instance: BillBoard;
 
   static get instance(): BillBoard {
-    return BillBoard._instance;
-  }
-
-  static init() {
     if (!BillBoard._instance) {
-      BillBoard._instance = new BillBoard('BillBoard');
-      BillBoard._instance.initialize();
+      let billboard = ObjectStore.instance.get('BillBoard')
+      if (billboard && billboard instanceof BillBoard) {
+         BillBoard._instance = billboard;
+      }
+      else {
+        BillBoard._instance = new BillBoard('BillBoard');
+        BillBoard._instance.initialize();
+      }
     }
+    return BillBoard._instance;
   }
 
   create(_card: BillBoardCardContext) {

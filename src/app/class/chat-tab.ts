@@ -26,8 +26,17 @@ export class ChatTab extends ObjectNode implements InnerXml {
     super.onChildAdded(child);
     if (child.parent === this && child instanceof ChatMessage && child.isDisplayable) {
       this._unreadLength++;
-      EventSystem.trigger('MESSAGE_ADDED', { tabIdentifier: this.identifier, messageIdentifier: child.identifier });
+      this.messageAdd(child.identifier);     
     }
+  }
+
+  async messageAdd(identifier :string) {
+    if (ObjectStore.instance.get(identifier))
+      EventSystem.trigger('MESSAGE_ADDED', { tabIdentifier: this.identifier, messageIdentifier: identifier });
+    else
+      setTimeout(() => {
+        this.messageAdd(identifier)
+        }, 100);
   }
 
   getMessage(identifier :string): ChatMessage {

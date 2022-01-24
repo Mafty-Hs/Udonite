@@ -1,8 +1,13 @@
-import { Network } from '../network/network';
+import { IONetwork } from '../socketio/ionetwork';
+import { NetworkStatus } from '../socketio/connection';
 import { Event, EventContext } from './event';
 import { Listener } from './listener';
 import { Callback } from './observer';
 import { Subject } from './subject';
+import { ObjectNetworkContext } from '@udonarium/core/synchronize-object/object-io';
+import { Subscription } from 'rxjs';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageContext } from '@udonarium/core/file-storage/image-context';
 
 type EventName = string;
 
@@ -16,6 +21,9 @@ export class EventSystem implements Subject {
     return EventSystem._instance;
   }
 
+  isOpen:boolean = false;
+
+  subcriber:Subscription;
   private listenerMap: Map<EventName, Listener[]> = new Map();
   private constructor() {
     console.log('EventSystem ready...');
@@ -86,7 +94,7 @@ export class EventSystem implements Subject {
 
   private _call(event: Event<any>, sendTo?: string) {
     let context = event.toContext();
-    Network.instance.send(context, sendTo);
+    IONetwork.instance.call(context, sendTo)
   }
 
   trigger<T>(eventName: string, data: T): Event<T>
@@ -115,33 +123,58 @@ export class EventSystem implements Subject {
   }
 
   private initializeNetworkEvent() {
-    let callback = Network.instance.callback;
+    IONetwork.instance.socket.statusEmit.subscribe((status) => {this.onNetworkChange(<NetworkStatus>status)});
+    this.subcriber = IONetwork.instance.roomIdEmit.subscribe((roomId) => {
+      this.trigger('ROOM_JOIN',roomId)
+      this.subcriber.unsubscribe();
+    });
+  }
 
-    callback.onOpen = (peerId) => {
-      this.trigger('OPEN_NETWORK', { peerId: peerId });
+  private onNetworkChange(status :NetworkStatus) {
+    let peerId :string = IONetwork.instance.peerId; 
+    switch(status) {
+      case NetworkStatus.CONNECT:
+        console.log('Network is Open');
+        this.trigger('OPEN_NETWORK', { peerId: peerId });
+        this.eventListener();
+        if (this.isOpen) {
+          this.reconnect();
+        }
+        else this.isOpen = true;
+        break;
+      case NetworkStatus.DISCONNECT:
+        this.trigger('CLOSE_NETWORK', { peerId: peerId });
+        break;
+      case NetworkStatus.ERROR:
+        console.log("Connect Error");
+        break;
+      case NetworkStatus.RECONNECT:
+        console.log('Network is Reconnect');
+        break;
+      default:
     }
-    callback.onClose = (peerId) => {
-      this.trigger('CLOSE_NETWORK', { peerId: peerId });
-    }
+  }
 
-    callback.onConnect = (peerId) => {
-      this.sendSystemMessage('<' + peerId + '> connect <DataConnection>');
-      this.trigger('CONNECT_PEER', { peerId: peerId });
-    }
+  private eventListener() {
+    IONetwork.instance.socket.recieve("call").subscribe((event:EventContext<any>) => {
+      if (event.sendFrom == IONetwork.instance.peerId) return; 
+      this.trigger(event)
+    });
+    IONetwork.instance.socket.recieve("PeerId").subscribe(peerId => {this.trigger('PEERID_UPDATE',<string>peerId)});
+    IONetwork.instance.socket.recieve("PEER_JOIN").subscribe(peerId => { IONetwork.instance.listPeer(); this.trigger('CONNECT_PEER',<string>peerId)});
+    IONetwork.instance.socket.recieve("PEER_LIEVE").subscribe(peerId => { IONetwork.instance.listPeer(); this.trigger('DISCONNECT_PEER',<string>peerId)});
+    IONetwork.instance.socket.recieve("UPDATE_GAME_OBJECT").subscribe(context => this.trigger('NW_UPDATE_GAME_OBJECT',<ObjectNetworkContext>context));
+    IONetwork.instance.socket.recieve("DELETE_GAME_OBJECT").subscribe(identifier => this.trigger('NW_DELETE_GAME_OBJECT',<string>identifier));
+    IONetwork.instance.socket.recieve("IMAGE_ADD").subscribe(context => {ImageStorage.instance.create(<ImageContext>context); this.trigger('IMAGE_SYNC',null) });
+    IONetwork.instance.socket.recieve("IMAGE_UPDATE").subscribe(context => {ImageStorage.instance.update(<ImageContext>context); this.trigger('IMAGE_SYNC',null)});
+  }
 
-    callback.onDisconnect = (peerId) => {
-      this.sendSystemMessage('<' + peerId + '> disconnect <DataConnection>');
-      this.trigger('DISCONNECT_PEER', { peerId: peerId });
-    }
-
-    callback.onData = (peerId, data: EventContext<never>[]) => {
-      for (let event of data) {
-        this.trigger(event);
-      }
-    }
-
-    callback.onError = (peerId, err) => {
-      this.sendSystemMessage('<' + peerId + '> ' + err);
+  private reconnect() {
+    if (IONetwork.instance.roomId) {
+      IONetwork.instance.join(IONetwork.instance.roomId).then(() => {
+        this.trigger('NEED_UPDATE',null)
+        ImageStorage.instance.getCatalog();
+      })
     }
   }
 

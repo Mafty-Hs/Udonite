@@ -46,7 +46,7 @@ export class GameCharacterService {
       character = template.clone();
       character.name = name;
       character.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
-      if (character.faceIcon) character.faceIcon.destroy();
+      //if (character.faceIcon) character.faceIcon.destroy();
       if (character.shadowImageFile) {
         const garbages = character.imageDataElement.getElementsByName('shadowImageIdentifier');
           for (const garbage of garbages) {
@@ -181,10 +181,11 @@ export class GameCharacterService {
     return "";
   }
 
-  constructor(
-     private playerService: PlayerService,
-     private roomService: RoomService
-  ) { 
+  paletteInit() {
+    EventSystem.unregister(this);
+    for (let identifier of this.playerService.paletteList) {
+      if (!this.get(identifier)) this.playerService.removeList(identifier); 
+    }
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
@@ -197,6 +198,17 @@ export class GameCharacterService {
         if (this.playerService.checkList(event.data.identifier)) {
           this.playerService.removeList(event.data.identifier);
         }
+      });
+
+  }
+
+  constructor(
+     private playerService: PlayerService,
+     private roomService: RoomService
+  ) { 
+    EventSystem.register(this)
+      .on('ROOM_PLAY', -1000, event => {
+        this.paletteInit();
       });
   }
 }

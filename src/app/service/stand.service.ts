@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameCharacterService } from 'service/game-character.service';
+import { PlayerService } from 'service/player.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { CutInList } from '@udonarium/cut-in-list';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -16,7 +17,8 @@ export class StandService {
   width:number = 0;
 
   constructor(
-   private gameCharacterService: GameCharacterService
+   private gameCharacterService: GameCharacterService,
+   private playerService: PlayerService
   ) { }
 
   getCacheCharacter(identifier :string) {
@@ -38,7 +40,7 @@ export class StandService {
     standInfo,isChat:boolean) {
     let sendToPeer :string; 
     if (sendTo) {
-     sendToPeer = this.getPeer(sendTo).peerId;
+     sendToPeer = sendTo;
     }
     if (standInfo.farewell) {
       const sendObj = {
@@ -108,10 +110,6 @@ export class StandService {
     }
   }
 
-  getPeer(identifier :string ) {
-     return ObjectStore.instance.get<PeerCursor>(identifier) as PeerCursor;
-  }
-
   async cutIn(text :string,sendTo :string) {
       const cutInInfo = CutInList.instance.matchCutInInfo(text);
       for (const identifier of cutInInfo.identifiers) {
@@ -122,7 +120,7 @@ export class StandService {
         };
         if (sendObj.secret) {
           if (sendTo) {
-            let peer : string = this.getPeer(sendTo).peerId;
+            let peer = sendTo;
             if (peer != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, peer);
             EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
           }

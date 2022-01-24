@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DiceBot , DiceBotInfo, DiceBotInfosIndexed, DiceRollResult , api } from '@udonarium/dice-bot';
-import { SvcDiceBotSetting } from '@udonarium/service/svc-dice-bot-setting'
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -20,11 +19,12 @@ interface rollDataContext {
   providedIn: 'root'
 })
 export class DiceBotService {
-  get diceBotInfos(): DiceBotInfo[] {return DiceBot.instance.diceBotInfos;} 
-  get diceBotInfosIndexed(): DiceBotInfosIndexed[] {return DiceBot.instance.diceBotInfosIndexed;} 
-  get isConnect():boolean { return DiceBot.instance.api.isConnect;}
-  get api(): api {return DiceBot.instance.api;} 
-  set api(_api) {DiceBot.instance.api = _api;}
+  diceBot = new DiceBot();
+  get diceBotInfos(): DiceBotInfo[] {return this.diceBot.diceBotInfos;} 
+  get diceBotInfosIndexed(): DiceBotInfosIndexed[] {return this.diceBot.diceBotInfosIndexed;} 
+  get isConnect():boolean { return this.diceBot.api.isConnect;}
+  get api(): api {return this.diceBot.api;} 
+  set api(_api) { this.diceBot.api = _api;}
   private gameType:string = "";
   private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i")
   private repeatPattern:RegExp = new RegExp('^S?((repeat|rep|x)\\d+)',"i");
@@ -207,12 +207,10 @@ export class DiceBotService {
   }
 
   initialize(apiUrl:string) {
-    DiceBot.instance.initialize();
     this.api.url = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
     this.api.version = 2
-    let svcDiceBotSetting = new SvcDiceBotSetting;
-    svcDiceBotSetting.getBcDiceVersion();
-    svcDiceBotSetting.loadDiceInfo();
+    this.getBcDiceVersion();
+    this.loadDiceInfo();
     EventSystem.register(this)
       .on('SEND_MESSAGE', event => { this.diceRoll(event.data.messageIdentifier) });
   }  
@@ -316,6 +314,104 @@ export class DiceBotService {
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 
+  async getBcDiceVersion() {
+    let response:Response;
+    try {
+      response = await fetch(`${this.api.url}/v2/version`, {mode: 'cors'})
+      if (response.ok) {
+        let json = await response.json()
+        this.api.bcDiceVersion = json.bcdice;
+      }
+    }
+    catch {
+     console.log(response.statusText);
+    }
+  }
+
+  async loadDiceInfo() {
+    const controller = new AbortController();
+    const timer = setTimeout(() => { controller.abort() }, 30000);
+
+      fetch(this.api.url + '/v2/game_system', {mode: 'cors'})
+        .then(response => { 
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json() 
+        })
+        .then(infos => {
+          console.log("diceBot Load END")
+          clearTimeout(timer); 
+          this.normalizeDiceInfo(infos);
+        })
+        .catch(error => {
+          console.log("diceBot INFO Load ERROR!")
+          if (this.api.retry <= 3) {
+            this.api.retry += 1;
+            let nexttime:number = this.api.retry * 30 * 1000;
+            setTimeout(() => { this.loadDiceInfo() }, nexttime);
+          }
+        });   
+  }
+
+  normalizeDiceInfo(infos :any) {
+    let tempInfos = (infos.game_system)
+      .filter(info => info.id != 'DiceBot')
+      .map(info => {
+        let normalize = (info.sort_key && info.sort_key.indexOf('国際化') < 0) ? info.sort_key : info.name.normalize('NFKD');
+        for (let replaceData of this.diceBot.replaceData) {
+          if (replaceData[2] && info.name === replaceData[0]) {
+            normalize = replaceData[1];
+            info.name = replaceData[2];
+          }
+          normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
+        }
+        info.normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
+        .replace(/第(.+?)版/g, 'タイ$1ハン')
+        .replace(/[・!?！？\s　:：=＝\/／（）\(\)]+/g, '')
+        .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
+        .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
+        .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
+        .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
+        .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
+        .replace(/ン+ー+/g, 'ン')
+        .replace(/ン+/g, 'ン');
+         return info;
+      })
+      .map(info => {
+         const lang = /.+\:(.+)/.exec(info.id);
+         info.lang = lang ? lang[1] : 'A';
+         return info;
+      })
+      .sort((a, b) => {
+        return a.lang < b.lang ? -1 
+         : a.lang > b.lang ? 1
+         : a.normalize == b.normalize ? 0 
+         : a.normalize < b.normalize ? -1 : 1;
+    });
+    this.diceBotInfos.push(...tempInfos.map(info => { return { script: (this.api.version == 1 ? info.system : info.id), game: info.name } }));
+    if (tempInfos.length > 0) {
+      let sentinel = tempInfos[0].normalize.substr(0, 1);
+      let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
+      for (let info of tempInfos) {
+        let index = info.lang == 'Other' ? 'その他' 
+         : info.lang == 'ChineseTraditional' ? '正體中文'
+         : info.lang == 'Korean' ? '한국어'
+         : info.lang == 'English' ? 'English'
+         : info.lang == 'SimplifiedChinese' ? '簡体中文'
+         : info.normalize.substr(0, 1);
+        if (index !== sentinel) {
+          sentinel = index;
+          this.diceBotInfosIndexed.push(group);
+          group = { index: index, infos: [] };
+        }
+        group.infos.push({ script: (this.api.version == 1 ? info.system : info.id), game: info.name });
+     }
+     this.diceBotInfosIndexed.push(group);
+     this.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
+   }
+    this.api.isConnect = true;
+  }
 
   constructor(
     private standService: StandService

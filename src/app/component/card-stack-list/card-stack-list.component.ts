@@ -4,7 +4,7 @@ import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';

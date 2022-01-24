@@ -11,24 +11,24 @@
   </div>
 </label>
 <div class="sticky-top">
-  <div style="float: right; margin-top: 3px; margin-right: 3px">
+  <div *ngIf="roomService.adminAuth" style="float: right; margin-top: 3px; margin-right: 3px">
     <label sytle="white-space: nowrap">
-      <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
-      <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+      <input name="show-allimages" type="checkbox" value="Show Hides" checked="{{isShowAllImages ? 'checked' : ''}}" (click)="onShowAllImages($event)">
+      <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowAllImages}">{{ isShowAllImages ? 'visibility' : 'visibility_off' }}</i>
     </label>
   </div>
   <span class="word-selecter">
-    <label *ngIf="roomService.adminAuth"> 
-      <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
-      <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
+    <label> 
+      <input name="word-selecter" type="checkbox" value="ALL" [checked]="showType == 'ALL'" (click)="onAll()">
+      <div class="all-tags"><b>ALL</b></div>
     </label>
-    <label *ngIf="countAllImagesHasWord(null) > 0">
-      <input name="word-selecter" type="checkbox" value="No Tag" [(ngModel)]="searchNoTagImage" checked="{{searchNoTagImage ? 'checked' : ''}}" (change)="searchNoTagImage = (searchNoTagImage ? true : false)">
-      <div class="no-tag"><s>No Tag</s><badge *ngIf="countImagesHasWord(null) > 0" class="badge" [count]="countImagesHasWord(null)" [@.disabled]="true"></badge></div>
+    <label>
+      <input name="word-selecter" type="checkbox" value="No Tag" [checked]="showType == 'No Tag'"  (click)="onNoTag()">
+      <div class="no-tag"><s>No Tag</s></div>
     </label>
-    <label *ngFor="let word of allImagesOwnWords">
-      <input name="word-selecter" type="checkbox" value="{{word}}" [checked]="searchWords.includes(word)" (change)="onSelectedWord(word)">
-      <div>{{word}}<badge *ngIf="countImagesHasWord(word) > 0" class="badge" [count]="countImagesHasWord(word)" [@.disabled]="true"></badge></div>
+    <label *ngFor="let tag of allTags">
+      <input name="word-selecter" type="checkbox" value="{{tag}}" [checked]="showType == 'Tag' && searchTags.includes(tag)" (click)="onTagSelect(tag)">
+      <div>{{tag}}</div>
     </label>
   </span>
   <span style="white-space: nowrap">
@@ -36,22 +36,16 @@
       <option value="true">いずれか (OR)</option>
       <option value="">すべて (AND)</option>
     </select>
-      <b style="font-size: smaller; margin-right: 3px">ソート</b>
-      <div class="toggle">
-      <label sytle="white-space: nowrap" title="最近使ったタグの画像を前に">
-        <input name="is-sort" value="Sort" type="checkbox" [(ngModel)]="isSort" checked="{{isSort ? 'checked' : ''}}" (change)="isSort = (isSort ? true : false)">
-        <div><div></div></div>
-    </label></div>
   </span>
 </div>
 <div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">
   <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut [ngClass]="{ selected: selected(file) }" style="text-align: center; min-width: 100px; height: 120px; position: relative;">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">
-      <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
+      <ng-container *ngIf="file.tag.length > 0; then tagsBlock; else noTagBlock"></ng-container> 
       <ng-template #tagsBlock>
         <div style="position: absolute; bottom: 0px; z-index: 5">
-          <ng-container *ngFor="let word of getTagWords(file); index as i">  
-            <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
+          <ng-container *ngFor="let tag of file.tag; index as i">  
+            <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ tag }}</label>
             <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
           </ng-container>
         </div>
@@ -62,20 +56,11 @@
         </div>
       </ng-template>
     </div>
-    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
-      <i class="material-icons red-eye" style="margin-right: 2px; font-size: 16px; display: block">visibility</i>
-    </div>
-    <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
-    <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
+    <img [src]="file.url | safe: 'resourceUrl'" height="120" (click)="onSelectedFile(file)">
   </div>
 </div>
 <div *ngIf="isSelected" class="sticky-bottom" @fadeAndUpInOut>
   <div>
-    <div style="margin-left: 3px; float: right">
-      <button style="padding: 2px 0.5em;" [attr.title]="selectedImagesIsHidden ? '選択画像を表示設定にする' : '選択画像を非表示設定にする'" (click)="setectedImagesToHidden(!selectedImagesIsHidden)">
-        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': selectedImagesIsHidden}">{{ selectedImagesIsHidden ? 'visibility' : 'visibility_off' }}</i>
-      </button>
-    </div>
     <button style="font-size: x-small; margin-right: 2em" (click)="onUnselect()">選択解除 ({{ selectedImageFiles.length }} 選択中)</button>
     <input attr.list="{{panelId}}_suggest" type="text" [(ngModel)]="addingTagWord" style="width: 14em" placeholder="スペース 区切りで 複数可能"><button style="font-size: x-small" [disabled]="addingTagWord == null || addingTagWord.trim() === ''" (click)="addTagWord()">タグ追加 ➡</button>
     <ng-container *ngIf="selectedImagesOwnWords().length > 0">
@@ -85,7 +70,4 @@
       <span style="font-size: smaller; font-weight: bolder; margin-left: 3px; color: gray"><s>No Tag</s></span>
     </ng-container>
   </div>
-  <datalist id="{{panelId}}_suggest">
-    <option *ngFor="let word of suggestWords()" value="{{word}}">{{word}}</option>
-  </datalist>
 </div>

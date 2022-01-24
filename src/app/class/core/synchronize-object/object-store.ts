@@ -1,7 +1,9 @@
 import { EventSystem } from '../system';
+import { IONetwork } from '../system';
 import { setZeroTimeout } from '../system/util/zero-timeout';
 import { GameObject, ObjectContext } from './game-object';
 import { Type } from './object-factory';
+import { ObjectIO } from './object-io';
 
 type ObjectAliasName = string;
 type ObjectIdentifier = string;
@@ -15,6 +17,8 @@ export class ObjectStore {
     if (!ObjectStore._instance) ObjectStore._instance = new ObjectStore();
     return ObjectStore._instance;
   }
+
+  objectIo = new ObjectIO();
 
   private identifierMap: Map<ObjectIdentifier, GameObject> = new Map();
   private aliasNameMap: Map<ObjectAliasName, Map<ObjectIdentifier, GameObject>> = new Map();
@@ -65,7 +69,10 @@ export class ObjectStore {
 
   private _delete(object: GameObject, shouldBroadcast: boolean): GameObject {
     if (this.remove(object) === null) return null;
-    if (shouldBroadcast) EventSystem.call('DELETE_GAME_OBJECT', { identifier: object.identifier });
+    if (shouldBroadcast) {
+      IONetwork.objectDelete(object.identifier);
+      EventSystem.trigger('DELETE_GAME_OBJECT', { identifier: object.identifier });
+    }
 
     return object;
   }
@@ -100,14 +107,14 @@ export class ObjectStore {
   update(context: ObjectContext)
   update(arg: any) {
     let context: ObjectContext = null;
+    let object: GameObject;
     if (typeof arg === 'string') {
-      let object: GameObject = this.get(arg);
+      object = this.get(arg);
       if (object) context = object.toContext();
     } else {
       context = arg;
     }
     if (!context) return;
-
     if (this.queueMap.has(context.identifier)) {
       let queue = this.queueMap.get(context.identifier);
       for (let key in context) {
@@ -115,7 +122,8 @@ export class ObjectStore {
       }
       return;
     }
-    EventSystem.call('UPDATE_GAME_OBJECT', context);
+    this.objectIo.ObjectUL(context.identifier);
+    EventSystem.trigger('UPDATE_GAME_OBJECT', context);
     this.queueMap.set(context.identifier, context);
     if (this.updateInterval === null) {
       this.updateInterval = setZeroTimeout(this.updateCallback);

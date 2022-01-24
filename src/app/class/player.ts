@@ -14,7 +14,6 @@ export class Player extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
   @SyncVar() color: string = Player.CHAT_WHITETEXT_COLOR;
-  @SyncVar() peerIdentifier: string = '';
   @SyncVar() playerId: string = '';
   @SyncVar() authType: AuthType = AuthType.NONE;
   @SyncVar() password: string = ''
@@ -25,6 +24,9 @@ export class Player extends ObjectNode {
   static readonly CHAT_BLACKTEXT_COLOR = '#444444';
   static readonly CHAT_WHITETEXT_COLOR = '#ffffff';
 
-  get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+  get image(): ImageFile { 
+    let image = ImageStorage.instance.get(this.imageIdentifier);
+    return image;
+   }
 
 }

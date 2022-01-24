@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { ChatPalette, SubPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { SimpleCreateComponent } from 'component/simple-create/simple-create.component';
@@ -43,7 +43,11 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     )
   }
 
-  _selectCharacter:string = this.myIdentifier + ',-1';
+  get myPlayerId():string {
+    return this.playerService.myPlayer.playerId;
+  }
+
+  _selectCharacter:string = this.myPlayerId + ',-1';
   get selectCharacter() :string {return this._selectCharacter};
   set selectCharacter(select :string) {
     if (!select) return;
@@ -120,17 +124,15 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   get myPlayer():Player {
     return this.playerService.myPlayer;
   }
-  get myIdentifier(): string {
-    return this.myPlayer.peerIdentifier;
-  }
+
   private isMine(identifier: string):boolean {
-    if (identifier == this.myIdentifier) {
+    if (identifier == this.playerService.myPlayer.playerId) {
       return true;
     }
     return false;
   }
 
-  sendFrom: string = this.myIdentifier;
+  sendFrom: string =  this.playerService.myPlayer.playerId;
 
   resizeHeight() {
     if(this.characterSelect.nativeElement.clientHeight > 32
@@ -288,7 +290,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     let locations = [
       { name: 'table', alias: 'テーブルへ移動' },
       { name: 'common', alias: '共有インベントリへ移動' },
-      { name: Network.peerId, alias: '個人インベントリへ移動' },
+      { name: this.playerService.myPlayer.playerId, alias: '個人インベントリへ移動' },
       { name: 'graveyard', alias: '墓場へ移動' }
     ];
     let aura = ['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {

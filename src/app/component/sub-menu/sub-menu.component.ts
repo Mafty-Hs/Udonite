@@ -1,5 +1,5 @@
 import {  AfterViewInit, Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -134,10 +134,10 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
-      : 'ルームデータ';
-    await this.saveDataService.saveRoomAsync(roomName, percent => {
+    let roomName = this.roomService.roomData.roomName
+    ? this.roomService.roomData.roomName
+    : 'chatlog';
+      await this.saveDataService.saveRoomAsync(roomName, percent => {
       this.progresPercent = percent;
     });
 

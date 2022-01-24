@@ -92,6 +92,8 @@ import { ChatEditComponent } from './component/chat-edit/chat-edit.component';
 import { PlayerSelectComponent } from './component/player-select/player-select.component';
 import { ImageViewComponent } from './component/image-view/image-view.component';
 import { DataElementComponent } from './component/data-element/data-element.component';
+import { SyncWaitComponent } from './component/sync-wait/sync-wait.component';
+import { DataLoadComponent } from './component/data-load/data-load.component';
 
 @NgModule({
   declarations: [
@@ -167,6 +169,8 @@ import { DataElementComponent } from './component/data-element/data-element.comp
     PlayerSelectComponent,
     ImageViewComponent,
     DataElementComponent,
+    SyncWaitComponent,
+    DataLoadComponent,
   ],
   imports: [
     BrowserModule,

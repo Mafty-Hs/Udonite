@@ -1,8 +1,6 @@
-import { EventSystem } from '../system';
-import { ResettableTimeout } from '../system/util/resettable-timeout';
-import { ImageContext, ImageFile, ImageState } from './image-file';
-
-export type CatalogItem = { readonly identifier: string, readonly state: number };
+import { IONetwork } from '../system';
+import { ImageFile } from './image-file';
+import { ImageContext } from './image-context';
 
 export class ImageStorage {
   private static _instance: ImageStorage
@@ -12,6 +10,7 @@ export class ImageStorage {
   }
 
   private imageHash: { [identifier: string]: ImageFile } = {};
+  taglist:string[] = [];
 
   get images(): ImageFile[] {
     let images: ImageFile[] = [];
@@ -21,71 +20,44 @@ export class ImageStorage {
     return images;
   }
 
-  private lazyTimer: ResettableTimeout;
-
   private constructor() {
     console.log('ImageStorage ready...');
   }
 
-  private destroy() {
-    for (let identifier in this.imageHash) {
-      this.delete(identifier);
+  private set(context :ImageContext): ImageFile {
+    let image = new ImageFile();
+    image.context = context;
+    if (!context.isHide && context.tag) {
+      for (let tag of context.tag) {
+        if (!this.taglist.includes(tag)) this.taglist.push(tag);
+      }
     }
-  }
-
-  async addAsync(file: File): Promise<ImageFile>
-  async addAsync(blob: Blob): Promise<ImageFile>
-  async addAsync(arg: any): Promise<ImageFile> {
-    let image: ImageFile = await ImageFile.createAsync(arg);
-
-    return this._add(image);
-  }
-
-  add(url: string): ImageFile
-  add(image: ImageFile): ImageFile
-  add(context: ImageContext): ImageFile
-  add(arg: any): ImageFile {
-    let image: ImageFile;
-    if (typeof arg === 'string') {
-      image = ImageFile.create(arg);
-    } else if (arg instanceof ImageFile) {
-      image = arg;
-    } else {
-      if (this.update(arg)) return this.imageHash[arg.identifier];
-      image = ImageFile.create(arg);
-    }
-    return this._add(image);
-  }
-
-  private _add(image: ImageFile): ImageFile {
-    if (ImageState.COMPLETE <= image.state) this.lazySynchronize(100);
-    if (this.update(image)) return this.imageHash[image.identifier];
-    this.imageHash[image.identifier] = image;
-    console.log('add Image: ' + image.identifier);
     return image;
   }
 
-  private update(image: ImageFile): boolean
-  private update(image: ImageContext): boolean
-  private update(image: any): boolean {
-    let context: ImageContext;
-    if (image instanceof ImageFile) {
-      context = image.toContext();
-    } else {
-      context = image;
+  tagAdd(tag :string) {
+    if (!this.taglist.includes(tag)) this.taglist.push(tag);
+  }
+
+  create(context :ImageContext) {
+    let image = this.set(context);
+    this.imageHash[image.identifier] = image; 
+  }
+
+  update(context :ImageContext) {
+    let image = this.get(context.identifier);
+    if (!context.isHide && context.tag) {
+      for (let tag of context.tag) {
+        if (!this.taglist.includes(tag)) this.taglist.push(tag);
+      }
     }
-    let updatingImage: ImageFile = this.imageHash[image.identifier];
-    if (updatingImage) {
-      updatingImage.apply(image);
-      return true;
-    }
-    return false;
+    image.context = context;
   }
 
   delete(identifier: string): boolean {
     let deleteImage: ImageFile = this.imageHash[identifier];
     if (deleteImage) {
-      deleteImage.destroy();
+      //deleteImage.destroy();
       delete this.imageHash[identifier];
       return true;
     }
@@ -98,23 +70,12 @@ export class ImageStorage {
     return null;
   }
 
-  synchronize(peer?: string) {
-    if (this.lazyTimer) this.lazyTimer.stop();
-    EventSystem.call('SYNCHRONIZE_FILE_LIST', this.getCatalog(), peer);
-  }
 
-  lazySynchronize(ms: number, peer?: string) {
-    if (this.lazyTimer == null) this.lazyTimer = new ResettableTimeout(() => this.synchronize(peer), ms);
-    this.lazyTimer.reset(ms);
-  }
-
-  getCatalog(): CatalogItem[] {
-    let catalog: CatalogItem[] = [];
-    for (let image of this.images) {
-      if (ImageState.COMPLETE <= image.state) {
-        catalog.push({ identifier: image.identifier, state: image.state });
-      }
+  async getCatalog() {
+    let images = await IONetwork.imageMap()
+    for (let image of images) {
+      if (!this.imageHash[image.identifier])
+        this.imageHash[image.identifier] = this.set(image); 
     }
-    return catalog;
   }
 }

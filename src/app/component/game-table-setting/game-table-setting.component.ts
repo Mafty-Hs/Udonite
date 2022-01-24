@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 import { TableSelecter } from '@udonarium/table-selecter';
 
@@ -105,7 +105,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   selectGameTable(identifier: string) {
-    EventSystem.call('SELECT_GAME_TABLE', { identifier: identifier }, Network.peerId);
+    EventSystem.call('SELECT_GAME_TABLE', { identifier: identifier }, IONetwork.peerId);
     this.selectedTable = ObjectStore.instance.get<GameTable>(identifier);
     this.selectedTableXml = '';
   }

@@ -354,8 +354,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   get senderName() {
     let ret = ''; 
     if (!this.sender) return ret;
-    let object = PeerCursor.findByPeerId(this.sender);
-    if (object instanceof PeerCursor) {
+    let object = this.playerService.findByPeerId(this.sender);
+    if (object) {
       ret = object.player.name;
     }
     return ret;
@@ -368,8 +368,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   get senderColor() {
     let ret = this.playerService.CHAT_BLACKTEXT_COLOR
     if (!this.sender) return ret;
-    let object = PeerCursor.findByPeerId(this.sender);
-    if (object instanceof PeerCursor) {
+    let object = this.playerService.findByPeerId(this.sender);
+    if (object) {
       ret = object.player.color;
     }
     return ret;

@@ -230,8 +230,9 @@ export class GameRoomComponent implements OnInit {
         this.standImageService.destroyAll();
       });
     this.roomService.adminAuth;
+    EventSystem.trigger("ROOM_PLAY",null)
   }
-
+  
 }
 
 PanelService.UIPanelComponentClass = UIPanelComponent;

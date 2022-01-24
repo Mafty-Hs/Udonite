@@ -16,7 +16,7 @@ import { CardStack } from '@udonarium/card-stack';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
@@ -146,18 +146,14 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.cardStack || !object) return;
         if ((this.cardStack === object)
-          || (object instanceof ObjectNode && this.cardStack.contains(object))
-          || (object instanceof PeerCursor && object.player.playerId === this.cardStack.owner)) {
+          || (object instanceof ObjectNode && this.cardStack.contains(object))) {
           this.changeDetector.markForCheck();
         }
       })
       .on('CARD_STACK_DECREASED', event => {
         if (event.data.cardStackIdentifier === this.cardStack.identifier && this.cardStack) this.changeDetector.markForCheck();
       })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('IMAGE_SYNC', -1000, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {
@@ -397,7 +393,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       {
         name: '山札を人数分に分割する', action: () => {
-          this.splitStack(Network.peerIds.length);
+          this.splitStack(IONetwork.peerIds.length);
           SoundEffect.play(PresetSound.cardDraw);
         }, 
         disabled: this.cards.length == 0

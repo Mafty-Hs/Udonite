@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy } from '@angular/core';
 
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 
 @Component({
   selector: 'network-indicator',
@@ -26,7 +26,8 @@ export class NetworkIndicatorComponent implements AfterViewInit, OnDestroy {
 
     EventSystem.register(this)
       .on('*', event => {
-        if (this.needRepeat || Network.bandwidthUsage < 3 * 1024) return;
+        return;
+        //if (this.needRepeat || Network.bandwidthUsage < 3 * 1024) return;
         if (this.timer === null) {
           this.nowConnect = true;
           this.timer = setTimeout(repeatFunc, 650);

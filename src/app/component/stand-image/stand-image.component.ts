@@ -1,5 +1,4 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
-import { ArrayType, ThrowStmt } from '@angular/compiler';
 import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';

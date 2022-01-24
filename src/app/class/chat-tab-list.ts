@@ -3,14 +3,21 @@ import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
   private static _instance: ChatTabList;
   static get instance(): ChatTabList {
     if (!ChatTabList._instance) {
-      ChatTabList._instance = new ChatTabList('ChatTabList');
-      ChatTabList._instance.initialize();
+      let chatTabList = ObjectStore.instance.get('ChatTabList')
+      if (chatTabList && chatTabList instanceof ChatTabList) {
+         ChatTabList._instance = chatTabList;
+      }
+      else {
+        ChatTabList._instance = new ChatTabList('ChatTabList');
+        ChatTabList._instance.initialize();
+      }
     }
     return ChatTabList._instance;
   }

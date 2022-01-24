@@ -3,6 +3,7 @@ import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { Player } from './player';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('room-admin')
 export class RoomAdmin extends ObjectNode implements InnerXml{
@@ -18,18 +19,16 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   @SyncVar() disableAllDataSave:boolean;
   @SyncVar() disableSeparateDataSave:boolean;
 
-  @SyncVar() roomLoad:boolean; 
   @SyncVar() gameType:string;
   @SyncVar() chatTab:string;
   @SyncVar() diceLog:boolean;
   @SyncVar() cardLog:boolean;
-  isLobby:boolean = true;
   myPlayerID:string = '';
   private static _instance:RoomAdmin;
 
   private static defaultSetting = {
     adminPlayer: [], 
-    disableRoomLoad: true,
+    disableRoomLoad: false,
     disableObjectLoad: false,
     disableTabletopLoad: false,
     disableImageLoad: false,
@@ -38,7 +37,6 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
     disableTabSetting: false,
     disableAllDataSave: false,
     disableSeparateDataSave: false,
-    roomLoad: true,
     gameType: "",
     chatTab: "",
     diceLog: false,
@@ -46,48 +44,52 @@ export class RoomAdmin extends ObjectNode implements InnerXml{
   }
 
   static init() {
-    if (!RoomAdmin._instance) {
+    let admin = ObjectStore.instance.get('RoomAdmin')
+    if (admin && admin instanceof RoomAdmin) {
+      RoomAdmin._instance = admin;
+     }
+    else {
       RoomAdmin._instance = new RoomAdmin('RoomAdmin');
       RoomAdmin._instance.initialize();
-      let admin = new RoomAdmin('admin')
-      admin.initialize();
-      for (let key in RoomAdmin.defaultSetting) {
-        admin.setAttribute(key, RoomAdmin.defaultSetting[key]);
-      }
-      RoomAdmin._instance.appendChild(admin);
     }
   }
 
-  private get getchild(): ObjectNode[] {  
+  makeChild() {
+    let admin = ObjectStore.instance.get('admin')
+    if (admin && admin instanceof RoomAdmin)  {
+      RoomAdmin._instance.appendChild(admin);  
+      return admin;
+    }
+    let newadmin = new RoomAdmin('admin')
+    newadmin.initialize();
+    for (let key in RoomAdmin.defaultSetting) {
+      newadmin.setAttribute(key, RoomAdmin.defaultSetting[key]);
+    }
+    RoomAdmin._instance.appendChild(newadmin);
+    return newadmin;
+  }
+
+  get getchild(): ObjectNode[] {  
     return this.children as ObjectNode[];
   }
 
   static get instance(): RoomAdmin {
+    if (!RoomAdmin._instance) RoomAdmin.init();
     return RoomAdmin._instance;
   }
  
   static get setting(): RoomAdmin {
-     return RoomAdmin.instance.getchild.find(object => 
-      (object instanceof RoomAdmin)
-    ) as RoomAdmin;
-  }
-
-  static get players(): Player[] {
-    return RoomAdmin.instance.getchild.filter(object => 
-      (object instanceof Player)
-    ) as Player[];
+    let child = RoomAdmin.instance.getchild.find(object => 
+      (object instanceof RoomAdmin)) as RoomAdmin;
+    if (!child) {
+      child = RoomAdmin._instance.makeChild()
+    }
+    return child;
   }
 
   static get auth() :boolean{
     if (RoomAdmin.setting.adminPlayer.length < 1) return true;
     return RoomAdmin.setting.adminPlayer.includes(RoomAdmin.setting.myPlayerID);
   }
-
-  static findPlayerById(playerId: string): Player {
-    return RoomAdmin.players.find( player =>
-      player.playerId === playerId
-    );
-  }
-
 
 }

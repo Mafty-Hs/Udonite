@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
@@ -48,7 +48,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get delayMs(): number {
-    let maxDelay = Network.peerIds.length * 16.6;
+    let maxDelay = IONetwork.peerIds.length * 16.6;
     return maxDelay < 100 ? 100 : maxDelay;
   }
 

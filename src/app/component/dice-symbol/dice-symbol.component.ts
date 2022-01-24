@@ -14,7 +14,7 @@ import {
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -208,8 +208,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
-          || (object instanceof ObjectNode && this.diceSymbol.contains(object))
-          || (object instanceof PeerCursor && object.player.playerId === this.diceSymbol.owner)) {
+          || (object instanceof ObjectNode && this.diceSymbol.contains(object))) {
           this.changeDetector.markForCheck();
         }
       })
@@ -227,10 +226,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           this.changeDetector.markForCheck();
         });
       })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('IMAGE_SYNC', -1000, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

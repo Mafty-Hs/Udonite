@@ -4,7 +4,7 @@ import { CounterList } from '@udonarium/counter-list';
 import { IRound } from '@udonarium/round';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
-import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
+import { ImageFile} from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { MimeType } from '@udonarium/core/file-storage/mime-type';
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
@@ -16,10 +16,8 @@ import { Room } from '@udonarium/room';
 
 import * as Beautify from 'vkbeautify';
 
-import { ImageTagList } from '@udonarium/image-tag-list';
 import { ChatTab } from '@udonarium/chat-tab';
 import { CutInList } from '@udonarium/cut-in-list';
-import { RoomAdmin } from '@udonarium/room-admin';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -37,7 +35,7 @@ export class SaveDataService {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveRoomAsync(fileName, updateCallback)));
   }
 
-  private _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+  private async _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
@@ -47,7 +45,6 @@ export class SaveDataService {
     let cutInXml = this.convertToXml(CutInList.instance);
     let billBoardXml = this.convertToXml(BillBoard.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
-    let roomAdmin = this.convertToXml(RoomAdmin.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
     files.push(new File([roundXml], 'round.xml', { type: 'text/plain' }));
@@ -56,23 +53,13 @@ export class SaveDataService {
     files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
     files.push(new File([cutInXml], 'cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
-    files.push(new File([roomAdmin], 'roomAdmin.xml', { type: 'text/plain' }));
 
-    //files = files.concat(this.searchImageFiles(roomXml));
-    //files = files.concat(this.searchImageFiles(chatXml));
-    let images: ImageFile[] = [];
-    images = images.concat(this.searchImageFiles(roomXml));
-    images = images.concat(this.searchImageFiles(chatXml));
-    images = images.concat(this.searchImageFiles(cutInXml));
-    images = images.concat(this.searchImageFiles(billBoardXml));
-    for (const image of images) {
-      if (image.state === ImageState.COMPLETE) {
-        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
-      }
-    }
-    let imageTagXml = this.convertToXml(ImageTagList.create(images));
+    files = files.concat(await this.searchImageFiles(roomXml));
+    files = files.concat(await this.searchImageFiles(chatXml));
+    files = files.concat(await this.searchImageFiles(cutInXml));
+    files = files.concat(await this.searchImageFiles(billBoardXml));
 
-    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
+    //イメージ保存
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
@@ -80,23 +67,12 @@ export class SaveDataService {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
   }
 
-  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
+  private async _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let xml: string = this.convertToXml(gameObject);
 
     files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
-    //files = files.concat(this.searchImageFiles(xml));
-    
-    let images: ImageFile[] = [];
-    images = images.concat(this.searchImageFiles(xml));
-    for (const image of images) {
-      if (image.state === ImageState.COMPLETE) {
-        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
-      }
-    }
-    let imageTagXml = this.convertToXml(ImageTagList.create(images));
-    
-    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
+    files = files.concat(await this.searchImageFiles(xml));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
@@ -115,9 +91,9 @@ export class SaveDataService {
     return xmlDeclaration + '\n' + Beautify.xml(gameObject.toXml(), 2);
   }
 
-  private searchImageFiles(xml: string): ImageFile[] {
+  private async searchImageFiles(xml: string): Promise<File[]> {
     let xmlElement: Element = XmlUtil.xml2element(xml);
-    let files: ImageFile[] = [];
+    let files: File[] = [];
     if (!xmlElement) return files;
 
     let images: { [identifier: string]: ImageFile } = {};
@@ -142,14 +118,31 @@ export class SaveDataService {
     }
     for (let identifier in images) {
       let image = images[identifier];
-      //if (image && image.state === ImageState.COMPLETE) {
-      //  files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
-      //}
-      if (image) {
-        files.push(image);
+      let file :File;
+      if (image && image?.owner != 'SYSTEM') file = await this.downloadImage(image.url);
+      if (file) {
+        files.push(file);
       }
     }
     return files;
+  }
+
+  async downloadImage(url :string) :Promise<File|null> {
+    let filename = url.match(".+/(.+?)([\?#;].*)?$")[1];
+    try {
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {},
+      });
+      if (response.ok) {
+        let blob = await response.blob() 
+        if (blob.size > 0) return new File([blob], filename);
+      }
+    }
+    catch(error) {
+      console.log(error);
+    }
+    return null
   }
 
   private appendTimestamp(fileName: string): string {

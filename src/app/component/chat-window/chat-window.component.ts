@@ -9,6 +9,7 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'chat-window',
@@ -16,7 +17,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
   styleUrls: ['./chat-window.component.css'],
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
-  _sendFrom: string = 'Guest';
+  _sendFrom: string = this.playerService.myPlayer.playerId;
 
   get sendFrom(): string { return this._sendFrom; }
   set sendFrom(sendFrom: string) {
@@ -29,8 +30,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }  
   }
 
-   private isMine(identifier: string):boolean {
-    if (identifier ==  PeerCursor.myCursor.identifier) {
+   private isMine(playerId: string):boolean {
+    if (playerId ==  this.playerService.myPlayer.playerId) {
       return true;
     }
     return false;
@@ -45,8 +46,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     return (this.bgColor === 'black')
   }
 
-  noControl = true;
-  _disableControl : boolean = false;
+  noControl:boolean = true;
+  _disableControl: boolean = true;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
     if (this.noControl) this._disableControl = true;
@@ -79,11 +80,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     public chatMessageService: ChatMessageService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
-    this.sendFrom = PeerCursor.myCursor.identifier;
     this._chatTabidentifier = 0 < this.chatMessageService.chatTabs.length ? this.chatMessageService.chatTabs[0].identifier : '';
 
     EventSystem.register(this)

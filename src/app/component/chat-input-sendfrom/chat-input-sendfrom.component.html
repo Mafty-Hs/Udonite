@@ -1,8 +1,8 @@
 <div class="selecter">
   <div *ngIf="!touched && !isLock ;else images">
     <select name="sendFrom" class="select" (change)="touch()" [(ngModel)]="sendFrom"
-     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': getColor() , 'font-weight': (sendFrom != player?.peerIdentifier ? 'normal' : 'bolder')}">
-       <option value="{{player?.peerIdentifier}}" [style.color]="colorValication(myColor)" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
+     [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': getColor() , 'font-weight': (sendFrom != myPlayerId ? 'normal' : 'bolder')}">
+       <option value="{{myPlayerId}}" [style.color]="colorValication(myColor)" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
        <option *ngFor="let gameCharacter of gameCharacters" 
           [style.color]="colorValication(this.gameCharacterService.color(gameCharacter.identifier))" 
          value="{{gameCharacter.identifier}}">{{gameCharacter.name}}

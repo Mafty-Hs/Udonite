@@ -1,6 +1,5 @@
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
-import { Network } from './core/system';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 import { moveToTopmost } from './tabletop-object-util';

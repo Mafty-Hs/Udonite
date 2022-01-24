@@ -35,6 +35,9 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
   isUseFaceIcon: boolean = true;  
   character: GameCharacter; 
+  get myPlayerId():string {
+    return this.playerService.myPlayer.playerId;
+  }
   get player():Player {
     return this.playerService.myPlayer;
   }

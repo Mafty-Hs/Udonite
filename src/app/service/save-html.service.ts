@@ -1,10 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ChatTab } from '@udonarium/chat-tab';
-import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatMessageService } from 'service/chat-message.service';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
-import { Network } from '@udonarium/core/system';
+import { RoomService } from './room.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +12,7 @@ export class SaveHtmlService {
 
   constructor(
     private chatMessageService: ChatMessageService,
+    private roomService: RoomService,
     private ngZone: NgZone
   ) { }
 
@@ -31,8 +31,8 @@ export class SaveHtmlService {
   htmlFoot: string = '</div>\r\n</body>\r\n</HTML>\r\n';
 
   saveAllHtmlLog() {
-    let thisRoomName:string = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
+    let thisRoomName:string = this.roomService.roomData.roomName
+      ? this.roomService.roomData.roomName
       : 'chatlog';
     let fileName:string;
     this.allTabs = this.chatMessageService.chatTabs;
@@ -47,9 +47,9 @@ export class SaveHtmlService {
   }  
 
   saveHtmlLog(targetTab: ChatTab) {
-    let thisRoomName:string = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
-      : 'chatlog';
+    let thisRoomName:string = this.roomService.roomData.roomName
+    ? this.roomService.roomData.roomName
+    : 'chatlog';
     let fileName:string = thisRoomName + "_" + targetTab.name  + "_" + this.timestamp();
     let files: File[] = [];
 

@@ -7,13 +7,13 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 import { Popup } from '@udonarium/popup';
+import { PlayerService } from './player.service';
 import { RoomService } from './room.service';
 
 import { CoordinateService } from './coordinate.service';
@@ -56,13 +56,13 @@ export class TabletopService {
   get terrains(): Terrain[] { return this.terrainCache.objects; }
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
-  get peerCursors(): PeerCursor[] { return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor); }
   get popups(): Popup[] { 
       return this.popupCache.objects;
   }
 
   constructor(
     private coordinateService: CoordinateService,
+    private playerService: PlayerService,
     private roomService: RoomService
   ) {
     this.initialize();

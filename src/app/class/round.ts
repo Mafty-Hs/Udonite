@@ -3,6 +3,7 @@ import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { ChatTab } from '@udonarium/chat-tab';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 
 @SyncObject('round')
@@ -33,20 +34,33 @@ export class IRound extends ObjectNode implements InnerXml{
   private static _instance: IRound;
 
   static init() {
-    if (!IRound._instance) {
+    let iround = ObjectStore.instance.get('Round');
+    if (iround && iround instanceof IRound) {
+      IRound._instance = iround;
+    }
+    else {
       IRound._instance = new IRound('Round');
       IRound._instance.initialize();
     }
-    if (IRound._instance.children.length == 0) {
-      let round = new Round('CommonRound')
+  }
+   
+  static childInit() { 
+    let round:Round
+    let tempRound = ObjectStore.instance.get('CommonRound');
+    if (tempRound || tempRound instanceof Round) {
+      round = <Round>tempRound
+    }
+    else {
+      round = new Round('CommonRound')
       round.initialize();
       round.reset();
       round.isInitiative = false;
-      IRound._instance.appendChild(round);
     }
+    IRound._instance.appendChild(round);
   }
 
-  private get getchild(): Round { 
+  private get getchild(): Round {
+    if (IRound._instance.children.length == 0) IRound.childInit();  
     let round:Round[] = this.children as Round[];
     return round[0];
   }
@@ -56,6 +70,7 @@ export class IRound extends ObjectNode implements InnerXml{
   }
 
   static get instance(): Round {
+    if (!IRound._instance) IRound.init();
     return IRound._instance.getchild;
   }
   static set instance(_round : Round) {

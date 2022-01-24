@@ -1,13 +1,14 @@
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip/dist/jszip.min.js';
 
-import { EventSystem } from '../system';
+import { EventSystem, IONetwork } from '../system';
 import { XmlUtil } from '../system/util/xml-util';
-import { AudioStorage } from './audio-storage';
 import { FileReaderUtil } from './file-reader-util';
-import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
 import { RoomAdmin } from '../../room-admin';
+
+import { PeerCursor } from '../../peer-cursor' 
+
 
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
@@ -70,8 +71,7 @@ export class FileArchiver {
 
   private onDrop(event: DragEvent) {
     event.preventDefault();
-    if (RoomAdmin.setting.isLobby) return;
-    console.log('onDrop', event.dataTransfer);
+     console.log('onDrop', event.dataTransfer);
     let files = event.dataTransfer.files
     this.load(files);
   };
@@ -99,7 +99,8 @@ export class FileArchiver {
         return;
       }
       console.log(file.name + ' type:' + file.type);
-      await ImageStorage.instance.addAsync(file);
+      let hash = await FileReaderUtil.calcSHA256Async(file);
+      await IONetwork.imageUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId)
     }
   }
 
@@ -111,8 +112,8 @@ export class FileArchiver {
         return;
       }
       console.log(file.name + ' type:' + file.type);
-      let audio = await AudioStorage.instance.addAsync(file);
-        EventSystem.trigger('ADD_AUDIO', { name: audio.name , identifier: audio.identifier});
+      let hash = await FileReaderUtil.calcSHA256Async(file);
+      await IONetwork.audioUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId)
     }
   }
 

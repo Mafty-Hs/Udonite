@@ -45,13 +45,10 @@
   </div>
 </div>
 <hr/>
-<ng-container *ngIf="networkService.peerContext.isRoom"> 
+<ng-container> 
   ログイン中のプレイヤー
   <div *ngFor="let peer of otherPeers">
     <div>
-      <span style="font-size: 12px;" [ngStyle]="{'color':peerStatus(peer.peerId)}" class="material-icons">
-        light_mode
-      </span>
       <span>[{{peer.player.playerId}}] <b [style.color]="peer.player.color">{{peer.player.name}}</b></span>
       <span *ngIf="peer.peerId == myPeer">[あなた]</span>
     </div>

@@ -16,7 +16,7 @@ import { CardStack } from '@udonarium/card-stack';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
@@ -141,15 +141,11 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.card || !object) return;
         if ((this.card === object)
-          || (object instanceof ObjectNode && this.card.contains(object))
-          || (object instanceof PeerCursor && object.player.playerId === this.card.owner)) {
+          || (object instanceof ObjectNode && this.card.contains(object))) {
           this.changeDetector.markForCheck();
         }
       })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('IMAGE_SYNC', -1000, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

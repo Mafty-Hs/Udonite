@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter,OnDestroy, OnInit } from '@angular/core';
-import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { GameCharacterService } from 'service/game-character.service';
-import { data } from 'browserslist';
+
 
 @Component({
   selector: 'player-palette-control',
@@ -19,7 +18,8 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   @Input() set sendFrom(sendFrom:string){
     this.cancelEdit();
     this._sendFrom = sendFrom;
-    this.name = this.gameCharacterService.get(sendFrom).name;
+    let character = this.gameCharacterService.get(sendFrom)
+    if (character) this.name = character.name;
   }
   private name:string;
 
@@ -61,7 +61,6 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   }
 
   ngOnDestroy() {
-    EventSystem.unregister(this);
   }
 
   innerText:string;

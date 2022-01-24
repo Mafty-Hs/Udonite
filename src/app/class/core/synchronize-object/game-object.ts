@@ -66,6 +66,12 @@ export class GameObject {
     return <this>ObjectSerializer.instance.parseXml(xmlString);
   }
 
+  setContext(identifier :string ,majorVersion :number ,minorVersion :number) {
+    this.context.identifier = identifier;
+    this.context.majorVersion = majorVersion;
+    this.context.minorVersion = minorVersion;
+  }
+
   toContext(): ObjectContext {
     return {
       aliasName: this.context.aliasName,

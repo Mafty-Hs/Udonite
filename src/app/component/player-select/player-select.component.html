@@ -24,7 +24,7 @@
           あなたの色
         </div>
         <div class="item-data">
-          <input type="color" style="width:2em; height:2.5em;" [(ngModel)]="myColor">
+          <input type="color" style="width:2em; height:2.5em;" [(ngModel)]="color">
         </div>
       </div>
       <div class="flex-item">
@@ -32,7 +32,7 @@
           ニックネーム
         </div>
         <div class="item-data">
-          <input [(ngModel)]="myName" [style.color]="myColor == '#444444' ? '#000000' : myColor" placeholder="ニックネーム" />
+          <input [(ngModel)]="playerName" [style.color]="myColor == '#444444' ? '#000000' : myColor" placeholder="ニックネーム" />
         </div>
       </div>
       <div class="flex-item">
@@ -57,12 +57,12 @@
     </div>
   </div>
   <div  class="box-item">
-    <button (click)="login()" [disabled]="!canConnect">ルームに入室</button>
+    <button (click)="login()" [disabled]="!canLogin">ルームに入室</button>
   </div>
 </div>
 
 <ng-template #savedPlayer >
-  <div *ngIf="allPlayers.length > 1 ;else noPlayer" class="player">
+  <div *ngIf="allPlayers.length > 0 ;else noPlayer" class="player">
     <div class="flex-item">
       <div class="item-name">
         プレイヤーを選択

@@ -100,5 +100,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isCritical(): boolean { return this.isDicebot && -1 < this.tags.indexOf('critical'); }
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
 
-  private getMyId = PeerCursor.myCursor.player.playerId;
+  private get getMyId():string {
+    return (PeerCursor.myCursor.context) ? PeerCursor.myCursor.player.playerId : ""
+  }
 }

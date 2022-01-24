@@ -1,11 +1,6 @@
-webrtc:
-  key: aaaaaaaa-bbbb-ccccc-dddd-eeeeeeeeeeee  #Your SkyWay API key
-  config: #未使用
-    iceServers: #未使用
-      - url: stun:stun.skyway.io:3478
-      - url: turn:homeo@turn.bistri.com:80
-        credential: homeo
 app: #未使用
 dice:
   url: https://test.example/api #bcDice-api server URL
   version: 2
+server:
+  url: https://test.example/ #Udonite server URL

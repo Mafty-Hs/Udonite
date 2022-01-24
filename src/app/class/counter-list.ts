@@ -3,14 +3,21 @@ import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { Counter , CounterAssign , CounterContext , CounterAssignContext} from './counter';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('counter-list')
 export class CounterList extends ObjectNode implements InnerXml{
   private static _instance: CounterList;
   static get instance(): CounterList {
     if (!CounterList._instance) {
-      CounterList._instance = new CounterList('CounterList');
-      CounterList._instance.initialize();
+      let counterlist = ObjectStore.instance.get('CounterList')
+      if (counterlist && counterlist instanceof CounterList) {
+         CounterList._instance = counterlist;
+      }
+      else {
+        CounterList._instance = new CounterList('CounterList');
+        CounterList._instance.initialize();
+      }
     }
     return CounterList._instance;
   }

@@ -29,6 +29,7 @@ import { TabletopService } from 'service/tabletop.service';
 import { GridLineRender } from './grid-line-render';
 import { TableMouseGesture } from './table-mouse-gesture';
 import { TableTouchGesture } from './table-touch-gesture';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'game-table',
@@ -79,7 +80,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get terrains(): Terrain[] { return this.tabletopService.terrains; }
   get textNotes(): TextNote[] { return this.tabletopService.textNotes; }
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
-  get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
+  get peerCursors(): PeerCursor[] { return this.playerService.peerCursors; }
   get popups(): Popup[] { return this.tabletopService.popups;
    }
 
@@ -89,6 +90,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
     private imageService: ImageService,
+    private playerService: PlayerService,
     private roomService: RoomService,
     private tabletopService: TabletopService,
     private tabletopActionService: TabletopActionService,
@@ -345,5 +347,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   trackByGameObject(index: number, gameObject: GameObject) {
     return gameObject.identifier;
+  }
+
+  trackByPeerId(index: number, peerCursor: PeerCursor) {
+    return peerCursor.peerId;
   }
 }

@@ -1,15 +1,8 @@
 <div style="width:98%">
-  <div>ルーム名 : <input class="input" (input)="calcPeerId($event.target.value, password)" [(ngModel)]="roomName" required minlength="1" maxlength="128" #roomNameValidation="ngModel"
+  <div>ルーム名 : <input class="input" [(ngModel)]="roomName" required minlength="1" maxlength="128" #roomNameValidation="ngModel"
       placeholder="ルームの名前は必須" /></div>
-  <div>パスワード: <input class="input" (input)="calcPeerId(roomName, $event.target.value)" [(ngModel)]="password" maxlength="12" #passwordValidation="ngModel" placeholder="空ならパスワードなし" 
+  <div>パスワード: <input class="input" [(ngModel)]="password" maxlength="12" #passwordValidation="ngModel" placeholder="空ならパスワードなし" 
     /></div>
-  <div>
-    <span style="font-size: 12px;">ルームマスター権限を使用する</span>
-    <div class="toggle"><label>
-      <input name="roomAdmin" type="checkbox" [(ngModel)]="roomAdmin">
-      <div><div></div></div>
-    </label></div>
-  </div>
   <div>デフォルトダイスボット:<br>   
     <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 20em;" [(ngModel)]="roomService.roomAdmin.gameType" [ngModelOptions]="{standalone: true}">
     <option value="" class="not-specified">ダイスボット指定なし</option>
@@ -27,27 +20,8 @@
   </div>
   <div>
   <hr/>
-  <div *ngIf="roomNameValidation.errors && (roomNameValidation.dirty || roomNameValidation.touched)">
-    <div [hidden]="!roomNameValidation.errors.required">
-      ルームの名前は必須です。
-    </div>
-    <div [hidden]="!roomNameValidation.errors.minlength">
-      ルームの名前は必須です。
-    </div>
-    <div [hidden]="!roomNameValidation.errors.maxlength">
-      ルーム名前の長さは128以内にしてください。
-    </div>
-  </div>
-  <div *ngIf="passwordValidation.errors && (passwordValidation.dirty || passwordValidation.touched)">
-    <div [hidden]="!passwordValidation.errors.maxlength">
-      パスワードの長さは12以内にしてください。
-    </div>
-  </div>
-  <div *ngIf="!validateLength">
-    ルームの名前とパスワードの合計が長すぎるようです。どちらかを少し短くしてみてください。
-  </div>
   <div>
-    <button [disabled]="!roomNameValidation.valid || !passwordValidation.valid || !validateLength" (click)="createRoom()">新しいルームを作成</button>
+    <button (click)="createRoom()">新しいルームを作成</button>
     <button (click)="close()">キャンセル</button>
   </div>
 </div>

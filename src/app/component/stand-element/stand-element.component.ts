@@ -51,9 +51,7 @@ export class StandElementComponent implements OnInit {
         this._imageFile = file ? file : ImageFile.Empty;
       }
     } else {
-      let fileContext = ImageFile.createEmpty('stand_no_image').toContext();
-      fileContext.url = './assets/images/nc96424.png';
-      this._imageFile = ImageStorage.instance.add(fileContext);
+       this._imageFile = ImageStorage.instance.get('stand_no_image');
       this.standElement.appendChild(DataElement.create('imageIdentifier', this._imageFile.identifier, { type: 'image' }, 'imageIdentifier_' + this.standElement.identifier));
     }
     return this._imageFile;

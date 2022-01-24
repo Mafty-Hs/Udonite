@@ -2,14 +2,21 @@ import { SyncObject } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
 import { DiceRollTable } from './dice-roll-table';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('dice-roll-table-list')
 export class DiceRollTableList extends ObjectNode implements InnerXml {
   private static _instance: DiceRollTableList;
   static get instance(): DiceRollTableList {
     if (!DiceRollTableList._instance) {
-      DiceRollTableList._instance = new DiceRollTableList('DiceRollTableList');
-      DiceRollTableList._instance.initialize();
+      let diceRollTableList = ObjectStore.instance.get('DiceRollTableList')
+      if (diceRollTableList && diceRollTableList instanceof DiceRollTableList) {
+         DiceRollTableList._instance = diceRollTableList;
+      }
+      else {
+        DiceRollTableList._instance = new DiceRollTableList('DiceRollTableList');
+        DiceRollTableList._instance.initialize();
+      }
     }
     return DiceRollTableList._instance;
   }

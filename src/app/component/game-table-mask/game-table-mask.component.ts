@@ -97,10 +97,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           this.changeDetector.markForCheck();
         }
       })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('IMAGE_SYNC', -1000, event => {
         this.changeDetector.markForCheck();
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {

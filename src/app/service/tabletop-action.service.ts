@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
-import { ImageContext, ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
@@ -17,8 +16,6 @@ import { GameCharacterService } from './game-character.service';
 
 import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
-
-import { ImageTag } from '@udonarium/image-tag';
 
 @Injectable({
   providedIn: 'root'
@@ -52,17 +49,11 @@ export class TabletopActionService {
 
   createTerrain(position: PointerCoordinate): Terrain {
     let url: string = './assets/images/tex.jpg';
-    let image: ImageFile = ImageStorage.instance.get(url);
-    //if (!image) image = ImageStorage.instance.add(url);
-    if (!image) {
-      image = ImageStorage.instance.add(url);
-      ImageTag.create(image.identifier).tag = '*default 地形';
-    }
-
+ 
     let viewTable = this.getViewTable();
     if (!viewTable) return;
 
-    let terrain = Terrain.create('地形', 2, 2, 2, image.identifier, image.identifier);
+    let terrain = Terrain.create('地形', 2, 2, 2, url, url);
     terrain.location.x = position.x - 50;
     terrain.location.y = position.y - 50;
     terrain.posZ = position.z;
@@ -85,24 +76,12 @@ export class TabletopActionService {
 
     diceSymbol.nothingFaces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
-      image = ImageStorage.instance.get(url)
-      //if (!image) { image = ImageStorage.instance.add(url); }
-      if (!image) {
-        image = ImageStorage.instance.add(url);
-        ImageTag.create(image.identifier).tag = `*default ${ diceType === DiceType.D2 ? 'コイン' : 'ダイス'}`;
-      }
-      diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
+      diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
     });
     
     diceSymbol.faces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
-      image = ImageStorage.instance.get(url);
-      //if (!image) { image = ImageStorage.instance.add(url); }
-      if (!image) {
-        image = ImageStorage.instance.add(url);
-        ImageTag.create(image.identifier).tag = `*default ${ diceType === DiceType.D2 ? 'コイン' : 'ダイス'}`;
-      }
-      diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
+          diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
     });
 
     diceSymbol.location.x = position.x - 25;
@@ -114,20 +93,7 @@ export class TabletopActionService {
   createBlankCard(position: PointerCoordinate): Card {
     const frontUrl = './assets/images/trump/blank_card.png';
     const backUrl = './assets/images/trump/z01.gif';
-    let frontImage: ImageFile;
-    let backImage: ImageFile;
-
-    frontImage = ImageStorage.instance.get(frontUrl);
-    if (!frontImage) {
-      frontImage = ImageStorage.instance.add(frontUrl);
-      ImageTag.create(frontImage.identifier).tag = '*default カード';
-    }
-    backImage = ImageStorage.instance.get(backUrl);
-    if (!backImage) {
-      backImage = ImageStorage.instance.add(backUrl);
-      ImageTag.create(backImage.identifier).tag = '*default カード';
-    }
-    let card = Card.create('カード', frontImage.identifier, backImage.identifier);
+     let card = Card.create('カード', frontUrl, backUrl);
     card.location.x = position.x - 25;
     card.location.y = position.y - 25;
     card.posZ = position.z;
@@ -141,12 +107,6 @@ export class TabletopActionService {
     cardStack.posZ = position.z;
 
     let back: string = './assets/images/trump/z02.gif';
-    if (!ImageStorage.instance.get(back)) {
-      //ImageStorage.instance.add(back);
-      const image = ImageStorage.instance.add(back);
-      ImageTag.create(image.identifier).tag = '*default カード';
-    }
-
     let suits: string[] = ['c', 'd', 'h', 's'];
     let trumps: string[] = [];
 
@@ -161,11 +121,6 @@ export class TabletopActionService {
 
     for (let trump of trumps) {
       let url: string = './assets/images/trump/' + trump + '.gif';
-      if (!ImageStorage.instance.get(url)) {
-        //ImageStorage.instance.add(url);
-        const image = ImageStorage.instance.add(url);
-        ImageTag.create(image.identifier).tag = '*default カード';
-      }
       let card = Card.create('カード', url, back);
       cardStack.putOnBottom(card);
     }

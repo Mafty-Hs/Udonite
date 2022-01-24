@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -27,7 +27,6 @@ import { Player } from '@udonarium/player';
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  networkService = Network;
   help: string = '';
   isCopied = false;
 
@@ -74,13 +73,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-  }
-
-  peerStatus(peerID: string) :string {
-    let count = PeerCursor.myCursor.keepalive[peerID];
-    if (count < -5) return '#F00';
-    if (count < -1) return '#FF0';
-    return '#0F0';
   }
 
   changeIcon() {

@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { PlayerService } from 'service/player.service';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -42,7 +42,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Input() isBlack: boolean = true;
   
-  _sendFrom: string = this.playerService.myPeerIdentifier;
+  _sendFrom: string = this.playerService.myPlayer.playerId;
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
     this.sendFromChange.emit(sendFrom); 
@@ -90,8 +90,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       .on('MESSAGE_ADDED', event => {
         if (event.data.tabIdentifier !== this.chatTabidentifier) return;
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        let peerCursor = ObjectStore.instance.getObjects<PeerCursor>(PeerCursor).find(obj => obj.player.playerId === message.from);
-        let sendFrom = peerCursor ? peerCursor.peerId : '?';
+        let sendFrom = this.playerService.getPeerByPlayer(message.from);
         if (this.writingPeers.has(sendFrom)) {
           this.writingPeers.get(sendFrom).stop();
           this.writingPeers.delete(sendFrom);
@@ -128,7 +127,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (this.writingEventInterval === null && this.previousWritingLength <= this.text.length) {
       let sendTo: string = null;
       if (this.isDirect) {
-        let peerId = this.playerService.getPeerId(this.sendTo);
+        let peerId = this.playerService.getPeerByPlayer(this.sendTo);
         if (peerId) sendTo = peerId;
       }
       EventSystem.call('WRITING_A_MESSAGE', this.chatTabidentifier, sendTo);
@@ -143,7 +142,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
     if (event && event.keyCode !== 13) return;
-    if (!this.sendFrom.length) this.sendFrom = this.playerService.myPeerIdentifier;
+    if (!this.sendFrom.length) this.sendFrom = this.playerService.myPlayer.playerId;;
 
     let text = this.text;
     if (StringUtil.cr(text).trim()) {

@@ -12,7 +12,6 @@ import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { Round } from '@udonarium/round';
 import { Room } from '@udonarium/room';
-import { RoomAdmin } from '@udonarium/room-admin';
 
 import { PlayerService } from './player.service';
 import { RoomService } from './room.service';
@@ -32,10 +31,7 @@ export class LoadDataService {
     'chat-tab-list',
     'counter-list',
     'cut-in-list',
-    'dice-roll-table-list',
-    'image-tag-list',    
-    'room',
-    'room-admin',
+    'dice-roll-table-list', 
     'round',
     'summary-setting'
   ];
@@ -57,12 +53,16 @@ export class LoadDataService {
 
   loadData(xmlElement :Element) {
     let nodeName = xmlElement.nodeName;
-    if (this.tableTopNodeList.includes(nodeName)) {
+    if (nodeName == 'room') {
+      if (!this.roomService.disableTabletopLoad)
+        this.parseRoomData(xmlElement)
+    }
+    else if (this.tableTopNodeList.includes(nodeName)) {
       if (!this.roomService.disableTabletopLoad)
         this.tabletopDataLoad(xmlElement ,nodeName);
     }
     else if (this.roomNodeList.includes(nodeName)) {
-      if (this.roomService.roomAdmin.isLobby || this.roomService.isStandalone || !this.roomService.roomAdmin.disableRoomLoad)
+      if (!this.roomService.roomAdmin.disableRoomLoad)
         this.roomDataLoad(xmlElement ,nodeName);
     }
     else if (this.otherNodeList.includes(nodeName)) {
@@ -83,9 +83,6 @@ export class LoadDataService {
         break;
       case (gameObject instanceof BillBoard):
         this.billBoardService.loadCard(<BillBoard>gameObject);
-        break;
-      case (gameObject instanceof RoomAdmin):
-        this.roomService.loadRoom(<RoomAdmin>gameObject);
         break;
       default:
         return;
@@ -110,6 +107,10 @@ export class LoadDataService {
       default:
         return;
     };
+  }
+
+  parseRoomData(xmlElement :Element) {
+    let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
   }
 
   initialize() {

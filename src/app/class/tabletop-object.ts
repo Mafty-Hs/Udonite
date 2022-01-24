@@ -5,6 +5,7 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
+import { Player } from './player';
 import { RoomAdmin } from './room-admin';
 
 export interface TabletopLocation {
@@ -34,11 +35,11 @@ export class TabletopObject extends ObjectNode {
   private _dataElements: { [name: string]: string } = {};
 
   get ownerName(): string {
-    let object = RoomAdmin.findPlayerById(this.owner);
+    let object = ObjectStore.instance.getObjects<Player>(Player).find(player => player.playerId == this.owner);
      return object ? object.name : '';
   }
   get ownerColor(): string {
-    let object = RoomAdmin.findPlayerById(this.owner);
+    let object = ObjectStore.instance.getObjects<Player>(Player).find(player => player.playerId == this.owner);
     return object ? object.color : '#444444';
   }
   get hasOwner(): boolean { return 0 < this.owner.length; }

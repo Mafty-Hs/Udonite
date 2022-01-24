@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { generateId } from '@udonarium/core/system/util/generateId';
 import { Player } from '@udonarium/player';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
+import { Color } from 'three';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +20,9 @@ export class PlayerService {
   
   CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
   CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
-
   
   myPlayer:Player;
+  peerCursors:PeerCursor[] = [];
   
   //プレイヤーパレット
   localpalette: ChatPalette;
@@ -39,7 +41,7 @@ export class PlayerService {
   }
 
   removeList(identifier: string) {
-    if (identifier == this.myPeer.identifier) {return}
+    if (identifier == this.myPlayer.playerId) {return}
     const index = this.paletteList.indexOf(identifier);
     if (index > -1) {
       this.paletteList.splice(index, 1);
@@ -50,22 +52,15 @@ export class PlayerService {
     if (this.paletteList.indexOf(identifier) >= 0) { return true } 
     return false; 
   }
-
-  playerCreate(imageIdentifier :string) {
+  playerCreate(playerName :string, color :string ,imageIdentifier :string) {
     let player = new Player();
     player.initialize();
     player.isInitial = true;
-    player.name =  (window.localStorage && localStorage.getItem(this.CHAT_MY_NAME_LOCAL_STORAGE_KEY)) ?
-      localStorage.getItem(this.CHAT_MY_NAME_LOCAL_STORAGE_KEY) :
-      "プレイヤー" ;
-    player.color = (window.localStorage && localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) ?
-      localStorage.getItem(this.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) :
-      this.CHAT_WHITETEXT_COLOR ;
+    player.name =  playerName;
+    player.color = color;
     player.imageIdentifier = imageIdentifier;
-    player.playerId = PeerContext.generateId();
-    RoomAdmin.instance.appendChild(player);
-    PeerCursor.createMyCursor(player.identifier);
-    this.myPlayer = player;
+    player.playerId = generateId();
+    this.refleshPeers();
     return player;
   }
 
@@ -90,48 +85,56 @@ export class PlayerService {
   }
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get myPeerIdentifier(): string { return this.myPeer.identifier; }
-  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+  get otherPeers(): PeerCursor[] { return this.peerCursors; }
 
   get otherPlayers(): Player[] {
     return this.otherPeers.map(peer => {
-      return peer.player;
+      if (peer.player) return peer.player;
     });
   }
 
-  getPeer(identifier :string): PeerCursor {
-    let object = ObjectStore.instance.get(identifier);
-    if (object instanceof PeerCursor) {
-      return object as PeerCursor;
-    }
-    return null;
+  findByPeerId(peerId :string): PeerCursor {
+    return this.otherPeers.find(peer => 
+      peer.peerId == peerId
+    );
   }
- 
+
   getPlayerById(playerId :string): Player {
     return this.otherPeers.find( peer => 
       peer.player.playerId === playerId
     ).player;
   }
 
-  getPeerId(identifier :string): string {
-    let peer = this.getPeer(identifier);
-    if (peer) {
-      let peerContext = PeerContext.parse(peer.peerId);
-      return peerContext.peerId;
-    }
-    return null;
+  getPeerByPlayer(playerId:string): string {
+    return this.otherPeers.find(peer => peer.player.playerId == playerId).peerId
   }
 
   findPeerNameAndColor(peerId: string):{ name: string, color: string } {
-    let peer = PeerCursor.findByPeerId(peerId);
+    let peer = this.findByPeerId(peerId);
       return {
         name: (peer ? peer.player.name : ''),
         color: (peer ? peer.player.color : this.CHAT_WHITETEXT_COLOR),
       };
   }
 
+  refleshPeers() {
+    IONetwork.otherPeers().then(peers => {
+      let newCursors:PeerCursor[] = [];
+      for (let context of peers) {
+        let newPeer = new PeerCursor;
+        newPeer._context = context;
+        if (newPeer.playerIdentifier) newPeer.player;
+        newCursors.push(newPeer);
+      }
+      this.peerCursors = newCursors;
+    })
+  }
 
   constructor() {
     this.localpalette =  new ChatPalette('LocalPalette');
+    EventSystem.register(this)
+    .on('NEED_UPDATE', event => {
+      PeerCursor.myCursor.context = {peerId: IONetwork.peerId ,playerIdentifier: PeerCursor.myCursor.playerIdentifier};
+    });
   }
 }

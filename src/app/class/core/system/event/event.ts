@@ -1,4 +1,4 @@
-import { Network } from '../network/network';
+import { IONetwork } from "../socketio/ionetwork";
 
 export class Event<T> implements EventContext<T>{
   readonly isSendFromSelf: boolean = false;
@@ -6,8 +6,8 @@ export class Event<T> implements EventContext<T>{
   constructor(
     readonly eventName: string,
     public data: T,
-    readonly sendFrom: string = Network.instance.peerId) {
-    this.isSendFromSelf = this.sendFrom === Network.instance.peerId;
+    readonly sendFrom: string = IONetwork.instance.peerId) {
+    this.isSendFromSelf = this.sendFrom === IONetwork.instance.peerId;
   }
 
   toContext(): EventContext<T> {

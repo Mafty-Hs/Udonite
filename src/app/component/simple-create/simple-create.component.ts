@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Network } from '@udonarium/core/system';
+import { IONetwork } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
 import { GameCharacterService } from 'service/game-character.service';
@@ -34,7 +34,7 @@ export class SimpleCreateComponent implements OnInit,AfterViewInit {
   create() {
     if (this.name == "") return;
     let character = this.gameCharacterService.create(this.name ,this.imageIdentifier)
-    character.setLocation(Network.peerId);
+    character.setLocation(IONetwork.peerId);
     if (this.useStand) character.standList.add(this.imageIdentifier);
     character.standList.position = this.position;
     this.playerService.addList(character.identifier);

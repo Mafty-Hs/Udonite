@@ -69,9 +69,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           this.changeDetector.markForCheck();
         }
       })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        if (event.isSendFromSelf) this.changeDetector.markForCheck();
-      })
       .on('UPDATE_INVENTORY', event => {
         if (event.isSendFromSelf) this.changeDetector.markForCheck();
       });

@@ -188,7 +188,9 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   get myPlayer(): Player { return this.playerService.myPlayer; }
-  get otherPlayers(): Player[] { return this.playerService.otherPlayers; }
+  get otherPlayers(): Player[] { 
+    return this.playerService.otherPlayers; 
+  }
   get sendToColor(): string {
     return this.playerService.getPlayerById(this.sendTo).color
   }

@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href=/test/",
-    "prod": "ng build --configuration production --base-href=/udonite/",
+    "build": "ng build --base-href=/udoniteS/",
+    "prod": "ng build --configuration production --base-href=/udoniteS/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

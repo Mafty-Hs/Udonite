@@ -100,9 +100,10 @@ export class PlayerService {
   }
 
   getPlayerById(playerId :string): Player {
-    return this.otherPeers.find( peer => 
-      peer.player.playerId === playerId
-    ).player;
+    let players = ObjectStore.instance.getObjects<Player>(Player)
+    return players.find( player => 
+      player.playerId === playerId
+    );
   }
 
   getPeerByPlayer(playerId:string): string {

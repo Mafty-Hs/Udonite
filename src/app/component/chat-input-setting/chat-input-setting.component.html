@@ -3,7 +3,7 @@
         ➡
         <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
           <option value="" class="not-specified">全員</option>
-          <option *ngFor="let player of otherPlayers" value="{{player.playerId}}" [style.color]="player && player?.color ? player.color : playerService.CHAT_WHITETEXT_COLOR" style="font-weight: bolder;">{{player.name}}
+          <option *ngFor="let player of otherPlayers" value="{({player && player?.playerId) ? player.playerId : '' }}" [style.color]="(player && player?.color )? player.color : playerService.CHAT_WHITETEXT_COLOR" style="font-weight: bolder;">{{(player && player?.name) ? player.name : '接続中' }}
             <ng-container *ngIf="player === myPlayer">（あなた）</ng-container>
           </option>
         </select>

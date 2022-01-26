@@ -9,6 +9,10 @@ export class ImageStorage {
     return ImageStorage._instance;
   }
 
+  get dataSize():number {
+    return Object.values(this.imageHash).reduce((totalSize, Image) => totalSize + Image.context.filesize ,0 )
+  } 
+
   private imageHash: { [identifier: string]: ImageFile } = {};
   taglist:string[] = [];
 
@@ -54,10 +58,13 @@ export class ImageStorage {
     image.context = context;
   }
 
-  delete(identifier: string): boolean {
+  remove(identifier :string) {
+    IONetwork.imageRemove(identifier);
+  }
+
+  destroy(identifier: string): boolean {
     let deleteImage: ImageFile = this.imageHash[identifier];
     if (deleteImage) {
-      //deleteImage.destroy();
       delete this.imageHash[identifier];
       return true;
     }

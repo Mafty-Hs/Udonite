@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
+import { IONetwork } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { RoomService , RoomState } from 'service/room.service';
 
@@ -34,7 +35,11 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  createRoom() {
+  async createRoom() {
+    if ((await this.roomService.roomList()).length >= IONetwork.server.maxRoomCount) {
+      this.roomFile = null;
+      this.close();
+    }
     if (this.roomFile) {
       this.roomService.roomFile = this.roomFile; 
       this.roomFile = null;

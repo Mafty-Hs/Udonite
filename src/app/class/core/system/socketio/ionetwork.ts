@@ -1,13 +1,13 @@
 
 import { socketio } from "./socketio";
-import { RoomContext, RoomList } from "./netowrkContext";
+import { RoomContext, RoomList, ServerInfo } from "./netowrkContext";
 import { NetworkStatus } from "./connection";
 import { EventContext , PeerContext} from "./netowrkContext";
 import { CatalogItem } from "@udonarium/core/synchronize-object/object-store";
 import { Subject } from "rxjs";
 import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-io";
 import { ImageContext } from "@udonarium/core/file-storage/image-context";
-import { ObjectContext } from "@udonarium/core/synchronize-object/game-object";
+import { AudioContext } from "@udonarium/core/file-storage/audio-context";
 
 export class IONetwork {
   private static _instance: IONetwork
@@ -47,6 +47,10 @@ export class IONetwork {
   async close() {
     this.socket.close();
     return ;
+  }
+
+  get server():ServerInfo {
+    return this.socket.serverInfo;
   }
 
   async listRoom():Promise<RoomList[]> {
@@ -129,8 +133,21 @@ export class IONetwork {
     this.socket.send('imageUpdate', context);
   }
 
-  async audio(audioFile: File): Promise<void>  {
-    this.socket.send('audio', audioFile);
+  async imageRemove(identifier :string) {
+    this.socket.send('imageRemove', {identifier: identifier});
+  }
+
+  async audioMap() {
+    let result = await this.socket.send('audioMap',{});
+    return result as AudioContext[];
+  }
+
+  async audioUpdate(context :AudioContext) {
+    this.socket.send('audioUpdate', context);
+  }
+
+  async audioRemove(identifier :string) {
+    this.socket.send('audioRemove', {identifier: identifier});
   }
 
   async allData():Promise<ObjectNetworkContext[]> {
@@ -181,6 +198,7 @@ export class IONetwork {
     const formData = new FormData();
     formData.append("roomId", this.roomId);
     formData.append("file", audioFile);
+    formData.append("name", audioFile.name);
     formData.append("filesize", String(audioFile.size));
     formData.append("owner", owner); 
     formData.append("type", type);

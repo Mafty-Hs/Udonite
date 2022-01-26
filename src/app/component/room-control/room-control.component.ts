@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem , IONetwork } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
@@ -9,6 +9,8 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { GameCharacterService } from 'service/game-character.service';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 
 @Component({
   selector: 'room-control',
@@ -39,6 +41,14 @@ export class RoomControlComponent implements OnInit {
   }
 
   get adminAuth():boolean { return this.roomService.adminAuth;}
+
+  get imageSize():string {
+    return  Math.floor(ImageStorage.instance.dataSize / 1024) + " / " + (IONetwork.server.imageStorageMaxSize * 1024) ;
+  }
+
+  get audioSize():string {
+    return Math.floor(AudioStorage.instance.dataSize / 1024) + " / " + (IONetwork.server.audioStorageMaxSize * 1024);
+  }
 
   alarmSend() {
     let peer:string = "";

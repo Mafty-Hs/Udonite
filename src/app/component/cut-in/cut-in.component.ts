@@ -398,7 +398,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   private _play() {
     if (this.isEnd) return;
     const audio = AudioStorage.instance.get(this.cutIn.audioIdentifier);
-    if (audio && audio.isReady) {
+    if (audio) {
       this.audioPlayer.volumeType = this.isTest ? VolumeType.AUDITION : VolumeType.MASTER;
       this.audioPlayer.loop = this.cutIn.isLoop;
       if (!this.cutIn.videoId) this.audioPlayer.play(audio);

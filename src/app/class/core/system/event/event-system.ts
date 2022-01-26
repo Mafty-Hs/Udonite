@@ -8,6 +8,8 @@ import { ObjectNetworkContext } from '@udonarium/core/synchronize-object/object-
 import { Subscription } from 'rxjs';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageContext } from '@udonarium/core/file-storage/image-context';
+import { AudioStorage } from  '@udonarium/core/file-storage/audio-storage';
+import { AudioContext } from '@udonarium/core/file-storage/audio-context';
 
 type EventName = string;
 
@@ -94,6 +96,7 @@ export class EventSystem implements Subject {
 
   private _call(event: Event<any>, sendTo?: string) {
     let context = event.toContext();
+    this.trigger(context);
     IONetwork.instance.call(context, sendTo)
   }
 
@@ -167,6 +170,10 @@ export class EventSystem implements Subject {
     IONetwork.instance.socket.recieve("DELETE_GAME_OBJECT").subscribe(identifier => this.trigger('NW_DELETE_GAME_OBJECT',<string>identifier));
     IONetwork.instance.socket.recieve("IMAGE_ADD").subscribe(context => {ImageStorage.instance.create(<ImageContext>context); this.trigger('IMAGE_SYNC',null) });
     IONetwork.instance.socket.recieve("IMAGE_UPDATE").subscribe(context => {ImageStorage.instance.update(<ImageContext>context); this.trigger('IMAGE_SYNC',null)});
+    IONetwork.instance.socket.recieve("IMAGE_REMOVE").subscribe(identifier => {ImageStorage.instance.destroy(<string>identifier); this.trigger('IMAGE_SYNC',null)});
+    IONetwork.instance.socket.recieve("AUDIO_ADD").subscribe(context => {AudioStorage.instance.create(<AudioContext>context); this.trigger('AUDIO_SYNC',null) });
+    IONetwork.instance.socket.recieve("AUDIO_UPDATE").subscribe(context => {AudioStorage.instance.update(<AudioContext>context); this.trigger('AUDIO_SYNC',null)});
+    IONetwork.instance.socket.recieve("AUDIO_REMOVE").subscribe(identifier => {AudioStorage.instance.destroy(<string>identifier); this.trigger('AUDIO_SYNC',null)});
   }
 
   private reconnect() {

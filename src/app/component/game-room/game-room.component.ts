@@ -6,7 +6,6 @@ import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { AudioService } from 'service/audio.service';
 import { CutInService } from 'service/cut-in.service';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { EffectService } from 'service/effect.service';
@@ -41,7 +40,6 @@ export class GameRoomComponent implements OnInit {
   selectMenu:string = "";
 
   constructor(
-    private audioService: AudioService,
     private cutInService: CutInService,
     private contextMenuService: ContextMenuService,
     private effectService: EffectService,
@@ -51,7 +49,6 @@ export class GameRoomComponent implements OnInit {
     private roomService: RoomService,
     private standImageService: StandImageService,
   ) {
-    this.audioService.initialize();
    }
 
   ngAfterViewInit() {

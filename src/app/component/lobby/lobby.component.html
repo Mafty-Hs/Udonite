@@ -32,7 +32,7 @@
     </div>
     <div *ngIf='!isConnecting && roomService.roomState == 0' >
       <button (click)="reload()" [disabled]="isReloading">一覧を更新</button>
-      <button (click)="showRoomSetting()">新規ルーム作成</button>
+      <button (click)="showRoomSetting()" [disabled]="reachRooms">新規ルーム作成</button>
     </div>
   </div>
 </div>

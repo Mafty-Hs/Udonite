@@ -24,3 +24,11 @@ export interface PeerContext {
   peerId :string ;
   playerIdentifier :string ;
 }
+
+export interface ServerInfo {
+  version: string;
+  maxRoomCount: number;
+  adminPassword: string;
+  imageStorageMaxSize: number;
+  audioStorageMaxSize: number;
+}

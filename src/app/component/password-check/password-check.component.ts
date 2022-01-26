@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, Input ,Output ,EventEmitter } from '@angular/core';
+import { IONetwork } from '@udonarium/core/system';
 import { RoomList } from '@udonarium/core/system/socketio/netowrkContext';
 import { RoomService, RoomState } from 'service/room.service';
 
@@ -36,7 +37,7 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.room.password != this.inputPassword) {
+    if ((this.room.password != this.inputPassword) && this.roomService.getHash(this.inputPassword) != IONetwork.server.adminPassword) {
       this.help = 'パスワードが違います';
       return;
     }

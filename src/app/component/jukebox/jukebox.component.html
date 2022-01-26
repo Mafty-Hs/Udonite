@@ -31,23 +31,23 @@
       <th style="width:5em">音量</th>
       <th >名前</th>
     <tr>
-    <tr *ngFor="let info of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}">
+    <tr *ngFor="let audio of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}">
       <td>
-        <button (click)="play(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == auditionIdentifier}"><i class="material-icons">play_arrow</i></button>
+        <button (click)="play(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == auditionIdentifier}"><i class="material-icons">play_arrow</i></button>
      </td>
       <td>
-        <button (click)="playBGM(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == jukeboxIdentifier}"><i class="material-icons">loop</i></button>
+        <button (click)="playBGM(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == jukeboxIdentifier}"><i class="material-icons">loop</i></button>
       </td>
       <td>
-        <button (click)="playSE(info.audioIdentifier)" [ngClass]="{'sw-on': info.audioIdentifier == effectIdentifier}"><i class="material-icons">play_arrow</i></button>
+        <button (click)="playSE(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == effectIdentifier}"><i class="material-icons">play_arrow</i></button>
       </td>
-      <td><input type="number" min="0" max="400" step="1" style="width: 4em" [(ngModel)]="info.volume">%</td>
-      <td (click)="toggleName($event,info.audioIdentifier)" class="name">
-        <ng-container *ngIf="info.audioIdentifier !== nameIdentifier">
-           {{info.name}}
+      <td><input type="number" min="0" max="400" step="1" style="width: 4em" [(ngModel)]="audio.volume">%</td>
+      <td (click)="toggleName($event,audio.identifier)" class="name">
+        <ng-container *ngIf="audio.identifier !== nameIdentifier">
+           {{audio.name}}
         </ng-container>
-        <ng-container *ngIf="info.audioIdentifier === nameIdentifier">
-          <input type="text" width="18em" [(ngModel)]="info.name" />
+        <ng-container *ngIf="audio.identifier === nameIdentifier">
+          <input type="text" width="18em" [(ngModel)]="audio.name" />
           <button (click)="toggleName($event,'')">OK</button>
         </ng-container>
       </td>
@@ -74,4 +74,4 @@
 <div style="font-size: 12px; margin-top: 3px">※「試聴<sup class="self-only">*</sup>」は自分のスピーカーだけで音楽を1回再生します。</div>
 <div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
 <div style="font-size: 12px;">※「SE」はルーム内の全員で1つの音楽を一回再生します。BGMと同時に再生することができます。</div>
-<div style="font-size: 12px;">セーブデータ（zip）には音楽ファイルは含まれません。（毎回アップロードが必要です）</div>
+<div style="font-size: 12px;">音楽ファイルはルームに誰もいなくなると削除されます（毎回アップロードが必要です）</div>

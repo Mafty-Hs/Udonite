@@ -1,7 +1,6 @@
 import { AudioFile } from './core/file-storage/audio-file';
 import { AudioPlayer, VolumeType } from './core/file-storage/audio-player';
 import { AudioStorage } from './core/file-storage/audio-storage';
-import { AudioInfo , AudioSetting } from '@udonarium/audio-setting';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { EventSystem } from './core/system';
@@ -40,7 +39,7 @@ export class Jukebox extends GameObject {
 
   play(identifier: string, isLoop: boolean = false) {
     let audio = AudioStorage.instance.get(identifier);
-    if (!audio || !audio.isReady) return;
+    if (!audio) return;
     this.audioIdentifier = identifier;
     this.isPlaying = true;
     this.isLoop = isLoop;
@@ -49,7 +48,7 @@ export class Jukebox extends GameObject {
 
   sePlay(identifier: string, isLoop: boolean = false) {
     let audio = AudioStorage.instance.get(identifier);
-    if (!audio || !audio.isReady) return;
+    if (!audio) return;
     this.seIdentifier = identifier;
     this.seIsPlaying = true;
     this.seIsLoop = isLoop;
@@ -58,17 +57,13 @@ export class Jukebox extends GameObject {
 
   private _play() {
     this._stop();
-    if (!this.audio || !this.audio.isReady) {
-      this.playAfterFileUpdate();
-      return;
-    }
     this.audioPlayer.loop = true;
     this.audioPlayer.play(this.audio);
   }
 
   private _sePlay() {
     this._seStop();
-    if (!this.se || !this.se.isReady) {
+    if (!this.se) {
       console.log(this.seIdentifier);
       console.log(this.se);
       return;
@@ -96,13 +91,6 @@ export class Jukebox extends GameObject {
 
   private _seStop() {
     this.sePlayer.stop();
-  }
-
-  private playAfterFileUpdate() {
-    EventSystem.register(this)
-      .on('UPDATE_AUDIO_RESOURE', -100, event => {
-        this._play();
-      });
   }
 
   private unlockAfterUserInteraction() {

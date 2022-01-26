@@ -1,8 +1,8 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
-import { AudioInfo , AudioSetting } from '@udonarium/audio-setting';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -25,7 +25,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get auditionVolume(): number { return AudioPlayer.auditionVolume; }
   set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
 
-  get audios(): AudioInfo[] { return AudioSetting.instance.list }
+  get audios(): AudioFile[] { return AudioStorage.instance.audios }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
   get percentAuditionVolume(): number { return Math.floor(AudioPlayer.auditionVolume * 100); }
@@ -43,17 +43,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get jukeboxIdentifier(): string { return this.jukebox.audio ? this.jukebox.audio.identifier : ""}
   get effectIdentifier(): string { return this.jukebox.se ? this.jukebox.se.identifier : ""}
 
-  get auditionPlayerName(): string  { return this.auditionPlayer?.audio ?  AudioSetting.instance.getName(this.auditionPlayer.audio.identifier) : ""}
-  get jukeboxName(): string {  return this.jukebox.audio ? AudioSetting.instance.getName(this.jukebox.audio.identifier) : ""}
+  get auditionPlayerName(): string  { return this.auditionPlayer?.audio ?  this.auditionPlayer?.audio.name : ""}
+  get jukeboxName(): string {  return this.jukebox.audio ? this.jukebox.audio.name : ""}
 
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
-  audio(audioIdentifier :string):AudioFile {
-    let audio = AudioSetting.instance.audios.find(file =>
-      file.identifier === audioIdentifier
-    )
-    if (audio) return audio;
-  }
 
   nameIdentifier:string = "";
 
@@ -68,8 +62,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ジュークボックス');
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
     EventSystem.register(this)
-      .on('*', event => {
-        if (event.eventName.startsWith('FILE_')) this.lazyNgZoneUpdate();
+      .on('AUDIO_SYNC', event => {
+        this.lazyNgZoneUpdate();
       });
   }
 
@@ -89,7 +83,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.stop();
       return;
     }
-    this.auditionPlayer.play(this.audio(identifier));
+    this.auditionPlayer.play(AudioStorage.instance.get(identifier));
   }
 
   stop() {

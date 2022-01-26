@@ -1,11 +1,13 @@
 import { io ,Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { Connection ,NetworkStatus} from './connection';
+import { ServerInfo } from './netowrkContext';
 
 export class socketio extends  Connection {
   private url:string = "";
   private socket!:Socket;
-  private reader = new FileReader();
+  private _serverInfo:ServerInfo;
+  get serverInfo():ServerInfo {return this._serverInfo}
   
   get id():string {
     return this.socket.id
@@ -80,6 +82,7 @@ export class socketio extends  Connection {
       //console.log(data);
     });
     this.socket.on('ServerInfo', (data) => {
+      this._serverInfo = <ServerInfo>data;
       this.status = NetworkStatus.CONNECT;
       console.log("Udonite Server Connection Successful")
     }); 

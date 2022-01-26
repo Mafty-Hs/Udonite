@@ -1,5 +1,4 @@
-import { AudioFile, AudioState } from './audio-file';
-import { AudioSetting, AudioInfo } from '@udonarium/audio-setting';
+import { AudioFile } from './audio-file';
 import { FileReaderUtil } from './file-reader-util';
 
 export enum VolumeType {
@@ -15,13 +14,11 @@ declare global {
   }
 }
 
-type AudioCache = { url: string, blob: Blob };
-
 export class AudioPlayer {
   private static _audioContext: AudioContext;
 
-  static calcVolume(identifier :string) :number {
-    let volume = AudioSetting.instance.getInfo(identifier).volume / 400;
+  static calcVolume(audio :AudioFile) :number {
+    let volume = audio.volume / 400;
     return volume;
   }
 
@@ -110,37 +107,21 @@ export class AudioPlayer {
   set loop(loop) { this.audioElm.loop = loop; }
   get paused(): boolean { return this.audioElm.paused; }
 
-  private static cacheMap: Map<string, AudioCache> = new Map();
-
   constructor(audio?: AudioFile) {
     this.audio = audio;
   }
 
-  static play(audio: AudioFile, volume: number = 1.0) {
-    this.playBufferAsync(audio, volume);
-  }
-
-  play(audio: AudioFile = this.audio) {
+  play(audio: AudioFile = this.audio, volume: number = 1.0) {
     this.stop();
     this.audio = audio;
     if (!this.audio) return;
 
     let url = this.audio.url;
-
-    if (audio.state === AudioState.URL) {
-      if (AudioPlayer.cacheMap.has(audio.identifier)) {
-        url = AudioPlayer.cacheMap.get(audio.identifier).url;
-      } else {
-        AudioPlayer.createCacheAsync(audio);
-      }
-    }
-    
-    //let gain = this.getConnectingAudioNode() as GainNode;
-    //gain.gain.value = AudioPlayer.calcVolume((this.volumeType !== VolumeType.AUDITION) ? AudioPlayer.volume : AudioPlayer.auditionVolume  ,audio.identifier);
+   
     this.mediaElementSource.connect(this.getConnectingAudioNode());
     this.audioElm.src = url;
     this.audioElm.load();
-    this.volume =  AudioPlayer.calcVolume(audio.identifier);
+    this.volume =  AudioPlayer.calcVolume(audio);
     this.audioElm.play().catch(reason => { console.warn(reason); });
   }
 
@@ -168,90 +149,6 @@ export class AudioPlayer {
     }
   }
 
-  private static async playBufferAsync(audio: AudioFile, volume: number = 1.0) {
-    let source = await AudioPlayer.createBufferSourceAsync(audio);
-    if (!source) return;
-
-    let gain = AudioPlayer.audioContext.createGain();
-    gain.gain.setValueAtTime(volume, AudioPlayer.audioContext.currentTime);
-
-    gain.connect(AudioPlayer.rootNode);
-    source.connect(gain);
-
-    source.onended = () => {
-      source.stop();
-      source.disconnect();
-      gain.disconnect();
-      source.buffer = null;
-    };
-
-    source.start();
-  }
-
-  private static async createBufferSourceAsync(audio: AudioFile): Promise<AudioBufferSourceNode> {
-    if (!audio) return null;
-    try {
-      let blob = audio.blob;
-      if (audio.state === AudioState.URL) {
-        if (AudioPlayer.cacheMap.has(audio.identifier)) {
-          blob = AudioPlayer.cacheMap.get(audio.identifier).blob;
-        } else {
-          let cache = await AudioPlayer.createCacheAsync(audio);
-          blob = cache && cache.blob ? cache.blob : null;
-        }
-      }
-      if (!blob) return null;
-      let decodedData = await this.decodeAudioDataAsync(blob);
-      let source = AudioPlayer.audioContext.createBufferSource();
-      source.buffer = decodedData;
-      return source;
-    } catch (reason) {
-      console.warn(reason);
-      return null;
-    }
-  }
-
-  private static decodeAudioDataAsync(blob: Blob): Promise<AudioBuffer> {
-    return new Promise(async (resolve, reject) => {
-      AudioPlayer.audioContext.decodeAudioData(
-        await FileReaderUtil.readAsArrayBufferAsync(blob),
-        decodedData => resolve(decodedData),
-        error => reject(error));
-    });
-  }
-
-  private static async getBlobAsync(audio: AudioFile): Promise<Blob> {
-    if (audio.blob) return audio.blob;
-    if (audio.url.length < 1) throw new Error('えっ なにそれ怖い');
-
-    try {
-      let response = await fetch(audio.url);
-      if (!response.ok) throw new Error('Network response was not ok.');
-      let blob = await response.blob();
-      return blob;
-    } catch (error) {
-      console.warn('There has been a problem with your fetch operation: ', error.message);
-      throw error;
-    }
-  }
-
-  private static async createCacheAsync(audio: AudioFile): Promise<AudioCache> {
-    let cache = { url: audio.url, blob: null };
-    try {
-      cache.blob = await AudioPlayer.getBlobAsync(audio);
-    } catch (e) {
-      console.error(e);
-      return cache;
-    }
-
-    if (AudioPlayer.cacheMap.has(audio.identifier)) {
-      return AudioPlayer.cacheMap.get(audio.identifier);
-    }
-
-    cache.url = URL.createObjectURL(cache.blob);
-    AudioPlayer.cacheMap.set(audio.identifier, cache);
-    return cache;
-  }
 
   static resumeAudioContext() {
     AudioPlayer.audioContext.resume();

@@ -8,36 +8,38 @@ import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 
 export class PresetSound {
-  static dicePick: string = '';
-  static dicePut: string = '';
-  static diceRoll1: string = '';
-  static diceRoll2: string = '';
-  static cardDraw: string = '';
-  static cardPick: string = '';
-  static cardPut: string = '';
-  static cardShuffle: string = '';
-  static piecePick: string = '';
-  static piecePut: string = '';
-  static blockPick: string = '';
-  static blockPut: string = '';
-  static lock: string = '';
-  static unlock: string = '';
-  static sweep: string = '';
-  static puyon: string = '';
-  static surprise: string = '';
-  static coinToss: string = '';
-  static alarm: string = '';
-  static pikon: string = '';
+  static dicePick: string = 'dicePick';
+  static dicePut: string = 'dicePut';
+  static diceRoll1: string = 'diceRoll1';
+  static diceRoll2: string = 'diceRoll2';
+  static cardDraw: string = 'cardDraw';
+  static cardPick: string = 'cardPIck';
+  static cardPut: string = 'cardPut';
+  static cardShuffle: string = 'cardSHhffle';
+  static piecePick: string = 'piecePick';
+  static piecePut: string = 'piecePut';
+  static blockPick: string = 'blockPick';
+  static blockPut: string = 'blockPut';
+  static lock: string = 'lock';
+  static unlock: string = 'unlock';
+  static sweep: string = 'sweep';
+  static puyon: string = 'puyon';
+  static surprise: string = 'surprise';
+  static coinToss: string = 'coinToss';
+  static alarm: string = 'alarm';
+  static pikon: string = 'pikon';
 }
 
 @SyncObject('sound-effect')
 export class SoundEffect extends GameObject {
+
+  private player = new AudioPlayer();
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
     EventSystem.register(this)
       .on<string>('SOUND_EFFECT', event => {
-        AudioPlayer.play(AudioStorage.instance.get(event.data), 0.12);
+        this.player.play(AudioStorage.instance.get(event.data), 0.12);
       })
       .on('SEND_MESSAGE', event => {
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);

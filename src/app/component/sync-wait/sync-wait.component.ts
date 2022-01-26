@@ -20,6 +20,9 @@ import { PlayerService } from 'service/player.service';
 import { RoomService , RoomState } from 'service/room.service';
 import { RoomAdmin } from '@udonarium/room-admin';
 
+import { Jukebox } from '@udonarium/Jukebox';
+import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
+import { SoundEffect } from '@udonarium/sound-effect';
 
 @Component({
   selector: 'sync-wait',
@@ -39,10 +42,13 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     FileArchiver.instance.initialize();
     ImageStorage.instance;
     AudioStorage.instance;
-    ImageStorage.instance.getCatalog().then(() => {
-      EventSystem.trigger("START_SYNC",null) ;
-      this.message = "サーバのデータを取得しています。";
-    });
+    let image = ImageStorage.instance.getCatalog();
+    let audio = AudioStorage.instance.getCatalog();
+    Promise.all([image,audio])
+      .then(() => {
+        EventSystem.trigger("START_SYNC",null) ;
+        this.message = "サーバのデータを取得しています。";
+      });
   }
 
   commonInitialnize() {
@@ -58,6 +64,14 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     DiceRollTableList.instance.identifier;
     RoomAdmin.instance.identifier;
     RoomAdmin.setting.identifier;
+    AudioPlayer.resumeAudioContext();
+
+    let jukebox: Jukebox = new Jukebox('Jukebox');
+    jukebox.initialize();
+    jukebox.seInit();
+
+    let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
+    soundEffect.initialize();
 
     let tableSelecter =  <TableSelecter>ObjectStore.instance.get('tableSelecter');
     if (!tableSelecter) {

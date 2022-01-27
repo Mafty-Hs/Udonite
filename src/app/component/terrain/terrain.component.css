@@ -19,12 +19,10 @@
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
 }
-
 .component-content .texture {
   -webkit-transition: -webkit-transform 132ms ease;
   transition: transform 132ms ease;
 }
-
 .component-content:hover .texture {
   opacity: 0.8;
 }
@@ -100,8 +98,12 @@
   filter: brightness(0.8);
 }
 
-.of-wall-left.is-slope, .of-wall-right.is-slope {
-  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+.of-wall-top.is-slope, .of-wall-bottom.is-slope , .of-wall-left.is-slope, .of-wall-right.is-slope {
+  clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+}
+
+.of-wall-top.is-inverse-slope, .of-wall-bottom.is-inverse-slope , .of-wall-left.is-inverse-slope, .of-wall-right.is-inverse-slope {
+  clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
 }
 
 .of-wall-top.no-shadow, .of-wall-left.no-shadow, .of-wall-right.no-shadow {
@@ -206,4 +208,14 @@
   color: blanchedalmond;
   text-shadow: #444 0px 0px 3px;
   backface-visibility: hidden;
+}
+
+.upright-transform {
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
+}
+
+.fall {
+  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
+  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
 }

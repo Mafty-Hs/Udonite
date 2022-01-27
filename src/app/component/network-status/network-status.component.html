@@ -1,5 +1,5 @@
 <div [ngClass]="isAlert ? 'boxAlert' : 'box'">
-  <div *ngIf="!minimumMode; else minimum">{{roomName()}} : {{userCount}}名</div>
+  <div *ngIf="!minimumMode; else minimum">{{roomName}} : {{userCount}}名</div>
 </div>
 <ng-template #minimum>
   {{userCount}}名  

@@ -8,6 +8,8 @@ import { MimeType } from './mime-type';
 import { RoomAdmin } from '../../room-admin';
 
 import { PeerCursor } from '../../peer-cursor' 
+import { ImageStorage } from './image-storage';
+import { AudioStorage } from './audio-storage';
 
 
 type MetaData = { percent: number, currentFile: string };
@@ -98,6 +100,10 @@ export class FileArchiver {
         console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
         return;
       }
+      if  ((ImageStorage.instance.dataSize + file.size) > (IONetwork.server.imageStorageMaxSize *1024 *1024) ) {
+        console.warn('Server ImageStorage size limit exceeded');
+        return;
+      }
       console.log(file.name + ' type:' + file.type);
       let hash = await FileReaderUtil.calcSHA256Async(file);
       await IONetwork.imageUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId)
@@ -109,6 +115,10 @@ export class FileArchiver {
     if (!RoomAdmin.setting.disableAudioLoad || RoomAdmin.auth) {
        if (this.maxAudioeSize < file.size) {
         console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        return;
+      }
+      if  ((AudioStorage.instance.dataSize + file.size) > (IONetwork.server.audioStorageMaxSize *1024 + 1024)  ) {
+        console.warn('Server AudioStorage size limit exceeded');
         return;
       }
       console.log(file.name + ' type:' + file.type);

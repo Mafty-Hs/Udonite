@@ -52,7 +52,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
   set color(color: string) {
     this._color = color;
     if (window.localStorage) {
-      localStorage.setItem(this.playerService.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, this.playerService.myPlayer.color);
+      localStorage.setItem(this.playerService.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, color);
     }
   }
 

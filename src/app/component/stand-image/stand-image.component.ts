@@ -5,6 +5,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
+import { PlayerService } from 'service/player.service';
 import { StandImageService } from 'service/stand-image.service';
 import { StandService } from 'service/stand.service';
 
@@ -81,6 +82,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   constructor(
     private standService: StandService,
+    private playerService: PlayerService,
     private ngZone: NgZone
   ) { }
 
@@ -104,6 +106,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
       }, 300);
     }
   }
+
+  get chatWHITECOLOR():string {return this.playerService.CHAT_WHITETEXT_COLOR};
+  get chatBLACKCOLOR():string {return this.playerService.CHAT_BLACKTEXT_COLOR};
 
   get isShowStand(): boolean {
     return StandImageComponent.isShowStand;

@@ -376,7 +376,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get dialogColor(): string {
-    return (this.dialog && this.dialog.color) ? this.dialog.color : this.playerService.CHAT_BLACKTEXT_COLOR;
+    return (this.dialog && this.dialog.color && this.dialog.color != this.playerService.CHAT_WHITETEXT_COLOR) ? this.dialog.color : this.playerService.CHAT_BLACKTEXT_COLOR;
   }
 
   movableOption: MovableOption = {};

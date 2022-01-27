@@ -50,8 +50,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.reload();
   }
 
+  get maxRoomCount():number {
+    return IONetwork.server ? IONetwork.server.maxRoomCount : 0
+  }
+  get roomCount():number {
+    return this.rooms.length
+  }
+
   get reachRooms():boolean {
-    if (IONetwork.server) return (IONetwork.server.maxRoomCount >= this.rooms.length)
+    if (IONetwork.server) return (this.maxRoomCount <= this.roomCount)
     return true;
   }
 

@@ -13,7 +13,7 @@
         [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
         [style.width.px]="imageWidth"
         [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
-        [style.color]="color ? color : '#444'"
+        [style.color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
         [style.bottom.px]="dialogBoxCssBottom + (imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16)"
         [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
       <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
@@ -35,23 +35,23 @@
   </div>
   <span *ngIf="isShowStand && !isFarewell && (isVisible || !isCanBeGone) && isShowNameTag && gameCharacter && gameCharacter.name" class="name-tag"
     style="pointer-events: none;" 
-    [style.color]="color ? color : '#444'" 
+    [style.color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR" 
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
     [style.left]="position + 'px'"
     [style.margin-bottom.px]="adjustY > 0 ? adjustY : 0"
-    [style.border-color]="color ? color : '#444'"
+    [style.border-color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
     [style.margin-left.px]="nameTagCSSMarginLeft"
     ><b>{{ gameCharacter.name }}</b></span>
   <div @fadeAndScaleInOut *ngIf="!isFarewell && isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
     (click)="toGhostly(); toBackyard();"
     style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
     [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
-    [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
+    [style.color]="isSecret ? '#ccc' : (color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
     [style.left.px]="dialogBoxCSSLeft"
     [style.bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? dialogBoxCssBottom : 12"
     [style.max-width.px]="dialogBoxCSSMaxWidth"
     [style.margin-bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? adjustY : 0"
     [ngStyle]="{left: (position <= halfWindow ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > halfWindow ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= halfWindow ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= halfWindow, 'is-position-left': position > halfWindow}"
-    [style.border-color]="color ? color : '#444'"><p style="width: 100%" [@dialogShake]="math.floor(dialogText.length / 2)" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</p></div>
+    [style.border-color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"><p style="width: 100%" [@dialogShake]="math.floor(dialogText.length / 2)" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</p></div>
 </div>

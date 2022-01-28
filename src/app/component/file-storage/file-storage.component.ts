@@ -204,6 +204,18 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onUnselect() {
+    this.selectedImageFiles = [];
+  }
+
+  remove() {
+    if (window.confirm("選択した画像を削除します。\nよろしいですか？")) {
+      for (let file of this.selectedImageFiles) {
+        ImageStorage.instance.destroy(file.identifier);
+      }
+    }
+  }
+
   identify(image){
     return image.identifier;
   }

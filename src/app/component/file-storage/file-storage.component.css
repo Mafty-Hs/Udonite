@@ -64,6 +64,8 @@
 }
 
 .sticky-bottom {
+  display: flex;
+  justify-content:space-between;
   position: sticky;
   bottom: 0;
   background-color: #212121;
@@ -148,4 +150,15 @@
   text-shadow: 0px 0px 2px crimson,
   0px 0px 4px white;
   font-weight: bolder;
+}
+
+.remove {
+  background: none;
+  background-color: darkred;
+  color: #eee;
+  padding: 2px 4px;
+}
+
+.remove ::after {
+  background: none;
 }

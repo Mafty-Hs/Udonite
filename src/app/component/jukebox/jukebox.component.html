@@ -31,7 +31,8 @@
       <th style="width:5em">音量</th>
       <th >名前</th>
     <tr>
-    <tr *ngFor="let audio of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}">
+    <tr *ngFor="let audio of audios; last as last" class="box" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden" [ngClass]="{last: last}" >
+      <ng-container *ngIf="audio.identifier !== nameIdentifier ; else edit">
       <td>
         <button (click)="play(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == auditionIdentifier}"><i class="material-icons">play_arrow</i></button>
      </td>
@@ -43,14 +44,9 @@
       </td>
       <td><input type="number" min="0" max="400" step="1" style="width: 4em" [(ngModel)]="audio.volume">%</td>
       <td (click)="toggleName($event,audio.identifier)" class="name">
-        <ng-container *ngIf="audio.identifier !== nameIdentifier">
-           {{audio.name}}
-        </ng-container>
-        <ng-container *ngIf="audio.identifier === nameIdentifier">
-          <input type="text" width="18em" [(ngModel)]="audio.name" />
-          <button (click)="toggleName($event,'')">OK</button>
-        </ng-container>
+        {{audio.name}}
       </td>
+      </ng-container>
     </tr>
     <tr>
       <td></td><td></td><td></td><td></td><td (click)="toggleName($event,'')">-</td>
@@ -75,3 +71,14 @@
 <div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
 <div style="font-size: 12px;">※「SE」はルーム内の全員で1つの音楽を一回再生します。BGMと同時に再生することができます。</div>
 <div style="font-size: 12px;">音楽ファイルはルームに誰もいなくなると削除されます（毎回アップロードが必要です）</div>
+
+<ng-template #edit>
+  <td colspan="4">
+    データの削除
+    <button class="remove" (click)="remove(nameAudio.identifier)" [diabled]="jukeboxIdentifier == audio.identifier || auditionIdentifier  == audio.identifier || effectIdentifier  == audio.identifier"><i class="material-icons">delete</i></button>
+  </td>
+  <td (click)="toggleName($event,audio.identifier)" class="name">
+    <input type="text" width="18em" [(ngModel)]="nameAudio.name" />
+    <button (click)="toggleName($event,'')">OK</button>
+  </td>
+</ng-template>

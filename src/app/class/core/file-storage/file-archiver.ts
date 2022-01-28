@@ -117,7 +117,7 @@ export class FileArchiver {
         console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
         return;
       }
-      if  ((AudioStorage.instance.dataSize + file.size) > (IONetwork.server.audioStorageMaxSize *1024 + 1024)  ) {
+      if  ((AudioStorage.instance.dataSize + file.size) > (IONetwork.server.audioStorageMaxSize *1024 *1024)  ) {
         console.warn('Server AudioStorage size limit exceeded');
         return;
       }

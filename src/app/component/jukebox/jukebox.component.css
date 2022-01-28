@@ -155,6 +155,17 @@ button .material-icons {
   white-space: nowrap;
 }
 
+.remove {
+  background: none;
+  background-color: darkred;
+  color: #eee;
+  padding: 2px 4px;
+}
+
+.remove ::after {
+  background: none;
+}
+
 @keyframes marquee {
   0% {
     -moz-transform: translateX(100%);

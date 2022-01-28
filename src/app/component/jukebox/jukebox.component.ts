@@ -50,6 +50,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
 
   nameIdentifier:string = "";
+  get nameAudio():AudioFile {
+    return AudioStorage.instance.get(this.nameIdentifier);
+  }
 
   constructor(
     private modalService: ModalService,
@@ -113,6 +116,12 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   stopSE() {
     this.jukebox.seStop();
+  }
+
+  remove(identifier :string) {
+    if (window.confirm("選択した音楽を削除します。\nよろしいですか？")) {
+      AudioStorage.instance.destroy(identifier); 
+    }
   }
 
   handleFileSelect(event: Event) {

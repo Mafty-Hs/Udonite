@@ -1,12 +1,12 @@
 {
   "name": "udonite",
-  "version": "0.6.5",
+  "version": "0.6.9",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href=/udoniteS/",
-    "prod": "ng build --configuration production --base-href=/udoniteS/",
+    "build": "ng build --base-href=/udonite/",
+    "prod": "ng build --configuration production --base-href=/udonite/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -48,7 +48,7 @@
     "set-value": "^4.1.0",
     "socket.io-client": "^4.3.2",
     "ssri": ">=8.0.1",
-    "three": "^0.132.2",
+    "three": "^0.137.4",
     "tslib": "^2.3.1",
     "url-parse": ">=1.5.0",
     "uuid": "^8.3.2",

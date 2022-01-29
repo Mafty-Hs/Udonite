@@ -53,10 +53,10 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     let images: ImageFile[];
     if (this.isShowAllImages) 
       images = ImageStorage.instance.images
-        .filter((image) => !image.context.isHide)
+        .filter((image) => !image.context.isHide);
     else 
       images = ImageStorage.instance.images
-        .filter((image) => !image.context.isHide && (image.owner == this.playerService.myPlayer.playerId))
+        .filter((image) => !image.context.isHide && (image.owner.includes(this.playerService.myPlayer.playerId)));
     if (this.showType == 'ALL')
       return images;
     else if (this.showType == 'No Tag')

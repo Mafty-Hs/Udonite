@@ -4,7 +4,7 @@ export interface ImageContext {
   url: string;
   thumbnail: ThumbnailContext;
   filesize: number;
-  owner: string;
+  owner: string[];
   isHide: boolean;
   tag?: string[];
 }

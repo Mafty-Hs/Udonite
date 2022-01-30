@@ -28,7 +28,7 @@
               "src/styles.css"
             ],
             "scripts": [
-               "src/assets/lib/effekseer_asmjs.js"
+               "src/assets/lib/effekseer_asmjs.min.js"
             ],
             "allowedCommonJsDependencies": [
               "hammerjs",

@@ -32,7 +32,7 @@ import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
-import * as THREE from 'three';
+import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
 import { Subscription } from 'rxjs'
 
 @Component({
@@ -154,9 +154,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   canvas:HTMLCanvasElement;
   private effect$: Subscription;
   private renderer;
-  private camera = new THREE.PerspectiveCamera( 30.0, 1, 1, 1000);
-  private scene = new THREE.Scene();
-  private clock = new THREE.Clock();
+  private camera = new PerspectiveCamera( 30.0, 1, 1, 1000);
+  private scene = new Scene();
+  private clock = new Clock();
   context : effekseer.EffekseerContext = null;
   effects;
   private hasEffect = null;
@@ -183,7 +183,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.canvas.style.position = "absolute";
     this.canvas.style.display = "none";
     this.camera.position.set(20, 20, 20);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.camera.lookAt(new Vector3(0, 0, 0));
  
     document.body.appendChild(this.canvas);
 
@@ -219,7 +219,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       this.setCanvasSize(newWidth ,newHeight);
     }
     else {
-      this.renderer = new THREE.WebGLRenderer({canvas: this.canvas , alpha: true});
+      this.renderer = new WebGLRenderer({canvas: this.canvas , alpha: true});
       this.newContext();
       this.setCanvasSize(newWidth ,newHeight);
     }

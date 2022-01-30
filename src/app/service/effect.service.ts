@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as THREE from 'three';
-import { Observable ,Subject } from 'rxjs';
+import { WebGLRenderer} from 'three';
+import { Subject } from 'rxjs';
 
 interface effectData {
       time: number;
@@ -64,7 +64,7 @@ export class EffectService {
     return Object.keys(this.effectInfo) as string[];
   }
 
-  createContext(renderer: THREE.WebGLRenderer) :effekseer.EffekseerContext {
+  createContext(renderer: WebGLRenderer) :effekseer.EffekseerContext {
     let context:  effekseer.EffekseerContext;
     context = effekseer.createContext();
     context.init(renderer.getContext(), {

@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy , NgZone, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy , NgZone } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
-import { PanelOption, PanelService } from 'service/panel.service';
+import { PanelService } from 'service/panel.service';
 import { EffectService } from 'service/effect.service';
-import * as THREE from 'three';
+import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
 
 @Component({
   selector: 'effect-view',
@@ -20,9 +20,9 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
   }
 
   private renderer;
-  private camera = new THREE.PerspectiveCamera(30.0, this.width / this.height, 1, 1000);
-  private scene = new THREE.Scene();
-  private clock = new THREE.Clock();
+  private camera = new PerspectiveCamera(30.0, this.width / this.height, 1, 1000);
+  private scene = new Scene();
+  private clock = new Clock();
   context : effekseer.EffekseerContext = null;
   effects :{[key: string]: any} = {};
 
@@ -72,10 +72,10 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
   }
 
   private renderingInit() {
-    this.renderer = new THREE.WebGLRenderer({canvas: this.effect.nativeElement as HTMLCanvasElement , alpha: true});
+    this.renderer = new WebGLRenderer({canvas: this.effect.nativeElement as HTMLCanvasElement , alpha: true});
     this.renderer.setSize(this.width, this.height);
     this.camera.position.set(20, 20, 20);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.camera.lookAt(new Vector3(0, 0, 0));
   }
  
   constructor(

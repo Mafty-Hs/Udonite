@@ -43,7 +43,8 @@
   <table class="room-list">
     <tr class="title">
       <th class="room-name">ルーム名</th>
-      <th style="width:5em">パスワード</th>
+      <th style="width:4em">状態</th>
+      <th style="width:6em">最終アクセス</th>
       <th style="width:4em">参加者</th>
       <th style="width:10em"></th>
     </tr>
@@ -51,12 +52,14 @@
       <tr>
         <td class="room-name">{{room.roomId.substr(0,3) + "/" + room.roomName}}</td>
         <td>
-          <i *ngIf="room.password > 0" class="material-icons" style="vertical-align: middle; font-size:0.9rem;">lock</i>
+          <i *ngIf="room.password > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
+          <i *ngIf="room.isOpen" class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i>
         </td>
+        <td>{{dateString(room.lastAccess)}}</td>
         <td>{{room.players}}人</td>
         <td>
-          <button [disabled]="!room.isOpen" type="submit" (click)="connect(room)">接続</button>
-          <button [disabled]="!room.isOpen" type="submit" (click)="delete(room)">削除</button>
+          <button type="submit" (click)="connect(room)">接続</button>
+          <button [disabled]="room.isOpen" type="submit" (click)="delete(room)">削除</button>
         </td>
       </tr>
     </ng-container>

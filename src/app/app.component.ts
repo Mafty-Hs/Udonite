@@ -9,12 +9,9 @@ import { ObjectSynchronizer } from '@udonarium/core/synchronize-object/object-sy
 
 import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { DiceBotService } from 'service/dice-bot.service';
-import { LoadDataService } from 'service/load-data.service';
-import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { RoomService } from 'service/room.service';
 
-import { TextViewComponent } from 'component/text-view/text-view.component';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PlayerService } from 'service/player.service';
 
@@ -32,16 +29,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(  
-    private modalService: ModalService,
     private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
     private appConfigService: AppConfigService,
     private ngZone: NgZone,
     private roomService: RoomService,
-    private loadDataService: LoadDataService,
     private playerService: PlayerService
   ) {
-
     this.ngZone.runOutsideAngular(() => {
       IONetwork;
       EventSystem;
@@ -52,8 +46,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       ObjectSynchronizer.instance.initialize();
     });
     this.appConfigService.initialize();
-    this.pointerDeviceService.initialize();
-    this.loadDataService.initialize();    
+    this.pointerDeviceService.initialize();    
     PeerCursor.myCursor = new PeerCursor();
      EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })

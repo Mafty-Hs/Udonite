@@ -19,6 +19,7 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { PlayerService } from 'service/player.service';
 import { RoomService , RoomState } from 'service/room.service';
 import { RoomAdmin } from '@udonarium/room-admin';
+import { LoadDataService } from 'service/load-data.service';
 
 import { Jukebox } from '@udonarium/Jukebox';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
@@ -36,6 +37,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public roomService: RoomService,
     private playerService: PlayerService,
+    private loadDataService: LoadDataService
   ) { }
 
   roomSync() { 
@@ -53,7 +55,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
 
   commonInitialnize() {
     this.roomService.roomData = IONetwork.roomInfo;
-    
+    this.loadDataService.initialize();
     IRound.instance.identifier;
     BillBoard.instance.identifier;
     ObjectTemplate.instance.identifier;

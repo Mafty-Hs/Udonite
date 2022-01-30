@@ -22,14 +22,14 @@
 .window-setting {
   width: 100%;
   display: flex;
-  flex-flow:  column;
+  flex-flow: column;
   justify-content: flex-start;
   align-items: stretch;
 }
 
 .window-item {
   display:flex; 
-  flex-diretion: row; 
+  flex-direction: row; 
   justify-content:space-between;
 }
 .item-text {

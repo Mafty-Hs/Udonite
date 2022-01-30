@@ -62,6 +62,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  dateString(unixtime: number):string {
+    let date = new Date(unixtime * 1000);
+    return date.toLocaleDateString('ja-JP').slice(5) +  " " + date.toLocaleTimeString('ja-JP')
+  }
+
   async reload() {
     this.isReloading = true;
     this.rooms = [];

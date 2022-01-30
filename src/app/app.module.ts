@@ -68,7 +68,6 @@ import { PlayerPaletteControlComponent } from './component/player-palette-contro
 import { NetworkStatusComponent } from './component/network-status/network-status.component';
 import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
-//import { LinkyModule } from 'ngx-linky';
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 import { RoundComponent } from './component/round/round.component';

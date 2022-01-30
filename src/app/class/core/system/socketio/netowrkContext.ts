@@ -9,6 +9,7 @@ export interface RoomList {
   roomName: string;
   roomId: string;
   password: string;
+  lastAccess: number;
   isOpen: boolean;
   is2d: boolean;
   players: number;

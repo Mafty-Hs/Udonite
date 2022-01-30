@@ -3,7 +3,7 @@ import { IONetwork } from '../system';
 import { setZeroTimeout } from '../system/util/zero-timeout';
 import { GameObject, ObjectContext } from './game-object';
 import { Type } from './object-factory';
-import { ObjectIO } from './object-io';
+
 
 type ObjectAliasName = string;
 type ObjectIdentifier = string;
@@ -17,8 +17,6 @@ export class ObjectStore {
     if (!ObjectStore._instance) ObjectStore._instance = new ObjectStore();
     return ObjectStore._instance;
   }
-
-  objectIo = new ObjectIO();
 
   private identifierMap: Map<ObjectIdentifier, GameObject> = new Map();
   private aliasNameMap: Map<ObjectAliasName, Map<ObjectIdentifier, GameObject>> = new Map();
@@ -122,8 +120,7 @@ export class ObjectStore {
       }
       return;
     }
-    this.objectIo.ObjectUL(context.identifier);
-    EventSystem.trigger('UPDATE_GAME_OBJECT', context);
+    EventSystem.trigger('UPLOAD_GAME_OBJECT', context);
     this.queueMap.set(context.identifier, context);
     if (this.updateInterval === null) {
       this.updateInterval = setZeroTimeout(this.updateCallback);

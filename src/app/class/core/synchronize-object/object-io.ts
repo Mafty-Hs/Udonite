@@ -15,6 +15,10 @@ export interface ObjectNetworkContext {
 
 export class ObjectIO {
 
+  constructor(){
+    console.log("IO");
+  }
+
   async ObjectUL(identifier :string) {
     //待機しないとappendChildが反映されない
     await this.sleep(0.1);

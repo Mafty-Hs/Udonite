@@ -1,12 +1,10 @@
 import { SyncObject } from './core/synchronize-object/decorator';
-import { InnerXml } from './core/synchronize-object/object-serializer';
 import { SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { Player } from './player';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('room-admin')
-export class RoomAdmin extends ObjectNode implements InnerXml{
+export class RoomAdmin extends ObjectNode{
 
   @SyncVar() adminPlayer:string[];
   @SyncVar() disableRoomLoad:boolean;

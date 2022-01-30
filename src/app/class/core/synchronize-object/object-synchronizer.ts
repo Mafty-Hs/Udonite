@@ -1,8 +1,7 @@
-import { EventSystem, IONetwork　} from '../system';
+import { EventSystem, IONetwork } from '../system';
 import { ObjectNetworkContext } from './object-io';
 import { CatalogItem, ObjectStore } from './object-store';
-
-type ObjectIdentifier = string;
+import { ObjectIO } from './object-io';
 
 export class ObjectSynchronizer {
   private static _instance: ObjectSynchronizer
@@ -12,13 +11,19 @@ export class ObjectSynchronizer {
   }
   private constructor() { }
 
+  objectIo = new ObjectIO();
+
   initialize() {
     this.destroy();
     console.log('ObjectSynchronizer ready...');
     EventSystem.register(this)
       .on('NW_UPDATE_GAME_OBJECT', event => {
         let context: ObjectNetworkContext = event.data;
-        ObjectStore.instance.objectIo.ObjectBuild(context);
+        this.objectIo.ObjectBuild(context);
+      })
+      .on('UPLOAD_GAME_OBJECT', event => {
+        EventSystem.trigger('UPDATE_GAME_OBJECT',event.data)
+        this.objectIo.ObjectUL(event.data.identifier)
       })
       .on('START_SYNC', event => {
         this.dataInit()
@@ -40,7 +45,7 @@ export class ObjectSynchronizer {
     let allContext = await IONetwork.allData();
     for (let context of allContext) {
       if (context.identifier == 'testdata') continue;
-      ObjectStore.instance.objectIo.ObjectBuild(context);
+      this.objectIo.ObjectBuild(context);
     }
     this.runSyncTask()
   }
@@ -79,10 +84,10 @@ export class ObjectSynchronizer {
 
   async objectSync(requestCatalog :CatalogItem[], uploadCatalog :CatalogItem[]){
     for (let catalogitem of requestCatalog) {
-      await ObjectStore.instance.objectIo.ObjectDL(catalogitem.identifier);
+      await this.objectIo.ObjectDL(catalogitem.identifier);
     }
     for (let catalogitem of uploadCatalog) {
-      await ObjectStore.instance.objectIo.ObjectUL(catalogitem.identifier);
+      await this.objectIo.ObjectUL(catalogitem.identifier);
     }
     console.log("Sync Data End retry");
     await this.sleep(2);

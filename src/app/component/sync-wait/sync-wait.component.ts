@@ -110,7 +110,6 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     this.message = "ルームを作成しています。";
     this.commonInitialnize();
     this.initialize();
-    if (this.roomService.gameType) this.roomService.roomAdmin.gameType = this.roomService.gameType;
     this.roomService.roomState = RoomState.PLAYER_SELECT;
   }
 

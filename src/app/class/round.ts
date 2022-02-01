@@ -13,10 +13,14 @@ export class Round {
 export class IRound {
   private static round :Round = new Round;
   private static _instance = new Proxy(IRound.round, {
+    get: (target:any, propertyKey:PropertyKey) =>  {
+      return IRound.round[propertyKey];
+    },
     set:  (target:any, propertyKey:PropertyKey, value:any, receiver:any):boolean  => {
+      IRound.round[propertyKey] = value;
       IRound.update();
-      return Reflect.set(target, propertyKey, value, receiver);
-  }
+      return true;
+    }
   })
 
   static reset() {
@@ -26,7 +30,7 @@ export class IRound {
   }
 
   static update() {
-    setTimeout(() => {IONetwork.roundUpdate(IRound.round);},500)
+    IONetwork.roundUpdate(IRound.round);
   }
 
   static async initialize() {

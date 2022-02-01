@@ -67,7 +67,6 @@ export class IONetwork {
 
   async create(room: RoomContext) {
     let response = await this.socket.send('roomCreate', room);
-    console.log(response);
     this.roomInfo = <RoomList>response;
     this.roomId = this.roomInfo.roomId 
     this.roomId$.next(this.roomInfo.roomId);
@@ -76,7 +75,6 @@ export class IONetwork {
 
   async join(roomId: string) {
     let response = await this.socket.send('roomJoin', { roomId: roomId });
-    console.log(response);
     this.roomInfo = <RoomList>response;
     this.roomId = this.roomInfo.roomId 
     this.roomId$.next(this.roomInfo.roomId);

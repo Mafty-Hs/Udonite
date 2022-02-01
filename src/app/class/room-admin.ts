@@ -24,14 +24,18 @@ export class RoomAdmin {
   static myPlayerID:string = '';
   private static control:RoomControl = new RoomControl;
   private static _setting = new Proxy(RoomAdmin.control, {
+    get: (target:any, propertyKey:PropertyKey) =>  {
+      return RoomAdmin.control[propertyKey];
+    },
     set:  (target:any, propertyKey:PropertyKey, value:any, receiver:any):boolean  => {
+      RoomAdmin.control[propertyKey] = value;
       RoomAdmin.update();
-      return Reflect.set(target, propertyKey, value, receiver);
-  }
+      return true;
+    }
   })
 
   static update() {
-    setTimeout(() => {IONetwork.roomAdminUpdate(RoomAdmin.control);},500)
+    IONetwork.roomAdminUpdate(RoomAdmin.control);
   }
 
   static async initialize() {

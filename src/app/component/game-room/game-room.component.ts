@@ -50,6 +50,7 @@ export class GameRoomComponent implements OnInit {
     private roomService: RoomService,
     private standImageService: StandImageService,
   ) {
+    if (this.roomService.gameType && this.roomService.adminAuth) this.roomService.roomAdmin.gameType = this.roomService.gameType;
    }
 
   ngAfterViewInit() {

@@ -1,7 +1,7 @@
 import { OnInit ,AfterViewInit, Component, OnDestroy, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
 import { CutIn } from '@udonarium/cut-in';
 import { DataElement } from '@udonarium/data-element';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -24,6 +24,7 @@ import { StandViewSettingComponent } from 'component/stand-view-setting/stand-vi
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
+import { IRound } from '@udonarium/round';
 
 
 
@@ -75,6 +76,12 @@ export class GameRoomComponent implements OnInit {
     setTimeout(() => {
       this.panelService.open(ChatWindowComponent, { width: chatWidth, height: 400, left: 0, top: 490 });
     }, 0);
+    IONetwork.socket.recieve("UPDATE_ROOMADMIN").subscribe((control:object) => {
+      RoomAdmin.set(control);
+    });
+    IONetwork.socket.recieve("UPDATE_ROUND").subscribe((round:object)  => {
+      IRound.set(round);
+    }); 
   }
 
     isOpen(menuName: string) {

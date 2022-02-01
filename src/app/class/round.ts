@@ -29,6 +29,10 @@ export class IRound {
     IRound.instance.roundState = 0;
   }
 
+  static set(round :object) {
+    IRound.round = <Round>round;
+  }
+
   static update() {
     IONetwork.roundUpdate(IRound.round);
   }
@@ -36,9 +40,6 @@ export class IRound {
   static async initialize() {
     let round = await IONetwork.roundGet()
     if (round) IRound.round = round;
-    IONetwork.socket.recieve("UPDATE_ROUND").subscribe(round => {
-      if (round instanceof Round) IRound.round = round;
-    });
   }
 
   static get instance(): Round {

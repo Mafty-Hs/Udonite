@@ -34,6 +34,10 @@ export class RoomAdmin {
     }
   })
 
+  static set(control :object) {
+    RoomAdmin.control = <RoomControl>control;
+  }
+
   static update() {
     IONetwork.roomAdminUpdate(RoomAdmin.control);
   }
@@ -41,9 +45,6 @@ export class RoomAdmin {
   static async initialize() {
     let control = await IONetwork.roomAdminGet()
     if (control) RoomAdmin.control = control;
-    IONetwork.socket.recieve("UPDATE_ROOMADMIN").subscribe(control => {
-      if (control instanceof RoomControl) RoomAdmin.control = control;
-    });
   }
 
   static get setting(): RoomControl {

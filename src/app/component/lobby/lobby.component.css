@@ -42,9 +42,20 @@
   justify-content:space-between;
 }
 
-.player {
-  display:flex; 
-  flex-direction: column;
+.header {
+  font-size: 14px;
+  padding: 6px;
+  background: transparent;
+}
+
+.infomation {
+  font-size: 12px;
+  border: solid 2px;
+  background-color: #444;
+  border:1px solid #4444DD;
+  box-shadow:3px 2px 4px -1px #212121 inset;
+  border-radius: 10px;
+  padding: 6px;
 }
 
 .flex-item {
@@ -89,13 +100,18 @@
   height: 2em; 
   text-align: center;
 }
+
+.room-list > tr > .room-name {
+  text-align: left;
+  text-indent: 1em;
+}
+
 .title {
   background-color: #212121;
   color: white;
 }
 .room-name {
   white-space: normal;
-  word-wrap: break-word;
   overflow-wrap: anywhere;
   word-break: break-word;
   max-width: 50%;

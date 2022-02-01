@@ -2,9 +2,15 @@
   <div class="logo" [style.background-image]="'url(./assets/images/udonite_logo.png)'"></div>
   <div class="menu" [style.width.px]="width"  [style.height.px]="height">
     <div class="top">
-      <div></div>
-      <div class="player">
-        {{roomCount}} / {{maxRoomCount}} 部屋
+      <div class="header">
+        <span style="font-size: 16px; font-weight: bold;">Udonite</span> <br/>
+        ルーム数 {{roomCount}} / {{maxRoomCount}}
+      </div>
+      <div class="infomation">
+        説明：<br/>
+        <i class="material-icons" style="font-size:0.9rem;">lock</i> パスワードロック<br/>
+        <i class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i> オンライン<br/>
+        オンライン状態のルームは削除できません。
       </div>
     </div>
     <div class="room-select">
@@ -42,7 +48,7 @@
 <ng-template #roomList>
   <table class="room-list">
     <tr class="title">
-      <th class="room-name">ルーム名</th>
+      <th class="room-name" style="text-align: center;">ルーム名</th>
       <th style="width:4em">状態</th>
       <th style="width:6em">最終アクセス</th>
       <th style="width:4em">参加者</th>

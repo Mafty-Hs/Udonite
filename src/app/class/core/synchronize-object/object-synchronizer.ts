@@ -1,7 +1,8 @@
 import { EventSystem, IONetwork } from '../system';
-import { ObjectNetworkContext } from './object-io';
 import { CatalogItem, ObjectStore } from './object-store';
-import { ObjectIO } from './object-io';
+import { GameObject, ObjectContext } from './game-object';
+import { ObjectFactory } from './object-factory';
+
 
 export class ObjectSynchronizer {
   private static _instance: ObjectSynchronizer
@@ -11,19 +12,17 @@ export class ObjectSynchronizer {
   }
   private constructor() { }
 
-  objectIo = new ObjectIO();
-
   initialize() {
     this.destroy();
     console.log('ObjectSynchronizer ready...');
     EventSystem.register(this)
       .on('NW_UPDATE_GAME_OBJECT', event => {
         let context: ObjectNetworkContext = event.data;
-        this.objectIo.ObjectBuild(context);
+        this.ObjectBuild(context);
       })
       .on('UPLOAD_GAME_OBJECT', event => {
         EventSystem.trigger('UPDATE_GAME_OBJECT',event.data)
-        this.objectIo.ObjectUL(event.data.identifier)
+        this.ObjectUL(event.data.identifier)
       })
       .on('START_SYNC', event => {
         this.dataInit()
@@ -45,7 +44,7 @@ export class ObjectSynchronizer {
     let allContext = await IONetwork.allData();
     for (let context of allContext) {
       if (context.identifier == 'testdata') continue;
-      this.objectIo.ObjectBuild(context);
+      this.ObjectBuild(context);
     }
     this.runSyncTask()
   }
@@ -84,14 +83,69 @@ export class ObjectSynchronizer {
 
   async objectSync(requestCatalog :CatalogItem[], uploadCatalog :CatalogItem[]){
     for (let catalogitem of requestCatalog) {
-      await this.objectIo.ObjectDL(catalogitem.identifier);
+      await this.ObjectDL(catalogitem.identifier);
     }
     for (let catalogitem of uploadCatalog) {
-      await this.objectIo.ObjectUL(catalogitem.identifier);
+      await this.ObjectUL(catalogitem.identifier);
     }
     console.log("Sync Data End retry");
     await this.sleep(2);
     this.runSyncTask();
+  }
+
+  async ObjectUL(identifier :string) {
+    //待機しないとappendChildが反映されない
+    await this.sleep(0.1);
+    let object:GameObject = this.get(identifier);
+    if (!object) return;
+    let context = object.toContext();
+    let uploadContext:ObjectNetworkContext = {
+      aliasName: context.aliasName,
+      identifier: context.identifier,
+      majorVersion: context.majorVersion,
+      minorVersion: context.minorVersion,
+      parentIdentifier: "",
+      context: context
+    };
+    await IONetwork.objectUpdate(uploadContext) 
+  }
+
+  async ObjectDL(identifier :string) {
+    let context:ObjectNetworkContext = await IONetwork.objectGet(identifier);
+    this.ObjectBuild(context);
+    return;
+  }
+
+  ObjectBuild(context:ObjectNetworkContext) {
+    let object = this.get(context.identifier); 
+      if (object) {
+        this.ObjectUpdate(object,context);
+      }
+      else this.ObjectCreate(context);
+
+  }
+
+  ObjectUpdate(object: GameObject, context: ObjectNetworkContext) {
+    if (context.majorVersion + context.minorVersion > object.version) {
+      object.apply(context.context);
+      EventSystem.trigger('UPDATE_GAME_OBJECT', context);
+    }
+  }
+
+
+  ObjectCreate(context :ObjectNetworkContext) {
+    let newObject: GameObject = ObjectFactory.instance.create(context.aliasName, context.identifier);
+    if (!newObject) {
+      console.warn(context.aliasName + ' is Unknown...?', context);
+      return;
+    }
+    newObject.apply(context.context);
+    ObjectStore.instance.add(newObject, false);
+    EventSystem.trigger('UPDATE_GAME_OBJECT', context);
+  }
+
+  private get(identifier :string) :GameObject {
+    return ObjectStore.instance.get(identifier);
   }
 
   async sleep(second :number) {
@@ -107,4 +161,13 @@ export class ObjectSynchronizer {
     this.runSyncTask();
   }
 
+}
+
+export interface ObjectNetworkContext {
+  aliasName: string;
+  identifier: string;
+  majorVersion: number;
+  minorVersion: number;
+  parentIdentifier: string;
+  context: ObjectContext
 }

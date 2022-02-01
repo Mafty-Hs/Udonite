@@ -64,8 +64,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     DataSummarySetting.instance.identifier;
     CutInList.instance.identifier;
     DiceRollTableList.instance.identifier;
-    RoomAdmin.instance.identifier;
-    RoomAdmin.setting.identifier;
+    RoomAdmin.setting;
     AudioPlayer.resumeAudioContext();
 
     let jukebox: Jukebox = new Jukebox('Jukebox');

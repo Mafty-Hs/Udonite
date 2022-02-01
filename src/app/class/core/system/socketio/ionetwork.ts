@@ -5,7 +5,7 @@ import { NetworkStatus } from "./connection";
 import { EventContext , PeerContext} from "./netowrkContext";
 import { CatalogItem } from "@udonarium/core/synchronize-object/object-store";
 import { Subject } from "rxjs";
-import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-io";
+import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-synchronizer";
 import { ImageContext } from "@udonarium/core/file-storage/image-context";
 import { AudioContext } from "@udonarium/core/file-storage/audio-context";
 

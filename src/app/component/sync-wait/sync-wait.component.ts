@@ -12,7 +12,6 @@ import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { IRound } from '@udonarium/round';
-import { ObjectTemplate } from '@udonarium/object-template';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameTable } from '@udonarium/game-table';
 import { TableSelecter } from '@udonarium/table-selecter';
@@ -56,15 +55,14 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   commonInitialnize() {
     this.roomService.roomData = IONetwork.roomInfo;
     this.loadDataService.initialize();
-    IRound.instance.identifier;
     BillBoard.instance.identifier;
-    ObjectTemplate.instance.identifier;
     CounterList.instance.identifier;
     ChatTabList.instance.identifier;
     DataSummarySetting.instance.identifier;
     CutInList.instance.identifier;
     DiceRollTableList.instance.identifier;
-    RoomAdmin.setting;
+    IRound.initialize();
+    RoomAdmin.initialize();
     AudioPlayer.resumeAudioContext();
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
@@ -112,6 +110,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     this.message = "ルームを作成しています。";
     this.commonInitialnize();
     this.initialize();
+    if (this.roomService.gameType) this.roomService.roomAdmin.gameType = this.roomService.gameType;
     this.roomService.roomState = RoomState.PLAYER_SELECT;
   }
 

@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BillBoard } from '@udonarium/bill-board';
 import { CounterList } from '@udonarium/counter-list';
-import { IRound } from '@udonarium/round';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile} from '@udonarium/core/file-storage/image-file';
@@ -40,14 +39,12 @@ export class SaveDataService {
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
     let counterXml = this.convertToXml(CounterList.instance);
-    let roundXml = this.convertToXml(IRound.instance);
     let diceRollTableXml = this.convertToXml(DiceRollTableList.instance);
     let cutInXml = this.convertToXml(CutInList.instance);
     let billBoardXml = this.convertToXml(BillBoard.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
-    files.push(new File([roundXml], 'round.xml', { type: 'text/plain' }));
     files.push(new File([counterXml], 'counter.xml', { type: 'text/plain' }));
     files.push(new File([billBoardXml], 'billboard.xml', { type: 'text/plain' }));
     files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));

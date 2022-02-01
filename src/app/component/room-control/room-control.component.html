@@ -107,7 +107,7 @@
         キャラクター<br>テンプレート
       </div>
       <div class="item-data">
-        <select name="template" style="width: 16em;height: 1.5em;" [(ngModel)]="gameCharacterService.template">
+        <select name="template" style="width: 16em;height: 1.5em;" [(ngModel)]="roomService.roomAdmin.templateCharacter">
           <option *ngFor="let gameCharacter of gameCharacterService.list(false)"  
             value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
           </option>

@@ -8,6 +8,8 @@ import { Subject } from "rxjs";
 import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-synchronizer";
 import { ImageContext } from "@udonarium/core/file-storage/image-context";
 import { AudioContext } from "@udonarium/core/file-storage/audio-context";
+import { RoomControl } from "@udonarium/room-admin";
+import { Round } from "@udonarium/round";
 
 export class IONetwork {
   private static _instance: IONetwork
@@ -115,6 +117,24 @@ export class IONetwork {
     this.socket.send('objectRemove', {identifier: identifier});
   }
 
+  async roomAdminGet() {
+    let control = await this.socket.send('getAdmin', {});
+    return <RoomControl>control;
+  }
+
+  async roomAdminUpdate(control :RoomControl) {
+    this.socket.send('setAdmin', control);
+  }
+
+  async roundGet() {
+    let control = await this.socket.send('getRound', {});
+    return <Round>control;
+  }
+
+  async roundUpdate(round :Round) {
+    this.socket.send('setRound', round);
+  }
+
   async remove(roomId: string) {
     await this.socket.send('roomRemove', { roomId });
     return;
@@ -152,6 +172,7 @@ export class IONetwork {
 
   async allData():Promise<ObjectNetworkContext[]> {
     const request = `${this.url}/_allData?roomId=${this.roomId}`;
+    if (!this.roomId) await this.roomId$.toPromise();
     try {
       let response:Response = await fetch(request, {mode: 'cors'})
       if (response.ok) {

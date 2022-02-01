@@ -23,6 +23,7 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
+import { RoomAdmin } from '@udonarium/room-admin';
 
 
 
@@ -196,7 +197,7 @@ export class GameRoomComponent implements OnInit {
     
 
   ngOnInit(): void {
-    this.roomService.roomAdmin.myPlayerID = this.playerService.myPlayer.playerId;
+    RoomAdmin.myPlayerID = this.playerService.myPlayer.playerId;
     EventSystem.register(this)
       .on('PLAY_CUT_IN', -1000, event => {
         let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);

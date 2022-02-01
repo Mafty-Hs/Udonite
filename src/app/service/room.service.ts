@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RoomAdmin } from '@udonarium/room-admin';
+import { RoomAdmin ,RoomControl} from '@udonarium/room-admin';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
 
 import { PlayerService } from 'service/player.service';
@@ -30,6 +30,7 @@ export class RoomService {
   roomFile :FileList;
   roomData :RoomList;
   createRoom :boolean = false;
+  gameType :string = "";
 
 
   constructor(
@@ -47,7 +48,7 @@ export class RoomService {
     this.roomAdmin.adminPlayer.push(this.playerService.myPlayer.playerId);
   }
    
-  get roomAdmin():RoomAdmin {
+  get roomAdmin():RoomControl {
     return RoomAdmin.setting;
   }
   

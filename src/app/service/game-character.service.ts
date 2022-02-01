@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
-import { ObjectTemplate } from '@udonarium/object-template';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { DataElement } from '@udonarium/data-element';
 import { PlayerService } from 'service/player.service';
@@ -13,19 +12,12 @@ import { StandList } from '@udonarium/stand-list';
 })
 export class GameCharacterService {
 
-  get template():string{
-    return ObjectTemplate.instance.character;
-  }
-  set template(identifier :string) {
-    ObjectTemplate.instance.character = identifier;
-  }
-
   get CharacterTemplate():GameCharacter {
-    let character = this.get(ObjectTemplate.instance.character);
+    let character = this.get(this.roomService.roomAdmin.templateCharacter);
     if (character) {
       return character;
     }
-    ObjectTemplate.instance.character = "";
+    this.roomService.roomAdmin.templateCharacter = "";
     return null;
   }
 

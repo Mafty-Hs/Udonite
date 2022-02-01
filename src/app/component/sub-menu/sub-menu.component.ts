@@ -160,7 +160,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   }
 
   resetRound() {
-    this.counterService.round.reset();
+    this.counterService.reset();
     this.closeMe.emit();
   }
 

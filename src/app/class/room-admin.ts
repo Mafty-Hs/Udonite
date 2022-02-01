@@ -1,53 +1,54 @@
+import { IONetwork } from "./core/system";
 
+export class RoomControl {
+  identifier = "RoomAdmin";
+  adminPlayer:string[] = [];
+  disableRoomLoad:boolean = false;
+  disableObjectLoad:boolean = false;
+  disableTabletopLoad:boolean = false;
+  disableImageLoad:boolean = false;
+  disableAudioLoad:boolean = false;
+  disableTableSetting:boolean = false;
+  disableTabSetting:boolean = false;
+  disableAllDataSave:boolean = false;
+  disableSeparateDataSave:boolean = false;
+  gameType:string = "";
+  templateCharacter:string = "";
+  chatTab:string = "";
+  diceLog:boolean = false;
+  cardLog:boolean = false;
+}
 
 export class RoomAdmin {
 
-  adminPlayer:string[];
-  disableRoomLoad:boolean;
-  disableObjectLoad:boolean;
-  disableTabletopLoad:boolean;
-  disableImageLoad:boolean;
-  disableAudioLoad:boolean;
-  disableTableSetting:boolean;
-  disableTabSetting:boolean;
-  disableAllDataSave:boolean;
-  disableSeparateDataSave:boolean;
+  static myPlayerID:string = '';
+  private static control:RoomControl = new RoomControl;
+  private static _setting = new Proxy(RoomAdmin.control, {
+    set:  (target:any, propertyKey:PropertyKey, value:any, receiver:any):boolean  => {
+      RoomAdmin.update();
+      return Reflect.set(target, propertyKey, value, receiver);
+  }
+  })
 
-  gameType:string;
-  chatTab:string;
-  diceLog:boolean;
-  cardLog:boolean;
-  myPlayerID:string = '';
-  private static _instance:RoomAdmin = new RoomAdmin;
-
-  private static defaultSetting = {
-    adminPlayer: [], 
-    disableRoomLoad: false,
-    disableObjectLoad: false,
-    disableTabletopLoad: false,
-    disableImageLoad: false,
-    disableAudioLoad: false,
-    disableTableSetting: false,
-    disableTabSetting: false,
-    disableAllDataSave: false,
-    disableSeparateDataSave: false,
-    gameType: "",
-    chatTab: "",
-    diceLog: false,
-    cardLog: false
+  static update() {
+    setTimeout(() => {IONetwork.roomAdminUpdate(RoomAdmin.control);},500)
   }
 
-  static get instance(): RoomAdmin {
-    return RoomAdmin._instance;
+  static async initialize() {
+    let control = await IONetwork.roomAdminGet()
+    if (control) RoomAdmin.control = control;
+    IONetwork.socket.recieve("UPDATE_ROOMADMIN").subscribe(control => {
+      if (control instanceof RoomControl) RoomAdmin.control = control;
+    });
   }
- 
-  static get setting(): RoomAdmin {
-    return RoomAdmin._instance;
+
+  static get setting(): RoomControl {
+    return RoomAdmin._setting;
   }
 
   static get auth() :boolean{
     if (RoomAdmin.setting.adminPlayer.length < 1) return true;
-    return RoomAdmin.setting.adminPlayer.includes(RoomAdmin.setting.myPlayerID);
+    return RoomAdmin.setting.adminPlayer.includes(RoomAdmin.myPlayerID);
   }
 
 }

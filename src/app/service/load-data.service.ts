@@ -10,7 +10,6 @@ import { CutInList } from '@udonarium/cut-in-list';
 import { CounterList } from '@udonarium/counter-list';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-import { Round } from '@udonarium/round';
 import { Room } from '@udonarium/room';
 
 import { PlayerService } from './player.service';
@@ -32,7 +31,6 @@ export class LoadDataService {
     'counter-list',
     'cut-in-list',
     'dice-roll-table-list', 
-    'round',
     'summary-setting'
   ];
   tableTopNodeList:string[] = [
@@ -75,9 +73,6 @@ export class LoadDataService {
   roomDataLoad(xmlElement :Element ,nodeName :string) {
     let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
     switch (true) {
-      case (gameObject instanceof Round):
-        this.counterService.loadRound(<Round>gameObject);
-        break;
       case (gameObject instanceof CounterList):
         this.counterService.loadCounter(<CounterList>gameObject);
         break;

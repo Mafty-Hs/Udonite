@@ -11,7 +11,6 @@ import { GameCharacterService } from './game-character.service';
 })
 export class CounterService {
   get round(): Round {return IRound.instance;} 
-  set round(_round) {IRound.instance = _round;}
   private nullCounter:Counter = new Counter;
 
   create( _name: string, _desc: string, _canDuplicate: boolean, _isPermanent: boolean, _age: number, _uniqueIdentifier?: string) {
@@ -89,7 +88,8 @@ export class CounterService {
     return assignedCounterList;
   }
 
-  initialize() {
+  reset() {
+    IRound.reset();
   }
 
   assignedList(): CounterAssign[] {
@@ -100,16 +100,6 @@ export class CounterService {
   constructor(
     private gameCharacterService :GameCharacterService
   ) {
-    this.initialize()
-  }
-
-  loadRound(object :Round) {
-    this.round.count = Number(object.count);
-    this.round.isInitiative = Boolean(object._isInitiative);
-    this.round.currentInitiative = Number(object.currentInitiative);
-    this.round.roundState = Number(object.roundState);
-    this.round.initName = String(object.initName);
-    object.destroy;
   }
 
   loadCounter(object :CounterList){

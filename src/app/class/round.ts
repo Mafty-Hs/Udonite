@@ -1,79 +1,44 @@
-import { SyncObject } from './core/synchronize-object/decorator';
-import { InnerXml } from './core/synchronize-object/object-serializer';
-import { SyncVar } from './core/synchronize-object/decorator';
-import { ObjectNode } from './core/synchronize-object/object-node';
-import { ChatTab } from '@udonarium/chat-tab';
-import { ObjectStore } from './core/synchronize-object/object-store';
+import { IONetwork } from "./core/system";
 
-
-@SyncObject('round')
-export class Round extends ObjectNode{
-  @SyncVar() count:number;
-  @SyncVar() tabIdentifier:string;
-  @SyncVar() _isInitiative:number;
-  @SyncVar() currentInitiative:number;
-  @SyncVar() roundState:number;
-  @SyncVar() initName:string;
-
-  get isInitiative():boolean {
-    return this._isInitiative === 1 ? true : false;
-  }
-  set isInitiative(_isInitiative :boolean) {
-    this._isInitiative = _isInitiative ? 1 : 0;
-  }
-
-  reset() {
-    this.count = 0;
-    this.currentInitiative = -1;
-    this.roundState = 0;
-  }
+export class Round {
+  identifier:string = "Round";
+  count:number = 0;
+  tabIdentifier:string = "";
+  isInitiative:boolean = false;;
+  currentInitiative:number = -1;
+  roundState:number = 0;
+  initName:string = "";
 }
 
-@SyncObject('Iround')
-export class IRound extends ObjectNode implements InnerXml{
-  private static _instance: IRound;
-
-  static init() {
-    let iround = ObjectStore.instance.get('Round');
-    if (iround && iround instanceof IRound) {
-      IRound._instance = iround;
-    }
-    else {
-      IRound._instance = new IRound('Round');
-      IRound._instance.initialize();
-    }
+export class IRound {
+  private static round :Round = new Round;
+  private static _instance = new Proxy(IRound.round, {
+    set:  (target:any, propertyKey:PropertyKey, value:any, receiver:any):boolean  => {
+      IRound.update();
+      return Reflect.set(target, propertyKey, value, receiver);
   }
-   
-  static childInit() { 
-    let round:Round
-    let tempRound = ObjectStore.instance.get('CommonRound');
-    if (tempRound || tempRound instanceof Round) {
-      round = <Round>tempRound
-    }
-    else {
-      round = new Round('CommonRound')
-      round.initialize();
-      round.reset();
-      round.isInitiative = false;
-    }
-    IRound._instance.appendChild(round);
+  })
+
+  static reset() {
+    IRound.round.count = 0;
+    IRound.round.currentInitiative = -1;
+    IRound.instance.roundState = 0;
   }
 
-  private get getchild(): Round {
-    if (IRound._instance.children.length == 0) IRound.childInit();  
-    let round:Round[] = this.children as Round[];
-    return round[0];
+  static update() {
+    setTimeout(() => {IONetwork.roundUpdate(IRound.round);},500)
   }
-  private set getchild(_round :Round) {
-    let round:Round[] = this.children as Round[];
-    round[0] = _round;
+
+  static async initialize() {
+    let round = await IONetwork.roundGet()
+    if (round) IRound.round = round;
+    IONetwork.socket.recieve("UPDATE_ROUND").subscribe(round => {
+      if (round instanceof Round) IRound.round = round;
+    });
   }
 
   static get instance(): Round {
-    if (!IRound._instance) IRound.init();
-    return IRound._instance.getchild;
+    return IRound._instance;
   }
-  static set instance(_round : Round) {
-    IRound._instance.getchild = _round;
-  }
+
 }

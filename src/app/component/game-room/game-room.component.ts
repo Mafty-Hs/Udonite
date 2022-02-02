@@ -52,13 +52,13 @@ export class GameRoomComponent implements OnInit {
     private standImageService: StandImageService,
   ) {
     if (this.roomService.gameType && this.roomService.adminAuth) this.roomService.roomAdmin.gameType = this.roomService.gameType;
+    if (window.innerWidth < 600) this.minimumMode = true;
    }
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     let chatWidth = 700;
     if (window.innerWidth < 600) {
-      this.minimumMode = true;
       StandImageComponent.isShowStand = false;
       chatWidth = 500;
       this.standService.leftEnd = 200;

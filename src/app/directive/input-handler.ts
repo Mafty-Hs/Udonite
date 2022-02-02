@@ -43,7 +43,7 @@ export class InputHandler {
 
   private initialize() {
     this.target.addEventListener('mousedown', this.callbackOnMouse, this.option.capture);
-    this.target.addEventListener('touchstart', this.callbackOnTouch, this.option.capture);
+    if (HasTouchDevice()) this.target.addEventListener('touchstart', this.callbackOnTouch, this.option.capture);
     if (this.option.always) this.addEventListeners();
   }
 
@@ -51,7 +51,7 @@ export class InputHandler {
     this.cancel();
     this._isDestroyed = true;
     this.target.removeEventListener('mousedown', this.callbackOnMouse, this.option.capture);
-    this.target.removeEventListener('touchstart', this.callbackOnTouch, this.option.capture);
+    if (HasTouchDevice()) this.target.removeEventListener('touchstart', this.callbackOnTouch, this.option.capture);
     this.removeEventListeners();
   }
 
@@ -163,3 +163,11 @@ export class InputHandler {
     this.target.ownerDocument.removeEventListener('drop', this.callbackOnMouse, option);
   }
 }
+
+function HasTouchDevice():boolean {
+  let touch_event = window.ontouchstart;
+  let touch_points = navigator.maxTouchPoints;
+  return ( touch_event !== undefined && 0 < touch_points ) ;
+}
+
+

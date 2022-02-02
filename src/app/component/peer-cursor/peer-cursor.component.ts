@@ -24,6 +24,8 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   get isMine(): boolean { return this.cursor.isMine; }
   get color(): string { return (this.cursor.player.color && this.cursor.player.color != '#ffffff') ? this.cursor.player.color : '#f0dabd'; }
 
+  isMoving:boolean = false;
+
   private cursorElement: HTMLElement = null;
   private opacityElement: HTMLElement = null;
   private fadeOutTimer: ResettableTimeout = null;
@@ -72,6 +74,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
       EventSystem.register(this)
         .on('CURSOR_MOVE', event => {
           if (event.sendFrom !== this.cursor.peerId) return;
+          this.isMoving = true;
           this.batchService.add(() => {
             this.stopTransition();
             this.setAnimatedTransition();
@@ -108,6 +111,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     document.body.removeEventListener('mousemove', this.callcack);
     document.body.removeEventListener('touchmove', this.callcack);
+    this.isMoving = false;
     EventSystem.unregister(this);
     this.batchService.remove(this);
     if (this.fadeOutTimer) this.fadeOutTimer.clear();
@@ -141,6 +145,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.opacityElement.style.opacity = '1.0';
     if (this.fadeOutTimer == null) {
       this.fadeOutTimer = new ResettableTimeout(() => {
+        this.isMoving = false;
         this.opacityElement.style.opacity = '0.0';
       }, 3000);
     }

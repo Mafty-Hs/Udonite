@@ -164,7 +164,7 @@ export class InputHandler {
   }
 }
 
-function HasTouchDevice():boolean {
+export function HasTouchDevice():boolean {
   let touch_event = window.ontouchstart;
   let touch_points = navigator.maxTouchPoints;
   return ( touch_event !== undefined && 0 < touch_points ) ;

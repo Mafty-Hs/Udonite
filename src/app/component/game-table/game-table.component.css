@@ -30,6 +30,10 @@
   pointer-events: none;
 }
 
+.will-change {
+  will-change: transform;
+}
+
 .component {
   -moz-user-select: none;
   -webkit-user-select: none;

@@ -76,6 +76,7 @@
 }
 
 .room-select {
+  overflow: auto;
   position: relative;
   width:98%;
   height:66%;
@@ -86,7 +87,20 @@
   box-shadow:3px 2px 4px -1px #212121 inset;
 }
 
+.room-select::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+.room-select::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.room-select::-webkit-scrollbar-track {
+  background: #444;
+}
+
 .room-list {
+  white-space: nowrap;
   width:100%;
   font-size: 12px;
   color: white;

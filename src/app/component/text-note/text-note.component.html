@@ -3,7 +3,7 @@
   <div class="is-3d" appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div class="component-content is-3d is-pointer-events-auto"
       [style.width.px]="width * gridSize">
-      <div class="upright-transform is-3d is-bg-color is-bg-texture" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? -90 : 0) + 'deg) rotateY(-90deg)' , 'height' : isSizeLocked ? height * gridSize + 'px' : 'auto' }"
+      <div class="upright-transform is-3d is-bg-color is-bg-texture" [ngClass]="{'will-change': isTranslate}" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? -90 : 0) + 'deg) rotateY(-90deg)' , 'height' : isSizeLocked ? height * gridSize + 'px' : 'auto' }"
         [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
         <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
         <textarea (input)="calcFitHeight();" class="textarea" #textArea [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
@@ -34,7 +34,7 @@
   <div class="is-3d" *ngIf="isAltitudeIndicate && math.abs(textNoteAltitude) >= 0.5"
     style="display: flex; align-items: center; border-left: 2px dashed blanchedalmond; transform-origin: top left"
     [style.height.px]="math.abs(textNoteAltitude * gridSize)"
-    [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+    [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}" [ngClass]="{'will-change': isTranslate}">
     <div class="is-3d">
       <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(textNoteAltitude) }}</span>
       <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ textNoteAltitude }}</span>

@@ -64,6 +64,8 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
 
+  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
+
   get gameTableMaskAltitude(): number {
     return +this.altitude.toFixed(1); 
   }

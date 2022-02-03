@@ -73,6 +73,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
   }
 
+  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
+
   get slopeDirection(): number {
     if (!this.terrain.isSlope) return SlopeDirection.NONE;
     if (this.terrain.isSlope && this.terrain.slopeDirection === SlopeDirection.NONE) return SlopeDirection.BOTTOM;

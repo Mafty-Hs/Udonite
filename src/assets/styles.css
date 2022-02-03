@@ -210,3 +210,6 @@ input[type="range"]:active::-webkit-slider-thumb {
     left: 32px;
 }
 
+.will-change {
+  will-change: transform;
+}

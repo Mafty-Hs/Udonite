@@ -79,6 +79,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
+  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
+
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;

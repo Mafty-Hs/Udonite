@@ -28,7 +28,7 @@
 </div>
 <div id="file-list" style="min-height: 250px">
   <span class="empty" *ngIf="isAllowedEmpty">
-    <button (click)="onSelectedFile(empty)" style="min-width: 100px; height: 120px">画像なし<br>/設定解除</button>
+    <button (click)="nonSelectedFile()" style="min-width: 100px; height: 120px">画像なし<br>/設定解除</button>
   </span>
   <div *ngFor="let file of images; trackBy: identify"  @scaleInOut class="image" style="text-align: center; min-width: 100px; height: 120px; position: relative" [ngClass]="{'current-images': getCurrent(file)}">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">

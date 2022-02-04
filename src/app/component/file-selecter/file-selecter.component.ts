@@ -150,6 +150,10 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.resolve(file.identifier);
   }
 
+  nonSelectedFile() {
+    this.modalService.resolve(ImageFile.Empty);
+  }
+
   onShowAllImages($event: Event) {
     if (this.isShowAllImages) {
       this.isShowAllImages = false;

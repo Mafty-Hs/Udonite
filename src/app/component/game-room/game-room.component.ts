@@ -51,7 +51,7 @@ export class GameRoomComponent implements OnInit {
     private roomService: RoomService,
     private standImageService: StandImageService,
   ) {
-    if (this.roomService.gameType && this.roomService.adminAuth) this.roomService.roomAdmin.gameType = this.roomService.gameType;
+    if (this.roomService.gameType && this.roomService.createRoom) this.roomService.roomAdmin.gameType = this.roomService.gameType;
     if (window.innerWidth < 600) this.minimumMode = true;
    }
 

@@ -76,12 +76,6 @@ export class GameRoomComponent implements OnInit {
     setTimeout(() => {
       this.panelService.open(ChatWindowComponent, { width: chatWidth, height: 400, left: 0, top: 490 });
     }, 0);
-    IONetwork.socket.recieve("UPDATE_ROOMADMIN").subscribe((control:object) => {
-      RoomAdmin.set(control);
-    });
-    IONetwork.socket.recieve("UPDATE_ROUND").subscribe((round:object)  => {
-      IRound.set(round);
-    }); 
   }
 
     isOpen(menuName: string) {
@@ -234,7 +228,13 @@ export class GameRoomComponent implements OnInit {
       })
       .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
         this.standImageService.destroyAll();
-      });
+      })
+      .on('UPDATE_ROOMADMIN', -1000, event => {
+        RoomAdmin.set(event.data);
+      })
+      .on('UPDATE_ROUND', -1000, event => {
+        IRound.set(event.data);
+      }); 
     this.roomService.adminAuth;
     EventSystem.trigger("ROOM_PLAY",null)
   }

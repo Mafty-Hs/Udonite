@@ -10,6 +10,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageContext } from '@udonarium/core/file-storage/image-context';
 import { AudioStorage } from  '@udonarium/core/file-storage/audio-storage';
 import { AudioContext } from '@udonarium/core/file-storage/audio-context';
+import { ServerEvent } from '../socketio/netowrkContext';
 
 type EventName = string;
 
@@ -139,7 +140,9 @@ export class EventSystem implements Subject {
       case NetworkStatus.CONNECT:
         console.log('Network is Open');
         this.trigger('OPEN_NETWORK', { peerId: peerId });
-        this.eventListener();
+        IONetwork.instance.socket.serverEvent().subscribe((event:ServerEvent) => {
+          this.serverEvent(event.type ,event.data);
+        });
         if (this.isOpen) {
           this.reconnect();
         }
@@ -158,22 +161,60 @@ export class EventSystem implements Subject {
     }
   }
 
-  private eventListener() {
-    IONetwork.instance.socket.recieve("call").subscribe((event:EventContext<any>) => {
-      if (event.sendFrom == IONetwork.instance.peerId) return; 
-      this.trigger(event)
-    });
-    IONetwork.instance.socket.recieve("PeerId").subscribe(peerId => {this.trigger('PEERID_UPDATE',<string>peerId)});
-    IONetwork.instance.socket.recieve("PEER_JOIN").subscribe(peerId => { IONetwork.instance.listPeer(); this.trigger('CONNECT_PEER',<string>peerId)});
-    IONetwork.instance.socket.recieve("PEER_LIEVE").subscribe(peerId => { IONetwork.instance.listPeer(); this.trigger('DISCONNECT_PEER',<string>peerId)});
-    IONetwork.instance.socket.recieve("UPDATE_GAME_OBJECT").subscribe(context => this.trigger('NW_UPDATE_GAME_OBJECT',<ObjectNetworkContext>context));
-    IONetwork.instance.socket.recieve("DELETE_GAME_OBJECT").subscribe(identifier => this.trigger('NW_DELETE_GAME_OBJECT',<string>identifier));
-    IONetwork.instance.socket.recieve("IMAGE_ADD").subscribe(context => {ImageStorage.instance.create(<ImageContext>context); this.trigger('IMAGE_SYNC',null) });
-    IONetwork.instance.socket.recieve("IMAGE_UPDATE").subscribe(context => {ImageStorage.instance.update(<ImageContext>context); this.trigger('IMAGE_SYNC',null)});
-    IONetwork.instance.socket.recieve("IMAGE_REMOVE").subscribe(identifier => {ImageStorage.instance.destroy(<string>identifier); this.trigger('IMAGE_SYNC',null)});
-    IONetwork.instance.socket.recieve("AUDIO_ADD").subscribe(context => {AudioStorage.instance.create(<AudioContext>context); this.trigger('AUDIO_SYNC',null) });
-    IONetwork.instance.socket.recieve("AUDIO_UPDATE").subscribe(context => {AudioStorage.instance.update(<AudioContext>context); this.trigger('AUDIO_SYNC',null)});
-    IONetwork.instance.socket.recieve("AUDIO_REMOVE").subscribe(identifier => {AudioStorage.instance.destroy(<string>identifier); this.trigger('AUDIO_SYNC',null)});
+  private async serverEvent(type :string ,data :any) {
+    switch(type) {
+      case 'call':
+        let event = <EventContext<any>>data;
+        if (event.sendFrom == IONetwork.instance.peerId) return; 
+        this.trigger(event)
+        break;
+      case 'PEER_JOIN':
+        IONetwork.instance.listPeer(); 
+        this.trigger('CONNECT_PEER',<string>data);
+        break;
+      case 'PEER_LIEVE':
+        IONetwork.instance.listPeer(); 
+        this.trigger('DISCONNECT_PEER',<string>data);
+        break;
+      case 'UPDATE_GAME_OBJECT':
+        this.trigger('NW_UPDATE_GAME_OBJECT',data)
+        break;
+      case 'DELETE_GAME_OBJECT':
+        this.trigger('NW_DELETE_GAME_OBJECT',data)
+        break;
+      case 'IMAGE_ADD':
+        ImageStorage.instance.create(<ImageContext>data);
+        this.trigger('IMAGE_SYNC',null);
+        break;  
+      case 'IMAGE_UPDATE':
+        ImageStorage.instance.update(<ImageContext>data);
+        this.trigger('IMAGE_SYNC',null);
+        break;  
+      case 'IMAGE_REMOVE':
+        ImageStorage.instance.destroy(<string>data);
+        this.trigger('IMAGE_SYNC',null);
+        break;
+      case 'AUDIO_ADD':
+        AudioStorage.instance.create(<AudioContext>data);
+        this.trigger('AUDIO_SYNC',null);
+        break;  
+      case 'AUDIO_UPDATE':
+        AudioStorage.instance.update(<AudioContext>data);
+        this.trigger('AUDIO_SYNC',null);
+        break;  
+      case 'AUDIO_REMOVE':
+        AudioStorage.instance.destroy(<string>data);
+        this.trigger('AUDIO_SYNC',null);
+        break;  
+      case 'UPDATE_ROOMADMIN':
+        this.trigger('UPDATE_ROOMADMIN',<object>data);
+        break;
+      case 'UPDATE_ROUND':
+        this.trigger('UPDATE_ROUND',<object>data);
+        break;
+      default:
+        return;
+    }
   }
 
   private reconnect() {

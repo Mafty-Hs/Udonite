@@ -73,7 +73,6 @@ export class ObjectSynchronizer {
     if (requestCatalog.length < 1 && uploadCatalog.length < 1) {
       EventSystem.trigger('SYNC_END',null)
       console.log('SYNCHRONIZE_GAME_OBJECT END');
-      this.repeatSyncTask();
       return;
     }
     console.log("request object :" +  requestCatalog.length);
@@ -154,11 +153,6 @@ export class ObjectSynchronizer {
       resolve()
       }, second * 1000)
     })
-  }
-
-  async repeatSyncTask() {
-    await this.sleep(600)
-    this.runSyncTask();
   }
 
 }

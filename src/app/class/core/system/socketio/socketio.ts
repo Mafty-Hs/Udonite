@@ -1,7 +1,7 @@
 import { io ,Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { Connection ,NetworkStatus} from './connection';
-import { ServerInfo } from './netowrkContext';
+import { ServerEvent, ServerInfo } from './netowrkContext';
 
 export class socketio extends  Connection {
   private url:string = "";
@@ -65,22 +65,17 @@ export class socketio extends  Connection {
     });
   }
 
-  recieve(type: string) {
+  serverEvent() {
     let observable = new Observable( observer => {
-      this.socket.on( type, ( data ) => {
-        observer.next( data );
+      this.socket.onAny((type,data) => {
+        observer.next(<ServerEvent>{ type: type , data: data});
       });
-
       return () => { this.socket.disconnect(); };
     } );
     return observable;
   }
 
   responseHandler() {
-    this.socket.onAny((name,data) => {
-      //console.log(name);
-      //console.log(data);
-    });
     this.socket.on('ServerInfo', (data) => {
       this._serverInfo = <ServerInfo>data;
       this.status = NetworkStatus.CONNECT;

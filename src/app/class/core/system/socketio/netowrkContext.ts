@@ -1,3 +1,8 @@
+export interface ServerEvent {
+  type :string;
+  data: any;
+} 
+
 export interface RoomContext {
   roomName: string;
   password: string;

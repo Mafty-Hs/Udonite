@@ -63,7 +63,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-  set isTranslate(isTranslate :boolean) { this.pointerDeviceService.isTranslate = isTranslate}
+  set isTranslate(isTranslate :boolean) { 
+    this.pointerDeviceService.isTranslate = isTranslate;
+  }
   translateTimer;
 
   private viewPotisonX: number = 100;

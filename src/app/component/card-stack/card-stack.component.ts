@@ -93,6 +93,24 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     return (card ? card.size : 2);
   }
 
+  get width():number {
+    return this.size * this.gridSize;
+  }
+  get height():number {
+    return  Math.floor(this.size * this.gridSize * this.aspect);
+  }
+  get thick():number {
+    return (this.cardStack.cards.length / 2);
+  }
+  get aspect():number {
+    if (!this.imageFile) return 1
+    return this.imageFile.aspect;
+    
+  }
+  get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.thick; }
+  get isVisibleWallLeftRight(): boolean { return 0 < this.height * this.thick; }
+
+
   get hasOwner(): boolean { return this.cardStack.hasOwner; }
   get ownerName(): string { return this.cardStack.ownerName; }
   get ownerColor(): string { return this.cardStack.ownerColor; }

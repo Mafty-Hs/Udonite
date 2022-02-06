@@ -56,14 +56,10 @@
 }
 
 .card-image {
-  display: block;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  height: auto;
-  width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .rotate-grab {
@@ -181,4 +177,49 @@
   #fff 0px 0px 2px,
   #fff 0px 0px 2px,
   #fff 0px 0px 2px;
+}
+
+.thick {
+  position: absolute;
+  backface-visibility: hidden;
+  background: repeating-linear-gradient(to top, #222, #222 1px, #999 1px, #999 2px);
+  height: 100%;
+  width: 100%;
+}
+
+
+.of-wall-top {
+  top: 0px;
+  left: 0px;
+
+  transform-origin: 50% 100%;
+  transform: translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0);
+  filter: brightness(0.3);
+}
+
+.of-wall-bottom {
+  bottom: 0px;
+  left: 0px;
+
+  transform-origin: 50% 100%;
+  transform: rotateX(-90deg);
+  /*filter: brightness(1.0);*/
+}
+
+.of-wall-left {
+  top: 0px;
+  left: 0px;
+
+  transform-origin: 0% 0%;
+  transform: rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%);
+  filter: brightness(0.5);
+}
+
+.of-wall-right {
+  top: 0px;
+  right: 0px;
+
+  transform-origin: 100% 0%;
+  transform: rotateZ(-90deg) rotateX(-90deg) translateY(-100%);
+  filter: brightness(0.8);
 }

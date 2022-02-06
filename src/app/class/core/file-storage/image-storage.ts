@@ -38,6 +38,7 @@ export class ImageStorage {
         if (!this.taglist.includes(tag)) this.taglist.push(tag);
       }
     }
+    image.calcAspect();
     return image;
   }
 

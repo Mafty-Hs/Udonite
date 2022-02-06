@@ -15,7 +15,7 @@ export class PresetSound {
   static cardDraw: string = 'cardDraw';
   static cardPick: string = 'cardPIck';
   static cardPut: string = 'cardPut';
-  static cardShuffle: string = 'cardSHhffle';
+  static cardShuffle: string = 'cardShuffle';
   static piecePick: string = 'piecePick';
   static piecePut: string = 'piecePut';
   static blockPick: string = 'blockPick';

@@ -13,6 +13,8 @@ export class ImageFile {
     tag: []
   };
 
+  private _aspect:number = 1;
+
   get identifier(): string { return this.context.identifier };
   get name(): string { return this.context.identifier };
   get url(): string { return this.context.url ? this.context.url : this.context.thumbnail.url; };
@@ -20,6 +22,17 @@ export class ImageFile {
   get tag(): string[] { return this.context.tag };
   get owner(): string[] { return this.context.owner };
   set owner(owner :string[]) {this.context.owner = owner; IONetwork.imageUpdate(this.context);}
+  get aspect():number { return this._aspect}
+
+
+  async calcAspect() {
+    if (!this.url) return;
+    let element = new Image();
+    element.src = this.url ;
+    element.onload = ()=>{
+      this._aspect = element.naturalHeight / element.naturalWidth;
+    }  
+  }
 
   static get Empty():ImageFile {
     if (!ImageFile._empty) {

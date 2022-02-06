@@ -63,6 +63,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
+  isViewed:boolean = false;
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
   set isTranslate(isTranslate :boolean) { 
     this.pointerDeviceService.isTranslate = isTranslate;
@@ -163,6 +164,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
     this.setTransform(0, 0, 0, 0, 0, 0);
     this.coordinateService.tabletopOriginElement = this.gameObjects.nativeElement;
+    this.isViewed = true;
   }
 
   ngOnDestroy() {
@@ -292,7 +294,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, isAbsolute: boolean=false) {
-    this.isTranslate = true;
+    if (this.isViewed) this.isTranslate = true;
     if (isAbsolute) {
       this.viewRotateX = rotateX;
       this.viewRotateY = rotateY;
@@ -323,7 +325,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
     if (this.translateTimer) this.translateTimer = null;
-    this.translateTimer = setTimeout(() => {this.isTranslate = false;},500);
+    if (this.isViewed) this.translateTimer = setTimeout(() => {this.isTranslate = false;},500);
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {

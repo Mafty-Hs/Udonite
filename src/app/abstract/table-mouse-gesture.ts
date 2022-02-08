@@ -18,11 +18,11 @@ enum Keyboard {
 }
 
 export class TableMouseGesture {
-  private currentPositionX: number = 0;
-  private currentPositionY: number = 0;
+  protected currentPositionX: number = 0;
+  protected currentPositionY: number = 0;
 
-  private buttonCode: number = 0;
-  private input: InputHandler = null;
+  protected buttonCode: number = 0;
+  protected input: InputHandler = null;
 
   get isGrabbing(): boolean { return this.input.isGrabbing; }
   get isDragging(): boolean { return this.input.isDragging; }

@@ -14,6 +14,8 @@ export class ImageFile {
   };
 
   private _aspect:number = 1;
+  private _width:number = 1;
+  private _height:number = 1;
 
   get identifier(): string { return this.context.identifier };
   get name(): string { return this.context.identifier };
@@ -23,6 +25,8 @@ export class ImageFile {
   get owner(): string[] { return this.context.owner };
   set owner(owner :string[]) {this.context.owner = owner; IONetwork.imageUpdate(this.context);}
   get aspect():number { return this._aspect}
+  get width():number { return this._width}
+  get height():number { return this._height}
 
 
   async calcAspect() {
@@ -30,7 +34,9 @@ export class ImageFile {
     let element = new Image();
     element.src = this.url ;
     element.onload = ()=>{
-      this._aspect = element.naturalHeight / element.naturalWidth;
+      this._width = element.naturalWidth;
+      this._height = element.naturalHeight;
+      this._aspect = this.height / this.width;
     }  
   }
 

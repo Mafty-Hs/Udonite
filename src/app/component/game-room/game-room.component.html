@@ -26,7 +26,7 @@
     </div>
   </div>
   <div id="app-table-layer" class="game-table">
-    <game-table></game-table>
+      <game-table *ngIf="!isFlat;else flat"></game-table>
   </div>
 </div>
 <div #modalLayer></div>
@@ -34,6 +34,9 @@
 <div class="bill-board">
   <bill-board></bill-board>
 </div>
+<ng-template #flat>
+   <game-table-flat></game-table-flat>
+</ng-template>
 <ng-template #miniFile>
   <i class="material-icons">
     sd_storage

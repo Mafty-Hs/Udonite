@@ -93,6 +93,8 @@ import { ImageViewComponent } from './component/image-view/image-view.component'
 import { DataElementComponent } from './component/data-element/data-element.component';
 import { SyncWaitComponent } from './component/sync-wait/sync-wait.component';
 import { DataLoadComponent } from './component/data-load/data-load.component';
+import { GameTableFlatComponent } from './component/game-table-flat/game-table-flat.component';
+import { GameCharacterFlatComponent } from './component/game-character-flat/game-character-flat.component';
 
 @NgModule({
   declarations: [
@@ -170,6 +172,8 @@ import { DataLoadComponent } from './component/data-load/data-load.component';
     DataElementComponent,
     SyncWaitComponent,
     DataLoadComponent,
+    GameTableFlatComponent,
+    GameCharacterFlatComponent,
   ],
   imports: [
     BrowserModule,

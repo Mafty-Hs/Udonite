@@ -1,4 +1,8 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { EventSystem } from '@udonarium/core/system';
+import { GameCharacter } from '@udonarium/game-character';
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -11,21 +15,14 @@ import {
   OnInit,
   ViewChild, ElementRef
 } from '@angular/core';
-import { EventSystem } from '@udonarium/core/system';
-import { GameCharacter } from '@udonarium/game-character';
-import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
-import { EffectService } from 'service/effect.service';
-import { OpenUrlComponent } from 'component/open-url/open-url.component';
-import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
-import { Subscription } from 'rxjs'
 import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.template';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
-  selector: 'game-character',
-  templateUrl: './game-character.component.html',
-  styleUrls: ['./game-character.component.css'],
+  selector: 'game-character-flat',
+  templateUrl: './game-character-flat.component.html',
+  styleUrls: ['./game-character-flat.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('switchImage', [
@@ -82,146 +79,21 @@ import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.
     ])
   ]
 })
-export class GameCharacterComponent extends GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
+export class GameCharacterFlatComponent extends GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
-  @ViewChild('characterImage') characterImage: ElementRef;
-  @ViewChild('chatBubble') chatBubble: ElementRef;
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
 
-  get canEffect():boolean {
-    return this.effectService.canEffect;
-  }
-
-  stopRotate:boolean = false;
-  gridSize: number = 50;
-  math = Math;
-  stringUtil = StringUtil;
-  viewRotateX = 50;
-  viewRotateZ = 10;
-  heightWidthRatio = 1.5;
-
-  canvas:HTMLCanvasElement;
-  private effect$: Subscription;
-  private renderer;
-  private camera = new PerspectiveCamera( 30.0, 1, 1, 1000);
-  private scene = new Scene();
-  private clock = new Clock();
-  context : effekseer.EffekseerContext = null;
-  effects;
-  private hasEffect = null;
-
-  toggleEffect(canEffect: boolean){
-    if(canEffect) {
-      this.createMyEffect()
-    }
-    else {
-      cancelAnimationFrame(this.myLoop);
-      document.body.removeChild(this.canvas);
-      this.canvas.remove();
-    }
-  }
-  private myLoop; 
-  mainLoop = () => {
-    this.myLoop = requestAnimationFrame(this.mainLoop.bind(this));
-    this.animate();
-  };
-
-  createMyEffect() {
-    this.canvas = document.createElement('canvas');
-    this.canvas.style.zIndex = "20";
-    this.canvas.style.position = "absolute";
-    this.canvas.style.display = "none";
-    this.camera.position.set(20, 20, 20);
-    this.camera.lookAt(new Vector3(0, 0, 0));
- 
-    document.body.appendChild(this.canvas);
-
-  }
-
-  newContext() {
-    this.context = this.effectService.createContext(this.renderer);
-    this.ngZone.runOutsideAngular(() => {
-      this.mainLoop();
-    });
-  }
-
-  setCanvasSize(mywidth: number , myheight: number){ 
-    this.canvas.style.width = String(mywidth);
-    this.canvas.style.height = String(mywidth);
-    this.renderer.setSize(mywidth, myheight);
-    this.camera.aspect = mywidth / myheight;
-    this.camera.updateProjectionMatrix();
-  }
-
-  setEffect(effectName: string) {
-    if (!this.characterImage?.nativeElement) return;
-
-    let rect = this.characterImage.nativeElement.getBoundingClientRect();
-    if (!this.effectService.isValid(rect)) return;
-
-    let newWidth,newHeight,top,left: number;
-    [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName); 
-    this.canvas.style.left = left + 'px';
-    this.canvas.style.top = top + 'px';
-    if (this.hasEffect) {
-      clearTimeout(this.hasEffect);
-      this.setCanvasSize(newWidth ,newHeight);
-    }
-    else {
-      this.renderer = new WebGLRenderer({canvas: this.canvas , alpha: true});
-      this.newContext();
-      this.setCanvasSize(newWidth ,newHeight);
-    }
-    this.canvas.style.display = "block";
-    this.effects = this.effectService.addEffect(this.context,effectName)
-    //this.canvas.style.backgroundColor = '#FFF';
-    setTimeout(() => {
-      this.playEffect(effectName);
-    }, 500);
-  }
-
-  playEffect(effectName:string) {
-    this.context.play(this.effects, 0, 0, 0);
-    this.hasEffect = setTimeout(() => {
-      this.stopEffect();
-    }, this.effectService.effectInfo[effectName].time);
-  }
-
-  stopEffect() {
-    this.hasEffect = null;
-    cancelAnimationFrame(this.myLoop);
-    this.canvas.style.display = "none"
-    this.renderer = null;
-  }
-
-  animate() {
-         this.context.update(this.clock.getDelta() * 60.0);
-         this.renderer.render(this.scene, this.camera);
-         this.context.setProjectionMatrix(Float32Array.from(this.camera.projectionMatrix.elements));
-         this.context.setCameraMatrix(Float32Array.from(this.camera.matrixWorldInverse.elements));
-         this.context.draw();
-         this.renderer.resetState();
-  }
-
-  
-  ngOnInit() {
+  ngOnInit():void {
     super.ngOnInit()
-    this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => { 
-      this.toggleEffect(bool);
-    });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit():void {
     super.ngAfterViewInit();
-    if (this.effectService.canEffect) this.createMyEffect()
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
     super.ngOnDestroy();
-    this.effect$.unsubscribe();
-    document.body.removeChild(this.canvas);
   }
 
   @HostListener('dragstart', ['$event'])
@@ -342,18 +214,6 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           }
       ]},
       ContextMenuSeparator,
-      (!this.isNotRide
-        ? {
-          name: '☑ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
       (this.stopRotate
         ? {
           name: '☑ 回転を禁止', action: () => {
@@ -366,27 +226,6 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
             SoundEffect.play(PresetSound.lock);
           }
         }),
-      (this.isAltitudeIndicate
-        ? {
-          name: '☑ 高度の表示', action: () => {
-            this.isAltitudeIndicate = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 高度の表示', action: () => {
-            this.isAltitudeIndicate = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      {
-        name: '高度を0にする', action: () => {
-          if (this.altitude != 0) {
-            this.altitude = 0;
-            SoundEffect.play(PresetSound.sweep);
-          }
-        },
-        altitudeHande: this.gameCharacter
-      },
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) } },
@@ -470,5 +309,6 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
       },
     ], this.name);
   }
+
 
 }

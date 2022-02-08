@@ -1,35 +1,37 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GameTableComponentTemplate } from 'src/app/abstract/game-table.template';
 import { EventSystem } from '@udonarium/core/system';
+import { GameTableComponentTemplate } from 'src/app/abstract/game-table.template';
+import { TableMouseGestureFlat } from './table-mouse-gesture-flat';
 
 @Component({
-  selector: 'game-table',
-  templateUrl: './game-table.component.html',
-  styleUrls: ['./game-table.component.css'],
+  selector: 'game-table-flat',
+  templateUrl: './game-table-flat.component.html',
+  styleUrls: ['./game-table-flat.component.css']
 })
-export class GameTableComponent extends GameTableComponentTemplate {
+export class GameTableFlatComponent extends GameTableComponentTemplate {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('gameTable', { static: true }) gameTable: ElementRef<HTMLElement>;
   @ViewChild('gameObjects', { static: true }) gameObjects: ElementRef<HTMLElement>;
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-  set isTranslate(isTranslate :boolean) { 
-    this.pointerDeviceService.isTranslate = isTranslate;
-  }
 
   viewPotisonX: number = 100;
   viewPotisonY: number = 0;
   viewPotisonZ: number = 0;
 
-  viewRotateX: number = 50;
+  viewRotateX: number = 0;
   viewRotateY: number = 0;
-  viewRotateZ: number = 10;
+  viewRotateZ: number = 0;
 
-  translateTimer;
+  initializeTableMouseGesture() {
+    this.mouseGesture = new TableMouseGestureFlat(this.rootElementRef.nativeElement);
+    this.mouseGesture.onstart = this.onTableMouseStart.bind(this);
+    this.mouseGesture.onend = this.onTableMouseEnd.bind(this);
+    this.mouseGesture.ontransform = this.onTableMouseTransform.bind(this);
+  }
+
 
   setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, isAbsolute: boolean=false) {
-    if (this.isViewed) this.isTranslate = true;
     if (isAbsolute) {
       this.viewRotateX = rotateX;
       this.viewRotateY = rotateY;
@@ -58,8 +60,7 @@ export class GameTableComponent extends GameTableComponentTemplate {
       });
     }
 
-    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
-    if (this.translateTimer) this.translateTimer = null;
-    if (this.isViewed) this.translateTimer = setTimeout(() => {this.isTranslate = false;},500);
+    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateZ(' + this.viewRotateZ + 'deg) ';
   }
+
 }

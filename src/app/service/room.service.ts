@@ -103,12 +103,12 @@ export class RoomService {
     return await IONetwork.listRoom()
   }
 
-  create(roomName: string ,password: string) {
+  create(roomName: string ,password: string ,is2d :boolean) {
     let room:RoomContext = {
       roomName: roomName,
       password: password,
       isOpen: true,
-      is2d: false
+      is2d: is2d
     }
     IONetwork.create(room);
     this.createRoom = true;

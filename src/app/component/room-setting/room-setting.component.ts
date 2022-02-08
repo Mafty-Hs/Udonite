@@ -17,6 +17,7 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   roomName: string = 'ふつうの部屋';
   password: string = '';
   isPrivate: boolean = false;
+  is2d:boolean = false;
 
   roomFile:FileList;
 
@@ -44,7 +45,7 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
       this.roomService.roomFile = this.roomFile; 
       this.roomFile = null;
     }
-    this.roomService.create(this.roomName, this.password);
+    this.roomService.create(this.roomName, this.password, this.is2d);
     this.roomService.roomState = RoomState.DATA_SYNC;
   }
 

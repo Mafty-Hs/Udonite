@@ -41,6 +41,10 @@ export class GameRoomComponent implements OnInit {
   minimumMode: boolean = false;
   selectMenu:string = "";
 
+  get isFlat():boolean {
+    return this.roomService.roomData.is2d;
+  }
+
   constructor(
     private cutInService: CutInService,
     private contextMenuService: ContextMenuService,

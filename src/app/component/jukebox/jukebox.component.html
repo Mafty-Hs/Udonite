@@ -75,9 +75,9 @@
 <ng-template #edit>
   <td colspan="4">
     データの削除
-    <button class="remove" (click)="remove(nameAudio.identifier)" [diabled]="jukeboxIdentifier == audio.identifier || auditionIdentifier  == audio.identifier || effectIdentifier  == audio.identifier"><i class="material-icons">delete</i></button>
+    <button class="remove" (click)="remove(nameAudio.identifier)" [diabled]="jukeboxIdentifier == nameAudio.identifier || auditionIdentifier  == nameAudio.identifier || effectIdentifier  == nameAudio.identifier"><i class="material-icons">delete</i></button>
   </td>
-  <td (click)="toggleName($event,audio.identifier)" class="name">
+  <td class="name">
     <input type="text" width="18em" [(ngModel)]="nameAudio.name" />
     <button (click)="toggleName($event,'')">OK</button>
   </td>

@@ -120,8 +120,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   remove(identifier :string) {
     if (window.confirm("選択した音楽を削除します。\nよろしいですか？")) {
-      AudioStorage.instance.destroy(identifier); 
+      AudioStorage.instance.remove(identifier); 
+      
     }
+    if (this.nameIdentifier === identifier) this.nameIdentifier = "";
   }
 
   handleFileSelect(event: Event) {

@@ -24,7 +24,7 @@ export class FileArchiver {
     return FileArchiver._instance;
   }
 
-  private maxImageSize = 2 * MEGA_BYTE;
+  maxImageSize = 2 * MEGA_BYTE;
   private maxAudioeSize = 10 * MEGA_BYTE;
 
   private callbackOnDragEnter;

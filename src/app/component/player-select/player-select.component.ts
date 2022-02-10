@@ -24,12 +24,11 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
   _color: string = (window.localStorage && localStorage.getItem(this.playerService.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) ?
     localStorage.getItem(this.playerService.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) :
     this.playerService.CHAT_WHITETEXT_COLOR ;
-  imageIdentifier: string = "none_icon";
+  imageFileChange:boolean = false;
+  imageFile:File = null;
+  imageBlob:string = "./assets/images/ic_account_circle_black_24dp_2x.png";
   password :string = '';
   savePW :boolean = false;
-  get image() :ImageFile {
-    return ImageStorage.instance.get(this.imageIdentifier);
-  }
   getPlayer(identifier :string):Player {
    let player = ObjectStore.instance.get(identifier)
    if (player instanceof Player) return player;
@@ -93,16 +92,24 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
   async changeIcon(event :Event) {
     let input = <HTMLInputElement>event.target;
     if (!input.files.length) return ;
-    let hash = await FileReaderUtil.calcSHA256Async(input.files[0]);
-    FileArchiver.instance.load(input.files);
-    if (hash) this.imageIdentifier = hash;   
+    if (FileArchiver.instance.maxImageSize < input.files[0].size) return;
+    this.imageFile = input.files[0];
+    this.imageBlob = window.URL.createObjectURL(this.imageFile) ;
+    this.imageFileChange = true;
   }
 
-  login() {
+  async setImage() {
+    let hash:string =  await FileReaderUtil.calcSHA256Async(this.imageFile)
+    await FileArchiver.instance.load([this.imageFile]);
+    if (!hash) return "none_icon";
+    return hash
+  }
+
+  async login() {
     PeerCursor.myCursor = new PeerCursor;
     let context = {peerId: IONetwork.peerId ,playerIdentifier: ""};
     if (this.playerType == 'NEW') {
-      this.playerService.myPlayer = this.playerService.playerCreate(this.playerName,this.color,this.imageIdentifier);
+      this.playerService.myPlayer = this.playerService.playerCreate(this.playerName,this.color,"none_icon");
       if (this.password.length > 0) {
         this.playerService.myPlayer.authType = AuthType.PASSWORD;
         this.playerService.myPlayer.password = this.roomService.getHash(this.password);
@@ -119,6 +126,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     }
     context.playerIdentifier =  this.playerService.myPlayer.identifier;
     PeerCursor.myCursor.context = context;
+    this.playerService.myPlayer.imageIdentifier = this.imageFileChange ? await this.setImage() : "none_icon";
     if (this.roomService.roomFile) {
       this.roomService.roomState = RoomState.ROOM_LOAD;
     }

@@ -14,7 +14,7 @@
         </div>
         <div class="item-data">
           <label class="icon">
-            <img class="image covor" [src]="image.url | safe: 'resourceUrl'" />
+            <img class="image covor" [src]="imageBlob | safe: 'resourceUrl'" />
             <input type="file" name="icondata" (change)="changeIcon($event)" style="display: none;" accept="image/*">
           </label>
         </div>

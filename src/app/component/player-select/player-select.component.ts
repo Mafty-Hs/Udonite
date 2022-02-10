@@ -91,6 +91,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
 
   async changeIcon(event :Event) {
     let input = <HTMLInputElement>event.target;
+    if (this.roomService.roomAdmin.disableImageLoad) return;
     if (!input.files.length) return ;
     if (FileArchiver.instance.maxImageSize < input.files[0].size) return;
     this.imageFile = input.files[0];

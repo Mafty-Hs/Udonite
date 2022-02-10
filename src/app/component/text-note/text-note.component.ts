@@ -26,6 +26,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() textNote: TextNote = null;
   @Input() is3D: boolean = false;
+  @Input() isFlat: boolean = false;
 
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
@@ -52,7 +53,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get height(): number { return this.adjustMinBounds(this.textNote.height); }
   get width(): number { return this.adjustMinBounds(this.textNote.width); }
 
-  get altitude(): number { return this.textNote.altitude; }
+  get altitude(): number { return this.isFlat ? 0 : this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
 
   get textNoteAltitude(): number {
@@ -64,8 +65,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     return +ret.toFixed(1); 
   }
 
-  get isUpright(): boolean { return this.textNote.isUpright; }
-  set isUpright(isUpright: boolean) { this.textNote.isUpright = isUpright; }
+  get isUpright(): boolean { return (this.textNote.isUpright && !this.isFlat); }
+  set isUpright(isUpright: boolean) { if (!this.isFlat) this.textNote.isUpright = isUpright; }
 
   get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
@@ -181,7 +182,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
+
+    let menuContent = this.isFlat ? [
       (this.isLocked
         ? {
           name: '☑ 固定', action: () => {
@@ -216,7 +218,80 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.isUpright
+      { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
+      (this.textNote.getUrls().length <= 0 ? null : {
+        name: '参照URLを開く', action: null,
+        subActions: this.textNote.getUrls().map((urlElement) => {
+          const url = urlElement.value.toString();
+          return {
+            name: urlElement.name ? urlElement.name : url,
+            action: () => {
+              if (StringUtil.sameOrigin(url)) {
+                window.open(url.trim(), '_blank', 'noopener');
+              } else {
+                this.modalService.open(OpenUrlComponent, { url: url, title: this.textNote.title, subTitle: urlElement.name });
+              } 
+            },
+            disabled: !StringUtil.validUrl(url),
+            error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
+            isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
+          };
+        })
+      }),
+      (this.textNote.getUrls().length <= 0 ? null : ContextMenuSeparator),
+      {
+        name: 'コピーを作る', action: () => {
+          let cloneObject = this.textNote.clone();
+          cloneObject.isLocked = false;
+          console.log('コピー', cloneObject);
+          cloneObject.location.x += this.gridSize;
+          cloneObject.location.y += this.gridSize;
+          cloneObject.toTopmost();
+          SoundEffect.play(PresetSound.cardPut);
+        }
+      },
+      {
+        name: '削除する', action: () => {
+          this.textNote.destroy();
+          SoundEffect.play(PresetSound.sweep);
+        }
+      },
+    ]: [
+      (this.isLocked
+        ? {
+          name: '☑ 固定', action: () => {
+            this.isLocked = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 固定', action: () => {
+            this.isLocked = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isSizeLocked
+        ? {
+          name: '☑ サイズ固定', action: () => {
+            this.isSizeLocked = false;
+          }
+        } : {
+          name: '☐ サイズ固定', action: () => {
+            this.isSizeLocked = true;
+          }
+        }),
+      (this.isOnlyPreview
+        ? {
+          name: '☑ プレビュー時のみ本文を表示', action: () => {
+            this.isOnlyPreview = false;
+          }
+        } : {
+          name: '☐ プレビュー時のみ本文を表示', action: () => {
+            this.isOnlyPreview = true;
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isUpright 
         ? {
           name: '☑ 直立', action: () => {
             this.isUpright = false;
@@ -227,7 +302,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.isAltitudeIndicate
+      (this.isAltitudeIndicate 
         ? {
           name: '☑ 高度の表示', action: () => {
             this.isAltitudeIndicate = false;
@@ -285,7 +360,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.sweep);
         }
       },
-    ], this.title);
+    ];
+
+
+    this.contextMenuService.open(position,menuContent, this.title);
   }
 
   onMove() {

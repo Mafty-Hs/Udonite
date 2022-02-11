@@ -1,6 +1,7 @@
 <div *ngIf="!isMine" #cursor class="component is-3d is-transition is-pointer-events-none" [ngClass]="{'will-change':isMoving}">
   <div class="is-3d is-transition" [ngStyle]="{'transform': 'rotateZ(' + (-rotateZ) + 'deg)'}">
-    <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'">
+    <ng-container *mgIf="!isFlat;else isFlat">
+    <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'" [style.transform]="'translateX(-100%) translateY(-100%) rotateX(-90deg) rotateZ(45deg)'">
       <div class="icon is-3d" [style.background-image]="'url(' + iconUrl + ')' | safe: 'style'">
         <div class="is-center is-3d" [ngStyle]="{'transform': 'translateX(-50%) rotateX(' + nameTagRotate + 'deg)'}">
           <div class="name is-3d" style="backface-visibility: hidden;" [style.background-color]="color + 'dd'">
@@ -12,5 +13,20 @@
         </div>
       </div>
     </div>
+    </ng-container>
   </div>
 </div>
+<ng-template #isFlat>
+  <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'" [style.transform]="'translateX(-100%) translateY(-100%) rotate(45deg)'">
+    <div class="icon is-3d" [style.background-image]="'url(' + iconUrl + ')' | safe: 'style'">
+      <div class="is-center is-3d" [ngStyle]="{'transform': 'translateX(-50%) rotateX(45deg)'}">
+        <div class="name is-3d" style="backface-visibility: hidden;" [style.background-color]="color + 'dd'">
+          <span style="white-space: nowrap; color: whitesmoke"><b>{{name}}</b></span>
+        </div>
+        <div class="name is-3d" style="position:absolute; backface-visibility: hidden; transform: rotateY(45deg);" [style.background-color]="color + 'dd'">
+          <span style="white-space: nowrap; color: whitesmoke"><b>{{name}}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

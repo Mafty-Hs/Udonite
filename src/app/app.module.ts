@@ -95,6 +95,7 @@ import { SyncWaitComponent } from './component/sync-wait/sync-wait.component';
 import { DataLoadComponent } from './component/data-load/data-load.component';
 import { GameTableFlatComponent } from './component/game-table-flat/game-table-flat.component';
 import { GameCharacterFlatComponent } from './component/game-character-flat/game-character-flat.component';
+import { TerrainFlatComponent } from './component/terrain-flat/terrain-flat.component';
 
 @NgModule({
   declarations: [
@@ -174,6 +175,7 @@ import { GameCharacterFlatComponent } from './component/game-character-flat/game
     DataLoadComponent,
     GameTableFlatComponent,
     GameCharacterFlatComponent,
+    TerrainFlatComponent,
   ],
   imports: [
     BrowserModule,

@@ -78,6 +78,10 @@
   border: solid 6px #FFCC80;
 }
 
+.pedestal-inner.not-inventory {
+  border-color: #80CCEE;
+}
+
 .pedestal-outer {
   backface-visibility: hidden;
   position: absolute;
@@ -111,8 +115,9 @@
   left: 0;
   right: 0;
   margin: auto;
-
-  height: auto;
+  height: 100%;
+  object-fit: contain;
+  
   vertical-align: bottom;
 }
 
@@ -228,3 +233,47 @@
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
+
+.inverse {
+  transform: rotateY(-180deg);
+}
+.inverser {
+  transition: transform 132ms 0s ease;
+}
+.hollow {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+.black-paint {
+  filter: brightness(0);
+}
+
+.aura {
+  transition: filter 0.2s ease-in-out;
+}
+
+.aura.black {
+  filter: drop-shadow(0 -4px 4px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -4px 4px #33f);
+}
+.aura.green {
+  filter: drop-shadow(0 -4px 4px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -4px 4px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -4px 4px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -4px 4px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -4px 4px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -4px 4px #fff);
+}
+

@@ -91,6 +91,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   mainImageWidth = 0;
   mainImageHeight = 0;
 
+  get is2d():boolean {
+    return this.roomService.roomData.is2d;
+  }
+
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,

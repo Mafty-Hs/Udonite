@@ -10,7 +10,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'terrain'">
     <button (click)="openModal('floor')">床の画像を変更</button>
-    <button (click)="openModal('wall')">壁の画像を変更</button>
+    <button *ngIf="!is2d" (click)="openModal('wall')">壁の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'dice-symbol'">
     <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>

@@ -21,7 +21,8 @@
   </div>
 </div>
 <ng-template #visible>
-  <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.text}}</span>
+  <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
+    [innerHTML]="chatMessage.escapeHtmlAndRuby"></span>
   <span *ngIf="chatMessage.tags.includes('edit')" class="edited" [ngClass]="{'is-black': isBlack}" [style.font-size.px]="localFontsize - 2">
     (<i class="material-icons" [style.font-size.px]="localFontsize - 2">create</i>
     編集済み)

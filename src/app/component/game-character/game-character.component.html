@@ -67,12 +67,12 @@
                 [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText }}</p>
+                </span><span [innerHTML]="dialogText"></span></p>
               <p class="is-3d chat-bubble-buyo back" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
                 [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText }}</p>
+                </span><span [innerHTML]="dialogText"></span></p>
             </div>
           </div>
         </div>

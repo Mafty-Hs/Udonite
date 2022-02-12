@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Zen+Antique&display=swap');
 
 :host {
   display: block;
@@ -91,6 +91,12 @@
        0.1px  0.1px 0px #666;
   padding: 2px 12px 0 12px;
 }
+
+::ng-deep .rubytext {
+  font-family: 'Zen Antique', serif;
+  font-size: 120%;
+}
+
 .message .tip {
   font-size: 8px;
   padding-left: 12px;

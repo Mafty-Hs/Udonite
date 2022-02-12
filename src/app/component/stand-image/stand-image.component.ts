@@ -3,6 +3,7 @@ import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { PlayerService } from 'service/player.service';
@@ -125,8 +126,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   get dialogText(): string {
     if (!this.gameCharacter || !this.gameCharacter.text) return '';
     return this.gameCharacter.text.replace(/[\r\n]{2,}/g, "\n\n").replace(/                            /g, '').trim();
-    //const ary = this.gameCharacter.text.replace(/。/g, "。\n\n").split(/[\r\n]{2,}/g).filter(str => str.trim());
-    //return ary.length > 0 ? ary.reverse()[0].trim() : '';
   }
 
   get standImage(): ImageFile {

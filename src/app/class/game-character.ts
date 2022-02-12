@@ -5,6 +5,7 @@ import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
 
 import { StandList } from './stand-list';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -18,7 +19,10 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
 
-  text = '';
+  _text = '';
+  set text(text :string) { this._text = text};
+  get text():string { return StringUtil.escapeHtmlAndRuby(this._text)};
+
   isEmote = false;
 
   set name(value:string) { this.setCommonValue('name', value); }

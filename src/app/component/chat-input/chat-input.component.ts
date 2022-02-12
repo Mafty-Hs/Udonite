@@ -4,7 +4,8 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PlayerService } from 'service/player.service';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
-import { PeerCursor } from '@udonarium/peer-cursor';
+import { PointerDeviceService } from 'service/pointer-device.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 import { BatchService } from 'service/batch.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
@@ -81,8 +82,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
+    private contextMenuService: ContextMenuService,
     private batchService: BatchService,
     private playerService: PlayerService,
+    private pointerDeviceService: PointerDeviceService,
+
   ) { }
 
   ngOnInit(): void {
@@ -170,5 +174,21 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (textArea.scrollHeight >= textArea.offsetHeight) {
       textArea.style.height = textArea.scrollHeight + 'px';
     }
+  }
+
+  helper(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let position = this.pointerDeviceService.pointers[0];
+
+    let actions: ContextMenuAction[] = [];
+    actions.push({ name: 'ルビ入力テンプレート', action: () =>
+     { this.rubi(); } });
+    this.contextMenuService.open(position, actions, '入力支援');
+  }
+
+  rubi() {
+    this.text += '|ルビを振られる文字《ルビ》'
   }
 }

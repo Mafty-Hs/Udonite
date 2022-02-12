@@ -80,4 +80,11 @@ export namespace StringUtil {
       }[match]
     });
   }
+
+  export function escapeHtmlAndRuby(text :string):string {
+    let escapeText = this.escapeHtml(text);
+    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby class="rubytext">$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
+  }
+
+
 }

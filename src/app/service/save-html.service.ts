@@ -4,6 +4,7 @@ import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatMessageService } from 'service/chat-message.service';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { RoomService } from './room.service';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +81,7 @@ export class SaveHtmlService {
   private addHtml(_chatMessage:  ChatMessageContext){
     let chatText:string;    
     let chatTabName:string = "[" + this.getTabName(_chatMessage.tabIdentifier) + "]"; 
-    let text:string =  _chatMessage.text.replace(/\n/g, '<br>');   
+    let text:string =  StringUtil.escapeHtmlAndRuby(_chatMessage.text).replace(/\n/g, '<br>');   
     chatText = chatTabName;
     chatText = chatText + '<font color="' + _chatMessage.color + '">';
     chatText = chatText + "<b>" + _chatMessage.name + "</b>"

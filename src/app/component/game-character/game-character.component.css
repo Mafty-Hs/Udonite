@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap');
+
 @supports (-moz-user-select: -moz-none) {
   /* 汚いけどとりあえず */
   .chat-bubble p:after {
@@ -496,4 +498,9 @@ p.is-wisper .face-icon {
 
 .democanvas {
   background-color: #FFF;
+}
+
+::ng-deep .rubytext {
+  font-family: 'Zen Antique', serif;
+  font-size: 150%;
 }

@@ -3,6 +3,7 @@ import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { PeerCursor } from './peer-cursor';
+import { StringUtil } from './core/system/util/string-util';
 
 export interface ChatMessageContext {
   identifier?: string;
@@ -99,6 +100,11 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isFailure(): boolean { return this.isDicebot && -1 < this.tags.indexOf('failure'); }
   get isCritical(): boolean { return this.isDicebot && -1 < this.tags.indexOf('critical'); }
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
+
+  get escapeHtmlAndRuby():string {
+    return StringUtil.escapeHtmlAndRuby(this.text); 
+  }
+
 
   private get getMyId():string {
     return (PeerCursor.myCursor.context) ? PeerCursor.myCursor.player.playerId : ""

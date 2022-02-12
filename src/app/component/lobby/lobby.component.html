@@ -55,7 +55,7 @@
     </tr>
     <ng-container *ngFor="let room of rooms">
       <tr>
-        <td class="room-name">{{room.roomId.substr(0,3) + "/" + room.roomName}}</td>
+        <td class="room-name">{{room.roomId.substr(0,3) + "/" + room.roomName}}<div class="is2d" *ngIf="room.is2d">2D</div></td>
         <td>
           <i *ngIf="room.password > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
           <i *ngIf="room.isOpen" class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i>

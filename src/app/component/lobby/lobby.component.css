@@ -130,3 +130,13 @@
   word-break: break-word;
   max-width: 50%;
 }
+
+.is2d {
+  display: inline-block;
+  background-color: #BB2266;
+  color: #FFF;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 2.5em;
+  padding: 0px 3px;
+}

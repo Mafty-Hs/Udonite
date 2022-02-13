@@ -5,11 +5,13 @@ import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-ser
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
+import { RoomAdmin } from './room-admin';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
   @SyncVar() isUseStandImage: boolean = true;
+  @SyncVar() allowedPlayers:string[] = [];
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
   private _unreadLength: number = 0;
@@ -19,6 +21,11 @@ export class ChatTab extends ObjectNode implements InnerXml {
   get latestTimeStamp(): number {
     let lastIndex = this.chatMessages.length - 1;
     return lastIndex < 0 ? 0 : this.chatMessages[lastIndex].timestamp;
+  }
+
+  get isAllowed():boolean {
+    if (!this.allowedPlayers) return true;
+    return  (RoomAdmin.auth || this.allowedPlayers.includes(RoomAdmin.myPlayerID));
   }
 
   // ObjectNode Lifecycle

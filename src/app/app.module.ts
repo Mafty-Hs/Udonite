@@ -96,6 +96,7 @@ import { DataLoadComponent } from './component/data-load/data-load.component';
 import { GameTableFlatComponent } from './component/game-table-flat/game-table-flat.component';
 import { GameCharacterFlatComponent } from './component/game-character-flat/game-character-flat.component';
 import { TerrainFlatComponent } from './component/terrain-flat/terrain-flat.component';
+import { PlayerControlComponent } from './component/player-control/player-control.component';
 
 @NgModule({
   declarations: [
@@ -176,6 +177,7 @@ import { TerrainFlatComponent } from './component/terrain-flat/terrain-flat.comp
     GameTableFlatComponent,
     GameCharacterFlatComponent,
     TerrainFlatComponent,
+    PlayerControlComponent,
   ],
   imports: [
     BrowserModule,

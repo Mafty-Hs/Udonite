@@ -54,6 +54,7 @@
     </div>
   </div>
 </ng-container>
+<button (click)="playerControl()" [disabled]="!auth"> 全プレイヤーの管理 </button>
 <div><span style="font-size: 12px;">{{help}}</span></div>
 <ng-template #disconnect>
   <span style="font-weight: bold;">未接続</span>

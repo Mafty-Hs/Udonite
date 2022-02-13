@@ -1,0 +1,64 @@
+table {
+  border-collapse:  collapse;
+  text-indent: initial;
+  border-spacing: 2px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+th {
+  border: solid 1px; 
+  padding: 3px;
+  display: table-cell;
+  vertical-align: inherit;
+  font-weight: bold;
+  text-align: -internal-center;
+}
+
+td {
+  border: solid 1px; 
+  padding: 3px;
+  font-size: 14px;
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+.center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image {
+  padding: 0px;
+  width: 64px;
+  height: 64px;
+  display: table-cell;
+  vertical-align: top;
+  border-radius: 0.6rem;
+}
+
+.image img{
+  width: auto;
+  height: auto;
+  max-width:100%;
+  max-height:100%;
+  vertical-align: bottom;
+}
+
+.cover {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.close {
+  padding: 0px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width:30px;
+  height:30px;
+  background-color: red;
+  color: white;
+}

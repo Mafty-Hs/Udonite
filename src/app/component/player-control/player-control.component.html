@@ -1,0 +1,19 @@
+<div>
+  <table>
+     <tr>
+      <th style="width:66px">画像</th>
+       <th style="width:12em">プレイヤー名</th>
+       <th style="width:8em">状態</th>
+       <th style="width:40px">削除</th>
+     <tr>
+    <tr *ngFor="let player of players; let i = index">
+       <td><img class="image cover" [src]="image(player.imageIdentifier).url | safe: 'resourceUrl'"/></td>
+       <td [style.color] = "player.color">{{player.name}} <span *ngIf="isMine(player.playerId)">(あなた)</span> </td>
+       <td>
+         <span *ngIf="isOnline(player.playerId)">オンライン<br/></span>
+         <span *ngIf="isAdmin(player.playerId)">ルームマスター</span>
+       </td>
+       <td class="center"><button class="close" [disabled]="isMine(player.playerId) || isOnline(player.playerId)" (click)="remove(player.playerId)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
+    </tr>
+  </table>
+</div>

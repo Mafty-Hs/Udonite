@@ -46,7 +46,7 @@
   color: #EEE;
   font-size: 14px;
   font-weight: bold;
-  background-color: #006;
+  background-color: #44A;
   border: 2px solid #000;
   box-shadow: inset 0 0 2px 2px #222;
   border-radius: 3px;
@@ -62,7 +62,7 @@
 }
 
 .is2d input[type="checkbox"]:checked + div {
-  background-color: #44A;
+  background-color: #BB2266;
 }
 .is2d input[type="checkbox"]:checked + div::after {
   left: 0;

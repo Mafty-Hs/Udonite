@@ -25,6 +25,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { IRound } from '@udonarium/round';
+import { AlarmComponent } from 'component/alarm/alarm.component';
 
 
 
@@ -214,9 +215,16 @@ export class GameRoomComponent implements OnInit {
       })
       .on('PLAY_ALARM', -1000, event => {
         if (!event.data.identifier || event.data.identifier == PeerCursor.myCursor.peerId ) {
-          setTimeout(() => {
-            SoundEffect.play(PresetSound.alarm);
-          },event.data.time); 
+          if (event.data.time > 1) {
+            let option: PanelOption = { left: 200, top: 250, width: 200, height: 230 };
+            let component = this.panelService.open(AlarmComponent, option);
+            component.timer = event.data.time / 1000;
+          }
+          else {
+            setTimeout(() => {
+              SoundEffect.play(PresetSound.alarm);
+            },event.data.time); 
+          }
         }
       })
       .on('POPUP_STAND_IMAGE', -1000, event => {

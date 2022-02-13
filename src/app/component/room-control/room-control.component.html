@@ -77,7 +77,7 @@
             <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
           </option>
         </select>
-        <button style="padding: 0.1em 0.4em;" (click)="alarmSend()">送信</button></div>
+        <button [disabled]="alarmInterval" style="padding: 0.1em 0.4em;" (click)="alarmSend()">送信</button></div>
       </div>
     </div>
     <div class="flex-item">

@@ -84,7 +84,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
         break;
       case 'CounterListComponent':
         component = CounterListComponent;
-        option = { width:450 , height: 600 };
+        option = { width:450 , height: 700 };
         break;
       case 'PlayerPaletteComponent':
         component = PlayerPaletteComponent;

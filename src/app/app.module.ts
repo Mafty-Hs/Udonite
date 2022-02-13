@@ -97,6 +97,7 @@ import { GameTableFlatComponent } from './component/game-table-flat/game-table-f
 import { GameCharacterFlatComponent } from './component/game-character-flat/game-character-flat.component';
 import { TerrainFlatComponent } from './component/terrain-flat/terrain-flat.component';
 import { PlayerControlComponent } from './component/player-control/player-control.component';
+import { AlarmComponent } from './component/alarm/alarm.component';
 
 @NgModule({
   declarations: [
@@ -178,6 +179,7 @@ import { PlayerControlComponent } from './component/player-control/player-contro
     GameCharacterFlatComponent,
     TerrainFlatComponent,
     PlayerControlComponent,
+    AlarmComponent,
   ],
   imports: [
     BrowserModule,

@@ -83,7 +83,11 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (window.localStorage && localStorage.getItem(this.playerService.KEY_PHRASE_LOCAL_STORAGE_KEY))
-    this.password = localStorage.getItem(this.playerService.KEY_PHRASE_LOCAL_STORAGE_KEY);
+      this.password = localStorage.getItem(this.playerService.KEY_PHRASE_LOCAL_STORAGE_KEY);
+    if ((window.localStorage && this.allPlayers.find(player => player.identifier == localStorage.getItem(this.playerService.PLAYER_LOCAL_STORAGE_KEY)))) {
+      this.selectedPlayer = localStorage.getItem(this.playerService.PLAYER_LOCAL_STORAGE_KEY);
+      this.playerType = "SAVE";
+    }
   }
 
   ngAfterViewInit(): void {     
@@ -127,7 +131,8 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     }
     context.playerIdentifier =  this.playerService.myPlayer.identifier;
     PeerCursor.myCursor.context = context;
-    this.playerService.myPlayer.imageIdentifier = this.imageFileChange ? await this.setImage() : "none_icon";
+    if (this.playerType == 'NEW')  this.playerService.myPlayer.imageIdentifier = this.imageFileChange ? await this.setImage() : "none_icon";
+    localStorage.setItem(this.playerService.PLAYER_LOCAL_STORAGE_KEY, this.playerService.myPlayer.identifier);
     if (this.roomService.roomFile) {
       this.roomService.roomState = RoomState.ROOM_LOAD;
     }

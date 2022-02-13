@@ -14,12 +14,13 @@ import { Color } from 'three';
 })
 export class PlayerService {
   //定義
-  CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
-  CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
-  KEY_PHRASE_LOCAL_STORAGE_KEY = 'kake-udon-keyphrase-local-storage';
+  readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
+  readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+  readonly KEY_PHRASE_LOCAL_STORAGE_KEY = 'kake-udon-keyphrase-local-storage';
+  readonly PLAYER_LOCAL_STORAGE_KEY = 'kake-udon-playerid-local-storage';
   
-  CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
-  CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
+  readonly CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
+  readonly CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
   
   myPlayer:Player;
   peerCursors:PeerCursor[] = [];

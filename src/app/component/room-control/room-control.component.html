@@ -85,20 +85,22 @@
         操作ログ
       </div>
       <div class="item-data">
-        <select style="width: 16em;" [(ngModel)]="roomService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
-          <option value="" class="not-specified">ログを出力しない</option>
-          <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
-        </select>
-        <ng-container *ngIf="roomService.roomAdmin.chatTab">
-          <div>出力するデータを指定します</div>
-          <div class="toggle"><label>ダイス操作ログ
-            <input name="diceLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.diceLog">
-            <div><div></div></div>
-          </label></div><br>
-          <div class="toggle"><label>カード操作ログ
-            <input name="cardLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.cardLog">
-            <div><div></div></div>
-          </label></div><br>
+        <ng-container *ngIf="adminAuth; else systemLog">
+          <select style="width: 16em;" [(ngModel)]="roomService.roomAdmin.chatTab" [ngModelOptions]="{standalone: true}">
+            <option value="" class="not-specified">ログを出力しない</option>
+            <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+          </select>
+          <ng-container *ngIf="roomService.roomAdmin.chatTab">
+            <div>出力するデータを指定します</div>
+            <div class="toggle"><label>ダイス操作ログ
+              <input name="diceLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.diceLog">
+              <div><div></div></div>
+            </label></div><br>
+            <div class="toggle"><label>カード操作ログ
+              <input name="cardLog" type="checkbox" [(ngModel)]="roomService.roomAdmin.cardLog">
+              <div><div></div></div>
+            </label></div><br>
+          </ng-container>
         </ng-container>
       </div>
     </div>
@@ -107,11 +109,13 @@
         キャラクター<br>テンプレート
       </div>
       <div class="item-data">
-        <select name="template" style="width: 16em;height: 1.5em;" [(ngModel)]="roomService.roomAdmin.templateCharacter">
-          <option *ngFor="let gameCharacter of gameCharacterService.list(false)"  
-            value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
-          </option>
-        </select>
+        <ng-container  *ngIf="adminAuth; else template">
+          <select name="template" style="width: 16em;height: 1.5em;" [(ngModel)]="roomService.roomAdmin.templateCharacter">
+            <option *ngFor="let gameCharacter of gameCharacterService.list(false)"  
+              value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
+            </option>
+          </select>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -136,6 +140,14 @@
     <button (click)="helpRoomControl()">?</button>
   </div>  
 </div>
+
+<ng-template #systemLog>
+  <span *ngIf="roomService.roomAdmin.diceLog">ダイス操作ログ<br/></span>
+  <span *ngIf="roomService.roomAdmin.cardLog">カード操作ログ<br/></span>
+</ng-template>
+<ng-template #template>
+  <span *ngIf="roomService.roomAdmin.templateCharacter">{{gameCharacterService.get(roomService.roomAdmin.templateCharacter).name}}</span>
+</ng-template>
 
 <ng-template #editSetting>
   <div>

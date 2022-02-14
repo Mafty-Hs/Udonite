@@ -8,11 +8,16 @@
 
 .item {
   width:100%;
+  height:100%;
   display: flex;
   flex-direction: row;
 }
 
 .inner-note {
+  resize: none;
+  box-sizing: border-box;
+  width:100%;
+  height:100%;
   overflow: auto;
   white-space: nowrap;
 }

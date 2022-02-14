@@ -15,7 +15,14 @@
       </form>
     </div>
     <div class="setting">
-      <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>チャット設定</button>
+      <div class="auto-scroll">
+        <span>自動スクロール</span>
+        <div class="toggle"><label>
+          <input name="autoScroll" type="checkbox" [(ngModel)]="canAutoScroll">
+          <div><div></div></div>
+        </label></div>
+      </div>
+      <button class="tab-setting small-font" (click)="showTabSetting()">チャット設定</button>
     </div>
   </div>
   <div *ngIf="isLogOnly && !isEdit">

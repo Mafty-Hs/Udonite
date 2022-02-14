@@ -18,6 +18,7 @@ import { PlayerService } from 'service/player.service';
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   _sendFrom: string = this.playerService.myPlayer.playerId;
+  canAutoScroll:boolean = true;
 
   get sendFrom(): string { return this._sendFrom; }
   set sendFrom(sendFrom: string) {
@@ -126,6 +127,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // @TODO やり方はもう少し考えた方がいいい
   scrollToBottom(isForce: boolean = false) {
+    if (!this.canAutoScroll) return;
     if (isForce) this.isAutoScroll = true;
     if (this.scrollToBottomTimer != null || !this.isAutoScroll) return;
     this.scrollToBottomTimer = setTimeout(() => {

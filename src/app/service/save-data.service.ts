@@ -125,7 +125,7 @@ export class SaveDataService {
   }
 
   async downloadImage(url :string) :Promise<File|null> {
-    let filename = url.match(".+/(.+?)([\?#;].*)?$")[1];
+    let filename = url.match(".+/(.+?)([?#;].*)?$")[1];
     try {
       let response = await fetch(url, {
         method: 'GET',

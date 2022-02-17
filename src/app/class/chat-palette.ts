@@ -61,6 +61,7 @@ export class ChatPalette extends ObjectNode {
     this.isAnalized = false;
   }
 
+  autoResouce:RegExp = new RegExp('^c\\({(.*?)}','i');
   evaluate(line: PaletteLine, extendVariables?: DataElement): string
   evaluate(line: string, extendVariables?: DataElement): string
   evaluate(line: any, extendVariables?: DataElement): string {
@@ -70,7 +71,11 @@ export class ChatPalette extends ObjectNode {
     } else {
       evaluate = line.palette;
     }
-
+    let resouceWord = ''
+    let resouceFlag = false;
+    if (this.autoResouce.test(evaluate)){
+      resouceWord = evaluate.match(this.autoResouce)[1]; 
+    }
     console.log(evaluate);
     let limit = 128;
     let loop = 0;
@@ -80,6 +85,7 @@ export class ChatPalette extends ObjectNode {
       isContinue = false;
       evaluate = evaluate.replace(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
         name = StringUtil.toHalfWidth(name);
+        if (name === resouceWord) resouceFlag = true;
         console.log(name);
         isContinue = true;
         //name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
@@ -121,6 +127,7 @@ export class ChatPalette extends ObjectNode {
       });
       if (limit < loop) isContinue = false;
     }
+    if (resouceFlag) return ':' +  resouceWord + evaluate
     return evaluate;
   }
 

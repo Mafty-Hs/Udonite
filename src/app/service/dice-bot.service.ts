@@ -6,6 +6,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
+import { GameCharacterService } from './game-character.service';
 import { StandService } from 'service/stand.service';
 
 interface rollDataContext {
@@ -26,15 +27,26 @@ export class DiceBotService {
   get api(): api {return this.diceBot.api;} 
   set api(_api) { this.diceBot.api = _api;}
   private gameType:string = "";
-  private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i")
+  private resoucePattern:RegExp = new RegExp('^(:.*)c\\(.*\\)',"i");
+  private resoucePattern2:RegExp = new RegExp('^c\\(.*\\) → (\\d+)',"i");
+  private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i");
   private repeatPattern:RegExp = new RegExp('^S?((repeat|rep|x)\\d+)',"i");
   private commandPattern:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
   private commandPatternBase:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
-  private choicePattern:RegExp = new RegExp('^S?choice[\u{20}\[\(]',"i");
-  private choicePattern1:RegExp = new RegExp('^S?choice\(.*\)',"i");
-  private choicePattern2:RegExp = new RegExp('^S?choice\[.*\]',"i");
-  private asciiPattern:RegExp = new RegExp('^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$');
+  private choicePattern:RegExp = new RegExp('^S?choice[\u{20}\\[\\(]',"i");
+  private choicePattern1:RegExp = new RegExp('^S?choice\\(.*\\)',"i");
+  private choicePattern2:RegExp = new RegExp('^S?choice\\[.*\\]',"i");
+  private asciiPattern:RegExp = new RegExp('^[a-zA-Z0-9!-/:-@\¥[-`{-~\\}]+$');
   private symbolPattern:RegExp = new RegExp('（）［］',"g");
+
+  private resourceFilter(text :string) {
+    if (this.resoucePattern.test(text)) {
+      let match = text.match(this.resoucePattern);
+      let resouce = match[1].substring(1);
+      return [text.substring(match[1].length),resouce];  
+    }
+    return [text,""];
+  }
 
   private async bcDiceFilter(gameType:string ,rollText:string):Promise<string> {
     if (gameType === this.gameType) {
@@ -115,7 +127,6 @@ export class DiceBotService {
     let isChoice:boolean = false;
     let resultRollData:rollDataContext = 
       {rollText: "",repeatText: "",isSecret: false,isDiceRollTable: false};
-
     [resultRollData.rollText ,resultRollData.repeatText] = this.repeatFilter(text);
     [resultRollData.rollText ,isChoice] = this.choiceFilter(resultRollData.rollText);
     if (isChoice) return resultRollData;
@@ -140,6 +151,8 @@ export class DiceBotService {
       .replace(/\s/g,"\u{20}").trim();
     let gameType: string = chatMessage.tag.replace('noface', '').trim();
     gameType = gameType ? gameType : 'DiceBot';
+    let resource:string = "";
+    [text,resource] = this.resourceFilter(text);
     let rollData:rollDataContext = await this.rollFilter(gameType ,text);
     let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
@@ -157,7 +170,7 @@ export class DiceBotService {
     catch(e) {
 
     }
-    this.sendResultMessage(finalResult, chatMessage);
+    this.sendResultMessage(finalResult, chatMessage,resource);
     return;
   }
 
@@ -170,14 +183,14 @@ export class DiceBotService {
 
     let response:Response = await fetch(request, {mode: 'cors'})
       if (response.ok) {
-        let json = await response.json()
+        let json = await response.json();
         let text = String(json.text);
         if (repeatText) {
           text = text.replace(/\n\n/g,"\t").replace(/\n/g," ").replace(/\t/g,"\n")
         }
         return { result: text, isSecret: json.secret, 
             isEmptyDice: (json.rands && json.rands.length == 0),
-            isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
+            isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble};
       }
       else {
         throw new Error(response.statusText);
@@ -249,17 +262,18 @@ export class DiceBotService {
     try {
       response = await fetch(`${this.api.url}/v2/game_system/${encodeURIComponent(gameType)}`, {mode: 'cors'})
       if (response.ok) {
-        let regtxt = response.json()[0].command_pattern;
+        let json = await response.json();
+         let regtxt = json.command_pattern;
         return new RegExp(regtxt,"i");
       }
     }
-    catch {
-     console.log(response.statusText);
+    catch(error) {
+      console.log(error);
     }
     return this.commandPatternBase;
   }
 
-   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
+   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage, resouce?: string) {
     let result: string = rollResult.result;
     const isSecret: boolean = rollResult.isSecret;
     const isEmptyDice: boolean = rollResult.isEmptyDice;
@@ -267,7 +281,6 @@ export class DiceBotService {
     const isFailure: boolean = rollResult.isFailure;
     const isCritical: boolean = rollResult.isCritical;
     const isFumble: boolean = rollResult.isFumble;
-
     if (result.length < 1) return;
     if (!rollResult.isDiceRollTable) result = result.replace(/[＞]/g, s => '→').trim();
 
@@ -312,6 +325,41 @@ export class DiceBotService {
       }
     }
     if (chatTab) chatTab.addMessage(diceBotMessage);
+
+    if (resouce && originalMessage.characterIdentifier) {
+      let dice = 0;
+      if (this.resoucePattern2.test(result)) {
+        let match = result.match(this.resoucePattern2);
+        dice = Number(match[1]); 
+      }
+      let dataElm = this.gameCharacterService.findDataElm(originalMessage.characterIdentifier,resouce);
+      let beforeValue:number = 0;
+      let afterValue:number = 0;
+      if (dataElm.type == 'numberResource') {
+        beforeValue = Number(dataElm.currentValue);
+        dataElm.currentValue = dice;
+        afterValue = Number(dataElm.currentValue);
+      }
+      else if (!isNaN(Number(dataElm.value))) {
+          beforeValue = Number(dataElm.value);
+          dataElm.value = dice;
+          afterValue = Number(dataElm.value);
+      }
+      let resouceMessage: ChatMessageContext = {
+        identifier: '',
+        tabIdentifier: originalMessage.tabIdentifier,
+        originFrom: originalMessage.from,
+        from: 'SYSTEM',
+        timestamp: originalMessage.timestamp + 2,
+        imageIdentifier: '',
+        tag: tag,
+        name: 'SYSTEM' ,
+        text: originalMessage.name + ':' + resouce + ' ' + beforeValue + '→' + afterValue,
+        color: originalMessage.color,
+        isUseStandImage: originalMessage.isUseStandImage
+      };
+      if (chatTab) chatTab.addMessage(resouceMessage);
+     }
   }
 
   async getBcDiceVersion() {
@@ -414,6 +462,7 @@ export class DiceBotService {
   }
 
   constructor(
-    private standService: StandService
+    private standService: StandService,
+    private gameCharacterService:GameCharacterService
   ) { }
 }

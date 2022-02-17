@@ -91,6 +91,27 @@ export class GameCharacterService {
     return  character.detailDataElement.children as DataElement[];
   }
 
+  findDataElm(identifier :string,resouce :string):DataElement|null {
+    let dataElms = this.dataElements(identifier);
+    for (let data of dataElms) {
+      let element = this._findDataElm(data ,resouce)
+      if (element) return element;
+    }
+    return null;
+  }
+
+  private _findDataElm(dataElm :DataElement ,resouce :string):DataElement|null {
+    if (dataElm.name === resouce) return dataElm;
+    if (dataElm.children.length > 0) {
+      let dataElms = dataElm.children as DataElement[];
+      for (let data of dataElms) {
+        let element = this._findDataElm(data ,resouce)
+        if (element) return element;
+      }
+    }
+    return null;
+  }
+
   //チャット用
   chatId :string;
   chatCharacter:GameCharacter;

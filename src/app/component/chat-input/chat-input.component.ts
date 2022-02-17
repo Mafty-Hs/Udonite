@@ -94,6 +94,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       .on('MESSAGE_ADDED', event => {
         if (event.data.tabIdentifier !== this.chatTabidentifier) return;
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        if (message.tags.includes('system')) return;
         let sendFrom = this.playerService.getPeerByPlayer(message.from);
         if (this.writingPeers.has(sendFrom)) {
           this.writingPeers.get(sendFrom).stop();

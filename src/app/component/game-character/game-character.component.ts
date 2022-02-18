@@ -207,7 +207,15 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
 
   
   ngOnInit() {
-    super.ngOnInit()
+    super.ngOnInit();
+    EventSystem.register(this)
+    .on('CHARACTER_EFFECT', event => {
+      let effectName = event.data[0];
+      let character = event.data[1];
+      if(this.effectService.canEffect && this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+        this.setEffect(effectName);
+      }
+    });
     this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => { 
       this.toggleEffect(bool);
     });

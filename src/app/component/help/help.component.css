@@ -1,0 +1,78 @@
+.menu {
+  display: flex;
+  height: 50px;
+  font-size: 14px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: scroll;
+}
+
+menu label {
+  display: inline-block;
+  position: relative;
+}
+
+.menu input[type="radio"] {
+  display: none;
+}
+
+.menu input[type="radio"] + div {
+  display: inline-block;
+  vertical-align: middle;
+  outline: 0;
+  background-color: #777;
+  border: solid 2px #222;
+  padding-top : 0px;
+  margin-top : 0px;
+  padding: 2px 8px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px; 
+  cursor: pointer;
+}
+
+.menu input[type="radio"] + div:hover {
+  background-color: #AAA;
+  color: #000;
+}
+
+.menu input[type="radio"]:checked + div {
+  border-top: none;
+  font-weight: bold;
+  background: #CCC;
+  color: #222;
+}
+
+.menu::-webkit-scrollbar {
+  height: 5px;
+}
+.menu::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.menu::-webkit-scrollbar-track {
+  background: #444;
+}
+
+.help {
+  overflow: scroll;
+  width:100%;
+  height:100%;
+}
+
+.content {
+  width:100%;
+  height:100%;
+  padding: 0;
+}
+
+.help::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.help::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 5px;
+}
+.help::-webkit-scrollbar-track {
+  background: #dcdcdc;
+}

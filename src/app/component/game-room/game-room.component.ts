@@ -17,6 +17,7 @@ import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { HelpComponent } from 'component/help/help.component';
 import { ModalComponent } from 'component/modal/modal.component';
 import { RoundComponent } from 'component/round/round.component';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
@@ -183,22 +184,8 @@ export class GameRoomComponent implements OnInit {
   }
 
   menuHelp(){
-    let gameHelp:string[] =
-      [
-      'ファイル\n  画像の管理、部屋データの保存、チャットログの保存ができます。',
-      'ルーム\n  接続の管理、テーブルの管理ができます。',
-      '機能\n  セッション中に便利な機能があります。',
-      '表示\n  自分だけ非表示にしたい項目を選択できます。',
-      'ラウンド管理\n  ラウンド制またはイニシアティブ制でラウンド進行を管理できます。\n  右クリックすることで動作の設定が可能です。',
-      'ネットワークインジケーター\n  データの送受信が発生しているとき、白く光ります',
-      'ルーム情報\n  ルーム名、参加人数が表示されます。自分以外全員とデータ送受信できていないとき赤く点滅します'
-      ];     
-
-      let coordinate = { x: ( window.innerWidth - 650 ), y: 50 };
-      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 450 };
-      let textView = this.panelService.open(TextViewComponent, option);
-      textView.title = "メニューバー説明";
-      textView.text = gameHelp;
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    this.panelService.open(HelpComponent,option);
   }
 
     

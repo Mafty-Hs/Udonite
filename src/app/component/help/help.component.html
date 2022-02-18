@@ -1,0 +1,71 @@
+<div class="menu">
+  <form>
+    <label>
+      <input name="menu" type="radio" value="0" [(ngModel)]="menu">
+       <div>全体</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="1" [(ngModel)]="menu">
+      <div>メニュー</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="2" [(ngModel)]="menu">
+       <div>ルーム</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="3" [(ngModel)]="menu">
+       <div>チャット</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="4" [(ngModel)]="menu">
+       <div>キャラクター</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="5" [(ngModel)]="menu">
+       <div>オブジェクト</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="6" [(ngModel)]="menu">
+       <div>セーブ・ロード</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="7" [(ngModel)]="menu">
+       <div>ログ</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="8" [(ngModel)]="menu">
+       <div>その他</div>
+    </label>
+  </form>
+</div>
+<div class="help">
+  <ng-container [ngSwitch]="menu">
+     <ng-container *ngSwitchCase="0">
+       <help-main class="content"></help-main>  
+     </ng-container>
+     <ng-container *ngSwitchCase="1">
+       <help-menu class="content"></help-menu>  
+     </ng-container>
+     <ng-container *ngSwitchCase="2">
+       <help-room class="content"></help-room>  
+     </ng-container>
+     <ng-container *ngSwitchCase="3">
+       <help-chat class="content"></help-chat>  
+     </ng-container>
+     <ng-container *ngSwitchCase="4">
+       <help-character class="content"></help-character>  
+     </ng-container>
+     <ng-container *ngSwitchCase="5">
+       <help-object class="content"></help-object>  
+     </ng-container>
+     <ng-container *ngSwitchCase="6">
+       <help-save class="content"></help-save>  
+     </ng-container>
+     <ng-container *ngSwitchCase="7">
+       <help-log class="content"></help-log>  
+     </ng-container>
+     <ng-container *ngSwitchCase="8">
+       <help-other class="content"></help-other>  
+     </ng-container>
+  </ng-container> 
+</div>

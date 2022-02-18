@@ -98,6 +98,16 @@ import { GameCharacterFlatComponent } from './component/game-character-flat/game
 import { TerrainFlatComponent } from './component/terrain-flat/terrain-flat.component';
 import { PlayerControlComponent } from './component/player-control/player-control.component';
 import { AlarmComponent } from './component/alarm/alarm.component';
+import { HelpComponent } from './component/help/help.component';
+import { HelpMainComponent } from './component/help/help-main/help-main.component';
+import { HelpRoomComponent } from './component/help/help-room/help-room.component';
+import { HelpChatComponent } from './component/help/help-chat/help-chat.component';
+import { HelpCharacterComponent } from './component/help/help-character/help-character.component';
+import { HelpMenuComponent } from './component/help/help-menu/help-menu.component';
+import { HelpObjectComponent } from './component/help/help-object/help-object.component';
+import { HelpSaveComponent } from './component/help/help-save/help-save.component';
+import { HelpLogComponent } from './component/help/help-log/help-log.component';
+import { HelpOtherComponent } from './component/help/help-other/help-other.component';
 
 @NgModule({
   declarations: [
@@ -180,6 +190,16 @@ import { AlarmComponent } from './component/alarm/alarm.component';
     TerrainFlatComponent,
     PlayerControlComponent,
     AlarmComponent,
+    HelpComponent,
+    HelpMainComponent,
+    HelpRoomComponent,
+    HelpChatComponent,
+    HelpCharacterComponent,
+    HelpMenuComponent,
+    HelpObjectComponent,
+    HelpSaveComponent,
+    HelpLogComponent,
+    HelpOtherComponent,
   ],
   imports: [
     BrowserModule,

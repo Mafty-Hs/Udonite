@@ -12,6 +12,10 @@
     "importHelpers": true,
     "target": "es2018",
     "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "paths": {
       "@udonarium/*": [
         "src/app/class/*"

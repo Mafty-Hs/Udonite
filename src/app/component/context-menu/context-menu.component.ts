@@ -12,6 +12,8 @@ import { PlayerService } from 'service/player.service';
 export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('altitudeSlider') altitudeSlider: ElementRef<HTMLElement>;
+  @ViewChild('altitudeSliderRoot') altitudeSliderRoot: ElementRef<HTMLElement>;
+  @ViewChild('altitudeSliderRuler') altitudeSliderRuler: ElementRef<HTMLElement>;
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
@@ -115,7 +117,8 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     panel.style.top = panel.offsetTop + diffTop + 'px';
 
     if (this.altitudeSlider) {
-      this.altitudeSlider.nativeElement.style.height = (panel.clientHeight - 72) + 'px';
+      this.altitudeSliderRoot.nativeElement.style.height = this.altitudeSliderRuler.nativeElement.clientHeight + 'px';
+      this.altitudeSlider.nativeElement.style.width = (panel.clientHeight - 72) + 'px';
     }
   }
 

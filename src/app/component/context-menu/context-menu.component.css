@@ -92,17 +92,42 @@ ul > li.hasHighlight:hover {
   max-width: 16.5em;
   text-overflow: ellipsis;
 }
+.bar-root {
+  position: relative;
+  width: 20px;
+}
 
 td.altitude {
   vertical-align: middle;
 }
 
 input.altitude {
+  /*
   writing-mode: bt-lr;   
   appearance: slider-vertical;
   width: 8px;
   height: 100%;
+  */
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  transform-origin:left bottom;
+  -webkit-transform:rotate(-90deg);
+  -moz-transform:rotate(-90deg);
+  -o-transform:rotate(-90deg);
+  transform:rotate(-90deg);
+  /*height: 8px;*/
   padding: 3px;
+}
+
+.bar::-webkit-slider-thumb {
+  border:3px #000;
+  background: #FFF; 
+}
+
+.bar::-moz-range-thumb {
+  border:3px #000;
+  background: #FFF; 
 }
 
 .disabled .menu-title, .disabled .material-icons {

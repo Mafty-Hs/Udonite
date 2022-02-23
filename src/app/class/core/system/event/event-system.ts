@@ -4,7 +4,6 @@ import { Event, EventContext } from './event';
 import { Listener } from './listener';
 import { Callback } from './observer';
 import { Subject } from './subject';
-import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-synchronizer";
 import { Subscription } from 'rxjs';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageContext } from '@udonarium/core/file-storage/image-context';

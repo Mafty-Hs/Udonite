@@ -5,7 +5,7 @@ import { NetworkStatus } from "./connection";
 import { EventContext , PeerContext} from "./netowrkContext";
 import { CatalogItem } from "@udonarium/core/synchronize-object/object-store";
 import { Subject } from "rxjs";
-import { ObjectNetworkContext } from "@udonarium/core/synchronize-object/object-synchronizer";
+import { ObjectContext } from "@udonarium/core/synchronize-object/game-object";
 import { ImageContext } from "@udonarium/core/file-storage/image-context";
 import { AudioContext } from "@udonarium/core/file-storage/audio-context";
 import { RoomControl } from "@udonarium/room-admin";
@@ -98,15 +98,15 @@ export class IONetwork {
     return <PeerContext[]>response;
   }
 
-  async objectUpdate(context: ObjectNetworkContext) {
+  async objectUpdate(context: ObjectContext) {
     if (!this.roomId) await this.roomId$.toPromise();
     this.socket.send('objectUpdate', context);
   }
 
-  async objectGet(identifier: string):Promise<ObjectNetworkContext|null> {
+  async objectGet(identifier: string):Promise<ObjectContext|null> {
     let context = await this.socket.send('objectGet', {identifier: identifier});
     if (context) {
-      return <ObjectNetworkContext>context;
+      return <ObjectContext>context;
     }
     return null;
   }
@@ -168,14 +168,14 @@ export class IONetwork {
     this.socket.send('audioRemove', {identifier: identifier});
   }
 
-  async allData():Promise<ObjectNetworkContext[]> {
+  async allData():Promise<ObjectContext[]> {
     const request = `${this.url}/_allData?roomId=${this.roomId}`;
     if (!this.roomId) await this.roomId$.toPromise();
     try {
       let response:Response = await fetch(request, {mode: 'cors'})
       if (response.ok) {
         let json = JSON.stringify(await response.json());
-        let contexts = <ObjectNetworkContext[]>JSON.parse(json);
+        let contexts = <ObjectContext[]>JSON.parse(json);
         return contexts;
       }
       else {

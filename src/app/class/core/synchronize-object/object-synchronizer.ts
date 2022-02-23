@@ -17,7 +17,7 @@ export class ObjectSynchronizer {
     console.log('ObjectSynchronizer ready...');
     EventSystem.register(this)
       .on('NW_UPDATE_GAME_OBJECT', event => {
-        let context: ObjectNetworkContext = event.data;
+        let context: ObjectContext = event.data;
         this.ObjectBuild(context);
       })
       .on('UPLOAD_GAME_OBJECT', event => {
@@ -98,24 +98,16 @@ export class ObjectSynchronizer {
     let object:GameObject = this.get(identifier);
     if (!object) return;
     let context = object.toContext();
-    let uploadContext:ObjectNetworkContext = {
-      aliasName: context.aliasName,
-      identifier: context.identifier,
-      majorVersion: context.majorVersion,
-      minorVersion: context.minorVersion,
-      parentIdentifier: "",
-      context: context
-    };
-    await IONetwork.objectUpdate(uploadContext) 
+    await IONetwork.objectUpdate(context) 
   }
 
   async ObjectDL(identifier :string) {
-    let context:ObjectNetworkContext = await IONetwork.objectGet(identifier);
+    let context:ObjectContext = await IONetwork.objectGet(identifier);
     this.ObjectBuild(context);
     return;
   }
 
-  ObjectBuild(context:ObjectNetworkContext) {
+  ObjectBuild(context:ObjectContext) {
     let object = this.get(context.identifier); 
       if (object) {
         this.ObjectUpdate(object,context);
@@ -124,21 +116,21 @@ export class ObjectSynchronizer {
 
   }
 
-  ObjectUpdate(object: GameObject, context: ObjectNetworkContext) {
+  ObjectUpdate(object: GameObject, context: ObjectContext) {
     if (context.majorVersion + context.minorVersion > object.version) {
-      object.apply(context.context);
+      object.apply(context);
       EventSystem.trigger('UPDATE_GAME_OBJECT', context);
     }
   }
 
 
-  ObjectCreate(context :ObjectNetworkContext) {
+  ObjectCreate(context :ObjectContext) {
     let newObject: GameObject = ObjectFactory.instance.create(context.aliasName, context.identifier);
     if (!newObject) {
       console.warn(context.aliasName + ' is Unknown...?', context);
       return;
     }
-    newObject.apply(context.context);
+    newObject.apply(context);
     ObjectStore.instance.add(newObject, false);
     EventSystem.trigger('UPDATE_GAME_OBJECT', context);
   }
@@ -157,11 +149,3 @@ export class ObjectSynchronizer {
 
 }
 
-export interface ObjectNetworkContext {
-  aliasName: string;
-  identifier: string;
-  majorVersion: number;
-  minorVersion: number;
-  parentIdentifier: string;
-  context: ObjectContext
-}

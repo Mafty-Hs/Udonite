@@ -1,0 +1,28 @@
+.container {
+  width: 100%;
+  display:flex;
+  flex-flow: column nowrap; 
+  justify-content: flex-start;
+}
+
+.title {
+  width: 100%;
+  font-size:14px;
+  font-weight: bolder;
+  background-color: #222;
+  text-align: center;
+}
+
+.section {
+  width: 100%;
+  display:flex;
+  flex-flow: row nowrap; 
+}
+
+.image {
+  width: 160px;
+}
+
+.description {
+  font-size:12px;
+}

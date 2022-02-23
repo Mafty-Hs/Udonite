@@ -32,6 +32,6 @@
 }
 .description {
   display: block;
-  width: calc(100%-266px);
+  width: calc(100% - 266px);
   font-size:12px;
 }

@@ -8,7 +8,7 @@
      <tr>
     <tr *ngFor="let player of players; let i = index">
        <td><img class="image cover" [src]="image(player.imageIdentifier).url | safe: 'resourceUrl'"/></td>
-       <td [style.color] = "player.color">{{player.name}} <span *ngIf="isMine(player.playerId)">(あなた)</span> </td>
+       <td><span [style.color] = "player.color">{{player.name}}</span> <span *ngIf="isMine(player.playerId)">(あなた)</span> </td>
        <td>
          <span *ngIf="isOnline(player.playerId)">オンライン<br/></span>
          <span *ngIf="isAdmin(player.playerId)">ルームマスター</span>

@@ -8,7 +8,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 })
 export class HelpComponent implements OnInit {
 
-  menu:string = "0";
+  menu:string = "main";
 
   constructor(
     private panelService: PanelService,

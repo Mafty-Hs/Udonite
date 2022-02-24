@@ -84,13 +84,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   delete(room :RoomList) {
-    if (room.password) {
-      this.room = room;
-      this.deleteMode = true;
-      this.roomService.roomState = RoomState.PASSWORD;
-      return;
+    if (confirm(room.roomName + 'を削除します。削除したら復活できません。\nよろしいですか？')) {  
+      if (room.password) {
+        this.room = room;
+        this.deleteMode = true;
+        this.roomService.roomState = RoomState.PASSWORD;
+        return;
+      }
+      this.roomService.delete(room.roomId,"");
     }
-    this.roomService.delete(room.roomId,"");
     this.reload();
   }
 

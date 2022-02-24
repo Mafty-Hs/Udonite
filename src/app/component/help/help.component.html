@@ -1,70 +1,91 @@
 <div class="menu">
   <form>
     <label>
-      <input name="menu" type="radio" value="0" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="main" [(ngModel)]="menu">
        <div>全体</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="1" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="menu" [(ngModel)]="menu">
       <div>メニュー</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="2" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="room" [(ngModel)]="menu">
        <div>ルーム</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="3" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="chat" [(ngModel)]="menu">
        <div>チャット</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="4" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="character" [(ngModel)]="menu">
        <div>キャラクター</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="5" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="stand" [(ngModel)]="menu">
+       <div>立ち絵</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="counter" [(ngModel)]="menu">
+       <div>ラウンド/カウンター</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="board" [(ngModel)]="menu">
+       <div>掲示板</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="object" [(ngModel)]="menu">
        <div>オブジェクト</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="6" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="save" [(ngModel)]="menu">
        <div>セーブ・ロード</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="7" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="log" [(ngModel)]="menu">
        <div>ログ</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="8" [(ngModel)]="menu">
+      <input name="menu" type="radio" value="other" [(ngModel)]="menu">
        <div>その他</div>
     </label>
   </form>
 </div>
 <div class="help">
   <ng-container [ngSwitch]="menu">
-     <ng-container *ngSwitchCase="0">
-       <help-main class="content"></help-main>  
+     <ng-container *ngSwitchCase="'main'">
+      <help-main class="content"></help-main>  
      </ng-container>
-     <ng-container *ngSwitchCase="1">
-       <help-menu class="content"></help-menu>  
+     <ng-container *ngSwitchCase="'menu'">
+      <help-menu class="content"></help-menu>  
      </ng-container>
-     <ng-container *ngSwitchCase="2">
-       <help-room class="content"></help-room>  
+     <ng-container *ngSwitchCase="'room'">
+      <help-room class="content"></help-room>  
      </ng-container>
-     <ng-container *ngSwitchCase="3">
-       <help-chat class="content"></help-chat>  
+     <ng-container *ngSwitchCase="'chat'">
+      <help-chat class="content"></help-chat>  
      </ng-container>
-     <ng-container *ngSwitchCase="4">
-       <help-character class="content"></help-character>  
+     <ng-container *ngSwitchCase="'character'">
+      <help-character class="content"></help-character>  
      </ng-container>
-     <ng-container *ngSwitchCase="5">
-       <help-object class="content"></help-object>  
+     <ng-container *ngSwitchCase="'stand'">
+      <help-stand class="content"></help-stand>  
      </ng-container>
-     <ng-container *ngSwitchCase="6">
+     <ng-container *ngSwitchCase="'counter'">
+      <help-counter class="content"></help-counter>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'board'">
+      <help-board class="content"></help-board>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'object'">
+      <help-object class="content"></help-object>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'save'">
        <help-save class="content"></help-save>  
      </ng-container>
-     <ng-container *ngSwitchCase="7">
+     <ng-container *ngSwitchCase="'log'">
        <help-log class="content"></help-log>  
      </ng-container>
-     <ng-container *ngSwitchCase="8">
+     <ng-container *ngSwitchCase="'other'">
        <help-other class="content"></help-other>  
      </ng-container>
   </ng-container> 

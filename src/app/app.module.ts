@@ -108,6 +108,9 @@ import { HelpObjectComponent } from './component/help/help-object/help-object.co
 import { HelpSaveComponent } from './component/help/help-save/help-save.component';
 import { HelpLogComponent } from './component/help/help-log/help-log.component';
 import { HelpOtherComponent } from './component/help/help-other/help-other.component';
+import { HelpStandComponent } from './component/help/help-stand/help-stand.component';
+import { HelpCounterComponent } from './component/help/help-counter/help-counter.component';
+import { HelpBoardComponent } from './component/help/help-board/help-board.component';
 
 @NgModule({
   declarations: [
@@ -200,6 +203,9 @@ import { HelpOtherComponent } from './component/help/help-other/help-other.compo
     HelpSaveComponent,
     HelpLogComponent,
     HelpOtherComponent,
+    HelpStandComponent,
+    HelpCounterComponent,
+    HelpBoardComponent,
   ],
   imports: [
     BrowserModule,

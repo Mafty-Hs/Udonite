@@ -253,7 +253,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getHidden(image: ImageFile): boolean {
-    return ( image.owner.includes(this.playerService.myPlayer.playerId) ); 
+    return !( image.owner.includes(this.playerService.myPlayer.playerId) ); 
   }
 
   upTabIndex() {

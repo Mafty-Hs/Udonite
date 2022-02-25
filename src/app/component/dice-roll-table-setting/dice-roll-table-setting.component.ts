@@ -4,7 +4,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
-import { TextViewComponent } from 'component/text-view/text-view.component';
+import { HelpComponent } from 'component/help/help.component';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -151,29 +151,8 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   }
 
   helpDiceRollTable() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
-    let textView = this.panelService.open(TextViewComponent, option);
-    textView.title = 'ダイスボット表ヘルプ';
-    textView.text = 
-`　名前、コマンド、振るダイスを設定し、ダイスの数字で表を参照し、表示します。
-　チャットでコマンドを送信することにより、ダイスボットと同様に結果が送信されます。
-　表は1行ごとに数字と結果を:（コロン）で区切り「数字:結果」の形で記述します（よって、ダイスは最後に一つの数字を返すものである必要があります、バラバラロール nBm の成功数にも対応しています）。
-　
-　-（ハイフン）または～で区切って数字の範囲を指定することもできます。
-　表に「\\n」と書くと、そこで改行します（\\nは表示されません）。
-
-例）
-　name: 遭遇艦種　
-　command: ShipType　　dice: 1d6
-
-　　1:戦艦
-　　2:空母
-　　3:重巡洋艦
-　　4:軽巡洋艦
-　　5-6:駆逐艦
-
-　表を参照する際は先にあるものが優先されます、上記の例では最後の行を「1-6:駆逐艦」などとしても同じ結果になります（が、分かりやすい記述をお勧めします）。
-　デフォルトの D66 はソートされませんので、必要な場合（サイコロ・フィクションの名前表など）は、 D66S としてソートした数字を得てください。`;
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "diceroll";
   }
 }

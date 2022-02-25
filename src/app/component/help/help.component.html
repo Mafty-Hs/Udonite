@@ -21,6 +21,14 @@
        <div>キャラクター</div>
     </label>
     <label>
+      <input name="menu" type="radio" value="popup" [(ngModel)]="menu">
+       <div>ポップアップメッセージ</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="object" [(ngModel)]="menu">
+       <div>オブジェクト</div>
+    </label>
+    <label>
       <input name="menu" type="radio" value="stand" [(ngModel)]="menu">
        <div>立ち絵</div>
     </label>
@@ -33,20 +41,28 @@
        <div>掲示板</div>
     </label>
     <label>
-      <input name="menu" type="radio" value="object" [(ngModel)]="menu">
-       <div>オブジェクト</div>
+      <input name="menu" type="radio" value="cutin" [(ngModel)]="menu">
+       <div>カットイン</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="diceroll" [(ngModel)]="menu">
+       <div>ダイスボット表</div>
+    </label>
+    <label>
+      <input name="menu" type="radio" value="image" [(ngModel)]="menu">
+       <div>画像・音楽(作成中)</div>
     </label>
     <label>
       <input name="menu" type="radio" value="save" [(ngModel)]="menu">
-       <div>セーブ・ロード</div>
+       <div>セーブ・ロード(作成中)</div>
     </label>
     <label>
       <input name="menu" type="radio" value="log" [(ngModel)]="menu">
-       <div>ログ</div>
+       <div>ログ(作成中)</div>
     </label>
     <label>
       <input name="menu" type="radio" value="other" [(ngModel)]="menu">
-       <div>その他</div>
+       <div>その他(作成中)</div>
     </label>
   </form>
 </div>
@@ -67,6 +83,12 @@
      <ng-container *ngSwitchCase="'character'">
       <help-character class="content"></help-character>  
      </ng-container>
+     <ng-container *ngSwitchCase="'popup'">
+      <help-popup class="content"></help-popup>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'object'">
+      <help-object class="content"></help-object>  
+     </ng-container>
      <ng-container *ngSwitchCase="'stand'">
       <help-stand class="content"></help-stand>  
      </ng-container>
@@ -76,8 +98,14 @@
      <ng-container *ngSwitchCase="'board'">
       <help-board class="content"></help-board>  
      </ng-container>
-     <ng-container *ngSwitchCase="'object'">
-      <help-object class="content"></help-object>  
+     <ng-container *ngSwitchCase="'cutin'">
+      <help-cutin class="content"></help-cutin>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'diceroll'">
+      <help-diceroll class="content"></help-diceroll>  
+     </ng-container>
+     <ng-container *ngSwitchCase="'image'">
+      <help-image class="content"></help-image>  
      </ng-container>
      <ng-container *ngSwitchCase="'save'">
        <help-save class="content"></help-save>  

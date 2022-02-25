@@ -10,7 +10,7 @@ import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 import { EventSystem } from '@udonarium/core/system';
-import { TextViewComponent } from 'component/text-view/text-view.component';
+import { HelpComponent } from 'component/help/help.component';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -361,27 +361,8 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   helpCutIn() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 620 };
-    let textView = this.panelService.open(TextViewComponent, option);
-    textView.title = 'カットインヘルプ';
-    textView.text = 
-`　カットインの名前、表示時間、位置と幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。また、動画を再生する場合および「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。
-　
-　横位置（PosX）と縦位置（PosY）は、画面の左上隅からカットインの中心位置までの距離となります。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します（ただし、カットインの最小幅、高さは${CutInComponent.MIN_SIZE}ピクセルとなります）。
-　
-　動画を再生するカットインは必ず前面、その他は後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。同じカットイン、動画を再生するカットイン、同じタグが指定されたカットインを再生する場合は、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
-
-　　・タグが設定されていないものはすべて
-　　・タグが設定されたものは、同じタグのものの中からランダムに1つ
-　　・動画を再生するカットインは上記の中からランダムに1つを選択
-
-となります。
-
-　カットインはドラッグによって移動可能です（動画を再生するカットインは端をドラッグ）。またダブルクリックで閉じる（自分だけ停止）、右クリックでコンテキストメニューから操作が可能です（「閉じる」「ウィンドウの背面に表示」「最小化」が可能、動画を再生するカットインは端で受付）。
-
-　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動操作によってカットインが停止した際には、途中であっても音声も停止します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。
-
-　カットインに動画を使用する場合、URLは現在YouTubeのもののみ有効です。動画を利用する際は権利者およびYouTubeの定めた利用規約を参照し、順守してください。`;
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "cutin";
   }
 }

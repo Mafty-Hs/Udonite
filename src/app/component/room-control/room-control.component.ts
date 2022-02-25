@@ -5,6 +5,7 @@ import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelService , PanelOption } from 'service/panel.service';
+import { HelpComponent } from 'component/help/help.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
@@ -83,20 +84,10 @@ export class RoomControlComponent implements OnInit {
     EventSystem.unregister(this);
   }
 
-    helpRoomControl() {
-      let gameHelp:string[] =
-      [
-        'ルーム基本情報\n  ログイン中のルーム情報です',
-        'ルーム設定\n  アラーム\n   通知音を鳴らします。\n  操作ログ\n   カード、ダイスの操作ログを出力するタブを指定します。\n  キャラクターテンプレート\n   新規キャラクターを作成するとき、指定したキャラクターのデータを引き継ぎます。\n   画像・立ち絵は初期化されます。',
-        'ルーム権限\n  ルームマスター以外のプレイヤーの操作を制限します。',
-        'ルーム権限でできること\n  データアップロード禁止(キャラクター以外)\n  データアップロード禁止(キャラクター)\n  テーブル設定禁止\n  チャットタブ設定禁止\n  部屋全データセーブ禁止\n  個別データセーブ禁止\n',
-      ];     
-
-      let coordinate = { x: 100, y: 100 };
-      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
-      let textView = this.panelService.open(TextViewComponent, option);
-      textView.title = "ルーム設定説明";
-      textView.text = gameHelp;
+  helpRoomControl() {
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "room";
   }
 
 }

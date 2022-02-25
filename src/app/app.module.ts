@@ -111,6 +111,10 @@ import { HelpOtherComponent } from './component/help/help-other/help-other.compo
 import { HelpStandComponent } from './component/help/help-stand/help-stand.component';
 import { HelpCounterComponent } from './component/help/help-counter/help-counter.component';
 import { HelpBoardComponent } from './component/help/help-board/help-board.component';
+import { HelpPopupComponent } from './component/help/help-popup/help-popup.component';
+import { HelpCutinComponent } from './component/help/help-cutin/help-cutin.component';
+import { HelpDicerollComponent } from './component/help/help-diceroll/help-diceroll.component';
+import { HelpImageComponent } from './component/help/help-image/help-image.component';
 
 @NgModule({
   declarations: [
@@ -206,6 +210,10 @@ import { HelpBoardComponent } from './component/help/help-board/help-board.compo
     HelpStandComponent,
     HelpCounterComponent,
     HelpBoardComponent,
+    HelpPopupComponent,
+    HelpCutinComponent,
+    HelpDicerollComponent,
+    HelpImageComponent,
   ],
   imports: [
     BrowserModule,

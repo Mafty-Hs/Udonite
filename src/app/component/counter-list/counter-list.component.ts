@@ -1,5 +1,4 @@
 import { Counter } from '@udonarium/counter';
-import { CounterInventoryComponent } from 'component/counter-inventory/counter-inventory.component';
 import { Component, OnDestroy, OnInit,ElementRef,HostListener,AfterViewInit} from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -12,6 +11,8 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ChatMessageService } from 'service/chat-message.service';
 import { GameCharacterService } from 'service/game-character.service';
+import { CounterInventoryComponent } from 'component/counter-inventory/counter-inventory.component';
+import { HelpComponent } from 'component/help/help.component';
 
 @Component({
   selector: 'counter-list',
@@ -172,6 +173,12 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       false,
       ""
      );
+  }
+
+  openHelp() {
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "counter";
   }
 
   openInventory(){

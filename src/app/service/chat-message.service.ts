@@ -84,7 +84,9 @@ export class ChatMessageService {
       standName: standName,
       isUseStandImage: isUseStandImage
     };
-    return chatTab.addMessage(chatMessage);
+    let message = chatTab.addMessage(chatMessage);
+    this.standService.trimming(message);
+    return message;
   }
 
   systemSend(chatTab: ChatTab, text: string) {
@@ -129,8 +131,9 @@ export class ChatMessageService {
       standName: "",
       isUseStandImage: false
     };
-
-    return chatTab.addMessage(chatMessage);
+    let message = chatTab.addMessage(chatMessage);
+    this.standService.trimming(message);
+    return message;
   }
 
   get myColor(): string {

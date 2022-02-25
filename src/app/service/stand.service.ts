@@ -7,6 +7,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ChatMessage } from '@udonarium/chat-message';
 
 @Injectable({
   providedIn: 'root'
@@ -110,8 +111,9 @@ export class StandService {
     }
   }
 
-  async cutIn(text :string,sendTo :string) {
+  async cutIn(text :string,sendTo :string):Promise<string> {
       const cutInInfo = CutInList.instance.matchCutInInfo(text);
+      if (!cutInInfo) return text;
       for (const identifier of cutInInfo.identifiers) {
         const sendObj = {
           identifier: identifier, 
@@ -128,6 +130,35 @@ export class StandService {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
+      return cutInInfo.matchMostLongText;
+  }
+
+  effectPattern = new RegExp('\\@effect\\((.*)\\)$',"i");
+  async trimming(message :ChatMessage) {
+    let text = message.text;
+    let character = this.getCacheCharacter(message.characterIdentifier);
+    let cutinText = await this.cutIn(text,message.to)
+    if (character) {
+      let stand = character.standList;
+      let standText = ""
+      if (stand) {
+        const standInfo = stand.matchStandInfo(text, message.imageIdentifier, message.standName);
+        standText = standInfo.matchMostLongText;
+      }
+      if (this.effectPattern.test(text)) {
+        let match = text.match(this.effectPattern);
+        let eventstat = [match[1] , [message.characterIdentifier]]
+        EventSystem.call('CHARACTER_EFFECT', eventstat);
+        text = text.replace(this.effectPattern,'');
+      }
+      text = text.replace(standText,'')
+    }
+    text = text.replace(cutinText,'')
+    if (text.length < 1) {
+      message.destroy();
+      return;
+    }
+    message.text = text;
   }
     
 }

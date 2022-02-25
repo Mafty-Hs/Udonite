@@ -52,18 +52,6 @@
       <input name="menu" type="radio" value="image" [(ngModel)]="menu">
        <div>画像・音楽(作成中)</div>
     </label>
-    <label>
-      <input name="menu" type="radio" value="save" [(ngModel)]="menu">
-       <div>セーブ・ロード(作成中)</div>
-    </label>
-    <label>
-      <input name="menu" type="radio" value="log" [(ngModel)]="menu">
-       <div>ログ(作成中)</div>
-    </label>
-    <label>
-      <input name="menu" type="radio" value="other" [(ngModel)]="menu">
-       <div>その他(作成中)</div>
-    </label>
   </form>
 </div>
 <div class="help">
@@ -106,15 +94,6 @@
      </ng-container>
      <ng-container *ngSwitchCase="'image'">
       <help-image class="content"></help-image>  
-     </ng-container>
-     <ng-container *ngSwitchCase="'save'">
-       <help-save class="content"></help-save>  
-     </ng-container>
-     <ng-container *ngSwitchCase="'log'">
-       <help-log class="content"></help-log>  
-     </ng-container>
-     <ng-container *ngSwitchCase="'other'">
-       <help-other class="content"></help-other>  
      </ng-container>
   </ng-container> 
 </div>

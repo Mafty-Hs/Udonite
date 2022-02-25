@@ -20,15 +20,15 @@
   <span class="word-selecter">
     <label> 
       <input name="word-selecter" type="checkbox" value="ALL" [checked]="showType == 'ALL'" (click)="onAll()">
-      <div class="all-tags"><b>ALL</b></div>
+      <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
     </label>
     <label>
       <input name="word-selecter" type="checkbox" value="No Tag" [checked]="showType == 'No Tag'"  (click)="onNoTag()">
-      <div class="no-tag"><s>No Tag</s></div>
+      <div class="no-tag"><s>No Tag</s><badge *ngIf="countImagesHasWord(null) > 0" class="badge" [count]="countImagesHasWord(null)" [@.disabled]="true"></badge></div>
     </label>
     <label *ngFor="let tag of allTags">
       <input name="word-selecter" type="checkbox" value="{{tag}}" [checked]="showType == 'Tag' && searchTags.includes(tag)" (click)="onTagSelect(tag)">
-      <div>{{tag}}</div>
+      <div>{{tag}}<badge *ngIf="countImagesHasWord(tag) > 0" class="badge" [count]="countImagesHasWord(tag)" [@.disabled]="true"></badge></div>
     </label>
   </span>
   <span style="white-space: nowrap">

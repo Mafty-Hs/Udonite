@@ -105,9 +105,6 @@ import { HelpChatComponent } from './component/help/help-chat/help-chat.componen
 import { HelpCharacterComponent } from './component/help/help-character/help-character.component';
 import { HelpMenuComponent } from './component/help/help-menu/help-menu.component';
 import { HelpObjectComponent } from './component/help/help-object/help-object.component';
-import { HelpSaveComponent } from './component/help/help-save/help-save.component';
-import { HelpLogComponent } from './component/help/help-log/help-log.component';
-import { HelpOtherComponent } from './component/help/help-other/help-other.component';
 import { HelpStandComponent } from './component/help/help-stand/help-stand.component';
 import { HelpCounterComponent } from './component/help/help-counter/help-counter.component';
 import { HelpBoardComponent } from './component/help/help-board/help-board.component';
@@ -204,9 +201,6 @@ import { HelpImageComponent } from './component/help/help-image/help-image.compo
     HelpCharacterComponent,
     HelpMenuComponent,
     HelpObjectComponent,
-    HelpSaveComponent,
-    HelpLogComponent,
-    HelpOtherComponent,
     HelpStandComponent,
     HelpCounterComponent,
     HelpBoardComponent,

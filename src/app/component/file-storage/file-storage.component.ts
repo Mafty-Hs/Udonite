@@ -134,6 +134,20 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  countImagesHasWord(tag): number {
+    let count = 0;
+    if (tag != null && tag.trim() === '') return count;
+    for (const imageFile of this.images) {
+      const imageTag = imageFile.tag;
+      if (tag == null) {
+        if (!imageTag || imageTag.length < 1) count++;
+      } else {
+        if (imageTag && imageTag.includes(tag.trim())) count++;
+      }
+    }
+    return count;
+  }
+
   handleFileSelect(event: Event) {
     let input = <HTMLInputElement>event.target;
     let files = input.files;

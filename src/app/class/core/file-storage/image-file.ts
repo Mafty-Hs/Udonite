@@ -51,16 +51,20 @@ export class ImageFile {
 
   private static _empty:ImageFile;
 
+  update() {
+    IONetwork.imageUpdate(this.context);
+  }
+
   addTag(tags :string[]) {
     for (let tag of tags) {
       if (!this.context.tag.includes(tag)) this.context.tag.push(tag)
     }
-    IONetwork.imageUpdate(this.context);
+    this.update();
   }
 
   removeTag(tag :string) {
     this.context.tag = this.context.tag.filter(tagword => tagword != tag)
-    IONetwork.imageUpdate(this.context);
+    this.update();
   }
 
   constructor() { } 

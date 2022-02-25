@@ -62,7 +62,17 @@ export class ImageStorage {
   }
 
   remove(identifier :string) {
-    IONetwork.imageRemove(identifier);
+    let deleteImage: ImageFile = this.imageHash[identifier];
+    if (deleteImage) {
+      if (deleteImage.owner.length > 1 && !RoomAdmin.setting.adminPlayer.includes(PeerCursor.myCursor.player.playerId)) {
+        deleteImage.owner = deleteImage.owner.filter( playerid => playerid != PeerCursor.myCursor.player.playerId );
+        deleteImage.update();
+        return true;
+      }
+      IONetwork.imageRemove(identifier);
+      return true;
+    }
+    return false;
   }
 
   setMine(identifier: string):boolean {
@@ -74,17 +84,8 @@ export class ImageStorage {
     return false;
   }
 
-  destroy(identifier: string): boolean {
-    let deleteImage: ImageFile = this.imageHash[identifier];
-    if (deleteImage) {
-      if (deleteImage.owner.length > 1 && !RoomAdmin.setting.adminPlayer.includes(PeerCursor.myCursor.player.playerId)) {
-        deleteImage.owner = deleteImage.owner.filter( playerid => playerid != PeerCursor.myCursor.player.playerId );
-        return true;
-      }
-      delete this.imageHash[identifier];
-      return true;
-    }
-    return false;
+  destroy(identifier: string) {
+    delete this.imageHash[identifier];
   }
 
   get(identifier: string): ImageFile {

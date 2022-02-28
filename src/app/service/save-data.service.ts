@@ -30,8 +30,8 @@ export class SaveDataService {
     private ngZone: NgZone
   ) { }
 
-  saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
-    return SaveDataService.queue.add((resolve, reject) => resolve(this._saveRoomAsync(fileName, updateCallback)));
+  async saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+    return SaveDataService.queue.add(this._saveRoomAsync(fileName, updateCallback));
   }
 
   private async _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
@@ -60,8 +60,8 @@ export class SaveDataService {
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
-  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
-    return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
+  async saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
+    return SaveDataService.queue.add(this._saveGameObjectAsync(gameObject, fileName, updateCallback));
   }
 
   private async _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
@@ -132,7 +132,7 @@ export class SaveDataService {
         headers: {},
       });
       if (response.ok) {
-        let blob = await response.blob() 
+        let blob = await response.blob()
         if (blob.size > 0) return new File([blob], filename);
       }
     }

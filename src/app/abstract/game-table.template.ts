@@ -232,7 +232,7 @@ export class GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewI
     this.cancelInput();
   }
 
-  onTableMouseTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, event: string, srcEvent: TouchEvent | MouseEvent | PointerEvent) {
+  onTableMouseTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, event: string, srcEvent: TouchEvent | MouseEvent | PointerEvent  | KeyboardEvent) {
     if (!this.isTransformMode || document.body !== document.activeElement) return;
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu && this.contextMenuService.isShow) {
@@ -315,7 +315,7 @@ export class GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewI
 
   protected showPopup(x: number , y: number , z: number) {
     let modal = this.modalService.open(PopupEditComponent, { x: x ,y: y,z: z});
-    
+
   }
 
   trackByGameObject(index: number, gameObject: GameObject) {

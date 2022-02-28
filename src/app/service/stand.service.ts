@@ -8,6 +8,7 @@ import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ChatMessage } from '@udonarium/chat-message';
+import { StandInfo } from '@udonarium/stand-list';
 
 @Injectable({
   providedIn: 'root'
@@ -36,10 +37,10 @@ export class StandService {
     }
     return;
   }
- 
+
   async showStand(text:string ,sendFrom:string ,sendTo:string ,color:string,
-    standInfo,isChat:boolean) {
-    let sendToPeer :string; 
+    standInfo:StandInfo ,isChat:boolean) {
+    let sendToPeer :string;
     if (sendTo) {
      sendToPeer = sendTo;
     }
@@ -58,8 +59,8 @@ export class StandService {
     }
     else if (standInfo && standInfo.standElementIdentifier) {
       const sendObj = {
-        characterIdentifier: sendFrom, 
-        standIdentifier: standInfo.standElementIdentifier, 
+        characterIdentifier: sendFrom,
+        standIdentifier: standInfo.standElementIdentifier,
         color: color,
         secret: sendTo ? true : false
       };
@@ -92,7 +93,7 @@ export class StandService {
     }
     if (dialog.length > 0) {
       const dialogObj = {
-        characterIdentifier: sendFrom, 
+        characterIdentifier: sendFrom,
         text: dialog.join("\n\n"),
         faceIconIdentifier: character.faceIcon ? character.faceIcon.identifier : null,
         color: color,
@@ -116,7 +117,7 @@ export class StandService {
       if (!cutInInfo) return text;
       for (const identifier of cutInInfo.identifiers) {
         const sendObj = {
-          identifier: identifier, 
+          identifier: identifier,
           secret: sendTo ? true : false,
           sender: PeerCursor.myCursor.peerId
         };
@@ -160,5 +161,5 @@ export class StandService {
     }
     message.text = text;
   }
-    
+
 }

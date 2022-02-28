@@ -17,7 +17,7 @@
     "alwaysStrict": true,
     "strictBindCallApply": true,
     "strictNullChecks": false,
-    "strictFunctionTypes": false,
+    "strictFunctionTypes": true,
     "strictPropertyInitialization": false,
     "lib": [
       "es2020",

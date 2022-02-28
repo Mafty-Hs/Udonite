@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 
-import * as yaml from 'js-yaml';
+import { load } from 'js-yaml';
 
-export interface AppConfig {
-  app: {
-    title: string,
-    mode: string
-  },
-  dice: {
-    url: string,
-    api: number
-  }
-  server: {
-    url: string,
-  }
+export class AppConfig {
+  app?: object;
+  dice: DiceBot;
+  server: Server;
 }
 
-const objectPropertyKeys = Object.getOwnPropertyNames(Object.prototype);
-const arrayPropertyKeys = Object.getOwnPropertyNames(Array.prototype);
+class DiceBot {
+  url: string;
+  api: number;
+}
+
+class Server {
+  url: string;
+}
 
 @Injectable()
 export class AppConfigService {
@@ -29,13 +27,10 @@ export class AppConfigService {
   isOpen: boolean = false;
 
   static appConfig: AppConfig = {
-    app: {
-      title: '',
-      mode: ''
-    },
+    app: null,
     dice: {
       url: '',
-      api: 1
+      api: 2
     },
     server: {
       url: '',
@@ -49,48 +44,56 @@ export class AppConfigService {
   private async initAppConfig() {
     try {
       console.log('YAML読み込み...');
-      let config = await this.loadYaml();
-      let obj = yaml.load(config);
-      AppConfigService.applyConfig(obj);
+      let yaml = await this.loadYaml();
+      let config = load(yaml) as object;
+      if (this.typeofConfig(config)) {
+        AppConfigService.appConfig = config;
+      }
+      //AppConfigService.applyConfig(obj);
     } catch (e) {
+      console.warn('YAMLファイルが破損しているか読み込めません')
       console.warn(e);
     }
     EventSystem.trigger('LOAD_CONFIG', AppConfigService.appConfig);
   }
 
   private async loadYaml(): Promise<string> {
-    let config = document.querySelector('script[type$="yaml"]');
+    const config = document.querySelector('script[type$="yaml"]');
     if (!config) {
       console.warn('loadYaml element not found.');
       return '';
     }
 
-    let url = config.getAttribute('src');
+    const url = config.getAttribute('src');
 
     if (url == null) {
       console.warn('loadYaml url undefined.');
       return config.textContent;
     }
 
-    let response = await fetch(url);
+    const response = await fetch(url);
     return response.text();
   }
 
-  private static applyConfig(config: Object, root: Object = AppConfigService.appConfig): Object {
-    if (config == null) return root;
-    let keys = Object.getOwnPropertyNames(config);
-    for (let key of keys) {
-      let invalidPropertyKeys = Array.isArray(config) || Array.isArray(root) ? objectPropertyKeys.concat(arrayPropertyKeys) : objectPropertyKeys;
-      if (invalidPropertyKeys.includes(key)) {
-        console.log(`skip invalid key (${key})`);
-        continue;
-      } else if (config[key] != null && typeof config[key] === 'object') {
-        if (root[key] == null) root[key] = Array.isArray(config[key]) ? [] : {};
-        AppConfigService.applyConfig(config[key], root[key]);
-      } else if (typeof config[key] !== 'function' && typeof root[key] !== 'function') {
-        root[key] = config[key];
+  private typeofConfig(object :object): object is AppConfig {
+    try {
+      if ('app' in object && 'dice' in object && 'server' in object ) {
+        let yaml = object as AppConfig;
+        return ( this.typeofDicebot(yaml.dice) && this.typeofServer(yaml.server));
       }
     }
-    return root;
+    catch(error :any) {
+      throw error
+    }
+    return false;
   }
+
+  private typeofDicebot(object :DiceBot): boolean {
+    return (typeof object.url === 'string');
+  }
+
+  private typeofServer(object :Server): boolean {
+    return (typeof object.url === 'string');
+  }
+
 }

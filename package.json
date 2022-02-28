@@ -1,6 +1,6 @@
 {
   "name": "udonite",
-  "version": "0.8.7",
+  "version": "0.8.7+",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -60,7 +60,7 @@
     "@types/hammerjs": "^2.0.40",
     "@types/jasmine": "^3.9.1",
     "@types/jasminewd2": "^2.0.10",
-    "@types/js-yaml": "^4.0.3",
+    "@types/js-yaml": "^4.0.5",
     "@types/msgpack-lite": "^0.1.8",
     "@types/node": "^16.11.22",
     "@types/pako": "^1.0.2",

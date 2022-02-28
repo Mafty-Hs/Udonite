@@ -1,7 +1,7 @@
-export interface ServerEvent {
+export class ServerEvent {
   type :string;
   data: any;
-} 
+}
 
 export interface RoomContext {
   roomName: string;

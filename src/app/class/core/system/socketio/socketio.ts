@@ -8,7 +8,7 @@ export class socketio extends  Connection {
   private socket!:Socket;
   private _serverInfo:ServerInfo;
   get serverInfo():ServerInfo {return this._serverInfo}
-  
+
   get id():string {
     return this.socket.id
   }
@@ -65,8 +65,8 @@ export class socketio extends  Connection {
     });
   }
 
-  serverEvent() {
-    let observable = new Observable( observer => {
+  serverEvent():Observable<ServerEvent> {
+    let observable = new Observable<ServerEvent>( observer => {
       this.socket.onAny((type,data) => {
         observer.next(<ServerEvent>{ type: type , data: data});
       });
@@ -80,7 +80,7 @@ export class socketio extends  Connection {
       this._serverInfo = <ServerInfo>data;
       this.status = NetworkStatus.CONNECT;
       console.log("Udonite Server Connection Successful")
-    }); 
+    });
     this.socket.on('connect_error',  (error) => this.connectError('error',error));
     this.socket.on('connect_timeout',  (error) => this.connectError('timeout',error));
     this.socket.on('error', (error) => this.connectError('error',error));
@@ -98,7 +98,7 @@ export class socketio extends  Connection {
       }, second * 1000)
     })
   }
-  
+
   private connectError(name :string,error?:any) {
     console.log("Udonite Server Connection " + name + "!")
     console.warn(error);

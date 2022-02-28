@@ -134,12 +134,12 @@ export class EventSystem implements Subject {
   }
 
   private onNetworkChange(status :NetworkStatus) {
-    let peerId :string = IONetwork.instance.peerId; 
+    let peerId :string = IONetwork.instance.peerId;
     switch(status) {
       case NetworkStatus.CONNECT:
         console.log('Network is Open');
         this.trigger('OPEN_NETWORK', { peerId: peerId });
-        IONetwork.instance.socket.serverEvent().subscribe((event:ServerEvent) => {
+        IONetwork.instance.socket.serverEvent().subscribe(event => {
           this.serverEvent(event.type ,event.data);
         });
         if (this.isOpen) {
@@ -164,15 +164,15 @@ export class EventSystem implements Subject {
     switch(type) {
       case 'call':
         let event = <EventContext<any>>data;
-        if (event.sendFrom == IONetwork.instance.peerId) return; 
+        if (event.sendFrom == IONetwork.instance.peerId) return;
         this.trigger(event)
         break;
       case 'PEER_JOIN':
-        IONetwork.instance.listPeer(); 
+        IONetwork.instance.listPeer();
         this.trigger('CONNECT_PEER',<string>data);
         break;
       case 'PEER_LIEVE':
-        IONetwork.instance.listPeer(); 
+        IONetwork.instance.listPeer();
         this.trigger('DISCONNECT_PEER',<string>data);
         break;
       case 'UPDATE_GAME_OBJECT':
@@ -184,11 +184,11 @@ export class EventSystem implements Subject {
       case 'IMAGE_ADD':
         ImageStorage.instance.create(<ImageContext>data);
         this.trigger('IMAGE_SYNC',null);
-        break;  
+        break;
       case 'IMAGE_UPDATE':
         ImageStorage.instance.update(<ImageContext>data);
         this.trigger('IMAGE_SYNC',null);
-        break;  
+        break;
       case 'IMAGE_REMOVE':
         ImageStorage.instance.destroy(<string>data);
         this.trigger('IMAGE_SYNC',null);
@@ -196,15 +196,15 @@ export class EventSystem implements Subject {
       case 'AUDIO_ADD':
         AudioStorage.instance.create(<AudioContext>data);
         this.trigger('AUDIO_SYNC',null);
-        break;  
+        break;
       case 'AUDIO_UPDATE':
         AudioStorage.instance.update(<AudioContext>data);
         this.trigger('AUDIO_SYNC',null);
-        break;  
+        break;
       case 'AUDIO_REMOVE':
         AudioStorage.instance.destroy(<string>data);
         this.trigger('AUDIO_SYNC',null);
-        break;  
+        break;
       case 'UPDATE_ROOMADMIN':
         this.trigger('UPDATE_ROOMADMIN',<object>data);
         break;

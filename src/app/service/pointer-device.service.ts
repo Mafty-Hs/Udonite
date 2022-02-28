@@ -16,10 +16,10 @@ const MOUSE_IDENTIFIER = -9999;
   providedIn: 'root'
 })
 export class PointerDeviceService {
-  private callbackOnPointerDown = (e) => this.onPointerDown(e);
-  private callbackOnPointerMove = (e) => this.onPointerMove(e);
-  private callbackOnPointerUp = (e) => this.onPointerUp(e);
-  private callbackOnContextMenu = (e) => this.onContextMenu(e);
+  private callbackOnPointerDown = (e :Event) => this.onPointerDown(e);
+  private callbackOnPointerMove = (e :any) => this.onPointerMove(e);
+  private callbackOnPointerUp = (e :Event) => this.onPointerUp(e);
+  private callbackOnContextMenu = (e :Event) => this.onContextMenu(e);
 
   private _isAllowedToOpenContextMenu: boolean = false;
   get isAllowedToOpenContextMenu(): boolean { return this._isAllowedToOpenContextMenu; }
@@ -58,9 +58,9 @@ export class PointerDeviceService {
     this.startPostion = this.pointers[0];
   }
 
-  private onPointerMove(e: MouseEvent)
-  private onPointerMove(e: TouchEvent)
-  private onPointerMove(e: any) {
+  private onPointerMove(e: MouseEvent):void
+  private onPointerMove(e: TouchEvent):void
+  private onPointerMove(e: any):void {
     if (e.touches) {
       this.onTouchMove(e);
     } else {

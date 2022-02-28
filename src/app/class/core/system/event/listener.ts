@@ -46,9 +46,15 @@ export class Listener implements Observer {
   once<T>(eventName: string, callback: Callback<T>): Listener
   once<T>(eventName: string, priority: number, callback: Callback<T>): Listener
   once(...args: any[]): Listener {
-    let listener = this.on.apply(this, args);
     this._isOnlyOnce = true;
-    return listener;
+    if (args.length === 2) {
+      return this.register(args[0], 0, args[1]);
+    } else {
+      return this.register(args[0], args[1], args[2]);
+    }
+    //let listener = this.on.apply(this, args);
+    //this._isOnlyOnce = true;
+    //return listener;
   }
 
   private register(eventName: string, priority: number, callback: Callback<any>): Listener {

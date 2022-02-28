@@ -42,11 +42,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get standName():string { return this.chatData.standName };
 
   @Input() isBlack: boolean = true;
-  
+
   _sendFrom: string = this.playerService.myPlayer.playerId;
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
-    this.sendFromChange.emit(sendFrom); 
+    this.sendFromChange.emit(sendFrom);
   }
   @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };
@@ -56,10 +56,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   @Input('text') set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-  @Output() chat = new EventEmitter<{ 
+  @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string,
-    isUseFaceIcon?: boolean, 
-    isCharacter?: boolean, 
+    isUseFaceIcon?: boolean,
+    isCharacter?: boolean,
     isUseStandImage?: boolean,
     standName?: string }>();
 
@@ -113,7 +113,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         }
         this.writingPeers.get(event.sendFrom).reset();
         this.updateWritingPeerNameAndColors();
-        this.batchService.add(() => this.ngZone.run(() => { }), this);
+        this.batchService.requireChangeDetection();
       });
   }
 
@@ -127,7 +127,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       return this.playerService.findPeerNameAndColor(peerId);
     });
   }
-  
+
   onInput() {
     if (this.writingEventInterval === null && this.previousWritingLength <= this.text.length) {
       let sendTo: string = null;

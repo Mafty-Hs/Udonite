@@ -6,6 +6,21 @@ import { GameTable } from './game-table';
 
 @SyncObject('TableSelecter')
 export class TableSelecter extends GameObject {
+  private static _instance: TableSelecter;
+  static get instance(): TableSelecter {
+    if (!TableSelecter._instance) {
+      let newTableSelecter = ObjectStore.instance.get('TableSelecter')
+      if (newTableSelecter) {
+        TableSelecter._instance = newTableSelecter as TableSelecter;
+      }
+      else {
+        TableSelecter._instance = new TableSelecter('TableSelecter');
+        TableSelecter._instance.initialize();
+      }
+    }
+    return TableSelecter._instance;
+  }
+
   @SyncVar() viewTableIdentifier: string = '';
   gridShow: boolean = false; // true=常時グリッド表示
   gridSnap: boolean = true;

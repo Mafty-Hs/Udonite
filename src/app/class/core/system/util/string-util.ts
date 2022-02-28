@@ -12,10 +12,10 @@ export namespace StringUtil {
     return str.replace(/[！-～]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
   }
 
-  export function isEmote(str: string): boolean {
+  export function isEmote(this: any,str: string): boolean {
     if (!str) return false;
     str = this.cr(str).replace(/[\s\r\n]/g, '');
-    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str)); 
+    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str));
   }
 
   export function cr(str: string): string {
@@ -81,7 +81,7 @@ export namespace StringUtil {
     });
   }
 
-  export function escapeHtmlAndRuby(text :string):string {
+  export function escapeHtmlAndRuby(this: any,text :string):string {
     let escapeText = this.escapeHtml(text);
     return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby class="rubytext">$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
   }

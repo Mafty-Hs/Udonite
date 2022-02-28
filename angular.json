@@ -38,7 +38,7 @@
               "msgpack-lite",
               "lzbase62",
               "pako",
-              "buffer",
+              "buffer"
             ],
             "vendorChunk": true,
             "extractLicenses": false,

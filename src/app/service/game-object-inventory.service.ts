@@ -18,7 +18,7 @@ type ElementName = string;
 export class GameObjectInventoryService {
   private get summarySetting(): DataSummarySetting { return DataSummarySetting.instance; }
   private get myPlayerId():string { return this.playerService.myPlayer.playerId}
-  
+
 
   get sortTag(): string { return this.summarySetting.sortTag; }
   set sortTag(sortTag: string) { this.summarySetting.sortTag = sortTag; }
@@ -139,7 +139,7 @@ export class GameObjectInventoryService {
   private isAnyLocation(location: string): boolean {
     if (location === 'table' || location === this.myPlayerId || location === 'graveyard') return true;
     return  Boolean(this.playerService.otherPlayers.find(player =>
-      location === player.playerId  
+      location === player.playerId
     ));
   }
 }
@@ -204,7 +204,7 @@ class ObjectInventory {
   constructor(
     readonly classifier: (object: TabletopObject) => boolean,
     newLineDataElement:DataElement
-  ) { 
+  ) {
     this.newLineDataElement =  newLineDataElement
   }
 
@@ -235,8 +235,8 @@ class ObjectInventory {
     if (sortTag.length < 1) return objects;
 
     objects.sort((a, b) => {
-      let aElm = a.rootDataElement.getFirstElementByName(sortTag);
-      let bElm = b.rootDataElement.getFirstElementByName(sortTag);
+      let aElm = a.rootDataElement?.getFirstElementByName(sortTag);
+      let bElm = b.rootDataElement?.getFirstElementByName(sortTag);
       if (!aElm && !bElm) return 0;
       if (!bElm) return -1;
       if (!aElm) return 1;

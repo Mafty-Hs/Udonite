@@ -24,7 +24,7 @@ type LocationName = string;
 @Injectable()
 export class TabletopService {
   private _emptyTable: GameTable = new GameTable('');
-  get tableSelecter(): TableSelecter { return ObjectStore.instance.get<TableSelecter>('tableSelecter'); }
+  get tableSelecter(): TableSelecter { return TableSelecter.instance; }
   get currentTable(): GameTable {
     let table = this.tableSelecter.viewTable;
     return table ? table : this._emptyTable;
@@ -56,7 +56,7 @@ export class TabletopService {
   get terrains(): Terrain[] { return this.terrainCache.objects; }
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
-  get popups(): Popup[] { 
+  get popups(): Popup[] {
       return this.popupCache.objects;
   }
 

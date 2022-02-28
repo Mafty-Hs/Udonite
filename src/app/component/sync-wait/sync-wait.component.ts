@@ -39,7 +39,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     private loadDataService: LoadDataService
   ) { }
 
-  roomSync() { 
+  roomSync() {
     FileArchiver.instance.initialize();
     ImageStorage.instance;
     AudioStorage.instance;
@@ -72,13 +72,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
 
-    let tableSelecter =  <TableSelecter>ObjectStore.instance.get('tableSelecter');
-    if (!tableSelecter) {
-      console.log("TableSelecter Initialize");
-      tableSelecter = new TableSelecter('tableSelecter');
-      tableSelecter.initialize();
-    }
-    if (!tableSelecter.viewTableIdentifier) {
+    if (!TableSelecter.instance.viewTableIdentifier) {
       let gameTable = <GameTable>ObjectStore.instance.get('gameTable');
       if (!gameTable) {
         console.log("GameTable Initialize");
@@ -89,7 +83,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
          gameTable.height = 15;
          gameTable.initialize();
       }
-      tableSelecter.viewTableIdentifier = gameTable.identifier;
+      TableSelecter.instance.viewTableIdentifier = gameTable.identifier;
     }
   }
 
@@ -103,7 +97,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     sampleDiceRollTable.command = 'SAMPLE'
     sampleDiceRollTable.dice = '1d6';
     sampleDiceRollTable.value = "1:これはダイスボット表のサンプルです\n2:数字と対応する結果を1行に1つづつ:（コロン）で区切り\n3:数字:結果のように記述します\n4:\\\\n  \\nで改行します\n5-6:また、-（ハイフン）で区切って数字の範囲を指定可能です";
-    DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable); 
+    DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
   }
 
   roomInit() {
@@ -129,7 +123,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
       else {
         this.roomJoin();
       }
-    }); 
+    });
   }
   ngAfterViewInit(): void {
     if (!IONetwork.roomId) {

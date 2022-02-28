@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
@@ -49,7 +48,7 @@ export class TabletopActionService {
 
   createTerrain(position: PointerCoordinate): Terrain {
     let url: string = './assets/images/tex.jpg';
- 
+
     let viewTable = this.getViewTable();
     if (!viewTable) return;
 
@@ -78,7 +77,7 @@ export class TabletopActionService {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
       diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
     });
-    
+
     diceSymbol.faces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
           diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
@@ -220,7 +219,6 @@ export class TabletopActionService {
   }
 
   private getViewTable(): GameTable {
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    return tableSelecter ? tableSelecter.viewTable : null;
+    return TableSelecter.instance.viewTable;
   }
 }

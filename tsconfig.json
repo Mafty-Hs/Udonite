@@ -12,6 +12,13 @@
     "importHelpers": true,
     "target": "es2018",
     "module": "es2020",
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
     "lib": [
       "es2020",
       "dom"
@@ -31,6 +38,9 @@
       ],
       "service/*": [
         "src/app/service/*"
+      ],
+      "abstract/*": [
+        "src/app/abstract/*"
       ]
     },
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DiceBot , DiceBotInfo, DiceBotInfosIndexed, DiceRollResult , api } from '@udonarium/dice-bot';
+import { DiceBot , DiceBotInfo, DiceBotInfosIndexed, DiceRollResult, api, DiceBotInfos, ServerDiceBotInfo } from '@udonarium/dice-bot';
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -387,7 +387,7 @@ export class DiceBotService {
           }
           return response.json() 
         })
-        .then(infos => {
+        .then((infos:DiceBotInfos) => {
           console.log("diceBot Load END")
           clearTimeout(timer); 
           this.normalizeDiceInfo(infos);
@@ -402,7 +402,7 @@ export class DiceBotService {
         });   
   }
 
-  normalizeDiceInfo(infos :any) {
+  normalizeDiceInfo(infos :DiceBotInfos) {
     let tempInfos = (infos.game_system)
       .filter(info => info.id != 'DiceBot')
       .map(info => {
@@ -437,10 +437,10 @@ export class DiceBotService {
          : a.normalize == b.normalize ? 0 
          : a.normalize < b.normalize ? -1 : 1;
     });
-    this.diceBotInfos.push(...tempInfos.map(info => { return { script: (this.api.version == 1 ? info.system : info.id), game: info.name } }));
+    this.diceBotInfos.push(...tempInfos.map(info => { return { script: info.id, game: info.name } }));
     if (tempInfos.length > 0) {
       let sentinel = tempInfos[0].normalize.substr(0, 1);
-      let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
+      let group:DiceBotInfosIndexed = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
       for (let info of tempInfos) {
         let index = info.lang == 'Other' ? 'その他' 
          : info.lang == 'ChineseTraditional' ? '正體中文'
@@ -453,7 +453,7 @@ export class DiceBotService {
           this.diceBotInfosIndexed.push(group);
           group = { index: index, infos: [] };
         }
-        group.infos.push({ script: (this.api.version == 1 ? info.system : info.id), game: info.name });
+        group.infos.push({ script:  info.id, game: info.name });
      }
      this.diceBotInfosIndexed.push(group);
      this.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);

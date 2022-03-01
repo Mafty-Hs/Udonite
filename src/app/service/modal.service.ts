@@ -48,7 +48,7 @@ export class ModalService {
     return this.count > 0;
   }
 
-  open<T>(childComponent: { new(...args: any[]) }, option?, parentViewContainerRef?: ViewContainerRef): Promise<T> {
+  open<T>(childComponent: { new(...args: any[]) }, option? :any, parentViewContainerRef?: ViewContainerRef): Promise<T> {
     if (!parentViewContainerRef) {
       parentViewContainerRef = ModalService.defaultParentViewContainerRef;
     }

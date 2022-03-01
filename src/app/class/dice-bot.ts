@@ -1,3 +1,15 @@
+export interface ServerDiceBotInfo {
+  id: string;
+  name: string;
+  sort_key: string;
+  lang?: string;
+  normalize?: string;
+}
+
+export interface DiceBotInfos {
+  game_system: ServerDiceBotInfo[];
+}
+
 export interface DiceBotInfo {
   script: string;
   game: string;

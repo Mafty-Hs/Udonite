@@ -42,6 +42,6 @@ export class PasswordCheckComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.deleteMode) {this.roomService.delete(this.room.roomId,this.room.password); this.deleteModeChange.emit(false);}
-    else this.roomService.connect(this.room.roomId,this.room.password);
+    else this.roomService.connect(this.room.roomId);
   }
 }

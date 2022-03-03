@@ -16,7 +16,7 @@ export const RoomState = {
   ROOM_LOAD: 5,
   PLAY: 6
 } as const;
-export type RoomState = typeof RoomState[keyof typeof RoomState]; 
+export type RoomState = typeof RoomState[keyof typeof RoomState];
 
 @Injectable({
   providedIn: 'root'
@@ -43,23 +43,23 @@ export class RoomService {
   getHash(password: string) {
     return SHA256(password).toString();
   }
-  
+
   enableAdmin() {
     this.roomAdmin.adminPlayer.push(this.playerService.myPlayer.playerId);
   }
-   
+
   get roomAdmin():RoomControl {
     return RoomAdmin.setting;
   }
-  
+
   get adminAuth():boolean {
     return RoomAdmin.auth;
   }
-  
+
   get disableRoomLoad():boolean {
      return this.roomAdmin.disableRoomLoad as boolean;
   }
-  
+
   get disableObjectLoad():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableObjectLoad as boolean;
@@ -69,7 +69,7 @@ export class RoomService {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTabletopLoad as boolean;
   }
-  
+
   get disableImageLoad():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableImageLoad as boolean;
@@ -79,7 +79,7 @@ export class RoomService {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableAudioLoad as boolean;
   }
-  
+
   get disableTableSetting():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTableSetting as boolean;
@@ -96,7 +96,7 @@ export class RoomService {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableSeparateDataSave as boolean;
   }
- 
+
    //ロビー
 
   async roomList() {
@@ -114,7 +114,12 @@ export class RoomService {
     this.createRoom = true;
   }
 
-  connect(roomId :string, password? :string) {
+  async connect(roomId :string) {
+    let roomList = await this.roomList()
+    if (!roomList.find(list => list.roomId === roomId)) {
+      EventSystem.trigger('LOBBY_ERROR','ルームが存在しません')
+      return;
+    }
     IONetwork.join(roomId);
     this.roomState = RoomState.DATA_SYNC;
   }

@@ -32,6 +32,7 @@ import { SoundEffect } from '@udonarium/sound-effect';
 export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
 
   message:string = "部屋に接続しています";
+  timeout:NodeJS.Timeout;
 
   constructor(
     public roomService: RoomService,
@@ -129,8 +130,10 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!IONetwork.roomId) {
       EventSystem.register(this)
       .on('ROOM_JOIN', event => {
+        this.timeout = null;
         this.roomSync();
       });
+      this.timeout = setTimeout(() => { this.onError()},15*1000)
     }
     else {
       this.roomSync();
@@ -138,6 +141,11 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
       EventSystem.unregister(this)
+  }
+
+  onError() {
+    EventSystem.unregister(this);
+    EventSystem.trigger('LOBBY_ERROR',"ルームへの接続に失敗しました");
   }
 
 }

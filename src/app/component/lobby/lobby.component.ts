@@ -16,16 +16,16 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   isReloading: boolean = false;
   isConnecting: boolean = true;
+  isError:boolean = false;
   room:RoomList;
   deleteMode:boolean = false;
 
-  help: string = '「一覧を更新」ボタンを押すと接続可能なルーム一覧を表示します。';
+  help: string = '';
 
   get peerId(): string { return IONetwork.peerId; }
 
   constructor(
-    public roomService: RoomService,
-    private changeDetectorRef: ChangeDetectorRef
+    public roomService: RoomService
   ) {
     EventSystem.register(this)
       .on('OPEN_NETWORK', event => {
@@ -40,6 +40,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    EventSystem.register(this)
+      .on('LOBBY_ERROR', event => {
+        this.onError(event.data);
+      });
   }
 
   ngOnDestroy() {
@@ -69,6 +73,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   async reload() {
     this.isReloading = true;
+    this.isError = false;
+    this.help = '';
     this.rooms = [];
     this.rooms = await this.roomService.roomList();
     this.isReloading = false;
@@ -80,11 +86,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
       this.roomService.roomState = RoomState.PASSWORD;
       return;
     }
-    this.roomService.connect(room.roomId,"");
+    this.roomService.connect(room.roomId);
   }
 
   delete(room :RoomList) {
-    if (confirm(room.roomName + 'を削除します。削除したら復活できません。\nよろしいですか？')) {  
+    if (confirm(room.roomName + 'を削除します。削除したら復活できません。\nよろしいですか？')) {
       if (room.password) {
         this.room = room;
         this.deleteMode = true;
@@ -98,5 +104,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   showRoomSetting() {
     this.roomService.roomState = RoomState.CREATE;
+  }
+
+  onError(eventString :string) {
+    if (!this.roomService.isLobby) return;
+    this.help = eventString;
+    this.roomService.roomState = RoomState.LOBBY;
+    this.isError = true;
   }
 }

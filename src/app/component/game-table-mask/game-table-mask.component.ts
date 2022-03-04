@@ -68,12 +68,16 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
 
   get gameTableMaskAltitude(): number {
-    return +this.altitude.toFixed(1); 
+    return +this.altitude.toFixed(1);
   }
 
   gridSize: number = 50;
   math = Math;
   viewRotateZ = 10;
+
+  get rubiedText(): string {
+    return StringUtil.escapeHtmlAndRuby(this.text)
+  }
 
   movableOption: MovableOption = {};
 
@@ -190,7 +194,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.gameTableMask.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
@@ -217,7 +221,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       },
       ContextMenuSeparator,
-      { name: 'メッセージを送信', action: () => {this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z) }}, 
+      { name: 'メッセージを送信', action: () => {this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z) }},
       { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
     ]
     :
@@ -279,7 +283,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.gameTableMask.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
@@ -306,7 +310,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       },
       ContextMenuSeparator,
-      { name: 'メッセージを送信', action: () => {this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z) }}, 
+      { name: 'メッセージを送信', action: () => {this.showPopup(objectPosition.x, objectPosition.y, objectPosition.z) }},
       { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
     ];
 
@@ -324,7 +328,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private showPopup(x: number , y: number , z: number) {
     let modal = this.modalService.open(PopupEditComponent, { x: x ,y: y,z: z});
-    
+
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

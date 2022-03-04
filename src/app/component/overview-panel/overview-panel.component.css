@@ -41,7 +41,7 @@
 
 .component-title {
   color: #FFF;
-  text-shadow    : 
+  text-shadow    :
        2px  2px 4px #000000,
       -2px  2px 4px #000000,
        2px -2px 4px #000000,
@@ -53,9 +53,9 @@
   font-size: 1em;
   font-weight : bold;
   text-align: right;
-  vertical-align: middle; 
+  vertical-align: middle;
   height: 32px;
-  line-height: 32px; 
+  line-height: 32px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -73,7 +73,7 @@
   font-size: 0.8em;
   padding: 10px;
   color: #ccc;
-  vertical-align: middle; 
+  vertical-align: middle;
   overflow: hidden;
   text-align: right;
   padding: 2px 1em;
@@ -85,9 +85,9 @@
   width: min-content;
   max-width: 100%;
   margin-left: auto;
-  margin-right: 0; 
+  margin-right: 0;
   overflow: hidden;
-  color: whitesmoke;
+  color: #222;
   background-color: rgb(30, 30, 30);
   box-sizing: border-box;
   padding: 3px 9px;
@@ -112,8 +112,8 @@
   left : 8px;
   bottom: -21px;
   width: 42px;
-  height: 42px; 
-  border-radius: 100px; 
+  height: 42px;
+  border-radius: 100px;
   padding: 4px;
 }
 
@@ -155,7 +155,7 @@
 
 .text-note-container {
   width: 100%;
-  max-height: 400px; 
+  max-height: 400px;
   padding: 0.5em 1.5em;
   box-sizing: border-box;
   overflow: hidden auto;
@@ -350,14 +350,14 @@
 .hidden-spacer {
   visibility: hidden;
   height: 0px;
-  min-width: 3em; 
+  min-width: 3em;
   overflow: hidden;
   white-space: pre-wrap;
 }
 
 .textarea-spacer {
   visibility: hidden;
-  min-width: 3em; 
+  min-width: 3em;
   height: auto;
   min-height: 24px;
   overflow: hidden;
@@ -368,7 +368,7 @@
 }
 
 .input {
-  min-width: 3em; 
+  min-width: 3em;
   text-align: right;
   font: inherit;
   font-size: inherit;
@@ -413,8 +413,8 @@ input[type=number]:hover, input[type=number]:focus {
 
 .is-fill {
   position: absolute;
-  top: 0; 
-  left: 0; 
+  top: 0;
+  left: 0;
   right: 0;
   bottom: 0;
 }
@@ -588,7 +588,7 @@ button.link {
   padding: 2px;
   box-sizing: border-box;
 }
-  
+
 button.link i {
   font-size: 1.0rem;
 }
@@ -625,12 +625,12 @@ button.link:disabled:hover {
   z-index: 5;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
+  text-shadow:
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
   #fff 0px 0px 2px,
   #fff 0px 0px 2px,
   #fff 0px 0px 2px;
@@ -638,7 +638,7 @@ button.link:disabled:hover {
 
 .counter-container {
   width: 100%;
-  display:flex; 
+  display:flex;
   flex-direction: row;
   flex-wrap: wrap;
   padding: 1px;

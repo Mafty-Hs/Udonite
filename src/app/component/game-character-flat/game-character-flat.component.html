@@ -1,9 +1,9 @@
-<div class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
+<div class="component is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
   [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()">
-  <div class="component-content is-3d" [@bounceInOut]="'in'">
-    <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
-      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+  <div class="component-content" [@bounceInOut]="'in'">
+    <div class="component-content is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
+      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner" [ngClass]="{'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">
@@ -12,18 +12,18 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="upright-transform is-fit-width is-3d">
-        <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-          <div class="rotate-inner is-3d">
-            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+      <div class="is-fit-width">
+        <div class="rotate-frame" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
+          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
+          <div class="rotate-inner">
+            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
+              <div class="fornt-tag has-length-limit">{{name}}</div>
             </div>
             <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
-              <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
-                <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                  <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
+              <div class="inverser" [ngClass]="{inverse: isInverse}">
+                <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                  <span class="image-box" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
                     <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
                     [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" (load)="onImageLoad()">
                   </span>

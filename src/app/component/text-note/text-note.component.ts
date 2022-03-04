@@ -31,7 +31,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
   set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
-  get _text(): string { 
+  get _text(): string {
     if (this.isOnlyPreview) {
       return "";
     }
@@ -62,7 +62,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       if (-this.height <= this.altitude) return 0;
       ret += this.height;
     }
-    return +ret.toFixed(1); 
+    return +ret.toFixed(1);
   }
 
   get isUpright(): boolean { return (this.textNote.isUpright && !this.isFlat); }
@@ -79,6 +79,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   set isOnlyPreview(isOnlyPreview: boolean) { this.textNote.isOnlyPreview = isOnlyPreview; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
+
+  get rubiedText(): string {
+    return StringUtil.escapeHtmlAndRuby(this.text);
+  }
 
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
 
@@ -230,7 +234,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.textNote.title, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
@@ -291,7 +295,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.isUpright 
+      (this.isUpright
         ? {
           name: '☑ 直立', action: () => {
             this.isUpright = false;
@@ -302,7 +306,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.isAltitudeIndicate 
+      (this.isAltitudeIndicate
         ? {
           name: '☑ 高度の表示', action: () => {
             this.isAltitudeIndicate = false;
@@ -334,7 +338,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.textNote.title, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
@@ -394,9 +398,14 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     else{
-        if (this.title == "") { titlesize = 0 } 
+        if (this.title == "") { titlesize = 0 }
         textArea.style.height = this.height * this.gridSize - titlesize  + 'px';
     }
+  }
+
+  lastNewLineAdjust(str: string): string {
+    if (str == null) return '';
+    return (!this.isSelected && str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str;
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

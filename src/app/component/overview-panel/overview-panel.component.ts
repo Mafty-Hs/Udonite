@@ -54,6 +54,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('cardImage', { static: false }) cardImageElement: ElementRef;
   @ViewChild('fullCardImage', { static: false }) fullCardImageElement: ElementRef<HTMLElement>;
+  @ViewChild('textArea', { static: false }) textAreaElementRef: ElementRef;
 
   @Input() tabletopObject: TabletopObject = null;
 
@@ -366,5 +367,18 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       card = this.tabletopObject;
     }
     return card ? StringUtil.escapeHtmlAndRuby(card.text) : '';
+  }
+
+  get isSelected(): boolean { return this.textAreaElementRef && document.activeElement === this.textAreaElementRef.nativeElement; }
+
+  adjustedRubiedNote(text, isRubied=true) {
+    if (!text) return '';
+    let ret = StringUtil.escapeHtml(text);
+    if (isRubied) ret = StringUtil.escapeHtmlAndRuby(text);
+    return (ret.lastIndexOf("\n") == ret.length - 1) ? ret + "\n" : ret;
+  }
+
+  textAreaActivate() {
+    if (this.textAreaElementRef && this.textAreaElementRef.nativeElement) this.textAreaElementRef.nativeElement.focus();
   }
 }

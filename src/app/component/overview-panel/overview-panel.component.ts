@@ -282,7 +282,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       window.open(url.trim(), '_blank', 'noopener');
     } else {
       this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle });
-    } 
+    }
   }
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(gameObject.identifier);
@@ -322,7 +322,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       rect.width = viewWidth;
       rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
       rect.top = offset + (viewHeight - rect.height) / 2;
-    } 
+    }
 
     let card = null;
     if (this.tabletopObject instanceof CardStack) {
@@ -365,6 +365,6 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     } else if (this.tabletopObject instanceof Card) {
       card = this.tabletopObject;
     }
-    return card ? card.text : '';
+    return card ? StringUtil.escapeHtmlAndRuby(card.text) : '';
   }
 }

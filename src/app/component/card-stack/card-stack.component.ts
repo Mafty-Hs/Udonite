@@ -18,7 +18,6 @@ import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -105,11 +104,13 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   get aspect():number {
     if (!this.imageFile) return 1
     return this.imageFile.aspect;
-    
+
   }
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.thick; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.height * this.thick; }
 
+
+  get rubiedText(): string { return StringUtil.escapeHtmlAndRuby(this.topCard.text)}
 
   get hasOwner(): boolean { return this.cardStack.hasOwner; }
   get ownerName(): string { return this.cardStack.ownerName; }
@@ -356,13 +357,13 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} の一番上の ${this.cardStack.topCard.name} を公開した`,"card");
           this.cardStack.faceUp();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
-        disabled: this.cards.length == 0        
+        },
+        disabled: this.cards.length == 0
       } : {
         name: '一番上を裏にする', action: () => {
           this.cardStack.faceDown();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       }),
       ContextMenuSeparator,
@@ -372,21 +373,21 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           //if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} をすべて表にし、一番上の ${this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUpAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
         name: 'すべて裏にする', action: () => {
           this.cardStack.faceDownAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
         name: 'すべて正位置にする', action: () => {
           this.cardStack.uprightAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
@@ -395,7 +396,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cardStack.shuffle();
           SoundEffect.play(PresetSound.cardShuffle);
           EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       { name: 'カード一覧を見る', action: () => {
@@ -413,14 +414,14 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         name: '山札を人数分に分割する', action: () => {
           this.splitStack(IONetwork.peerIds.length);
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
         name: '山札を崩す', action: () => {
           this.breakStack();
           SoundEffect.play(PresetSound.cardShuffle);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
@@ -429,7 +430,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           SoundEffect.play(PresetSound.cardDraw);
           SoundEffect.play(PresetSound.cardDraw);
           EventSystem.call('INVERSE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
@@ -445,7 +446,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.cardStack.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,

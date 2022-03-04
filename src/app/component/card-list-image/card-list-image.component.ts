@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Card } from '@udonarium/card';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'card-list-image',
@@ -9,10 +10,12 @@ import { Card } from '@udonarium/card';
 export class CardListImageComponent implements OnInit {
   @Input() card: Card = null;
   @ViewChild('cardImage', { static: true }) cardImageElement: ElementRef;
-  
+
   gridSize = 50;
   naturalWidth = 0;
   naturalHeight = 0;
+
+  get rubiedText(): string { return this.card ? StringUtil.escapeHtmlAndRuby(this.card.text) : '' }
 
   constructor() { }
 
@@ -44,7 +47,7 @@ export class CardListImageComponent implements OnInit {
       rect.width = viewWidth;
       rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
       rect.top = offset + (viewHeight - rect.height) / 2;
-    } 
+    }
 
     if (this.card) {
       rect.scale = rect.width / (this.card.size * this.gridSize);

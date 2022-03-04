@@ -33,9 +33,9 @@
     <div *ngIf="hasImage" style="position: relative;">
       <div *ngIf="(card.aliasName == 'card' && (card.isFront || card.isHand)) || (card.aliasName == 'card-stack' && card.topCard.isFront)"
         class="text" style="z-index: 5; top: 8px"
-        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left" 
+        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left"
         [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
-        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
       </div>
       <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
       <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
@@ -108,10 +108,10 @@
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <div class="grid-container-root" *ngIf="hasDataElms">
         <div class="grid-container">
-          <div class="counter-container"> 
+          <div class="counter-container">
             <div class="counter" *ngFor="let counter of counterList(character)" [ngStyle]="{'color': counter.age === 0 && !counter.isPermanent ? 'maroon' : 'black'}">
               {{counter.name}}<span *ngIf="!counter.isPermanent">:{{counter.age}}</span>
-            </div> 
+            </div>
           </div>
         </div>
         <div class="grid-container">
@@ -275,7 +275,7 @@
       class="text" style="z-index: 5"
       [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top"
       [ngStyle]="{transform: 'scale(' + fullImageAreaRect.scale + ')'}">
-      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
     </div>
     <div class="close-button is-pointer-events-none" style="z-index: 10"><i class="material-icons">close</i></div>
     <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />

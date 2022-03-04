@@ -20,6 +20,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PlayerService } from 'service/player.service';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'game-character-sheet',
@@ -367,7 +368,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   identify(index, obj){
-    return obj.identifier;  
+    return obj.identifier;
   }
 
   get imageAreaRreact(): {width: number, height: number, top: number, left: number, scale: number} {
@@ -389,7 +390,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       rect.width = viewWidth;
       rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
       rect.top = offset + (viewHeight - rect.height) / 2;
-    } 
+    }
 
     let card = null;
     if (this.tabletopObject instanceof CardStack) {
@@ -425,13 +426,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     return card ? card.fontsize + 9 : 18;
   }
 
-  get cardText(): number {
+  get cardText(): string {
     let card = null;
     if (this.tabletopObject instanceof CardStack) {
       card = this.tabletopObject.topCard;
     } else if (this.tabletopObject instanceof Card) {
       card = this.tabletopObject;
     }
-    return card ? card.text : '';
+    return card ? StringUtil.escapeHtmlAndRuby(card.text) : '';
   }
 }

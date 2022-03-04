@@ -121,6 +121,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private input: InputHandler = null;
 
+  get rubiedText(): string { return StringUtil.escapeHtmlAndRuby(this.card.text)}
+
   constructor(
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
@@ -293,7 +295,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.card.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,

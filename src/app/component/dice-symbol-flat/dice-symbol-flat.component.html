@@ -9,7 +9,6 @@
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
-          <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
       </ng-container>
@@ -18,12 +17,11 @@
           <div class="rotate-frame" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner">
               <div [@changeFaceNameTag]="isVisible ? face : null" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
-                <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background" [style.transfrom]="isFlat ? 'translateY(10px)' : 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'">
+                <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background" [ngStyle]="{'transform' :'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                   <div class="fornt-tag"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
-                  <div class="back-tag"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                 </div>
               </div>
-              <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background" [ngStyle]="{'background-color': ownerColor + 'dd', 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
+              <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background" [ngStyle]="{'background-color': ownerColor + 'dd', 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <div class="fornt-tag" style="color: #222"><b>{{ownerName}}</b></div>
               </div>
               <div class="component-content"

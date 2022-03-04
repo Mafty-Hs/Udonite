@@ -2,7 +2,7 @@
   appMovable [movable.option]="movableOption" [movable.disable]="true"
   [style.width.px]="50" [style.height.px]="50">
   <div class="component-content is-3d">
-    <div class="upright-transform is-fit-width is-3d">
+    <div class="is-fit-width is-3d" [ngClass]="{'upright-transform': !isFlat}">
       <div class="rotate-frame is-3d" [style.width.px]="50" [style.height.px]="50">
         <div class="rotate-inner is-3d">
           <div *ngIf="text.length > 0" class="name-tag is-nowrap is-black-background is-3d">

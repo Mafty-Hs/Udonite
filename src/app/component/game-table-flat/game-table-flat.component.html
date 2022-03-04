@@ -11,8 +11,8 @@
       <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
       <dice-symbol-flat class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol-flat>
       <game-character-flat class="is-3d" *ngFor="let character of characters; trackBy: trackByGameObject" [gameCharacter]="character" [appTooltip]="character"></game-character-flat>
-      <popup class="is-3d" *ngFor="let popup of popups; trackBy: trackByGameObject" [popup]="popup"></popup>
-      <peer-cursor class="is-3d" *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" [cursor]="cursor" [isFlat]="true" ></peer-cursor>
+      <popup class="is-3d" *ngFor="let popup of popups; trackBy: trackByGameObject" [popup]="popup" [isFlat]="true"></popup>
+      <peer-cursor class="is-3d" *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" [cursor]="cursor" [isFlat]="true"></peer-cursor>
     </div>
   </div>
 </div>

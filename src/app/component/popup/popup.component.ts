@@ -22,6 +22,7 @@ import { MovableOption } from 'directive/movable.directive';
 export class PopupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() popup: Popup = null;
   @Input() is3D: boolean = false;
+  @Input() isFlat: boolean = false;
 
   get text():string {return this.popup.text}
 

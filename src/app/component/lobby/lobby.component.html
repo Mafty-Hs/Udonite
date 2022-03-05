@@ -40,39 +40,57 @@
     </div>
     <div *ngIf='!isConnecting && roomService.roomState == 0' >
       <button (click)="reload()" [disabled]="isReloading">一覧を更新</button>
-      <button (click)="showRoomSetting()" [disabled]="reachRooms">新規ルーム作成</button>
     </div>
   </div>
 </div>
 <ng-template #connecting><span style="font-size: 12px;">現在接続中です。少々お待ち下さい</span></ng-template>
 <ng-template #password><password-check [room]="room" [(deleteMode)]="deleteMode"></password-check></ng-template>
 <ng-template #roomList>
+  <div class="room-selecter">
+    <ng-container *ngFor="let lobbyIndex of indexes">
+      <button class="tab-change" [ngStyle]="{'background': lobbyIndex.index == lobbyTabStartIndex ? '#DDD' : '#666' , 'color': lobbyIndex.index == lobbyTabStartIndex ? '#222' : '#FFF' }" (click)="tabChange(lobbyIndex.index)">{{lobbyIndex.name}}</button>
+    </ng-container>
+  </div>
   <table class="room-list">
     <tr class="title">
+      <th style="width:3em">No</th>
       <th class="room-name" style="text-align: center;">ルーム名</th>
-      <th style="width:4em">状態</th>
+      <th style="width:3em">状態</th>
       <th style="width:6em">最終アクセス</th>
       <th style="width:4em">参加者</th>
       <th style="width:10em"></th>
     </tr>
-    <ng-container *ngFor="let room of rooms">
-      <tr>
-        <td class="room-name">{{room.roomId.substr(0,3) + "/" + room.roomName}}<div class="is2d" *ngIf="room.is2d">2D</div></td>
-        <td>
-          <i *ngIf="room.password > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
-          <i *ngIf="room.isOpen" class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i>
-        </td>
-        <td>{{dateString(room.lastAccess)}}</td>
-        <td>{{room.players}}人</td>
-        <td>
-          <button type="submit" (click)="connect(room)">接続</button>
-          <button [disabled]="room.isOpen" type="submit" (click)="delete(room)">削除</button>
-        </td>
-      </tr>
+    <ng-container *ngFor="let room of indexedRoomList">
+      <ng-container *ngIf="room.roomId">
+        <tr>
+          <td>{{room.roomNo}}</td>
+          <td class="room-name">{{room.roomName}}<div class="is2d" *ngIf="room.is2d">2D</div></td>
+          <td>
+            <i *ngIf="room.password > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
+            <i *ngIf="room.isOpen" class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i>
+          </td>
+          <td>{{dateString(room.lastAccess)}}</td>
+          <td>{{room.players}}人</td>
+          <td>
+            <button type="submit" (click)="connect(room)">接続</button>
+            <button [disabled]="room.isOpen" type="submit" (click)="delete(room)">削除</button>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="!room.roomId">
+        <tr>
+          <td>{{room.roomNo}}</td>
+          <td class="room-name">空き部屋</td>
+          <td></td><td>-</td><td>-</td>
+          <td>
+            <button type="submit" (click)="create(room.roomNo)">新規作成</button>
+          </td>
+        </tr>
+      </ng-container>
     </ng-container>
   </table>
 </ng-template>
-<ng-template #roomCreate><room-setting ></room-setting></ng-template>
+<ng-template #roomCreate><room-setting [roomNo]="selectNo" ></room-setting></ng-template>
 <ng-template #dataSync><sync-wait ></sync-wait></ng-template>
 <ng-template #playerSelect><player-select></player-select></ng-template>
 <ng-template #dataLoad><data-load></data-load></ng-template>

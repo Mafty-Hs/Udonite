@@ -4,6 +4,7 @@ export class ServerEvent {
 }
 
 export interface RoomContext {
+  roomNo: number;
   roomName: string;
   password: string;
   isOpen: boolean;
@@ -11,13 +12,14 @@ export interface RoomContext {
 }
 
 export interface RoomList {
-  roomName: string;
-  roomId: string;
-  password: string;
-  lastAccess: number;
-  isOpen: boolean;
-  is2d: boolean;
-  players: number;
+  roomNo: number;
+  roomName?: string;
+  roomId?: string;
+  password?: string;
+  lastAccess?: number;
+  isOpen?: boolean;
+  is2d?: boolean;
+  players?: number;
 }
 
 export interface EventContext<T> {
@@ -34,6 +36,7 @@ export interface PeerContext {
 export interface ServerInfo {
   version: string;
   maxRoomCount: number;
+  roomPerPage: number;
   adminPassword: string;
   imageStorageMaxSize: number;
   audioStorageMaxSize: number;

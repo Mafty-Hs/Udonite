@@ -100,11 +100,20 @@ export class RoomService {
    //ロビー
 
   async roomList() {
-    return await IONetwork.listRoom()
+    let list = await IONetwork.listRoom()
+    return list.sort((a, b) => {
+      return (a.roomNo < b.roomNo) ? -1 : 1;
+    });
   }
 
-  create(roomName: string ,password: string ,is2d :boolean) {
+  async create(roomNo: number ,roomName: string ,password: string ,is2d :boolean) {
+    let roomList = await this.roomList()
+    if (roomList.find(list => list.roomNo === roomNo)) {
+      EventSystem.trigger('LOBBY_ERROR','そのルーム番号は他の誰かに使われてしまいました')
+      return;
+    }
     let room:RoomContext = {
+      roomNo: roomNo,
       roomName: roomName,
       password: password,
       isOpen: true,

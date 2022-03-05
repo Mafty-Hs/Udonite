@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
-import { IONetwork } from '@udonarium/core/system';
+import { Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { DiceBotService } from 'service/dice-bot.service';
 import { RoomService , RoomState } from 'service/room.service';
 
@@ -10,6 +10,7 @@ import { RoomService , RoomState } from 'service/room.service';
 })
 export class RoomSettingComponent implements OnInit, OnDestroy {
 
+  @Input() roomNo: number = NaN;
   close() {
     this.roomService.roomState = RoomState.LOBBY;
   }
@@ -37,15 +38,19 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   }
 
   async createRoom() {
+    if (isNaN(this.roomNo)) {
+      EventSystem.trigger('LOBBY_ERROR','ルーム番号が不正です')
+      return;
+    }
     if ((await this.roomService.roomList()).length >= IONetwork.server.maxRoomCount) {
       this.roomFile = null;
       this.close();
     }
     if (this.roomFile) {
-      this.roomService.roomFile = this.roomFile; 
+      this.roomService.roomFile = this.roomFile;
       this.roomFile = null;
     }
-    this.roomService.create(this.roomName, this.password, this.is2d);
+    this.roomService.create(this.roomNo ,this.roomName, this.password, this.is2d);
     this.roomService.roomState = RoomState.DATA_SYNC;
   }
 

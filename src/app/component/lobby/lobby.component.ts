@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit,ChangeDetectorRef } from '@angular/core';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { RoomService , RoomState } from 'service/room.service';
 import { RoomList } from '@udonarium/core/system/socketio/netowrkContext';
+import { timeStamp } from 'console';
 
 @Component({
   selector: 'lobby',
@@ -14,6 +15,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   width:number = 550;
   height:number = 600;
 
+  selectNo: number = NaN;
+  lobbyTabStartIndex: number = 0;
+
   isReloading: boolean = false;
   isConnecting: boolean = true;
   isError:boolean = false;
@@ -23,6 +27,20 @@ export class LobbyComponent implements OnInit, OnDestroy {
   help: string = '';
 
   get peerId(): string { return IONetwork.peerId; }
+
+  get indexedRoomList():RoomList[] {
+    let rooms: RoomList[] = [];
+    for (let index = this.lobbyTabStartIndex;
+      index < this.lobbyTabStartIndex + this.roomPerPage;
+      index++ ) {
+      let room:RoomList = this.rooms.find(room => room.roomNo == index);
+      if (!room) {
+        room = {roomNo : index}
+      }
+      rooms.push(room);
+    }
+    return rooms;
+  }
 
   constructor(
     public roomService: RoomService
@@ -54,9 +72,43 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.reload();
   }
 
+  tabChange(index :number) {
+    this.lobbyTabStartIndex = Number(index);
+  }
+
+  get indexes():lobbyindex[] {
+    let _indexes:lobbyindex[] = [];
+    if (!this.maxRoomCount) return []
+    if (this.roomPerPage >= this.maxRoomCount) {
+      return [{index: 0, name: '0-' + this.maxRoomCount }] as lobbyindex[];
+    }
+    let max = this.maxRoomCount;
+    let page = this.roomPerPage;
+     for (let i = 0;
+      i < max;
+      i = i + page ) {
+      let name:string = String(i) + '-' + String(i + page - 1);
+      let _index:lobbyindex = {index: i,name:  name}
+      _indexes.push(_index);
+    }
+    let mod = this.maxRoomCount % this.roomPerPage;
+    if (mod)
+    {
+      let lastindex = this.maxRoomCount - mod - 1;
+      let _index:lobbyindex = {index: lastindex ,name: '' + lastindex + '-' + ( this.maxRoomCount - 1) }
+      _indexes.push(_index);
+    }
+    return _indexes
+  }
+
   get maxRoomCount():number {
     return IONetwork.server ? IONetwork.server.maxRoomCount : 0
   }
+
+  get roomPerPage():number {
+    return IONetwork.server ? IONetwork.server.roomPerPage : 10
+  }
+
   get roomCount():number {
     return this.rooms.length
   }
@@ -102,7 +154,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.reload();
   }
 
-  showRoomSetting() {
+  create(roomNo: number) {
+    this.selectNo = roomNo;
     this.roomService.roomState = RoomState.CREATE;
   }
 
@@ -112,4 +165,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.roomService.roomState = RoomState.LOBBY;
     this.isError = true;
   }
+}
+
+interface lobbyindex {
+  index: number;
+  name: string;
 }

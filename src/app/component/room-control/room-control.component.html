@@ -7,7 +7,7 @@
           ルーム名
         </div>
         <div class="item-data">
-          <span style="font-weight: bold;">{{roomService.roomData.roomId.substr(0,3)}}/{{roomService.roomData.roomName}}</span>
+          <span style="font-weight: bold;">{{roomService.roomData.roomNo}}/{{roomService.roomData.roomName}}</span>
         </div>
       </div>
       <div class="flex-item">
@@ -69,7 +69,7 @@
         アラーム
       </div>
       <div class="item-data">
-        <div><input type="number" style="width:4em" name="alarmTime" [(ngModel)]="alarmTime"  />秒後</div> 
+        <div><input type="number" style="width:4em" name="alarmTime" [(ngModel)]="alarmTime"  />秒後</div>
         <div>送信先:
         <select name="sendTo" style="width:10em" [(ngModel)]="sendTo" >
           <option value="" class="not-specified">全員</option>
@@ -111,7 +111,7 @@
       <div class="item-data">
         <ng-container  *ngIf="adminAuth; else template">
           <select name="template" style="width: 16em;height: 1.5em;" [(ngModel)]="roomService.roomAdmin.templateCharacter">
-            <option *ngFor="let gameCharacter of gameCharacterService.list(false)"  
+            <option *ngFor="let gameCharacter of gameCharacterService.list(false)"
               value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
             </option>
           </select>
@@ -138,7 +138,7 @@
   </div>
   <div class="help">
     <button (click)="helpRoomControl()">?</button>
-  </div>  
+  </div>
 </div>
 
 <ng-template #systemLog>

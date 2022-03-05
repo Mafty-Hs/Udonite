@@ -13,10 +13,11 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 interface easeMessage {
   name :string;
-  text: string;
+  html: string;
   color: string;
   identifier: string;
   isDirect :boolean;
@@ -64,23 +65,27 @@ export class ChatTabEaseComponent implements OnInit {
          let color:string = message.color;
          if (message.isDirect || message.isSecret) color = "#DDD";
          if (message.isSystem) color = "#444444";
-         if (this.isBlack && color == "#444444") color = "#EEE"; 
+         if (this.isBlack && color == "#444444") color = "#EEE";
          if (message.isDicebot || message.isCalculate) color = this.isBlack ? "#CCF"  : "#22F";
          let newMessage:easeMessage = {
            name: message.name,
-           text: message.text,
+           html: this.escapeHtmlAndRuby(message.text),
            color: color,
            identifier: message.identifier,
-           isDirect: message.isDirect, 
+           isDirect: message.isDirect,
            isSecret: message.isSecret,
            isSendFromSelf: message.isSendFromSelf
          };
-         return newMessage; 
+         return newMessage;
       }) : [];
       this.needUpdate = false;
     }
     return this._chatMessages;
-  }  
+  }
+
+  escapeHtmlAndRuby(text :string):string {
+   return StringUtil.escapeHtmlAndRuby(text);
+  }
 
   ngOnInit(){
   }
@@ -98,7 +103,7 @@ export class ChatTabEaseComponent implements OnInit {
   constructor(
     private ngZone: NgZone,
     private changeDetectorRef: ChangeDetectorRef
-  ) { 
+  ) {
     EventSystem.register(this)
       .on('MESSAGE_ADDED', event => {
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
@@ -107,7 +112,7 @@ export class ChatTabEaseComponent implements OnInit {
         this.scrollToBottom();
      })
   }
- 
+
   scrollToBottom(){
     try {
       this.messageContainer.nativeElement.scroll({
@@ -115,8 +120,8 @@ export class ChatTabEaseComponent implements OnInit {
         left: 0,
         behavior: 'smooth'
       });
-    } catch(err) { 
-    }                 
+    } catch(err) {
+    }
   }
- 
+
 }

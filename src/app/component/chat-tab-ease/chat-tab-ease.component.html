@@ -4,8 +4,10 @@
       <ng-container *ngFor="let chatMessage of chatMessages; index as i">
         <p class="message" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret)}"  [style.font-size.px]="localFontsize">
         <span [style.color]="chatMessage.color">{{chatMessage.name}}</span> : <span  [style.color]="chatMessage.color">
-          <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; else secret">{{chatMessage.text}}
-  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage(i,chatMessage.identifier)">結果を公開</button></ng-container>
+          <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; else secret">
+            <span [innerHTML]="chatMessage.html"></span>
+            <button *ngIf="chatMessage.isSecret" (click)="discloseMessage(i,chatMessage.identifier)">結果を公開</button>
+          </ng-container>
         </span></p>
       </ng-container>
     </ng-container>

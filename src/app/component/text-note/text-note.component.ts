@@ -31,21 +31,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
   set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
-  get _text(): string {
-    if (this.isOnlyPreview) {
-      return "";
-    }
-    else {
-      this.calcFitHeightIfNeeded(); return this.textNote.text;
-    }
-  }
-  set _text(text: string) {
-    if (this.isOnlyPreview) {
-    }
-    else {
-      this.calcFitHeightIfNeeded(); this.textNote.text = text;
-    }
-  }
   get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
@@ -81,6 +66,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
   get rubiedText(): string {
+    if (this.isOnlyPreview) return "";
     return StringUtil.escapeHtmlAndRuby(this.text);
   }
 

@@ -8,7 +8,7 @@
         <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
         <textarea #textArea (input)="calcFitHeight();" class="textarea is-3d" [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'hide-area': !isSelected}"
           [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false"></textarea>
-          <div (input)="calcFitHeight();" class="is-3d is-outline-text note-text" style="margin-top:-18px" [ngClass]="{'hide-area': isSelected}"
+        <div (input)="calcFitHeight();" class="is-3d is-outline-text note-text" style="margin-top:-18px" [ngClass]="{'hide-area': isSelected}"
           [style.font-size.px]="fontSize + 9" [innerHTML]="lastNewLineAdjust(rubiedText)"></div>
       </div>
       <div *ngIf="!isLocked" [ngClass]="{'is-grab': !isLocked}" class="grand-grabing-area" style="position: absolute"

@@ -21,7 +21,7 @@ export class GameCharacter extends TabletopObject {
 
   _text = '';
   set text(text :string) { this._text = text};
-  get text():string { return StringUtil.escapeHtmlAndRuby(this._text)};
+  get text():string { return StringUtil.escapeHtmlAndRuby(this._text,true)};
 
   isEmote = false;
 
@@ -136,7 +136,7 @@ export class GameCharacter extends TabletopObject {
         testElement.appendChild(DataElement.create('説明', 'ここに説明を書く\nあいうえお', { 'type': 'note' }, '説明' + this.identifier));
         testElement.appendChild(DataElement.create('メモ', '任意の文字列\n１\n２\n３\n４\n５', { 'type': 'note' }, 'メモ' + this.identifier));
         testElement.appendChild(DataElement.create('参照URL', 'https://www.example.com', { 'type': 'url' }, '参照URL' + this.identifier));
-    
+
         testElement = DataElement.create('能力', '', {}, '能力' + this.identifier);
         this.detailDataElement.appendChild(testElement);
         testElement.appendChild(DataElement.create('器用度', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '器用度' + this.identifier));
@@ -145,7 +145,7 @@ export class GameCharacter extends TabletopObject {
         testElement.appendChild(DataElement.create('生命力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '生命力' + this.identifier));
         testElement.appendChild(DataElement.create('知力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '知力' + this.identifier));
         testElement.appendChild(DataElement.create('精神力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '精神力' + this.identifier));
-    
+
         testElement = DataElement.create('戦闘特技', '', {}, '戦闘特技' + this.identifier);
         this.detailDataElement.appendChild(testElement);
         testElement.appendChild(DataElement.create('Lv1', '全力攻撃', {}, 'Lv1' + this.identifier));
@@ -154,7 +154,7 @@ export class GameCharacter extends TabletopObject {
         testElement.appendChild(DataElement.create('Lv7', '頑強', {}, 'Lv7' + this.identifier));
         testElement.appendChild(DataElement.create('Lv9', '薙ぎ払い', {}, 'Lv9' + this.identifier));
         testElement.appendChild(DataElement.create('自動', '治癒適正', {}, '自動' + this.identifier));
-       
+
         this.chatPalette.setPalette(`チャットパレット入力例：
     2d6+1 ダイスロール
     １ｄ２０＋{敏捷}＋｛格闘｝　{name}の格闘！

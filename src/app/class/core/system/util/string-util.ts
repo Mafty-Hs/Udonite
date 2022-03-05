@@ -81,9 +81,10 @@ export namespace StringUtil {
     });
   }
 
-  export function escapeHtmlAndRuby(this: any,text :string):string {
+  export function escapeHtmlAndRuby(this: any,text :string, needFont :boolean = false):string {
     let escapeText = this.escapeHtml(text);
-    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby class="rubytext">$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
+    if (needFont) return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby class="rubytext">$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
+    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
   }
 
 

@@ -34,7 +34,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() from: string;
   @SyncVar() to: string;
   @SyncVar() name: string;
-  @SyncVar() tag: string; 
+  @SyncVar() tag: string;
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
   @SyncVar() color: string;
@@ -51,7 +51,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value; }
   set text(text: string) { this.value = (text == null) ? '' : text; }
-  
+
   get timestamp(): number {
     let timestamp = this.getAttribute('timestamp');
     let num = timestamp ? +timestamp : 0;
@@ -102,7 +102,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
 
   get escapeHtmlAndRuby():string {
-    return StringUtil.escapeHtmlAndRuby(this.text); 
+    return StringUtil.escapeHtmlAndRuby(this.text,true);
   }
 
 

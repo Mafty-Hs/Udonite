@@ -6,7 +6,7 @@
         'update' : updateList.includes(message.identifier),
         'new' : newList.includes(message.identifier)}"
          [@flyInOut]="'active'" (click)="openCard(message)">
-      {{message.title}}
+         <span [innerHTML]="message.titleAsHtml"></span>
       </div><div></div>
     </div>
   </div>

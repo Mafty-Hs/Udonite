@@ -1,5 +1,6 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { StringUtil } from './core/system/util/string-util';
 
 export interface BillBoardCardContext {
   identifier?: string;
@@ -22,7 +23,20 @@ export class BillBoardCard extends ObjectNode {
   @SyncVar() allowPlayers: string[];
   @SyncVar() imageIdentifier: string;
 
-  get isImage():boolean{
+  get isImage():boolean {
     return this.imageIdentifier.length > 0;
   }
+
+  get titleWithoutRuby():string {
+    let html = StringUtil.escapeHtmlAndRuby(this.title);
+    return html
+      .replace(/<ruby>/g,'')
+      .replace(/<\/ruby>/g,'')
+      .replace(/<rt>.*?<\/rt>/g,'');
+  }
+
+  get titleAsHtml():string {
+    return StringUtil.escapeHtmlAndRuby(this.title)
+  }
+
 }

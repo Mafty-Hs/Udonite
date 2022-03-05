@@ -59,8 +59,8 @@ export class BillBoardComponent implements OnInit,OnDestroy {
     if (this.newList.includes(card.identifier)) {
       this.newList.splice(this.newList.indexOf(card.identifier),1);
     }
-    let title = ' ' + card.title;
-    let option: PanelOption = { title: title, left: 400, top: 100, width: 500, height: 400 };
+    let title = ' ' + card.titleWithoutRuby;
+    let option: PanelOption = { title: title, left: 400, top: 100, width: 500, height: 420 };
     let component = this.panelService.open<BillBoardCardComponent>(BillBoardCardComponent, option);
     component.card = card;
   }
@@ -87,11 +87,11 @@ export class BillBoardComponent implements OnInit,OnDestroy {
     this.handle.style.zIndex = "100";
     setTimeout(() => {
       this.alertStop()
-    },3000); 
+    },3000);
   }
   alertStop() {
-    this.notification = false; 
-    this.handle_message = "Message Board"; 
+    this.notification = false;
+    this.handle_message = "Message Board";
     this.handle.style.zIndex = "";
   }
 

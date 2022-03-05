@@ -30,9 +30,9 @@
   </div>
   <ng-container *ngIf="!isImage ;else imageBox">
     <div class="item">
-      <form>
+      <ng-container *ngIf="isEdit; else showText">
         <textarea name="textArea" rows="20" cols="65" [readOnly]="!isEdit"  placeholder="本文" [(ngModel)]="text"></textarea>
-      </form>
+      </ng-container>
     </div>
   </ng-container>
   <div class="control">
@@ -56,7 +56,10 @@
 
 
 <ng-template #showTitle>
-  <span class="title">{{title}}</span>
+  <span class="title" [innerHTML]="titleAsHtml"></span>
+</ng-template>
+<ng-template #showText>
+  <div class="show-text" [innerHTML]="textAsHtml"></div>
 </ng-template>
 <ng-template #showAuthority>
   <span style="font-size:14px">{{authType[dataType]}}</span>

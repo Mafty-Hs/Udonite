@@ -1,6 +1,5 @@
 import { Component, OnInit , AfterViewInit } from '@angular/core';
 import { BillBoardCard } from '@udonarium/bill-board-card';
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageViewComponent } from 'component/image-view/image-view.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -8,9 +7,9 @@ import { BillBoardService } from 'service/bill-board.service';
 import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 import { ModalService } from 'service/modal.service';
-import { RoomService } from 'service/room.service';
 import { EventSystem } from '@udonarium/core/system';
 import { Buffer } from 'buffer';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'bill-board-card',
@@ -36,7 +35,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   _card:BillBoardCard;
   get card():BillBoardCard { return this._card;}
   set card(card :BillBoardCard) {
-    this._card = card; 
+    this._card = card;
     this.title = card.title;
     this.dataType = Number(card.dataType);
     if (this.dataType == 1 && !this.auth()) this.readOnly = true;
@@ -49,7 +48,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     }
     this.players = card.allowPlayers;
     this.allowPlayerName = this.playerService.otherPlayers
-      .filter( player => 
+      .filter( player =>
         this.players.includes(player.playerId)
       )
       .map( player => {
@@ -61,7 +60,15 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     }
   }
 
-  get imageurl(): string { 
+  get titleAsHtml(): string {
+    return StringUtil.escapeHtmlAndRuby(this.title)
+  }
+
+  get textAsHtml(): string {
+    return StringUtil.escapeHtmlAndRuby(this.text).replace(/\n/g,'<br/>')
+  }
+
+  get imageurl(): string {
     let imagefile = ImageStorage.instance.get(this.imageIdentifier)
     if (imagefile)  return imagefile.url;
     return ""
@@ -79,11 +86,11 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   create() {
     let identifier :string;
     if (this.dataType) {
-      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.players,this.imageIdentifier);  
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,this.players,this.imageIdentifier);
     }
     else {
-      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,[],this.imageIdentifier);  
-    } 
+      identifier = this.billBoardService.add(this.title ,this.encode(this.text), this.dataType,[],this.imageIdentifier);
+    }
     EventSystem.call('BOARD_NEW', identifier);
     this.close();
   }
@@ -99,7 +106,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
 
   edit() {
     this.isEdit = true;
-    this.panelService.height += 50 ;
+    this.panelService.height += 30 ;
   }
 
   save() {
@@ -107,9 +114,9 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     this.card.text = this.encode(this.text);
     this.card.dataType = String(this.dataType);
     if (this.isImage) this.card.imageIdentifier = this.imageIdentifier;
-    else this.imageIdentifier = ""; 
+    else this.imageIdentifier = "";
     this.isEdit = false;
-    this.panelService.height -= 50 ;
+    this.panelService.height -= 30 ;
     EventSystem.call('BOARD_UPDATE', this.card.identifier);
 
   }
@@ -122,7 +129,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   }
 
   auth():boolean {
-    return ( (this.card.ownerPlayer.includes(this.playerService.myPlayer.playerId)) 
+    return ( (this.card.ownerPlayer.includes(this.playerService.myPlayer.playerId))
      || (this.card.allowPlayers.includes(this.playerService.myPlayer.playerId)) );
   }
 
@@ -142,9 +149,8 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
-    private roomService: RoomService,
     private billBoardService: BillBoardService
-  ) { 
+  ) {
   }
 
   ngAfterViewInit() {

@@ -3,11 +3,9 @@ import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { PlayerService } from 'service/player.service';
-import { StandImageService } from 'service/stand-image.service';
 import { StandService } from 'service/stand.service';
 
 @Component({
@@ -77,7 +75,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   private naturalWidth = 0;
   private naturalHeight = 0;
-  
+
   isSpeaking = false;
   math = Math;
 
@@ -106,6 +104,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
         });
       }, 300);
     }
+  }
+
+  get standBottom():number {
+    return this.standService.bottomEnd;
   }
 
   get chatWHITECOLOR():string {return this.playerService.CHAT_WHITETEXT_COLOR};
@@ -138,7 +140,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
       elm = this.standElement.getFirstElementByName('imageIdentifier');
     }
     if (elm) {
-      if (this._imageFile.identifier !== elm.value) { 
+      if (this._imageFile.identifier !== elm.value) {
         let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
         this._imageFile = file ? file : ImageFile.Empty;
       }
@@ -199,7 +201,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
     let elm = this.standElement.getFirstElementByName('height');
     if ((!elm || +elm.value == 0) && this.gameCharacter.standList) {
       return this.gameCharacter.standList.height;
-    } 
+    }
     return elm ? +elm.value : 0;
   }
 
@@ -215,7 +217,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   get dialogBoxCSSLeft(): number {
     return (this.imageWidth * (this.position > this.halfWindow ? 0.33 : 0.66) - this.imageWidth / 2 - 12)
-     + this.position 
+     + this.position
      - (this.position > this.halfWindow ? this.dialogBoxCSSMaxWidth : 0);
   }
 
@@ -226,14 +228,14 @@ export class StandImageComponent implements OnInit, OnDestroy {
   get dialogBoxCSSMaxWidth(): number {
     let screenRatio = this.imageWidth / document.documentElement.clientWidth;
     screenRatio = screenRatio / 2;
-    if (screenRatio < 0.14) screenRatio = 0.14;  
+    if (screenRatio < 0.14) screenRatio = 0.14;
     return (screenRatio * document.documentElement.clientWidth);
   }
 
   get dialogBoxCssBottom(): number {
     let ret = this.imageHeight * 0.66;
     if (ret < 48) ret = 48;
-    return ret;
+    return ret + this.standBottom;
   }
 
   get emoteCssBottom(): number {
@@ -290,7 +292,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
     let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
     if (ratio > 0.66) ratio = 0.66;
     return 'center ' + (ratio * 100) + '%';
-  } 
+  }
 
   toGhostly() {
     this.ngZone.run(() => {

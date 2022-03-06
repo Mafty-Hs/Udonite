@@ -70,7 +70,7 @@ export class GameRoomComponent implements OnInit {
       this.standService.leftEnd = 200;
       this.standService.width = 200;
     }
-    else if (window.innerWidth < 900) { 
+    else if (window.innerWidth < 900) {
       chatWidth = 500;
       this.standService.leftEnd = 500;
       this.standService.width = (window.innerWidth - 700);
@@ -100,17 +100,16 @@ export class GameRoomComponent implements OnInit {
 
 
   showStandView() {
-    let top = window.innerHeight - 150;
-    
-    let component = this.panelService.open(StandViewSettingComponent, { width: this.standService.width, height: 150, left: this.standService.leftEnd , top: top });
+    let top = window.innerHeight - (this.standService.bottomEnd + 150);
+    this.panelService.open(StandViewSettingComponent, { width: this.standService.width, height: 150, left: this.standService.leftEnd , top: top });
   }
 
   showViewMenu(left: number) {
 
     const isShowStand = StandImageComponent.isShowStand;
     const isShowNameTag = StandImageComponent.isShowNameTag;
-    const isCanBeGone = StandImageComponent.isCanBeGone; 
-    const canEffect = this.effectService.canEffect; 
+    const isCanBeGone = StandImageComponent.isCanBeGone;
+    const canEffect = this.effectService.canEffect;
 
     this.contextMenuService.open(
       { x: left, y: 50 }, [
@@ -125,23 +124,23 @@ export class GameRoomComponent implements OnInit {
         ContextMenuSeparator,
         { name: "立ち絵設定" },
         ContextMenuSeparator,
-          { name: '立ち絵表示設定', action: () => this.showStandView()}, 
-          { name: `${ isShowStand ? '☑' : '☐' }立ち絵表示`, 
+          { name: '立ち絵表示設定', action: () => this.showStandView()},
+          { name: `${ isShowStand ? '☑' : '☐' }立ち絵表示`,
             action: () => {
               StandImageComponent.isShowStand = !isShowStand;
             }
           },
-          { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
+          { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`,
             action: () => {
               StandImageComponent.isShowNameTag = !isShowNameTag;
             }
           },
-          { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
+          { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`,
             action: () => {
             StandImageComponent.isCanBeGone = !isCanBeGone;
             }
           },
-          { name: '表示中の立ち絵全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }, 
+          { name: '表示中の立ち絵全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) },
         ContextMenuSeparator,
         { name: "エフェクト設定" },
         ContextMenuSeparator,
@@ -150,7 +149,7 @@ export class GameRoomComponent implements OnInit {
               this.effectService.canEffect = !canEffect;
             }
           }
-      ], 
+      ],
       '自分のみ反映されます');
   }
 
@@ -188,7 +187,7 @@ export class GameRoomComponent implements OnInit {
     this.panelService.open(HelpComponent,option);
   }
 
-    
+
 
   ngOnInit(): void {
     RoomAdmin.myPlayerID = this.playerService.myPlayer.playerId;
@@ -210,7 +209,7 @@ export class GameRoomComponent implements OnInit {
           else {
             setTimeout(() => {
               SoundEffect.play(PresetSound.alarm);
-            },event.data.time); 
+            },event.data.time);
           }
         }
       })
@@ -233,11 +232,11 @@ export class GameRoomComponent implements OnInit {
       })
       .on('UPDATE_ROUND', -1000, event => {
         IRound.set(event.data);
-      }); 
+      });
     this.roomService.adminAuth;
     EventSystem.trigger("ROOM_PLAY",null)
   }
-  
+
 }
 
 PanelService.UIPanelComponentClass = UIPanelComponent;

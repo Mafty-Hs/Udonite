@@ -17,17 +17,21 @@ interface standInfo {
   styleUrls: ['./stand-view-setting.component.css']
 })
 export class StandViewSettingComponent implements OnInit {
+  @ViewChild('main') mainElm: ElementRef;
   @ViewChild('menu') menuElm: ElementRef;
+  main: HTMLElement;
   menu: HTMLElement;
   count:number = 2;
   observer = new ResizeObserver(change => {
-    setTimeout(() => {this.sizeUpdate(),1000});
+    setTimeout(() => {this.sizeUpdate(),500});
   });
 
   sizeUpdate() {
     let rect = this.menu.getBoundingClientRect();
     this.standService.leftEnd = rect.left - 9;
     this.standService.width = rect.width + 20;
+    let bottomrect = this.main.getBoundingClientRect();
+    this.standService.bottomEnd = window.innerHeight - bottomrect.bottom -27;
     this.count -= 1;
   }
 
@@ -66,12 +70,13 @@ export class StandViewSettingComponent implements OnInit {
     let dataElm :DataElement[] = stand.children as DataElement[];
     let result: {[index: string]: string} = {};
     dataElm.forEach( item => {
-      if(item.name) result[String(item.name)] = String(item.value); 
+      if(item.name) result[String(item.name)] = String(item.value);
     });
     return result;
   }
 
   ngAfterViewInit() {
+    this.main = this.mainElm.nativeElement;
     this.menu = this.menuElm.nativeElement;
     setTimeout(() => {this.observer.observe(this.menu),5000});
   }
@@ -81,6 +86,7 @@ export class StandViewSettingComponent implements OnInit {
       //開いた時に取得するDOMがおかしいので暫定対応
       this.standService.leftEnd = this.panelService.left;
       this.standService.width = this.panelService.width;
+      this.standService.bottomEnd = window.innerHeight - (this.panelService.top + this.panelService.height)
     }
     this.observer.disconnect();
   }
@@ -89,7 +95,7 @@ export class StandViewSettingComponent implements OnInit {
      private gameCharacterService: GameCharacterService,
      private panelService: PanelService,
      private standService: StandService
-  ) { 
+  ) {
     this.panelService.isAbleFullScreenButton = false;
     this.panelService.isAbleMinimizeButton = false;
     this.panelService.title = "立ち絵表示設定";

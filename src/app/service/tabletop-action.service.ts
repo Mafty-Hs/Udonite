@@ -71,16 +71,15 @@ export class TabletopActionService {
 
   createDiceSymbol(position: PointerCoordinate, name: string, diceType: DiceType, imagePathPrefix: string): DiceSymbol {
     let diceSymbol = DiceSymbol.create(name, diceType, 1);
-    let image: ImageFile = null;
 
     diceSymbol.nothingFaces.forEach(face => {
-      let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
-      diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
+      let imageIdentifier: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
+      diceSymbol.imageDataElement.getFirstElementByName(face).value = imageIdentifier;
     });
 
     diceSymbol.faces.forEach(face => {
-      let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
-          diceSymbol.imageDataElement.getFirstElementByName(face).value = url;
+      let imageIdentifier: string  = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
+      diceSymbol.imageDataElement.getFirstElementByName(face).value = imageIdentifier;
     });
 
     diceSymbol.location.x = position.x - 25;

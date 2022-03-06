@@ -97,7 +97,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     sampleDiceRollTable.name = 'サンプルダイスボット表'
     sampleDiceRollTable.command = 'SAMPLE'
     sampleDiceRollTable.dice = '1d6';
-    sampleDiceRollTable.value = "1:これはダイスボット表のサンプルです\n2:数字と対応する結果を1行に1つづつ:（コロン）で区切り\n3:数字:結果のように記述します\n4:\\\\n  \\nで改行します\n5:https://docs.bcdice.org/original_table.html \n6:詳細はbcdiceオリジナル表の仕様に準じます";
+    sampleDiceRollTable.value = "1:これはダイスボット表のサンプルです\n2:数字と対応する結果を1行に1つづつ:（コロン）で区切り\n3:数字:結果のように記述します\n4:\\nで改行します\n5:https://docs.bcdice.org/original_table.html \n6:詳細はbcdiceオリジナル表の仕様に準じます";
     DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
   }
 

@@ -7,7 +7,6 @@ import { CounterService } from 'service/counter.service';
 import { ModalService } from 'service/modal.service';
 import { SaveDataService } from 'service/save-data.service';
 import { RoomService } from 'service/room.service';
-import { SaveHtmlService } from 'service/save-html.service';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
@@ -120,7 +119,6 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     private panelService: PanelService,
     private roomService: RoomService,
     private saveDataService: SaveDataService,
-    private saveHtmlService: SaveHtmlService,
     private counterService: CounterService,
     private chatMessageService: ChatMessageService
   ) { }

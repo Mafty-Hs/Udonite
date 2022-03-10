@@ -12,7 +12,6 @@ import { PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
-import { SaveHtmlService } from 'service/save-html.service';
 
 import { LogSaveComponent } from 'component/log-save/log-save.component';
 
@@ -59,7 +58,6 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     public roomService: RoomService,
     private chatMessageService: ChatMessageService,
     private saveDataService: SaveDataService,
-    private saveHtmlService: SaveHtmlService
   ) { }
 
   ngOnInit() {

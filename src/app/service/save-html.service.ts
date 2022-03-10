@@ -161,6 +161,10 @@ export class SaveHtmlService {
   rubyToText(rubiedText :string):string {
     if (rubiedText.match(/<ruby>/g)) {
       return rubiedText
+      .replace(/<ruby>/g,'')
+      .replace(/<\/ruby>/g,'')
+      .replace(/<rt>/g,'(')
+      .replace(/<\/rt>/g,')');
     }
     return rubiedText;
   }

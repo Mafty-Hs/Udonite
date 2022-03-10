@@ -41,6 +41,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   roomSync() {
+    if (this.timeout) clearTimeout(this.timeout)
     FileArchiver.instance.initialize();
     ImageStorage.instance;
     AudioStorage.instance;
@@ -130,7 +131,6 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!IONetwork.roomId) {
       EventSystem.register(this)
       .on('ROOM_JOIN', event => {
-        this.timeout = null;
         this.roomSync();
       });
       this.timeout = setTimeout(() => { this.onError()},15*1000)

@@ -49,6 +49,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     let audio = AudioStorage.instance.getCatalog();
     Promise.all([image,audio])
       .then(() => {
+        this.timeout = setTimeout(() => { this.onError()},300*1000)
         EventSystem.trigger("START_SYNC",null) ;
         this.message = "サーバのデータを取得しています。";
       });
@@ -118,6 +119,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     EventSystem.register(this)
     .on('SYNC_END', event => {
+      if (this.timeout) clearTimeout(this.timeout)
       EventSystem.unregister(this);
       if (this.roomService.createRoom) {
         this.roomInit();

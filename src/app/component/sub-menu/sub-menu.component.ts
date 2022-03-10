@@ -4,6 +4,7 @@ import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { CounterService } from 'service/counter.service';
+import { ModalService } from 'service/modal.service';
 import { SaveDataService } from 'service/save-data.service';
 import { RoomService } from 'service/room.service';
 import { SaveHtmlService } from 'service/save-html.service';
@@ -14,6 +15,7 @@ import { FileStorageComponent } from 'component/file-storage/file-storage.compon
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
+import { LogSaveComponent } from 'component/log-save/log-save.component';
 import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { EffectViewComponent } from 'component/effect-view/effect-view.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
@@ -114,6 +116,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   }
 
   constructor(
+    private modalService: ModalService,
     private panelService: PanelService,
     private roomService: RoomService,
     private saveDataService: SaveDataService,
@@ -148,7 +151,8 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   }
 
   htmlsave(){
-    this.saveHtmlService.saveAllHtmlLog();
+    this.modalService.open<string>(LogSaveComponent, { chatTabIdentifier: "" });
+
     this.closeMe.emit();
   }
 

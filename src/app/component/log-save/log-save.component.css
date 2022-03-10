@@ -1,0 +1,23 @@
+.window-setting {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.window-item {
+  display:flex; 
+  flex-direction: row; 
+  justify-content:space-between;
+}
+.item-text {
+  font-size: 14px;
+}
+.item-setting {
+  width: 18em;
+  display: flex;
+  flex-flow:  column;
+  justify-content: flex-start;
+  font-size: 14px;
+}

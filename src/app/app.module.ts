@@ -113,6 +113,7 @@ import { HelpCutinComponent } from './component/help/help-cutin/help-cutin.compo
 import { HelpDicerollComponent } from './component/help/help-diceroll/help-diceroll.component';
 import { HelpImageComponent } from './component/help/help-image/help-image.component';
 import { DiceSymbolFlatComponent } from './component/dice-symbol-flat/dice-symbol-flat.component';
+import { LogSaveComponent } from './component/log-save/log-save.component';
 
 @NgModule({
   declarations: [
@@ -210,6 +211,7 @@ import { DiceSymbolFlatComponent } from './component/dice-symbol-flat/dice-symbo
     HelpDicerollComponent,
     HelpImageComponent,
     DiceSymbolFlatComponent,
+    LogSaveComponent,
   ],
   imports: [
     BrowserModule,

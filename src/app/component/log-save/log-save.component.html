@@ -1,0 +1,33 @@
+<div class="window-setting">
+  <div class="window-item">
+    <div class="item-text">出力形式</div>
+    <div class="item-setting">
+      <div>
+        <form>
+          <input name="bgColor" type="radio" value="text" [(ngModel)]="logType">
+            TEXT
+          <input name="bgColor" type="radio" value="html" [(ngModel)]="logType">
+            HTML
+          <input name="bgColor" type="radio" value="csv" [(ngModel)]="logType">
+            CSV
+        </form>
+       </div>
+    </div>
+  </div>
+  <div class="window-item">
+    <div *ngIf="logType == 'html'" class="item-text">背景色</div>
+    <div *ngIf="logType == 'html'" class="item-setting">
+      <div>
+        <form>
+          <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
+            白
+          <input name="bgColor" type="radio" value="black" [(ngModel)]="bgColor">
+            黒
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="window-item">
+    <div class="item-setting" style="margin: 0 0 0 auto;"><button style="width:5em;" (click)="saveLog()">保存</button></div>
+  </div>
+</div>

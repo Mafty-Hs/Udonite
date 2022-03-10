@@ -14,6 +14,8 @@ import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 import { SaveHtmlService } from 'service/save-html.service';
 
+import { LogSaveComponent } from 'component/log-save/log-save.component';
+
 @Component({
   selector: 'app-chat-tab-setting',
   templateUrl: './chat-tab-setting.component.html',
@@ -87,7 +89,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   htmlsave() {
     if (!this.selectedTab) return;
-    this.saveHtmlService.saveHtmlLog(this.selectedTab)
+    this.modalService.open<string>(LogSaveComponent, { chatTabIdentifier: this.selectedTab.identifier });
   }
 
   async save() {

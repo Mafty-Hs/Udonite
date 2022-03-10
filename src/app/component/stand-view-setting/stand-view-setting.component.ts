@@ -16,23 +16,20 @@ interface standInfo {
   templateUrl: './stand-view-setting.component.html',
   styleUrls: ['./stand-view-setting.component.css']
 })
-export class StandViewSettingComponent implements OnInit {
+export class StandViewSettingComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('main') mainElm: ElementRef;
   @ViewChild('menu') menuElm: ElementRef;
   main: HTMLElement;
   menu: HTMLElement;
-  count:number = 2;
-  observer = new ResizeObserver(change => {
-    setTimeout(() => {this.sizeUpdate(),500});
-  });
+  timer:NodeJS.Timer
 
   sizeUpdate() {
+    //500sごとにパネルの四方の座標をチェック。observerではパネルに対するドラッグイベントが拾えない。
     let rect = this.menu.getBoundingClientRect();
-    this.standService.leftEnd = rect.left - 9;
-    this.standService.width = rect.width + 20;
+    this.standService.leftEnd = rect.left - 6;
+    this.standService.width = rect.width + 18;
     let bottomrect = this.main.getBoundingClientRect();
-    this.standService.bottomEnd = window.innerHeight - bottomrect.bottom -27;
-    this.count -= 1;
+    this.standService.bottomEnd = window.innerHeight - bottomrect.bottom -15;
   }
 
   scaleList : string[] = ["10","30","50","70","90"];
@@ -78,17 +75,11 @@ export class StandViewSettingComponent implements OnInit {
   ngAfterViewInit() {
     this.main = this.mainElm.nativeElement;
     this.menu = this.menuElm.nativeElement;
-    setTimeout(() => {this.observer.observe(this.menu),5000});
+    this.timer = setInterval(() => {this.sizeUpdate()}, 500)
   }
 
   ngOnDestroy() {
-    if (this.count > 0) {
-      //開いた時に取得するDOMがおかしいので暫定対応
-      this.standService.leftEnd = this.panelService.left;
-      this.standService.width = this.panelService.width;
-      this.standService.bottomEnd = window.innerHeight - (this.panelService.top + this.panelService.height)
-    }
-    this.observer.disconnect();
+    clearInterval(this.timer);
   }
 
   constructor(

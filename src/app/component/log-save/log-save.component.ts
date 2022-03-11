@@ -20,7 +20,7 @@ export class LogSaveComponent implements OnInit, AfterViewInit {
     return ObjectStore.instance.get<ChatTab>(this.chatTabIdentifier);
   }
   get chatTabName():string {
-    if (!this.chatTab) return "全て"
+    if (!this.chatTab) return "全てのタブ"
     return this.chatTab.name
   }
 

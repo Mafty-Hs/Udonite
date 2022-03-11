@@ -8,12 +8,23 @@ import { TableMouseGestureFlat } from './table-mouse-gesture-flat';
   templateUrl: './game-table-flat.component.html',
   styleUrls: ['./game-table-flat.component.css']
 })
-export class GameTableFlatComponent extends GameTableComponentTemplate {
+export class GameTableFlatComponent extends GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('gameTable', { static: true }) gameTable: ElementRef<HTMLElement>;
   @ViewChild('gameObjects', { static: true }) gameObjects: ElementRef<HTMLElement>;
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
 
+  ngOnInit():void {
+    super.ngOnInit()
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+  }
 
   viewPotisonX: number = 100;
   viewPotisonY: number = 0;

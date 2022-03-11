@@ -7,11 +7,23 @@ import { EventSystem } from '@udonarium/core/system';
   templateUrl: './game-table.component.html',
   styleUrls: ['./game-table.component.css'],
 })
-export class GameTableComponent extends GameTableComponentTemplate {
+export class GameTableComponent extends GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('gameTable', { static: true }) gameTable: ElementRef<HTMLElement>;
   @ViewChild('gameObjects', { static: true }) gameObjects: ElementRef<HTMLElement>;
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
+
+  ngOnInit():void {
+    super.ngOnInit()
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+  }
 
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
   set isTranslate(isTranslate :boolean) { 

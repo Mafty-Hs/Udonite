@@ -23,9 +23,21 @@ import { TerrainComponentTemplate } from 'src/app/abstract/terrain.template';
   styleUrls: ['./terrain.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TerrainComponent extends TerrainComponentTemplate {
+export class TerrainComponent extends TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
+
+  ngOnInit():void {
+    super.ngOnInit()
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+  }
 
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {

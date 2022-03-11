@@ -1,8 +1,11 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { DiceSymbolComponentTemplate } from 'src/app/abstract/dice-symbol.template';
@@ -87,8 +90,20 @@ import { DiceSymbolComponentTemplate } from 'src/app/abstract/dice-symbol.templa
     ])
   ]
 })
-export class DiceSymbolFlatComponent extends DiceSymbolComponentTemplate {
+export class DiceSymbolFlatComponent extends DiceSymbolComponentTemplate implements OnInit, OnDestroy, AfterViewInit  {
   @Input() diceSymbol: DiceSymbol = null;
   @Input() is3D: boolean = false;
+
+  ngOnInit():void {
+    super.ngOnInit()
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+  }
 
 }

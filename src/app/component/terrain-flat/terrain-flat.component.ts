@@ -5,6 +5,8 @@ import {
   Component,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
@@ -19,9 +21,21 @@ import { TerrainComponentTemplate } from 'src/app/abstract/terrain.template';
   styleUrls: ['./terrain-flat.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TerrainFlatComponent extends TerrainComponentTemplate {
+export class TerrainFlatComponent extends TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
+
+  ngOnInit():void {
+    super.ngOnInit()
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+  }
 
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {

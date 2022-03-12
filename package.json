@@ -1,11 +1,11 @@
 {
   "name": "udonite",
-  "version": "0.8.9",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href=/test/",
+    "build": "ng build",
     "prod": "ng build --configuration production --base-href=/udonite/",
     "test": "ng test",
     "lint": "ng lint",

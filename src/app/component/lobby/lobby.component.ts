@@ -87,7 +87,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
      for (let i = 0;
       i < max;
       i = i + page ) {
-      let name:string = String(i) + '-' + String(i + page - 1);
+      let name:string = this.zeroPadding(i) + '-' + this.zeroPadding(i + page - 1);
       let _index:lobbyindex = {index: i,name:  name}
       _indexes.push(_index);
     }
@@ -95,10 +95,19 @@ export class LobbyComponent implements OnInit, OnDestroy {
     if (mod)
     {
       let lastindex = this.maxRoomCount - mod - 1;
-      let _index:lobbyindex = {index: lastindex ,name: '' + lastindex + '-' + ( this.maxRoomCount - 1) }
+      let _index:lobbyindex = {index: lastindex ,name: this.zeroPadding(lastindex) + '-' + this.zeroPadding( this.maxRoomCount - 1) }
       _indexes.push(_index);
     }
     return _indexes
+  }
+
+  get numberDigit():number {
+    return String((this.maxRoomCount - 1)).length;
+  }
+
+  zeroPadding(num :number) :string{
+    let zero:string = '0'.repeat(this.numberDigit);
+	  return (zero + num).slice(-1 * this.numberDigit);
   }
 
   get maxRoomCount():number {

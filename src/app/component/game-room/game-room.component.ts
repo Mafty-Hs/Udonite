@@ -7,11 +7,12 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CutInService } from 'service/cut-in.service';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { EffectService } from 'service/effect.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
 import { RoomService } from 'service/room.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
@@ -22,7 +23,6 @@ import { ModalComponent } from 'component/modal/modal.component';
 import { RoundComponent } from 'component/round/round.component';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
 import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
-import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { IRound } from '@udonarium/round';
@@ -54,6 +54,7 @@ export class GameRoomComponent implements OnInit {
     private panelService: PanelService,
     private standService: StandService,
     private playerService: PlayerService,
+    private pointerDeviceService: PointerDeviceService,
     private roomService: RoomService,
     private standImageService: StandImageService,
   ) {
@@ -180,6 +181,24 @@ export class GameRoomComponent implements OnInit {
 
   roundContext(e:Event) {
     this.round.displayContextMenu(e);
+  }
+
+  roomMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let position = this.pointerDeviceService.pointers[0];
+    let actions: ContextMenuAction[] = [];
+    actions.push({ name: 'ルームから退出する', action: () =>
+     { this.leave(); } });
+    this.contextMenuService.open(position, actions, 'ルームメニュー');
+  }
+
+  leave() {
+    if (confirm('ルームから退出します。よろしいですか？')) {
+      location.reload();
+    }
   }
 
   menuHelp(){

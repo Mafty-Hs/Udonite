@@ -26,7 +26,6 @@ import { GameTableComponent } from 'component/game-table/game-table.component';
 import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { LobbyComponent } from 'component/lobby/lobby.component';
 import { ModalComponent } from 'component/modal/modal.component';
-import { NetworkIndicatorComponent } from 'component/network-indicator/network-indicator.component';
 import { OverviewPanelComponent } from 'component/overview-panel/overview-panel.component';
 import { PasswordCheckComponent } from 'component/password-check/password-check.component';
 import { PeerCursorComponent } from 'component/peer-cursor/peer-cursor.component';
@@ -152,7 +151,6 @@ import { LogSaveComponent } from './component/log-save/log-save.component';
     TextNoteComponent,
     MovableDirective,
     RotableDirective,
-    NetworkIndicatorComponent,
     DiceSymbolComponent,
     TooltipDirective,
     DraggableDirective,

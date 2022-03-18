@@ -1,7 +1,7 @@
 <div class="container">
   <div id="menu" class="menu">
     <div id="menu" class="left">
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'file' ? '2px solid #000' : '2px solid #989898'}"  
+      <button class="select" [ngStyle]="{'border': this.selectMenu == 'file' ? '2px solid #000' : '2px solid #989898'}"
         (click)='openSubMenu($event,"file")'>
           <span *ngIf="!minimumMode; else miniFile">ファイル{{isOpen("file")}}
       </span></button>
@@ -20,8 +20,7 @@
       <round class="select" style="padding: 0" [minimumMode]="this.minimumMode" (contextmenu)="roundContext($event); false" ></round>
     </div>
     <div class="right">
-      <network-indicator style="width:40px;height:40px;"></network-indicator>
-      <div class="select"><network-status  [minimumMode]="this.minimumMode"></network-status></div>
+      <div class="select"><network-status  [minimumMode]="this.minimumMode" (contextmenu)="roomMenu($event); false"></network-status></div>
       <button class="select" *ngIf="!minimumMode"  (click)='menuHelp()'>？</button>
     </div>
   </div>

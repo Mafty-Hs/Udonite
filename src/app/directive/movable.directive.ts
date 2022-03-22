@@ -311,11 +311,14 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private setCollidableLayer(isCollidable: boolean) {
-    // todo
     let isEnable = isCollidable;
     for (let layerName in MovableDirective.layerHash) {
       if (-1 < this.colideLayers.indexOf(layerName)) {
-        isEnable = this.input.isGrabbing ? isCollidable : true;
+        if (layerName == 'character') {
+          isEnable = this.input.isGrabbing ? isCollidable && !this.tabletopObject.isNotRide : true;
+        } else {
+          isEnable = this.input.isGrabbing ? isCollidable : true;
+        }
       } else {
         isEnable = !isCollidable;
       }

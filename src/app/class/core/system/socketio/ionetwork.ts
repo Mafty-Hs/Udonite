@@ -1,6 +1,7 @@
 
 import { socketio } from "./socketio";
 import { RoomContext, RoomList, ServerInfo } from "./netowrkContext";
+import { StringUtil } from "../util/string-util";
 import { NetworkStatus } from "./connection";
 import { EventContext , PeerContext} from "./netowrkContext";
 import { CatalogItem } from "@udonarium/core/synchronize-object/object-store";
@@ -41,8 +42,9 @@ export class IONetwork {
   socket: socketio;
 
   async open(url: string) {
-    this.url = url;
-    await this.socket.open(url);
+    this.url = StringUtil.urlSanitize(url);
+    if (this.url) await this.socket.open(url);
+    else console.error('Not Valid Server URL');
     return;
   }
 
@@ -68,7 +70,7 @@ export class IONetwork {
   async create(room: RoomContext) {
     let response = await this.socket.send('roomCreate', room);
     this.roomInfo = <RoomList>response;
-    this.roomId = this.roomInfo.roomId 
+    this.roomId = this.roomInfo.roomId
     this.roomId$.next(this.roomInfo.roomId);
     return this.roomInfo.roomId;
   }
@@ -76,7 +78,7 @@ export class IONetwork {
   async join(roomId: string) {
     let response = await this.socket.send('roomJoin', { roomId: roomId });
     this.roomInfo = <RoomList>response;
-    this.roomId = this.roomInfo.roomId 
+    this.roomId = this.roomInfo.roomId
     this.roomId$.next(this.roomInfo.roomId);
     return this.roomInfo.roomId;
   }
@@ -194,7 +196,7 @@ export class IONetwork {
     formData.append("roomId", this.roomId);
     formData.append("file", imageFile);
     formData.append("filesize", String(imageFile.size));
-    formData.append("owner", owner); 
+    formData.append("owner", owner);
     formData.append("type", type);
     formData.append("hash", hash);
     try {
@@ -219,7 +221,7 @@ export class IONetwork {
     formData.append("file", audioFile);
     formData.append("name", audioFile.name);
     formData.append("filesize", String(audioFile.size));
-    formData.append("owner", owner); 
+    formData.append("owner", owner);
     formData.append("type", type);
     formData.append("hash", hash);
     try {

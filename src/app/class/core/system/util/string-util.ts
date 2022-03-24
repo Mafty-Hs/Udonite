@@ -56,6 +56,11 @@ export namespace StringUtil {
     return /^https?\:\/\//.test(url.trim());
   }
 
+  export function urlSanitize(url :string):string {
+    if (!validUrl(url)) return "";
+    return url.replace(/\/$/,'');
+  }
+
   export function sameOrigin(url: string): boolean {
     if (!url) return false;
     try {

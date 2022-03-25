@@ -18,17 +18,19 @@ export class PlayerService {
   readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
   readonly KEY_PHRASE_LOCAL_STORAGE_KEY = 'kake-udon-keyphrase-local-storage';
   readonly PLAYER_LOCAL_STORAGE_KEY = 'kake-udon-playerid-local-storage';
-  
+
   readonly CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
   readonly CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
-  
+
   myPlayer:Player;
   peerCursors:PeerCursor[] = [];
-  
+
   //プレイヤーパレット
   localpalette: ChatPalette;
   myPalette = null;
-  
+
+  isShowStatusBar:boolean = true;
+
   get paletteList() {
     return this.myPlayer.paletteList;
   }
@@ -49,9 +51,9 @@ export class PlayerService {
     }
   }
 
-  checkList(identifier: string):boolean {     
-    if (this.paletteList.indexOf(identifier) >= 0) { return true } 
-    return false; 
+  checkList(identifier: string):boolean {
+    if (this.paletteList.indexOf(identifier) >= 0) { return true }
+    return false;
   }
   playerCreate(playerName :string, color :string ,imageIdentifier :string) {
     let player = new Player();
@@ -73,7 +75,7 @@ export class PlayerService {
       && this.myPlayer.image
       && this.myPlayer.image.url.length > 0) {
       return this.myPlayer.image;
-    }  
+    }
     return ImageFile.Empty;
   }
 
@@ -95,14 +97,14 @@ export class PlayerService {
   }
 
   findByPeerId(peerId :string): PeerCursor {
-    return this.otherPeers.find(peer => 
+    return this.otherPeers.find(peer =>
       peer.peerId == peerId
     );
   }
 
   getPlayerById(playerId :string): Player {
     let players = ObjectStore.instance.getObjects<Player>(Player)
-    return players.find( player => 
+    return players.find( player =>
       player.playerId === playerId
     );
   }

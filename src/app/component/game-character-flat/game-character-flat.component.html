@@ -16,9 +16,27 @@
         <div class="rotate-frame" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
           <div class="rotate-inner">
-            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
+            <div class="top-container"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <div class="fornt-tag has-length-limit">{{name}}</div>
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                <div class="fornt-tag has-length-limit">{{name}}</div>
+              </div>
+              <div *ngIf="statusBar1 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+                <div class="status-bar"
+                  [ngStyle]="{'width': size * gridSize * statusBar1 + 'px' , 'background-color': statusColor1}"
+                ></div>
+              </div>
+              <div *ngIf="statusBar2 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+                <div class="status-bar"
+                  [ngStyle]="{'width': size * gridSize * statusBar2 + 'px' , 'background-color': statusColor2}"
+                ></div>
+              </div>
+              <div *ngIf="statusBar3 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+                <div class="status-bar"
+                  [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
+                ></div>
+              </div>
             </div>
             <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
               <div class="inverser" [ngClass]="{inverse: isInverse}">

@@ -50,6 +50,44 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   get newLineString(): string { return this.inventoryService.newLineString; }
 
+  get bar1(): string {
+    return this.inventoryService.statusBar_1
+  }
+  set bar1(status :string) {
+    this.inventoryService.statusBar_1 = status.trim();
+  }
+  get bar2(): string {
+    return this.inventoryService.statusBar_2
+  }
+  set bar2(status :string) {
+    this.inventoryService.statusBar_2 = status.trim();
+  }
+  get bar3(): string {
+    return this.inventoryService.statusBar_3
+  }
+  set bar3(status :string) {
+    this.inventoryService.statusBar_3 = status.trim();
+  }
+  get color1(): string {
+    return this.inventoryService.statusColor_1;
+  }
+  set color1(color :string) {
+    this.inventoryService.statusColor_1 = color;
+  }
+  get color2(): string {
+    return this.inventoryService.statusColor_2;
+  }
+  set color2(color :string) {
+    this.inventoryService.statusColor_2 = color;
+  }
+  get color3(): string {
+    return this.inventoryService.statusColor_3;
+  }
+  set color3(color :string) {
+    this.inventoryService.statusColor_3 = color;
+  }
+
+
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
@@ -126,20 +164,20 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.selectGameObject(gameObject);
 
     let position = this.pointerDeviceService.pointers[0];
-    
+
     let actions: ContextMenuAction[] = [];
     if (gameObject.imageFiles.length > 1) {
       actions.push({
         name: '画像切り替え',
         action: null,
         subActions: gameObject.imageFiles.map((image, i) => {
-          return { 
-            name: `${gameObject.currntImageIndex == i ? '◉' : '○'}`, 
-            action: () => { 
+          return {
+            name: `${gameObject.currntImageIndex == i ? '◉' : '○'}`,
+            action: () => {
               gameObject.currntImageIndex = i;
               SoundEffect.play(PresetSound.surprise);
               EventSystem.trigger('UPDATE_INVENTORY', null);
-            }, 
+            },
             default: gameObject.currntImageIndex == i,
             icon: image
           };
@@ -185,7 +223,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       })
     );
-    actions.push({ name: '画像効果', action: null,  
+    actions.push({ name: '画像効果', action: null,
     subActions: [
       (gameObject.isInverse
         ? {
@@ -223,7 +261,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
-        { name: 'オーラ', action: null, subActions: [ { name: `${gameObject.aura == -1 ? '◉' : '○'} なし`, action: () => { gameObject.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+        { name: 'オーラ', action: null, subActions: [ { name: `${gameObject.aura == -1 ? '◉' : '○'} なし`, action: () => { gameObject.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {
           return { name: `${gameObject.aura == i ? '◉' : '○'} ${color}`, action: () => { gameObject.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
         })) },
         ContextMenuSeparator,
@@ -293,7 +331,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
               window.open(url.trim(), '_blank', 'noopener');
             } else {
               this.modalService.open(OpenUrlComponent, { url: url, title: gameObject.name, subTitle: urlElement.name });
-            } 
+            }
           },
           disabled: !StringUtil.validUrl(url),
           error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
@@ -326,10 +364,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       action: null,
       subActions: locations
         .filter((location, i) => { return !(gameObject.location.name == location.name || (i == 1 && !locations.map(loc => loc.name).includes(gameObject.location.name))) })
-        .map((location) => { 
+        .map((location) => {
           return {
-            name: `${location.alias}`, 
-            action: () => { 
+            name: `${location.alias}`,
+            action: () => {
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
               if (location.name == 'graveyard') {
@@ -338,7 +376,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
                 SoundEffect.play(PresetSound.piecePut);
               }
             }
-          } 
+          }
         })
     });
     /*
@@ -378,6 +416,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   toggleEdit() {
     this.isEdit = !this.isEdit;
+    EventSystem.call('UPDATE_BAR',null)
   }
 
   cleanInventory() {
@@ -399,7 +438,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     cloneObject.name = this.appendCloneNumber(cloneObject.name);
   }
 
-  private appendCloneNumber(objectname: string): string {    
+  private appendCloneNumber(objectname: string): string {
     let reg = new RegExp('(.*)_([0-9]*)');
     let res = objectname.match(reg);
 

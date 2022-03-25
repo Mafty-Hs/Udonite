@@ -23,10 +23,13 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { DataElement } from '@udonarium/data-element';
+import { GameCharacterService } from 'service/game-character.service';
 
 
 @Component({
@@ -66,7 +69,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
-  
+
   get dialogFaceIcon(): ImageFile {
     if (!this.dialog || !this.dialog.faceIconIdentifier) return null;
     return ImageStorage.instance.get(<string>this.dialog.faceIconIdentifier);
@@ -82,6 +85,45 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     return this.effectService.canEffect;
   }
 
+  get statusBar1():number|null {
+    if (!this.playerService.isShowStatusBar || !this.gameCharacter.isInventoryIndicate) return null;
+    if (!this.gameObjectInventoryService.statusBar_1) return null;
+    let dataElm = this.gameCharacterService.findDataElm(this.gameCharacter.identifier ,this.gameObjectInventoryService.statusBar_1)
+    if (!dataElm || !dataElm.isNumberResource || !dataElm.value ) return null;
+    let result = Number(dataElm.currentValue) / Number(dataElm.value);
+    if (isNaN(result) || result > 1 ) return 1;
+    return result;
+  }
+  get statusBar2():number|null {
+    if (!this.playerService.isShowStatusBar || !this.gameCharacter.isInventoryIndicate) return null;
+    if (!this.gameObjectInventoryService.statusBar_2) return null;
+    let dataElm = this.gameCharacterService.findDataElm(this.gameCharacter.identifier ,this.gameObjectInventoryService.statusBar_2)
+    if (!dataElm || !dataElm.isNumberResource || !dataElm.value ) return null;
+    let result = Number(dataElm.currentValue) / Number(dataElm.value);
+    if (isNaN(result) || result > 1 ) return 1;
+    return result;
+  }
+  get statusBar3():number|null {
+    if (!this.playerService.isShowStatusBar || !this.gameCharacter.isInventoryIndicate) return null;
+    if (!this.gameObjectInventoryService.statusBar_3) return null;
+    let dataElm = this.gameCharacterService.findDataElm(this.gameCharacter.identifier ,this.gameObjectInventoryService.statusBar_3)
+    if (!dataElm || !dataElm.isNumberResource || !dataElm.value ) return null;
+    let result = Number(dataElm.currentValue) / Number(dataElm.value);
+    if (isNaN(result) || result > 1 ) return 1;
+    return result;
+  }
+  get statusColor1():string {
+    return this.gameObjectInventoryService.statusColor_1;
+  }
+  get statusColor2():string {
+    return this.gameObjectInventoryService.statusColor_2;
+  }
+  get statusColor3():string {
+    return this.gameObjectInventoryService.statusColor_3;
+  }
+
+
+
   stopRotate:boolean = false;
   gridSize: number = 50;
   math = Math;
@@ -90,7 +132,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
 
- 
+
 
   set dialog(dialog) {
     if (!this.gameCharacter) return;
@@ -101,11 +143,11 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]{2,})/g, "$1                            ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
     let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
     if (speechDelay > 200) speechDelay = 200;
-    if (!isEmote) this.gameCharacter.text = text.slice(0, 1); 
+    if (!isEmote) this.gameCharacter.text = text.slice(0, 1);
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
-      this.gameCharacter.isEmote = false; 
+      this.gameCharacter.isEmote = false;
       this.changeDetector.markForCheck();
     }, text.length * speechDelay + 6000);
     this._dialog = dialog;
@@ -136,7 +178,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     const max = (this.gameCharacter.size + 1.8) * this.gridSize;
     const existIcon = this.isUseFaceIcon && this.dialogFaceIcon && this.dialogFaceIcon.url;
     const dynamic = this.dialogText.length * 11 + 52 + (existIcon ? 32 : 0);
-    return max < dynamic ? max : dynamic; 
+    return max < dynamic ? max : dynamic;
   }
 
   get dialog() {
@@ -157,10 +199,10 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     return ret / 1.5;
   }
 
-  
+
   get characterImageHeight(): number {
     if (!this.imageFile) return 0;
-    let ratio = (this.imageFile.aspect > this.heightWidthRatio) ? this.heightWidthRatio : this.imageFile.aspect;  
+    let ratio = (this.imageFile.aspect > this.heightWidthRatio) ? this.heightWidthRatio : this.imageFile.aspect;
     return ratio * this.gridSize * this.size;
   }
 
@@ -215,6 +257,8 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
 
   constructor(
     protected contextMenuService: ContextMenuService,
+    protected gameCharacterService: GameCharacterService,
+    protected gameObjectInventoryService: GameObjectInventoryService,
     protected panelService: PanelService,
     protected playerService: PlayerService,
     protected effectService: EffectService,
@@ -223,9 +267,12 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     protected ngZone: NgZone,
     protected modalService: ModalService
   ) { }
-  
+
   ngOnInit() {
     EventSystem.register(this)
+      .on('UPDATE_BAR', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameCharacter || !object) return;
@@ -264,7 +311,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
         }
       })
       ;
-      
+
     this.movableOption = {
       tabletopObject: this.gameCharacter,
       transformCssOffset: 'translateZ(1.0px)',
@@ -276,7 +323,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   }
 
   ngAfterViewInit() {
-    
+
   }
 
   ngOnDestroy() {

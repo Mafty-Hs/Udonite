@@ -107,6 +107,7 @@ export class GameRoomComponent implements OnInit {
 
   showViewMenu(left: number) {
 
+    const isShowStatusBar = this.playerService.isShowStatusBar;
     const isShowStand = StandImageComponent.isShowStand;
     const isShowNameTag = StandImageComponent.isShowNameTag;
     const isCanBeGone = StandImageComponent.isCanBeGone;
@@ -138,10 +139,19 @@ export class GameRoomComponent implements OnInit {
           },
           { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`,
             action: () => {
-            StandImageComponent.isCanBeGone = !isCanBeGone;
+              StandImageComponent.isCanBeGone = !isCanBeGone;
             }
           },
           { name: '表示中の立ち絵全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) },
+        ContextMenuSeparator,
+        { name: "キャラクター設定" },
+        ContextMenuSeparator,
+          { name: `${ isShowStatusBar ? '☑' : '☐' }ステータスバー表示`,
+            action: () => {
+              this.playerService.isShowStatusBar = !isShowStatusBar;
+              EventSystem.trigger('UPDATE_BAR',null)
+            }
+          },
         ContextMenuSeparator,
         { name: "エフェクト設定" },
         ContextMenuSeparator,

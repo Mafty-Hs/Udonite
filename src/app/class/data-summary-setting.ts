@@ -29,6 +29,12 @@ export class DataSummarySetting extends GameObject implements InnerXml {
   @SyncVar() sortTag: string = 'name';
   @SyncVar() sortOrder: SortOrder = SortOrder.ASC;
   @SyncVar() dataTag: string = 'HP MP 敏捷度 生命力 精神力';
+  @SyncVar() StatusBarTag_1: string = "HP";
+  @SyncVar() StatusBarTag_2: string = "MP";
+  @SyncVar() StatusBarTag_3: string = "";
+  @SyncVar() StatusBarColor_1: string = "#00CC00";
+  @SyncVar() StatusBarColor_2: string = "#0000CC";
+  @SyncVar() StatusBarColor_3: string = "#CC9900";
 
   private _dataTag: string;
   private _dataTags: string[];

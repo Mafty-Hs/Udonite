@@ -32,6 +32,12 @@
     </div>
     <div style="font-size: 12px; padding-top: 6px;">表示項目</div>
     <input style="width: 100%; box-sizing: border-box;" [(ngModel)]="dataTag" placeholder="スペース区切りでタグ名 スラッシュで改行 ex.「HP MP / メモ」" />
+    <div style="font-size: 12px;">
+      ステータスバー(リソースのみ指定できます)<br/>
+      1：<input type="color" style="width:2em; height:2em;" [(ngModel)]="color1"> <input style="width: 5em;" [(ngModel)]="bar1" placeholder="タグ名" />
+      2：<input type="color" style="width:2em; height:2em;" [(ngModel)]="color2"> <input style="width: 5em;" [(ngModel)]="bar2" placeholder="タグ名" />
+      3：<input type="color" style="width:2em; height:2em;" [(ngModel)]="color3"> <input style="width: 5em;" [(ngModel)]="bar3" placeholder="タグ名" />
+    </div>
     <div style="padding-top: 6px;">
       <button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>完了</button>
     </div>

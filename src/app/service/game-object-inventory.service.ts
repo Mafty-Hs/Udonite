@@ -28,6 +28,50 @@ export class GameObjectInventoryService {
   set dataTag(dataTag: string) { this.summarySetting.dataTag = dataTag; }
   get dataTags(): string[] { return this.summarySetting.dataTags; }
 
+  get statusBar_1(): string {
+    if (!this.summarySetting.StatusBarTag_1) this.summarySetting.StatusBarTag_1 = "";
+    return this.summarySetting.StatusBarTag_1;
+  }
+  set statusBar_1(status :string) {
+    this.summarySetting.StatusBarTag_1 = status;
+  }
+  get statusBar_2(): string {
+    if (!this.summarySetting.StatusBarTag_2) this.summarySetting.StatusBarTag_2 = "";
+    return this.summarySetting.StatusBarTag_2;
+  }
+  set statusBar_2(status :string) {
+    this.summarySetting.StatusBarTag_2 = status;
+  }
+  get statusBar_3(): string {
+    if (!this.summarySetting.StatusBarTag_3) this.summarySetting.StatusBarTag_3 = "";
+    return this.summarySetting.StatusBarTag_3;
+  }
+  set statusBar_3(status :string) {
+    this.summarySetting.StatusBarTag_3 = status;
+  }
+  get statusColor_1(): string {
+    if (!this.summarySetting.StatusBarColor_1) this.summarySetting.StatusBarColor_1 = "#00CC00";
+    return this.summarySetting.StatusBarColor_1;
+  }
+  set statusColor_1(color :string) {
+    this.summarySetting.StatusBarColor_1 = color;
+  }
+  get statusColor_2(): string {
+    if (!this.summarySetting.StatusBarColor_2) this.summarySetting.StatusBarColor_2 = "#0000CC";
+    return this.summarySetting.StatusBarColor_2;
+  }
+  set statusColor_2(color :string) {
+    this.summarySetting.StatusBarColor_2 = color;
+  }
+  get statusColor_3(): string {
+    if (!this.summarySetting.StatusBarColor_3) this.summarySetting.StatusBarColor_3 = "#CC9900";
+    return this.summarySetting.StatusBarColor_3;
+  }
+  set statusColor_3(color :string) {
+    this.summarySetting.StatusBarColor_3 = color;
+  }
+
+
   readonly newLineString: string = '/';
   readonly newLineDataElement: DataElement =  DataElement.create(this.newLineString,this.newLineString,{},"newLineDataElement");
 

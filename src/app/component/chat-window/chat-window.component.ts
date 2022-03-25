@@ -28,7 +28,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     else {
       this.disableControl = false;
-    }  
+    }
   }
 
    private isMine(playerId: string):boolean {
@@ -182,10 +182,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     isUseFaceIcon?:boolean ,isCharacter?: boolean, standName?: string, isUseStandImage?: boolean }) {
     if (this.chatTab) {
       this.chatMessageService.sendMessage(
-        this.chatTab, 
-        value.text, 
-        value.gameType, 
-        value.sendFrom, 
+        this.chatTab,
+        value.text,
+        value.gameType,
+        value.sendFrom,
         value.sendTo,
         value.isCharacter,
         value.isUseFaceIcon,

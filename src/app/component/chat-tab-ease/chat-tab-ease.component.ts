@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   ChangeDetectorRef,
   Input,
+  Output,
   NgZone,
   OnDestroy,
   OnInit,
@@ -55,6 +57,9 @@ export class ChatTabEaseComponent implements OnInit {
   get chatTab(): ChatTab {return this._chatTab;}
   get isBlack() {return (this.bgColor == "black")}
   needUpdate:boolean = true;
+
+  @Output() onAddMessage: EventEmitter<null> = new EventEmitter();
+  private addMessageEventTimer: NodeJS.Timer = null;
 
   private _chatMessages: easeMessage[] = [];
   get chatMessages(): easeMessage[] {
@@ -109,19 +114,18 @@ export class ChatTabEaseComponent implements OnInit {
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!message || !this.chatTab.contains(message)) return;
         this.needUpdate = true;
-        this.scrollToBottom();
+        this.onMessageInit();
      })
   }
 
-  scrollToBottom(){
-    try {
-      this.messageContainer.nativeElement.scroll({
-        top: this.messageContainer.nativeElement.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
-      });
-    } catch(err) {
-    }
+  onMessageInit() {
+    if (this.addMessageEventTimer != null) return;
+    this.ngZone.runOutsideAngular(() => {
+      this.addMessageEventTimer = setTimeout(() => {
+        this.addMessageEventTimer = null;
+        this.ngZone.run(() => this.onAddMessage.emit());
+      }, 0);
+    });
   }
 
 }

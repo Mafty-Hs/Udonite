@@ -132,7 +132,7 @@ export class GameCharacterService {
     return {
       name: this.chatCharacter.name ,
       imageIdentifier: imageIdentifier ? imageIdentifier : '',
-      color: this.chatCharacter.chatPalette?.paletteColor ? 
+      color: this.chatCharacter.chatPalette?.paletteColor ?
        this.chatCharacter.chatPalette.paletteColor : "",
       isInverse: !isUseFaceIcon ? Number(this.chatCharacter.isInverse) : 0,
       isHollow: !isUseFaceIcon ? Number(this.chatCharacter.isHollow) : 0,
@@ -184,7 +184,7 @@ export class GameCharacterService {
     if(character.aura != -1) myClass.push(this.aura[Number(character.aura)]);
     return myClass;
   }
-  
+
   imageUrl(identifier: string ,isUseFaceIcon :boolean): string {
     let character = this.get(identifier);
     if (isUseFaceIcon && character.faceIcon != null && 0 < character.faceIcon?.url?.length)
@@ -197,13 +197,13 @@ export class GameCharacterService {
   paletteInit() {
     EventSystem.unregister(this);
     for (let identifier of this.playerService.paletteList) {
-      if (!this.get(identifier)) this.playerService.removeList(identifier); 
+      if (!this.get(identifier)) this.playerService.removeList(identifier);
     }
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;
         if (!this.locationCheck(this.get(event.data.identifier),false)) {
-          this.playerService.removeList(event.data.identifier); 
+          this.playerService.removeList(event.data.identifier);
         }
         this.shouldUpdateCharacterList = true;
       })
@@ -218,7 +218,7 @@ export class GameCharacterService {
   constructor(
      private playerService: PlayerService,
      private roomService: RoomService
-  ) { 
+  ) {
     EventSystem.register(this)
       .on('ROOM_PLAY', -1000, event => {
         this.paletteInit();

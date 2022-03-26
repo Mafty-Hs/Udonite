@@ -58,7 +58,7 @@
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
     <div class="object-name">{{gameObject.name}}
-      <button style="font-size: 0.8em; padding: 2px 5px;" *ngIf="selectedIdentifier === gameObject.identifier" (click)="onContextMenu($event, gameObject)">
+      <button style="font-size: 0.8em; padding: 2px 5px;" *ngIf="selectedIdentifier === gameObject.identifier" [disabled]="!gameObject.canView" (click)="onContextMenu($event, gameObject)">
         <i class="material-icons" style="font-size: 1em;">settings</i>
       </button>
     </div>
@@ -66,9 +66,11 @@
       <div class="table-cell image-box">
         <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
       </div>
-      <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
-        <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
-      </ng-container>
+      <ng-container *ngIf="gameObject.canView; else forbidden">
+        <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
+          <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
+        </ng-container>
+     </ng-container>
     </div>
   </div>
 </ng-template>
@@ -94,3 +96,8 @@
     <data-element [dataElement]="dataElm"></data-element>
   </ng-template>
 </ng-template>
+
+<ng-template #forbidden>
+  非公開
+</ng-template>
+

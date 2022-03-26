@@ -1,10 +1,12 @@
 <div *ngIf="!isEdit; else edit" class="component">
-  <div class="frame" *ngFor="let dataElm of inventoryDataElms">
-    <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-      <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+  <ng-container *ngIf="canView; else forbidden">
+    <div class="frame" *ngFor="let dataElm of inventoryDataElms">
+      <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+        <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #dataElement let-dataElm="dataElm">
@@ -36,3 +38,6 @@
   </div>
 </ng-template>
 
+<ng-template #forbidden>
+  非公開
+</ng-template>

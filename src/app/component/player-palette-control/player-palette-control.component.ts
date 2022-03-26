@@ -11,7 +11,7 @@ import { GameCharacterService } from 'service/game-character.service';
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
-  private _sendFrom: string = ""; 
+  private _sendFrom: string = "";
   get sendFrom(){
     return this._sendFrom;
   }
@@ -20,10 +20,12 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     this._sendFrom = sendFrom;
     let character = this.gameCharacterService.get(sendFrom)
     if (character) this.name = character.name;
+    this.canView = character.canView;
   }
   private name:string;
+  canView:boolean = true;
 
-  @Output() chat = new EventEmitter<{ 
+  @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string
     }>();
 
@@ -36,7 +38,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   isEdit : boolean = false;
 
   invalidcr:string[] = [ 'note' , 'checkProperty' , 'url' ];
-  
+
   setDataElm(dataElm: DataElement){
     if ((dataElm.value && Number.isNaN(dataElm.value)) ||
     (dataElm.currentValue && Number.isNaN(dataElm.currentValue)) ||
@@ -46,7 +48,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   }
 
   selectElm: DataElement;
- 
+
   cancelEdit(){
     this.innerText = '';
     this.isEdit = false;
@@ -84,7 +86,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
       }
     }
     this.innerText = '';
-    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue; 
+    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue;
     this.chat.emit({
         text: resulttext,
         gameType: "",
@@ -96,7 +98,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
 text2Byte () : string {
   let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
-    'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'  
+    'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
   };
   let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');
 
@@ -108,7 +110,7 @@ text2Byte () : string {
     return calcMap[str];
   });
   baseText = baseText.replace(/[^\x20-\x7e]/g,'');
-  
+
   return baseText;
 }
 
@@ -126,7 +128,7 @@ calcValue(targetNum:number , targetText:string):number {
     result = this.myeval(targetText);
     break;
   }
- 
+
  if(!isNaN(result)) return Number(result);
  return targetNum;
 }

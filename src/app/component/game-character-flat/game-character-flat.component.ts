@@ -116,9 +116,9 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
         name: '画像切り替え',
         action: null,
         subActions: this.gameCharacter.imageFiles.map((image, i) => {
-          return { 
-            name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`, 
-            action: () => { this.changeImage(i); }, 
+          return {
+            name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`,
+            action: () => { this.changeImage(i); },
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
@@ -198,7 +198,7 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-          { name: 'オーラ', action: null, subActions: [{ name: `${this.aura == -1 ? '◉' : '○'} なし`, action: () => { this.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+          { name: 'オーラ', action: null, subActions: [{ name: `${this.aura == -1 ? '◉' : '○'} なし`, action: () => { this.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {
             return { name: `${this.aura == i ? '◉' : '○'} ${color}`, action: () => { this.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
           })) },
           ContextMenuSeparator,
@@ -227,10 +227,22 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
           }
         }),
       ContextMenuSeparator,
-      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
-      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) } },
-      { name: 'メモを表示', action: () => { this.showInnerNote()}},
-      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } },
+      ( this.gameCharacter.owner != this.playerService.myPlayer.playerId
+        ? {
+          name: this.gameCharacter.hasOwner ? '自分のコマにする' : 'データを秘匿する' , action: () => {
+            this.gameCharacter.owner = this.playerService.myPlayer.playerId;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }, disabled: !this.gameCharacter.canView
+        } : {
+          name: 'データを公開する', action: () => {
+            this.gameCharacter.owner = "";
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }, disabled: !this.gameCharacter.canView
+        }),
+      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); }, disabled: !this.gameCharacter.canView },
+      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) }, disabled: !this.gameCharacter.canView },
+      { name: 'メモを表示', action: () => { this.showInnerNote()} , disabled: !this.gameCharacter.canView},
+      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } , disabled: !this.gameCharacter.canView},
       ContextMenuSeparator,
       {
         name: '参照URLを開く', action: null,
@@ -243,14 +255,14 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.gameCharacter.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
             isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         }),
-        disabled: this.gameCharacter.getUrls().length <= 0
+        disabled: this.gameCharacter.getUrls().length <= 0 || !this.gameCharacter.canView
       },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate

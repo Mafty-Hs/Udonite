@@ -14,13 +14,13 @@ import {
 import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuAction } from 'service/context-menu.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { EffectService } from 'service/effect.service';
-import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
 import { Subscription } from 'rxjs'
 import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.template';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
   selector: 'game-character',
@@ -122,7 +122,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
       this.canvas.remove();
     }
   }
-  private myLoop; 
+  private myLoop;
   mainLoop = () => {
     this.myLoop = requestAnimationFrame(this.mainLoop.bind(this));
     this.animate();
@@ -135,7 +135,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     this.canvas.style.display = "none";
     this.camera.position.set(20, 20, 20);
     this.camera.lookAt(new Vector3(0, 0, 0));
- 
+
     document.body.appendChild(this.canvas);
 
   }
@@ -147,7 +147,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     });
   }
 
-  setCanvasSize(mywidth: number , myheight: number){ 
+  setCanvasSize(mywidth: number , myheight: number){
     this.canvas.style.width = String(mywidth);
     this.canvas.style.height = String(mywidth);
     this.renderer.setSize(mywidth, myheight);
@@ -162,7 +162,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     if (!this.effectService.isValid(rect)) return;
 
     let newWidth,newHeight,top,left: number;
-    [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName); 
+    [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName);
     this.canvas.style.left = left + 'px';
     this.canvas.style.top = top + 'px';
     if (this.hasEffect) {
@@ -205,7 +205,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
          this.renderer.resetState();
   }
 
-  
+
   ngOnInit() {
     super.ngOnInit();
     EventSystem.register(this)
@@ -216,7 +216,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
         this.setEffect(effectName);
       }
     });
-    this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => { 
+    this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => {
       this.toggleEffect(bool);
     });
   }
@@ -247,14 +247,14 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
+    let actions: ContextMenuAction[] = [
       (this.gameCharacter.imageFiles.length <= 1 ? null : {
         name: '画像切り替え',
         action: null,
         subActions: this.gameCharacter.imageFiles.map((image, i) => {
-          return { 
-            name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`, 
-            action: () => { this.changeImage(i); }, 
+          return {
+            name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`,
+            action: () => { this.changeImage(i); },
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
@@ -334,7 +334,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-          { name: 'オーラ', action: null, subActions: [{ name: `${this.aura == -1 ? '◉' : '○'} なし`, action: () => { this.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+          { name: 'オーラ', action: null, subActions: [{ name: `${this.aura == -1 ? '◉' : '○'} なし`, action: () => { this.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {
             return { name: `${this.aura == i ? '◉' : '○'} ${color}`, action: () => { this.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
           })) },
           ContextMenuSeparator,
@@ -396,10 +396,22 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
         altitudeHande: this.gameCharacter
       },
       ContextMenuSeparator,
-      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
-      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) } },
-      { name: 'メモを表示', action: () => { this.showInnerNote()}},
-      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } },
+      ( this.gameCharacter.owner != this.playerService.myPlayer.playerId
+        ? {
+          name: this.gameCharacter.hasOwner ? '自分のコマにする' : 'データを秘匿する' , action: () => {
+            this.gameCharacter.owner = this.playerService.myPlayer.playerId;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }, disabled: !this.gameCharacter.canView
+        } : {
+          name: 'データを公開する', action: () => {
+            this.gameCharacter.owner = "";
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }, disabled: !this.gameCharacter.canView
+        }),
+      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); }, disabled: !this.gameCharacter.canView },
+      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) }, disabled: !this.gameCharacter.canView },
+      { name: 'メモを表示', action: () => { this.showInnerNote()} , disabled: !this.gameCharacter.canView},
+      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } , disabled: !this.gameCharacter.canView},
       ContextMenuSeparator,
       {
         name: '参照URLを開く', action: null,
@@ -412,14 +424,14 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.gameCharacter.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
             isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         }),
-        disabled: this.gameCharacter.getUrls().length <= 0
+        disabled: this.gameCharacter.getUrls().length <= 0 || !this.gameCharacter.canView
       },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate
@@ -476,7 +488,9 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           SoundEffect.play(PresetSound.piecePut);
         }
       },
-    ], this.name);
+    ];
+
+    this.contextMenuService.open(position,actions, this.name);
   }
 
 }

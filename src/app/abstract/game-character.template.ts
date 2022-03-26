@@ -18,13 +18,14 @@ import { PlayerPaletteComponent } from 'component/player-palette/player-palette.
 import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ModalService } from 'service/modal.service';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
@@ -37,7 +38,7 @@ import { GameCharacterService } from 'service/game-character.service';
   template: `<div></div>`
 })
 export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
-  gameCharacter: GameCharacter
+  gameCharacter: GameCharacter = null;
   is3D: boolean
 
   get name(): string { return this.gameCharacter.name; }
@@ -415,4 +416,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
       this.changeImage(this.gameCharacter.currntImageIndex + 1);
     }
   }
+
+
 }

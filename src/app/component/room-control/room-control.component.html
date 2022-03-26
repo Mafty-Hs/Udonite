@@ -129,6 +129,7 @@
         <li *ngIf="roomService.roomAdmin.disableObjectLoad">データアップロード禁止(その他)</li>
         <li *ngIf="roomService.roomAdmin.disableImageLoad">画像アップロード禁止</li>
         <li *ngIf="roomService.roomAdmin.disableAudioLoad">音楽アップロード禁止</li>
+        <li *ngIf="roomService.roomAdmin.transparentMode">透過モード</li>
         <li *ngIf="roomService.roomAdmin.disableTableSetting">テーブル設定禁止</li>
         <li *ngIf="roomService.roomAdmin.disableTabSetting">チャットタブ設定禁止</li>
         <li *ngIf="roomService.roomAdmin.disableAllDataSave">部屋全データセーブ禁止</li>
@@ -169,6 +170,10 @@
     </label></div><br>
     <div class="toggle"><label>音楽アップロード禁止
       <input name="disableAudioLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAudioLoad">
+      <div><div></div></div>
+    </label></div><br>
+    <div class="toggle"><label>透過モード
+      <input name="transparentMode" type="checkbox" [(ngModel)]="roomService.roomAdmin.transparentMode">
       <div><div></div></div>
     </label></div><br>
     <div class="toggle"><label>テーブル設定禁止

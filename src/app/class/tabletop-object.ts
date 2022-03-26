@@ -26,7 +26,7 @@ export class TabletopObject extends ObjectNode {
   @SyncVar() posZ: number = 0;
 
   set name(value:string) { this.setCommonValue('name', value); }
-  get name(): string { return this.getCommonValue('name', ''); } 
+  get name(): string { return this.getCommonValue('name', ''); }
   get isVisibleOnTable(): boolean { return this.location.name === 'table'; }
 
   private _imageFile: ImageFile = ImageFile.Empty;
@@ -43,7 +43,12 @@ export class TabletopObject extends ObjectNode {
     return object ? object.color : '#444444';
   }
   get hasOwner(): boolean { return 0 < this.owner.length; }
-  get isMine(): boolean { return PeerCursor.myCursor.player.playerId === this.owner; }
+  get isMine(): boolean {
+    return (PeerCursor.myCursor.player.playerId === this.owner);
+  }
+  get canView(): boolean {
+    return (PeerCursor.myCursor.player.playerId === this.owner) ||  (RoomAdmin.setting.transparentMode && RoomAdmin.auth);
+  }
 
   // GameDataElement getter/setter
   get rootDataElement(): DataElement {

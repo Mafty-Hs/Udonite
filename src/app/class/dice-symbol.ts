@@ -20,13 +20,13 @@ export class DiceSymbol extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isLock: boolean = false;
-  
+
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }
   get size(): number { return this.getCommonValue('size', 1); }
   set size(size: number) { this.setCommonValue('size', size); }
 
-  get faces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue != 'nothing').map(element => (element as DataElement).name); }
+  get faces(): string[] { return this.imageDataElement.children ? this.imageDataElement.children.filter(element => (element as DataElement).currentValue != 'nothing').map(element => (element as DataElement).name) : []; }
   get imageFile(): ImageFile {
     return this.isVisible ?
       this.getImageFile(this.face)
@@ -40,10 +40,10 @@ export class DiceSymbol extends TabletopObject {
     this.getImageFile(this.face == '表' ? '裏' : '表')
     : this.getImageFile(this.faces[1])
   }
-  get nothingFaces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue == 'nothing').map(element => (element as DataElement).name); }
+  get nothingFaces(): string[] { return this.imageDataElement.children ? this.imageDataElement.children.filter(element => (element as DataElement).currentValue == 'nothing').map(element => (element as DataElement).name) : []; }
 
   get hasOwner(): boolean { return 0 < this.owner.length; }
-  get isVisible(): boolean { return !this.hasOwner || this.isMine; }
+  get isVisible(): boolean { return !this.hasOwner || this.canView; }
   get isCoin(): boolean { return this.faces.length === 2; }
 
   diceRoll(): string {

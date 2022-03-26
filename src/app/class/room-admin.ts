@@ -3,6 +3,7 @@ import { IONetwork } from "./core/system";
 export class RoomControl {
   identifier = "RoomAdmin";
   adminPlayer:string[] = [];
+  transparentMode:boolean = false;
   disableRoomLoad:boolean = false;
   disableObjectLoad:boolean = false;
   disableTabletopLoad:boolean = false;

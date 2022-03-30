@@ -1,0 +1,43 @@
+<div class="container">
+  <div *ngFor="let character of characters; trackBy: trackByCharacter" class="card"
+    [ngStyle]="{'background-image': character.faceIcon ? 'url(' + character.faceIcon.url + ')' :
+     'url(' + character.imageFile?.url + ')' }" [attr.data-tooltip]="character.name">
+    <div *ngIf="initiative" class="init-count">
+      <span style="transform: translateY(-1px);">{{initDataElm(character.identifier)}}</span>
+    </div>
+    <div class="data-container">
+      <ng-container *ngIf="character.canView; else forbidden" >
+        <div class="data" *ngFor="let dataElm of dataElms(character.identifier)">
+          <ng-container *ngIf="dataElm">
+            <ng-container *ngTemplateOutlet="swDataElm; context:{DataElm :dataElm}">
+            </ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #swDataElm let-dataElm="DataElm">
+  <ng-container [ngSwitch]="dataElm.type">
+    <ng-container *ngSwitchCase="'simpleNumber'">
+      {{dataElm.name}}: {{dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'numberResource'">
+      {{dataElm.name}}: {{dataElm.currentValue}}/{{!+dataElm.value ? '???' : dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'checkProperty'">
+      {{dataElm.name}} <input type="checkbox" style="width: 2em;" checked="{{dataElm.value ? 'checked' : ''}}">
+    </ng-container>
+    <ng-container *ngSwitchCase="'abilityScore'">
+      {{dataElm.name}}: {{dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      {{dataElm.name}}: {{dataElm.value}}
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #forbidden>
+  <div class="data">非公開</div>
+</ng-template>

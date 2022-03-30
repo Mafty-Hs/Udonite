@@ -10,6 +10,7 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'round',
@@ -30,7 +31,7 @@ export class RoundComponent implements OnInit {
 
   get chatTabs(): ChatTab[] {
     return ChatTabList.instance.chatTabs;
-  } 
+  }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
   get isInitiative():boolean { return this.counterService.round.isInitiative }
@@ -50,7 +51,7 @@ export class RoundComponent implements OnInit {
     this.inventoryService.tableInventory.dataElementMap.forEach((value,key)=>
     {
       let dataElms = value as DataElement[];
-      let dataElm = dataElms.find(element => element?.name === this.initName) 
+      let dataElm = dataElms.find(element => element?.name === this.initName)
       if (dataElm)
         newArray.push([key , dataElm.value]);
     });
@@ -66,7 +67,7 @@ export class RoundComponent implements OnInit {
   get chatTab(): ChatTab {
     let tab =  ObjectStore.instance.get<ChatTab>(this.counterService.round.tabIdentifier);
     if (tab) return tab;
-    this.counterService.round.tabIdentifier = this.chatTabs[0].identifier;  
+    this.counterService.round.tabIdentifier = this.chatTabs[0].identifier;
     return this.chatTabs[0];
   };
   set chatTab(tab: ChatTab) {
@@ -84,7 +85,7 @@ export class RoundComponent implements OnInit {
     if(this.isInitiative) this.addInitiative();
     else this.addRound();
   }
-  
+
   addInitiative() {
     let message:string
     switch (this.roundState){
@@ -93,7 +94,7 @@ export class RoundComponent implements OnInit {
         this.addRound();
         this.chat("ラウンド開始");
         this.roundState += 1;
-      break; 
+      break;
       case 1:
         //イニシアティブ
         this.currentInitiative = this.calcInitiative();
@@ -103,20 +104,21 @@ export class RoundComponent implements OnInit {
         if(this.currentInitiative == 0) {
           this.roundState += 1;
         }
-      break; 
+      break;
       case 2:
         //ラウンド終了
         this.chat("ラウンド終了");
         this.roundState = 0;
         this.currentInitiative = -1;
-      break; 
+      break;
     }
+    EventSystem.call("ADD_ROUND",null)
   }
 
   calcInitiative():number {
     let inventory = this.getInventory().sort(function(a,b){return(b[1] - a[1]);});
     if (inventory.length == 0) return 0;
-    if (this.currentInitiative == -1) return inventory[0][1]  
+    if (this.currentInitiative == -1) return inventory[0][1]
     let current = inventory.find(value => Number(value[1]) < Number(this.currentInitiative))
     if (!current || current[1] < 0) return 0;
     return current[1];
@@ -208,7 +210,7 @@ export class RoundComponent implements OnInit {
 
   private chat(chattext: string) {
     if (!this.chatTabs.includes(this.chatTab)) {
-      this.chatTab = this.chatTabs[0];  
+      this.chatTab = this.chatTabs[0];
     }
 
     this.chatMessageService.sendMessage

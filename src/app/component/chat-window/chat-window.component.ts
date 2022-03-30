@@ -47,11 +47,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     return (this.bgColor === 'black')
   }
 
-  noControl:boolean = true;
+  controlType:string = "resource";
   _disableControl: boolean = true;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
-    if (this.noControl) this._disableControl = true;
     this._disableControl = control;
   };
 
@@ -104,8 +103,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.localFontsize = event.data[1];
           this.bgColor = event.data[2];
           this.isEase = event.data[3];
-          this.isLogOnly= event.data[4];
-          this.noControl= event.data[5];
+          this.isLogOnly = event.data[4];
+          this.controlType = event.data[5];
         }
       })
     Promise.resolve().then(() => this.updatePanelTitle());
@@ -175,7 +174,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     component.bgColor = this.bgColor;
     component.isEase = this.isEase;
     component.isLogOnly = this.isLogOnly;
-    component.noControl = this.noControl;
+    component.controlType = this.controlType;
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,

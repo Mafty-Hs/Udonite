@@ -94,8 +94,6 @@ export class GameObjectInventoryService {
   private initialize() {
     EventSystem.register(this)
       .on('OPEN_NETWORK', event => { this.refresh(); })
-      .on('CONNECT_PEER', event => { this.refresh(); })
-      .on('DISCONNECT_PEER', event => { this.refresh(); })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!object) return;
@@ -132,9 +130,6 @@ export class GameObjectInventoryService {
         this.locationMap.delete(event.data.identifier);
         this.tagNameMap.delete(event.data.identifier);
         this.refresh();
-      })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        if (event.isSendFromSelf) this.callInventoryUpdate();
       });
   }
 
@@ -188,7 +183,7 @@ export class GameObjectInventoryService {
   }
 }
 
-class ObjectInventory {
+export class ObjectInventory {
   newLineString: string = '/';
   private newLineDataElement: DataElement;
 

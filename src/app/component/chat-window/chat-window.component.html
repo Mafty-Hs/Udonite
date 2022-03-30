@@ -26,9 +26,16 @@
     </div>
   </div>
   <div *ngIf="isLogOnly && !isEdit">
-    <div *ngIf="!disableControl && noControl" class="Character-Control">
-      <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
-    </div>
+    <ng-container [ngSwitch]="controlType">
+      <ng-container *ngSwitchCase="'resource'">
+        <player-palette-control class="character-Control" *ngIf="!disableControl" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+      </ng-container>
+      <ng-container *ngSwitchCase="'inventory'">
+        <simple-inventory></simple-inventory>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+      </ng-container>
+    </ng-container>
     <chat-input [isBlack]="isBlack" [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
   </div>
   <chat-edit *ngIf="isLogOnly && isEdit" [isBlack]="isBlack" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>

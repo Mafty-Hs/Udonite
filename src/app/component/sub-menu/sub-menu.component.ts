@@ -19,6 +19,7 @@ import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { EffectViewComponent } from 'component/effect-view/effect-view.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoomControlComponent } from 'component/room-control/room-control.component';
+import { SimpleInventoryComponent } from 'component/simple-inventory/simple-inventory.component';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
 
@@ -94,6 +95,10 @@ export class SubMenuComponent implements OnInit,OnDestroy {
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;
         option = { width: 645, height: 475 };
+        break;
+      case 'SimpleInventoryComponent':
+        component = SimpleInventoryComponent;
+        option = { title: "イニシアティブリスト", width: 650, height: 100 };
         break;
       case 'EffectViewComponent':
         component = EffectViewComponent;

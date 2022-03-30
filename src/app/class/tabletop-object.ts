@@ -47,7 +47,7 @@ export class TabletopObject extends ObjectNode {
     return (PeerCursor.myCursor.player.playerId === this.owner);
   }
   get canView(): boolean {
-    return  !this.hasOwner || this.isMine ||  (RoomAdmin.setting.transparentMode && RoomAdmin.auth);
+    return  !this.hasOwner || this.isMine || (RoomAdmin.setting.transparentMode && RoomAdmin.auth);
   }
 
   // GameDataElement getter/setter

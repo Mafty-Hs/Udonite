@@ -83,6 +83,12 @@
           <div>インベントリ</div>
         </a>
       </li>
+      <li *ngIf="isOpen('work')" (click)="open('SimpleInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">view_list</i></div>
+          <div>イニシアティブリスト</div>
+        </a>
+      </li>
       <li *ngIf="isOpen('work')" (click)="open('PlayerPaletteComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">library_books</i></div>

@@ -7,12 +7,12 @@
         <div class="item-setting">
            <div>
              <form>
-             <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
-             白
-             <input name="bgColor" type="radio" value="grey" [(ngModel)]="bgColor">
-　　　　　　 灰
-             <input name="bgColor" type="radio" value="black" [(ngModel)]="bgColor">
-             黒
+              <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
+              白
+              <input name="bgColor" type="radio" value="grey" [(ngModel)]="bgColor">
+              灰
+              <input name="bgColor" type="radio" value="black" [(ngModel)]="bgColor">
+              黒
              </form>
            </div>
         </div>
@@ -29,31 +29,39 @@
         </div>
       </div>
       <div class="window-item">
+        <div class="item-text">操作パネル</div>
+        <div class="item-setting" style="font-size: 12px;">
+          <div>
+            <form>
+              <input name="controlType" type="radio" value="" [(ngModel)]="controlType">
+              なし
+              <input name="controlType" type="radio" value="resource" [(ngModel)]="controlType">
+              リソース
+              <input name="controlType" type="radio" value="inventory" [(ngModel)]="controlType">
+              インベントリ
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="window-item">
         <div class="item-text">表示</div>
         <div class="item-setting">
-             <form>
-          <div style="display: flex;">
-            <div class="toggle"><label>
-            <input name="isEase" type="checkbox" [(ngModel)]="isEase" />
-             <div><div></div></div>
-            </label></div>
-            <span> メッセージ簡易表示</span>
-          </div>
-          <div style="display: flex;">
-            <div class="toggle"><label>
-            <input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
-            <div><div></div></div>
-            </label></div>
-            <span>チャット入力欄表示</span>
-          </div>
-          <div style="display: flex;">
-            <div class="toggle"><label>
-            <input name="noControl" type="checkbox" [(ngModel)]="noControl" />
-            <div><div></div></div>
-            </label></div>
-            <span>キャラクター操作パネル表示</span>
-          </div>
-             </form>
+          <form>
+            <div style="display: flex;">
+              <div class="toggle"><label>
+              <input name="isEase" type="checkbox" [(ngModel)]="isEase" />
+                <div><div></div></div>
+              </label></div>
+              <span> メッセージ簡易表示</span>
+            </div>
+            <div style="display: flex;">
+              <div class="toggle"><label>
+              <input name="isLogOnly" type="checkbox" [(ngModel)]="isLogOnly" />
+              <div><div></div></div>
+              </label></div>
+              <span>チャット入力欄表示</span>
+            </div>
+          </form>
         </div>
       </div>
       <div class="window-item">

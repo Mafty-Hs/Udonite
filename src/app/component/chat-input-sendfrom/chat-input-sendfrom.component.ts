@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter, ChangeDetectionStrategy,  ChangeDetectorRef} from '@angular/core';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';
@@ -8,7 +8,8 @@ import { Player } from '@udonarium/player';
 @Component({
   selector: 'chat-input-sendfrom',
   templateUrl: './chat-input-sendfrom.component.html',
-  styleUrls: ['./chat-input-sendfrom.component.css']
+  styleUrls: ['./chat-input-sendfrom.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
 
@@ -17,8 +18,9 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   private _sendFrom:string;
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
-    this.character = this.gameCharacterService.get(sendFrom) 
-    this.sendFromChange.emit(sendFrom); 
+    this.character = this.gameCharacterService.get(sendFrom)
+    this.changeDetector.detectChanges();
+    this.sendFromChange.emit(sendFrom);
   }
   get sendFrom(): string { return this._sendFrom };
   @Output() sendFromChange = new EventEmitter<string>();
@@ -33,8 +35,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     this.touched = true;
   }
 
-  isUseFaceIcon: boolean = true;  
-  character: GameCharacter; 
+  isUseFaceIcon: boolean = true;
+  character: GameCharacter;
   get myPlayerId():string {
     return this.playerService.myPlayer.playerId;
   }
@@ -59,7 +61,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   get gameCharacters(): GameCharacter[] {
     let onlyTable:boolean = true;
     return this.gameCharacterService.list(onlyTable);
-  }  
+  }
 
   colorValication(color :string) :string {
     return (color == Player.CHAT_WHITETEXT_COLOR && !this.isBlack) ? Player.CHAT_BLACKTEXT_COLOR : color;
@@ -68,7 +70,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   getColor():string {
     let color:string = Player.CHAT_WHITETEXT_COLOR;
     if(this.character) {
-      color = this.gameCharacterService.color(this.sendFrom) 
+      color = this.gameCharacterService.color(this.sendFrom)
     }
     else color = this.myColor;
     return this.colorValication(color);
@@ -79,10 +81,11 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
    }
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private gameCharacterService: GameCharacterService,
     private playerService: PlayerService
-  ) {     
-    
+  ) {
+
   }
 
   ngOnInit(): void {

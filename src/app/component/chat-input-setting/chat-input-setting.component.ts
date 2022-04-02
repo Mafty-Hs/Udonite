@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectionStrategy,  ChangeDetectorRef } from '@angular/core';
+import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { Player } from '@udonarium/player';
 import { DiceBotService } from 'service/dice-bot.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -23,7 +24,8 @@ interface chatDataContext {
 @Component({
   selector: 'chat-input-setting',
   templateUrl: './chat-input-setting.component.html',
-  styleUrls: ['./chat-input-setting.component.css']
+  styleUrls: ['./chat-input-setting.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestroy {
 
@@ -38,7 +40,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   get gameType(): string { return this.gameCharacterService.gameType };
-  set gameType(gameType: string) { 
+  set gameType(gameType: string) {
     this.gameCharacterService.gameType = gameType;
     this.chatData.gameType = gameType;
     this.chatSetting.emit(this.chatData);
@@ -92,13 +94,14 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
         this.myWindow = this.settingDOM.nativeElement as HTMLElement;
         canDisplayCount = this.windowWidth < 190 ? 1 : 2;
     }
-    else canDisplayCount = 2;      
-    
+    else canDisplayCount = 2;
+
     let count: number = 0;
     if (!this.character) this.sortVisible(canDisplayCount);
     for (let item = 0; item < this.visibleList.length ; item++) {
       (item < canDisplayCount) ? this.changeVisible(item,true)  : this.changeVisible(item,false)
     }
+    this.changeDetector.detectChanges();
   }
   sortVisible(canDisplayCount :number) {
     for (let item = 0; item < canDisplayCount ; item++) {
@@ -188,8 +191,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   get myPlayer(): Player { return this.playerService.myPlayer; }
-  get otherPlayers(): Player[] { 
-    return this.playerService.otherPlayers; 
+  get otherPlayers(): Player[] {
+    return this.playerService.otherPlayers;
   }
   get sendToColor(): string {
     return this.playerService.getPlayerById(this.sendTo).color
@@ -244,8 +247,8 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   get paletteColor(): string {
-    if (this.character 
-      && this.character.chatPalette 
+    if (this.character
+      && this.character.chatPalette
       && this.character.chatPalette.paletteColor) {
       return this.character.chatPalette.paletteColor;
     }
@@ -259,6 +262,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   waitLoadDiceBot() {
     this.loadDiceBot(this.gameType);
     this.chatData.gameType = this.gameType;
+    this.changeDetector.detectChanges();
     this.chatSetting.emit(this.chatData);
   }
 
@@ -269,14 +273,27 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
     private playerService: PlayerService,
     private gameCharacterService:GameCharacterService,
     private contextMenuService: ContextMenuService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngAfterViewInit() {
     this.myWindow = this.settingDOM.nativeElement as HTMLElement;
     if (this.gameType) this.loadDiceBot(this.gameType);
      EventSystem.register(this)
-      .on('DICEBOT_LOAD', event => { this.waitLoadDiceBot() });
+      .on('DICEBOT_LOAD', event => { this.waitLoadDiceBot() })
+      .on('UPDATE_GAME_OBJECT', -1000, event => {
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (!this.character || !object) return;
+        if (this.character === object || (object instanceof ObjectNode && this.character.contains(object))) {
+          this.changeDetector.detectChanges();
+        }
+      })
+      .on('CONNECT_PEER', event => {
+        this.changeDetector.detectChanges();
+      })
+      .on('DISCONNECT_PEER', event => {
+        this.changeDetector.detectChanges();
+      });
     setTimeout(() => {
       this.viewInit();
     }, 100);

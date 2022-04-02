@@ -62,6 +62,7 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
   get hasOwner(): boolean { return this.diceSymbol.hasOwner; }
   get ownerName(): string { return this.diceSymbol.ownerName; }
   get ownerColor(): string { return this.diceSymbol.ownerColor; }
+  get canTransparent(): boolean { return  this.hasOwner && this.diceSymbol.canTransparent}
   get isVisible(): boolean { return this.diceSymbol.isVisible; }
 
   get isDropShadow(): boolean { return this.diceSymbol.isDropShadow; }

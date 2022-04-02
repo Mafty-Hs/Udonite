@@ -73,6 +73,10 @@ export class ObjectSynchronizer {
     if (requestCatalog.length < 1 && uploadCatalog.length < 1) {
       EventSystem.trigger('SYNC_END',null)
       console.log('SYNCHRONIZE_GAME_OBJECT END');
+      setTimeout(() => {
+        this.runSyncTask();
+       }
+        , 5 * 60 * 1000);
       return;
     }
     console.log("request object :" +  requestCatalog.length);
@@ -98,7 +102,7 @@ export class ObjectSynchronizer {
     let object:GameObject = this.get(identifier);
     if (!object) return;
     let context = object.toContext();
-    await IONetwork.objectUpdate(context) 
+    await IONetwork.objectUpdate(context)
   }
 
   async ObjectDL(identifier :string) {
@@ -108,7 +112,7 @@ export class ObjectSynchronizer {
   }
 
   ObjectBuild(context:ObjectContext) {
-    let object = this.get(context.identifier); 
+    let object = this.get(context.identifier);
       if (object) {
         this.ObjectUpdate(object,context);
       }

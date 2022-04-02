@@ -66,7 +66,7 @@
       <div class="table-cell image-box">
         <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
       </div>
-      <ng-container *ngIf="gameObject.canView; else forbidden">
+      <ng-container *ngIf="!gameObject.hasOwner || gameObject.isMine || gameObject.canTransparent; else forbidden">
         <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
           <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
         </ng-container>

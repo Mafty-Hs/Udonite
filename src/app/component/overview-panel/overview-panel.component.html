@@ -106,7 +106,7 @@
     <div class="title-area component-title" [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging,
     'pointer-events-none': this.isPointerDragging }">{{character.name}}</div>
     <div class="void-area is-pointer-events-none"></div>
-    <div *ngIf="character.canView; else forbidden" class="dataElm-area component-background"
+    <div *ngIf="character.isTransparent ; else forbidden" class="dataElm-area component-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <div class="grid-container-root" *ngIf="hasDataElms">
         <div class="grid-container">

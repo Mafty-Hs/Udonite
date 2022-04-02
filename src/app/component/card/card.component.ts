@@ -99,6 +99,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get canView(): boolean { return this.card.canView; }
   get isHand(): boolean { return this.card.isHand; }
+  get canTransparent(): boolean { return  this.hasOwner && this.card.canTransparent}
   get isFront(): boolean { return this.card.isFront; }
   get isVisible(): boolean { return this.card.isVisible; }
   get hasOwner(): boolean { return this.card.hasOwner; }

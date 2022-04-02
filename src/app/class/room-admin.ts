@@ -52,9 +52,13 @@ export class RoomAdmin {
     return RoomAdmin._setting;
   }
 
-  static get auth() :boolean{
+  static get auth() :boolean {
     if (RoomAdmin.setting.adminPlayer.length < 1) return true;
     return RoomAdmin.setting.adminPlayer.includes(RoomAdmin.myPlayerID);
+  }
+
+  static get canTransparent() :boolean {
+    return (RoomAdmin.setting.transparentMode && RoomAdmin.auth);
   }
 
 }

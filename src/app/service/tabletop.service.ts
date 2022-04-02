@@ -13,8 +13,6 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 import { Popup } from '@udonarium/popup';
-import { PlayerService } from './player.service';
-import { RoomService } from './room.service';
 
 import { CoordinateService } from './coordinate.service';
 
@@ -62,8 +60,6 @@ export class TabletopService {
 
   constructor(
     private coordinateService: CoordinateService,
-    private playerService: PlayerService,
-    private roomService: RoomService
   ) {
     this.initialize();
   }

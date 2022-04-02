@@ -6,7 +6,7 @@
       <span style="transform: translateY(-1px);">{{initDataElm(character.identifier)}}</span>
     </div>
     <div class="data-container">
-      <ng-container *ngIf="character.canView; else forbidden" >
+      <ng-container *ngIf="!character.hasOwner || character.isTransparent ; else forbidden" >
         <div class="data" *ngFor="let dataElm of dataElms(character.identifier)">
           <ng-container *ngIf="dataElm">
             <ng-container *ngTemplateOutlet="swDataElm; context:{DataElm :dataElm}">

@@ -20,10 +20,10 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     this._sendFrom = sendFrom;
     let character = this.gameCharacterService.get(sendFrom)
     if (character) this.name = character.name;
-    this.canView = character.canView;
+    this.isTranparent = character.isTransparent;
   }
   private name:string;
-  canView:boolean = true;
+  isTranparent:boolean = true;
 
   @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string

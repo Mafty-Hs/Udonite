@@ -401,17 +401,17 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           name: this.gameCharacter.hasOwner ? '自分のコマにする' : 'データを秘匿する' , action: () => {
             this.gameCharacter.owner = this.playerService.myPlayer.playerId;
             EventSystem.trigger('UPDATE_INVENTORY', null);
-          }, disabled: !this.gameCharacter.canView
+          }, disabled: !this.gameCharacter.isTransparent
         } : {
           name: 'データを公開する', action: () => {
             this.gameCharacter.owner = "";
             EventSystem.trigger('UPDATE_INVENTORY', null);
-          }, disabled: !this.gameCharacter.canView
+          }, disabled: !this.gameCharacter.isTransparent
         }),
-      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); }, disabled: !this.gameCharacter.canView },
-      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) }, disabled: !this.gameCharacter.canView },
-      { name: 'メモを表示', action: () => { this.showInnerNote()} , disabled: !this.gameCharacter.canView},
-      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } , disabled: !this.gameCharacter.canView},
+      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); }, disabled: !this.gameCharacter.isTransparent },
+      { name: 'チャットパレットを追加', action: () => { this.showChatPalette(this.gameCharacter) }, disabled: !this.gameCharacter.isTransparent },
+      { name: 'メモを表示', action: () => { this.showInnerNote()} , disabled: !this.gameCharacter.isTransparent},
+      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } , disabled: !this.gameCharacter.isTransparent},
       ContextMenuSeparator,
       {
         name: '参照URLを開く', action: null,
@@ -431,7 +431,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
             isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         }),
-        disabled: this.gameCharacter.getUrls().length <= 0 || !this.gameCharacter.canView
+        disabled: this.gameCharacter.getUrls().length <= 0 || !this.gameCharacter.isTransparent
       },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate

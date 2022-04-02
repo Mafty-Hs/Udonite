@@ -68,6 +68,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   get isUseIconToOverviewImage(): boolean { return this.gameCharacter.isUseIconToOverviewImage; }
   set isUseIconToOverviewImage(isUseIconToOverviewImage: boolean) { this.gameCharacter.isUseIconToOverviewImage = isUseIconToOverviewImage; }
   get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
+  get isTransparent(): boolean { return  this.gameCharacter.isTransparent}
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
 

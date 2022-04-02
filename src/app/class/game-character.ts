@@ -37,6 +37,8 @@ export class GameCharacter extends TabletopObject {
     return note as InnerNote;
   }
 
+  get isTransparent(): boolean { return !this.hasOwner || this.isMine || this.canTransparent}
+
   get note():string {
     return this.innerNote.value + '';
   }

@@ -46,8 +46,11 @@ export class TabletopObject extends ObjectNode {
   get isMine(): boolean {
     return (PeerCursor.myCursor.player.playerId === this.owner);
   }
+  get canTransparent(): boolean {
+    return this.isMine || RoomAdmin.canTransparent;
+  }
   get canView(): boolean {
-    return  !this.hasOwner || this.isMine || (RoomAdmin.setting.transparentMode && RoomAdmin.auth);
+    return  !this.hasOwner || this.isMine;
   }
 
   // GameDataElement getter/setter

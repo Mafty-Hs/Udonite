@@ -76,11 +76,11 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
       afterValue = this.selectElm.currentValue;
     }
     else {
-      if (typeof this.selectElm.value === 'number') {
+      if (!isNaN(Number(this.selectElm.value))) {
         this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte());
         afterValue = this.selectElm.value;
       }
-      if (typeof this.selectElm.value === 'string') {
+      else {
         this.selectElm.value = this.innerText;
         afterValue = this.selectElm.value;
       }

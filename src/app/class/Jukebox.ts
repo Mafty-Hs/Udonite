@@ -11,17 +11,16 @@ export class Jukebox extends GameObject {
   @SyncVar() startTime: number = 0;
   @SyncVar() isLoop: boolean = false;
   @SyncVar() isPlaying: boolean = false;
-  @SyncVar() seIdentifier: string = '';
-  @SyncVar() seStartTime: number = 0;
-  @SyncVar() seIsLoop: boolean = false;
-  @SyncVar() seIsPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
-  get se(): AudioFile { return AudioStorage.instance.get(this.seIdentifier); }
   private audioPlayer: AudioPlayer = new AudioPlayer();
   private sePlayer: AudioPlayer = new AudioPlayer();
 
   seInit() {
+    EventSystem.register(this)
+    .on<string>('SOUND_EFFECT', event => {
+      this.sePlay(event.data);
+    });
     this.sePlayer.volumeType = VolumeType.SE;
   }
 
@@ -46,13 +45,9 @@ export class Jukebox extends GameObject {
     this._play();
   }
 
-  sePlay(identifier: string, isLoop: boolean = false) {
+  private sePlay(identifier: string, isLoop: boolean = false) {
     let audio = AudioStorage.instance.get(identifier);
-    if (!audio) return;
-    this.seIdentifier = identifier;
-    this.seIsPlaying = true;
-    this.seIsLoop = isLoop;
-    this._sePlay();
+    this.sePlayer.play(audio);
   }
 
   private _play() {
@@ -61,36 +56,16 @@ export class Jukebox extends GameObject {
     this.audioPlayer.play(this.audio);
   }
 
-  private _sePlay() {
-    this._seStop();
-    if (!this.se) {
-      console.log(this.seIdentifier);
-      console.log(this.se);
-      return;
-    }
-    this.sePlayer.loop = false;
-    this.sePlayer.play(this.se);
-  }
-
   stop() {
     this.audioIdentifier = '';
     this.isPlaying = false;
     this._stop();
   }
 
-  seStop() {
-    this.seIdentifier = '';
-    this.seIsPlaying = false;
-    this._seStop();
-  }
 
   private _stop() {
     this.unregisterEvent();
     this.audioPlayer.stop();
-  }
-
-  private _seStop() {
-    this.sePlayer.stop();
   }
 
   private unlockAfterUserInteraction() {

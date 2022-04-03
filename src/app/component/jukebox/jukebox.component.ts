@@ -25,6 +25,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get auditionVolume(): number { return AudioPlayer.auditionVolume; }
   set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
 
+  get seVolume(): number { return AudioPlayer.seVolume; }
+  set seVolume(seVolume: number) { AudioPlayer.seVolume = seVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
+
+
   get audios(): AudioFile[] { return AudioStorage.instance.audios }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
@@ -34,14 +38,16 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get percentVolume(): number { return Math.floor(AudioPlayer.volume * 100); }
   set percentVolume(percentVolume: number) { AudioPlayer.volume = percentVolume / 100; }
 
-  get auditionIdentifier(): string { 
+  get percentSeVolume(): number { return Math.floor(AudioPlayer.seVolume * 100); }
+  set percentSeVolume(percentVolume: number) { AudioPlayer.seVolume = percentVolume / 100; }
+
+  get auditionIdentifier(): string {
     if ( this.auditionPlayer?.audio ) {
       return !this.auditionPlayer?.paused ? this.auditionPlayer.audio.identifier : ""
     }
     return ""
   }
   get jukeboxIdentifier(): string { return this.jukebox.audio ? this.jukebox.audio.identifier : ""}
-  get effectIdentifier(): string { return this.jukebox.se ? this.jukebox.se.identifier : ""}
 
   get auditionPlayerName(): string  { return this.auditionPlayer?.audio ?  this.auditionPlayer?.audio.name : ""}
   get jukeboxName(): string {  return this.jukebox.audio ? this.jukebox.audio.name : ""}
@@ -76,7 +82,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   toggleName(e: Event,identifier :string) {
-    if (identifier !== this.nameIdentifier) this.nameIdentifier = identifier; 
+    if (identifier !== this.nameIdentifier) this.nameIdentifier = identifier;
     e.stopPropagation();
     e.preventDefault();
   }
@@ -107,21 +113,13 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   playSE(identifier :string) {
-    if (identifier === this.effectIdentifier) {
-      this.stopSE();
-      return;
-    }
-    this.jukebox.sePlay(identifier, false);
-  }
-
-  stopSE() {
-    this.jukebox.seStop();
+    EventSystem.call('SOUND_EFFECT', identifier);
   }
 
   remove(identifier :string) {
     if (window.confirm("選択した音楽を削除します。\nよろしいですか？")) {
-      AudioStorage.instance.remove(identifier); 
-      
+      AudioStorage.instance.remove(identifier);
+
     }
     if (this.nameIdentifier === identifier) this.nameIdentifier = "";
   }

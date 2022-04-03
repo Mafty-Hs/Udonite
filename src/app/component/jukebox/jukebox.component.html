@@ -1,15 +1,21 @@
 <div class="sticky-top">
   <div>
     <b>試聴音量<sup class="self-only">*</sup>：</b>
-    <i class="material-icons" style="font-size: 22px">{{ auditionVolume == 0 ? 'volume_off' : auditionVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
-    <input [(ngModel)]="auditionVolume" type="range" title="{{percentAuditionVolume + '%'}}" min="0" max="1" step="0.001" style="width:53%" /> 
+    <i class="material-icons" style="font-size: 22px">{{ auditionVolume == 0 ? 'volume_off' : auditionVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
+    <input [(ngModel)]="auditionVolume" type="range" title="{{percentAuditionVolume + '%'}}" min="0" max="1" step="0.001" style="width:53%" />
     <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentAuditionVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
   </div>
   <div>
     <b>再生音量<sup class="self-only">*</sup>：</b>
-    <i class="material-icons" style="font-size: 22px">{{ volume == 0 ? 'volume_off' : volume <= 0.5 ? 'volume_down' : 'volume_up' }}</i> 
-    <input [(ngModel)]="volume" type="range" min="0" title="{{percentVolume + '%'}}" max="1" step="0.001" style="width:53%" /> 
+    <i class="material-icons" style="font-size: 22px">{{ volume == 0 ? 'volume_off' : volume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
+    <input [(ngModel)]="volume" type="range" min="0" title="{{percentVolume + '%'}}" max="1" step="0.001" style="width:53%" />
     <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
+  </div>
+  <div>
+    <b>SE音量<sup class="self-only">*</sup>：</b>
+    <i class="material-icons" style="font-size: 22px">{{ seVolume == 0 ? 'volume_off' : seVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
+    <input [(ngModel)]="seVolume" type="range" min="0" title="{{percentSeVolume + '%'}}" max="1" step="0.001" style="width:53%" />
+    <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentSeVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
   </div>
   <hr/>
   <div class="player" *ngIf="jukeboxIdentifier && !auditionIdentifier">
@@ -40,7 +46,7 @@
         <button (click)="playBGM(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == jukeboxIdentifier}"><i class="material-icons">loop</i></button>
       </td>
       <td>
-        <button (click)="playSE(audio.identifier)" [ngClass]="{'sw-on': audio.identifier == effectIdentifier}"><i class="material-icons">play_arrow</i></button>
+        <button (click)="playSE(audio.identifier)"><i class="material-icons">play_arrow</i></button>
       </td>
       <td><input type="number" min="0" max="400" step="1" style="width: 4em" [(ngModel)]="audio.volume">%</td>
       <td (click)="toggleName($event,audio.identifier)" class="name">
@@ -54,7 +60,7 @@
   </table>
 </div>
 
-  
+
 <label>
   <div class="drop-zone" *ngIf="!roomService.disableAudioLoad">
     <div>

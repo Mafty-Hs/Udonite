@@ -1,7 +1,5 @@
-import { ChatMessage, ChatMessageContext } from './chat-message';
+import { ChatMessage } from './chat-message';
 import { AudioFile } from './core/file-storage/audio-file';
-import { AudioPlayer } from './core/file-storage/audio-player';
-import { AudioStorage } from './core/file-storage/audio-storage';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { GameObject } from './core/synchronize-object/game-object';
 import { ObjectStore } from './core/synchronize-object/object-store';
@@ -32,15 +30,10 @@ export class PresetSound {
 
 @SyncObject('sound-effect')
 export class SoundEffect extends GameObject {
-
-  private player = new AudioPlayer();
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
     EventSystem.register(this)
-      .on<string>('SOUND_EFFECT', event => {
-        this.player.play(AudioStorage.instance.get(event.data), 0.12);
-      })
       .on('SEND_MESSAGE', event => {
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isEmptyDice) return;

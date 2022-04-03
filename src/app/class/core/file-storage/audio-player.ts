@@ -33,6 +33,13 @@ export class AudioPlayer {
     let value = volume *4;
     AudioPlayer._volume = value;
     AudioPlayer.masterGainNode.gain.setTargetAtTime(value, AudioPlayer.audioContext.currentTime, 0.01);
+  }
+
+  private static _seVolume: number = 2;
+  static get seVolume(): number { return AudioPlayer._seVolume / 4; }
+  static set seVolume(seVolume: number) {
+    let value =  seVolume *4;
+    AudioPlayer._seVolume = value;
     AudioPlayer.seGainNode.gain.setTargetAtTime(value, AudioPlayer.audioContext.currentTime, 0.01);
   }
 
@@ -69,7 +76,7 @@ export class AudioPlayer {
   private static get seGainNode(): GainNode {
     if (!AudioPlayer._seGainNode) {
       let seGain = AudioPlayer.audioContext.createGain();
-      seGain.gain.setValueAtTime(AudioPlayer._volume, AudioPlayer.audioContext.currentTime);
+      seGain.gain.setValueAtTime(AudioPlayer._seVolume, AudioPlayer.audioContext.currentTime);
       seGain.connect(AudioPlayer.audioContext.destination);
       AudioPlayer._seGainNode = seGain;
     }
@@ -117,7 +124,7 @@ export class AudioPlayer {
     if (!this.audio) return;
 
     let url = this.audio.url;
-   
+
     this.mediaElementSource.connect(this.getConnectingAudioNode());
     this.audioElm.src = url;
     this.audioElm.load();

@@ -41,14 +41,14 @@ export class IONetwork {
 
   socket: socketio;
 
-  async open(url: string) {
+  async open(url: string):Promise<void> {
     this.url = StringUtil.urlSanitize(url);
     if (this.url) await this.socket.open(url);
     else console.error('Not Valid Server URL');
     return;
   }
 
-  async close() {
+  async close():Promise<void> {
     this.socket.close();
     return ;
   }
@@ -67,7 +67,7 @@ export class IONetwork {
    if (peers) this._peerIds = peers as string[]
   }
 
-  async create(room: RoomContext) {
+  async create(room: RoomContext):Promise<string> {
     let response = await this.socket.send('roomCreate', room);
     this.roomInfo = <RoomList>response;
     this.roomId = this.roomInfo.roomId
@@ -75,7 +75,7 @@ export class IONetwork {
     return this.roomInfo.roomId;
   }
 
-  async join(roomId: string) {
+  async join(roomId: string):Promise<string> {
     let response = await this.socket.send('roomJoin', { roomId: roomId });
     this.roomInfo = <RoomList>response;
     this.roomId = this.roomInfo.roomId
@@ -84,25 +84,23 @@ export class IONetwork {
   }
 
   async getCatalog():Promise<CatalogItem[]> {
-    if (!this.roomId) await this.roomId$.toPromise();
     let response = await this.socket.send('getCatalog', null);
     return <CatalogItem[]>response;
   }
 
-  async myCursor(cursor :PeerContext) {
-    if (!this.roomId) await this.roomId$.toPromise();
+  async myCursor(cursor :PeerContext):Promise<void> {
     this.socket.send('myCursor', cursor);
+    return;
   }
 
   async otherPeers():Promise<PeerContext[]> {
-    if (!this.roomId) await this.roomId$.toPromise();
     let response = await this.socket.send('otherPeers', null);
     return <PeerContext[]>response;
   }
 
-  async objectUpdate(context: ObjectContext) {
-    if (!this.roomId) await this.roomId$.toPromise();
+  async objectUpdate(context: ObjectContext):Promise<void> {
     this.socket.send('objectUpdate', context);
+    return;
   }
 
   async objectGet(identifier: string):Promise<ObjectContext|null> {
@@ -113,8 +111,14 @@ export class IONetwork {
     return null;
   }
 
-  async objectDelete(identifier :string) {
+  async objectDelete(identifier :string):Promise<void> {
     this.socket.send('objectRemove', {identifier: identifier});
+    return;
+  }
+
+  async roomUpdate(roomName?: string, password?: string):Promise<void> {
+    await this.socket.send('roomUpdate', {roomName: roomName, password: password});
+    return;
   }
 
   async roomAdminGet() {
@@ -122,52 +126,59 @@ export class IONetwork {
     return <RoomControl>control;
   }
 
-  async roomAdminUpdate(control :RoomControl) {
+  async roomAdminUpdate(control :RoomControl):Promise<void> {
     this.socket.send('setAdmin', control);
+    return;
   }
 
-  async roundGet() {
-    let control = await this.socket.send('getRound', {});
-    return <Round>control;
+  async roundGet():Promise<Round> {
+    let round = await this.socket.send('getRound', {});
+    return <Round>round;
   }
 
-  async roundUpdate(round :Round) {
+  async roundUpdate(round :Round):Promise<void> {
     this.socket.send('setRound', round);
+    return;
   }
 
-  async remove(roomId: string) {
+  async remove(roomId: string):Promise<void> {
     await this.socket.send('roomRemove', { roomId });
     return;
   }
 
-  async call(event :EventContext<any>,sendTo :string = "") {
+  async call(event :EventContext<any>,sendTo :string = ""):Promise<void> {
     this.socket.send('call',{event: event ,sendTo: sendTo})
+    return;
   }
 
-  async imageMap() {
+  async imageMap():Promise<ImageContext[]> {
     let result = await this.socket.send('imageMap',{});
     return result as ImageContext[];
   }
 
-  async imageUpdate(context :ImageContext) {
+  async imageUpdate(context :ImageContext):Promise<void> {
     this.socket.send('imageUpdate', context);
+    return;
   }
 
-  async imageRemove(identifier :string) {
+  async imageRemove(identifier :string):Promise<void> {
     this.socket.send('imageRemove', {identifier: identifier});
+    return;
   }
 
-  async audioMap() {
+  async audioMap():Promise<AudioContext[]> {
     let result = await this.socket.send('audioMap',{});
     return result as AudioContext[];
   }
 
-  async audioUpdate(context :AudioContext) {
+  async audioUpdate(context :AudioContext):Promise<void> {
     this.socket.send('audioUpdate', context);
+    return;
   }
 
-  async audioRemove(identifier :string) {
+  async audioRemove(identifier :string):Promise<void> {
     this.socket.send('audioRemove', {identifier: identifier});
+    return;
   }
 
   async allData():Promise<ObjectContext[]> {

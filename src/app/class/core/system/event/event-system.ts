@@ -9,7 +9,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageContext } from '@udonarium/core/file-storage/image-context';
 import { AudioStorage } from  '@udonarium/core/file-storage/audio-storage';
 import { AudioContext } from '@udonarium/core/file-storage/audio-context';
-import { ServerEvent } from '../socketio/netowrkContext';
+import { RoomList, ServerEvent } from '../socketio/netowrkContext';
 
 type EventName = string;
 
@@ -174,6 +174,9 @@ export class EventSystem implements Subject {
       case 'PEER_LIEVE':
         IONetwork.instance.listPeer();
         this.trigger('DISCONNECT_PEER',<string>data);
+        break;
+      case 'ROOM_UPDATE':
+         this.trigger('ROOM_UPDATE',<RoomList>data);
         break;
       case 'UPDATE_GAME_OBJECT':
         this.trigger('NW_UPDATE_GAME_OBJECT',data)

@@ -17,22 +17,25 @@ export class AlarmComponent implements OnInit, AfterViewInit {
   }
 
   get second():string {
-   return ('00' +(this.timer % 60)).slice( -2 ); 
+   return ('00' +(this.timer % 60)).slice( -2 );
   }
 
-  play() {
+  play():void {
     clearInterval(this.nodeTimer);
     SoundEffect.play(PresetSound.alarm);
     this.panelService.close();
   }
 
   constructor(
-    private ngZone: NgZone,
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService
   ) { }
 
   ngOnInit(): void {
+    Promise.resolve().then(() => this.updatePanelSetting());
+  }
+
+  updatePanelSetting(): void {
     this.panelService.title = "アラーム";
     this.panelService.isAbleCloseButton = false;
     this.panelService.isAbleFullScreenButton = false;
@@ -41,7 +44,7 @@ export class AlarmComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
 
-      this.nodeTimer = setInterval(()=>{ 
+      this.nodeTimer = setInterval(()=>{
         this.timer -= 1;
         this.changeDetector.markForCheck();
         if (this.timer < 1) this.play();

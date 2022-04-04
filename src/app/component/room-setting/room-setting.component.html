@@ -1,25 +1,25 @@
 <div style="width:98%">
   <div>ルーム名 : <input class="input" [(ngModel)]="roomName" required minlength="1" maxlength="128" #roomNameValidation="ngModel"
       placeholder="ルームの名前は必須" /></div>
-  <div>パスワード: <input class="input" [(ngModel)]="password" maxlength="12" #passwordValidation="ngModel" placeholder="空ならパスワードなし" 
+  <div>パスワード: <input class="input" [(ngModel)]="password" maxlength="12" #passwordValidation="ngModel" placeholder="空ならパスワードなし"
     /></div>
-  <div>デフォルトダイスボット:<br>   
-    <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 20em;" [(ngModel)]="roomService.gameType" [ngModelOptions]="{standalone: true}">
-    <option value="" class="not-specified">ダイスボット指定なし</option>
-    <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-  </select>
-  <select *ngIf="diceBotInfosIndexed.length > 0" style="width:20em;" [(ngModel)]="roomService.gameType" [ngModelOptions]="{standalone: true}">
-    <option value="" class="not-specified">ダイスボット指定なし</option>
-    <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
-      <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-    </optgroup>
-  </select></div>
+  <div>デフォルトダイスボット:<br>
+    <select *ngIf="diceBotInfosIndexed.length < 1" style="max-width: 20em;">
+      <option value="" class="not-specified">ダイスボット読込中..</option>
+    </select>
+    <select *ngIf="diceBotInfosIndexed.length > 0" style="width:20em;" [(ngModel)]="roomService.gameType" [ngModelOptions]="{standalone: true}">
+      <option value="" class="not-specified">ダイスボット指定なし</option>
+      <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
+        <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+      </optgroup>
+    </select>
+  </div>
   <div class="is2d"><label>
     <input name="is2d" type="checkbox" [(ngModel)]="is2d">
     <div><div></div></div>
     </label></div>
   </div>
-  <div> 
+  <div>
     <span style="font-size: 12px;">ルームデータのロード</span><br/>
     <input type="file" name="roomdata" (change)="handleFileSelect($event)" accept="application/zip" />
   </div>

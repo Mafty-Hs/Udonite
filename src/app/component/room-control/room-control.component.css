@@ -1,7 +1,7 @@
 .flex-box {
   width: 97%;
   display:flex;
-  flex-flow: column wrap; 
+  flex-flow: column wrap;
   justify-content: flex-start;
   font-size: 12px;
   padding: 3px;
@@ -11,7 +11,7 @@
 .room-info {
   width: 100%;
   display:flex;
-  flex-flow: column wrap; 
+  flex-flow: column wrap;
   justify-content: flex-start;
   margin: 3px 0;
   border: dotted 2px #999;
@@ -29,24 +29,42 @@
 
 .flex-item {
   width: 100%;
-  display:flex; 
-  flex-flow: row nowrap; 
+  display:flex;
+  flex-flow: row nowrap;
   justify-content:flex-start;
 }
+
 .item-name {
+  padding-left: 1em;
   width: 11em;
 }
-.item-data {
-  display:flex; 
-  flex-flow: column wrap; 
-  justify-content:flex-start;
 
+.item-data {
+  display:flex;
+  flex-flow: column wrap;
+  justify-content:flex-start;
+}
+
+.between-item {
+  justify-content:space-between;
+}
+
+.control-name {
+  padding-left: 1em;
+  width: 20em;
+
+}
+.control-toggle {
+  width: calc(100% - 20em);
+  display:flex;
+  flex-flow: row nowrap;
+  justify-content: center;
 }
 
 .help {
   width: 100%;
-  display:flex; 
-  flex-flow: row nowrap; 
+  display:flex;
+  flex-flow: row nowrap;
   margin: 6px;
   justify-content:flex-end
 }

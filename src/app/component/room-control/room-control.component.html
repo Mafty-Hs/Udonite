@@ -120,7 +120,7 @@
       </div>
     </div>
   </div>
-  <div class="item-data">
+  <div class="room-info">
     <div class="title">ルーム権限</div>
     <div *ngIf="!adminAuth || roomService.roomAdmin.adminPlayer.length < 1; else editSetting">
      現在、下記の制御が有効になっています。
@@ -152,46 +152,114 @@
 </ng-template>
 
 <ng-template #editSetting>
-  <div>
-    <div class="toggle"><label>ルームデータアップロード禁止
-      <input name="disableRoomLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableRoomLoad">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>データアップロード禁止(オブジェクト)
-      <input name="disableTabletopLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabletopLoad">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>データアップロード禁止(その他)
-      <input name="disableObjectLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableObjectLoad">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>画像アップロード禁止
-      <input name="disableImageLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableImageLoad">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>音楽アップロード禁止
-      <input name="disableAudioLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAudioLoad">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>透過モード
-      <input name="transparentMode" type="checkbox" [(ngModel)]="roomService.roomAdmin.transparentMode">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>テーブル設定禁止
-      <input name="disableTableSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableSetting">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>チャットタブ設定禁止
-      <input name="disableTabSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabSetting">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>部屋全データセーブ禁止
-      <input name="disableAllDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAllDataSave">
-      <div><div></div></div>
-    </label></div><br>
-    <div class="toggle"><label>個別データセーブ禁止
-      <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableSeparateDataSave">
-      <div><div></div></div>
-    </label></div><br>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      ルームデータアップロード禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableRoomLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableRoomLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      データアップロード禁止(オブジェクト)
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableTabletopLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabletopLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      データアップロード禁止(その他)
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableObjectLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableObjectLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      画像アップロード禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableImageLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableImageLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      音楽アップロード禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableImageLoad" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAudioLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      透過モード
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="transparentMode" type="checkbox" [(ngModel)]="roomService.roomAdmin.transparentMode">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      テーブル設定禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableTableSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTableSetting">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      チャットタブ設定禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableTabSetting" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableTabSetting">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      部屋全データセーブ禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableAllDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableAllDataSave">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item  between-item">
+    <div class="control-name">
+      個別データセーブ禁止
+    </div>
+    <div class="control-toggle">
+      <div class="toggle"><label>
+        <input name="disableSeparateDataSave" type="checkbox" [(ngModel)]="roomService.roomAdmin.disableSeparateDataSave">
+        <div><div></div></div>
+      </label></div>
+    </div>
   </div>
 </ng-template>

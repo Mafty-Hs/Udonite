@@ -2,20 +2,22 @@
   <div class="room-info">
     <div class="title">ルーム基本情報</div>
     <ng-container>
-      <div class="flex-item">
+      <div class="flex-item" (dblclick)="toggleEdit()">
         <div class="item-name">
           ルーム名
         </div>
         <div class="item-data">
-          <span style="font-weight: bold;">{{roomService.roomData.roomNo}}/{{roomService.roomData.roomName}}</span>
+          <span *ngIf="!isEdit" style="font-weight: bold;">{{roomService.roomData.roomNo}}/{{roomService.roomData.roomName}}</span>
+          <input *ngIf="isEdit" [(ngModel)]="roomName" placeholder="空欄だと変更なし" />
         </div>
       </div>
-      <div class="flex-item">
+      <div class="flex-item" (dblclick)="toggleEdit()">
         <div class="item-name">
           パスワード
         </div>
         <div class="item-data">
-          {{roomService.roomData.password}}
+          <span *ngIf="!isEdit">{{roomService.roomData.password}}</span>
+          <input *ngIf="isEdit" [(ngModel)]="password"/>
         </div>
       </div>
       <div class="flex-item">

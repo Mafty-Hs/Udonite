@@ -25,11 +25,13 @@ export class RoomControlComponent implements OnInit {
   get myPeer(): PeerCursor { return this.playerService.myPeer; }
   get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   sendTo:string = "";
+  roomName:string = "";
   password:string = "";
+  isEdit:boolean = false;
 
   get enableAdmin():boolean {
     return (this.roomService.roomAdmin.adminPlayer.length > 0);
-  } 
+  }
 
   get adminPlayer():string {
     let name:string = "";
@@ -50,6 +52,22 @@ export class RoomControlComponent implements OnInit {
 
   get audioSize():string {
     return Math.floor(AudioStorage.instance.dataSize / 1024) + " / " + (IONetwork.server.audioStorageMaxSize * 1024);
+  }
+
+  toggleEdit() {
+    if (this.adminAuth) {
+      if (this.isEdit) {
+        if (!this.password) this.password = "";
+        IONetwork.roomUpdate(this.roomName, this.password);
+        this.roomName = "";
+        this.password = "";
+      }
+      else {
+        this.roomName = this.roomService.roomData.roomName;
+        this.password = this.roomService.roomData.password;
+      }
+      this.isEdit = !this.isEdit
+    }
   }
 
   alarmSend() {

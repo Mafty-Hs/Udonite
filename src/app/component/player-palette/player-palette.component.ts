@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { ChatPalette, SubPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, IONetwork } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { SimpleCreateComponent } from 'component/simple-create/simple-create.component';
@@ -21,7 +21,8 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 @Component({
   selector: 'player-palette',
   templateUrl: './player-palette.component.html',
-  styleUrls: ['./player-palette.component.css']
+  styleUrls: ['./player-palette.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
@@ -38,7 +39,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     return this.playerService.paletteList;
   }
   get characterPaletteList(): GameCharacter[] {
-    return this.paletteList.map( identifier => 
+    return this.paletteList.map( identifier =>
       this.gameCharacterService.get(identifier)
     )
   }
@@ -61,7 +62,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     else {
       this.disableControl = false;
-    }  
+    }
   }
   paletteIndex:number = -1;
 
@@ -80,7 +81,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     let palette = new ChatPalette;
     palette.initialize;
-    let initPalette:string = this.character.name + 'の追加パレット\n//1行目がタブに表示されるタイトルになります\n'; 
+    let initPalette:string = this.character.name + 'の追加パレット\n//1行目がタブに表示されるタイトルになります\n';
     palette.setPalette(initPalette);
     palette.getPalette();
     subPalette.palette.push(palette);
@@ -92,10 +93,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this.selectCharacter = this.sendFrom + ',-1';
   }
 
-  get palette(): ChatPalette { 
+  get palette(): ChatPalette {
     if (this.paletteIndex == -1) {
       if (this.isMine(this.sendFrom)) {
-        return  this.playerService.localpalette; 
+        return  this.playerService.localpalette;
       }
       else {
         return this.character.chatPalette;
@@ -105,7 +106,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       return this.subPalette(this.character).palette[this.paletteIndex];
     }
   }
-  
+
   _disableControl : boolean = true;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
@@ -136,10 +137,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   resizeHeight() {
     if(this.characterSelect.nativeElement.clientHeight > 32
-      && this.panelService.height == 400) 
+      && this.panelService.height == 400)
       this.panelService.height += 32 ;
     if(this.characterSelect.nativeElement.clientHeight == 32
-      && this.panelService.height > 400) 
+      && this.panelService.height > 400)
       this.panelService.height -= 32 ;
 
   }
@@ -195,7 +196,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   clickPalette(line: string) {
     if (!this.chatPletteElementRef.nativeElement) return;
-    const evaluatedLine = this.evaluatLine(line); 
+    const evaluatedLine = this.evaluatLine(line);
     if (this.doubleClickTimer && this.selectedPaletteIndex === this.chatPletteElementRef.nativeElement.selectedIndex) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
@@ -225,9 +226,9 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
 
   addList() {
     if (this.selectedCharacter == 'default') { return }
-    if (this.selectedCharacter == 'create') { 
+    if (this.selectedCharacter == 'create') {
       this.modalService.open(SimpleCreateComponent);
-      return; 
+      return;
     }
     this.playerService.addList(this.selectedCharacter);
     this.selectedCharacter = 'default';
@@ -246,7 +247,8 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     private playerService: PlayerService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -257,6 +259,13 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
         if (this.chatTabidentifier === event.data.identifier) {
           this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
+        this.changeDetector.detectChanges();
+      })
+      .on('UPDATE_GAME_OBJECT', -1000, event => {
+        this.changeDetector.detectChanges();
+      })
+      .on<string>('WRITING_A_MESSAGE', event => {
+        this.changeDetector.markForCheck();
       });
    if(!this.playerService.myPalette) this.playerService.myPalette = this;
   }
@@ -295,7 +304,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     ];
     let aura = ['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {
                 return { name: `${gameObject.aura == i ? '◉' : '○'} ${color}`,
-                action: () => { gameObject.aura = i}} 
+                action: () => { gameObject.aura = i}}
               });
 
     actions.push({ name: '画像効果', action: null, subActions: [
@@ -329,8 +338,8 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
               gameObject.isBlackPaint = true;
             }
           }),
-        { name: 'オーラ', 
-          action: null,   
+        { name: 'オーラ',
+          action: null,
           subActions: [
             { name: `${gameObject.aura == -1 ? '◉' : '○'} なし`,
              action: () => { gameObject.aura = -1} },
@@ -349,7 +358,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: '詳細を表示', action: () => { this.showDetail(gameObject); } 
+      name: '詳細を表示', action: () => { this.showDetail(gameObject); }
     });
     this.contextMenuService.open(position, actions, gameObject.name);
   }

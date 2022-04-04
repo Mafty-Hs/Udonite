@@ -3,11 +3,10 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { generateId } from '@udonarium/core/system/util/generateId';
 import { Player } from '@udonarium/player';
-import { RoomAdmin } from '@udonarium/room-admin';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
-import { Color } from 'three';
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -22,28 +21,40 @@ export class PlayerService {
   readonly CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
   readonly CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
 
-  myPlayer:Player;
+  primaryChatWindowID:string = "";
+  private _primaryChatTabIdentifier:string = "";
+  primaryChatTabIdentifier$ = new Subject<string>();
+  primaryChatTabIdentifierEmit = this.primaryChatTabIdentifier$.asObservable();
+  myPlayer:Player = null;
   peerCursors:PeerCursor[] = [];
 
   //プレイヤーパレット
-  localpalette: ChatPalette;
+  localpalette: ChatPalette = null;
   myPalette = null;
 
   isShowStatusBar:boolean = true;
 
-  get paletteList() {
+  get paletteList():string[] {
     return this.myPlayer.paletteList;
   }
   set paletteList(paletteList :string[]) {
     this.myPlayer.paletteList = paletteList;
   }
 
-  addList(identifier: string) {
+  get primaryChatTabIdentifier():string {
+    return this._primaryChatTabIdentifier;
+  }
+  set primaryChatTabIdentifier(primaryChatTabIdentifier :string) {
+    this._primaryChatTabIdentifier = primaryChatTabIdentifier;
+    this.primaryChatTabIdentifier$.next(this._primaryChatTabIdentifier);
+  }
+
+  addList(identifier: string):void {
     if (this.checkList(identifier)) { return }
     this.paletteList.push(identifier);
   }
 
-  removeList(identifier: string) {
+  removeList(identifier: string):void {
     if (identifier == this.myPlayer.playerId) {return}
     const index = this.paletteList.indexOf(identifier);
     if (index > -1) {
@@ -55,7 +66,7 @@ export class PlayerService {
     if (this.paletteList.indexOf(identifier) >= 0) { return true }
     return false;
   }
-  playerCreate(playerName :string, color :string ,imageIdentifier :string) {
+  playerCreate(playerName :string, color :string ,imageIdentifier :string):Player {
     let player = new Player();
     player.initialize();
     player.isInitial = true;
@@ -121,7 +132,7 @@ export class PlayerService {
       };
   }
 
-  refleshPeers() {
+  refleshPeers():void {
     IONetwork.otherPeers().then(peers => {
       let newCursors:PeerCursor[] = [];
       for (let context of peers) {

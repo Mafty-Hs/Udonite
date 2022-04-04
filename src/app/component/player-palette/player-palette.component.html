@@ -1,17 +1,26 @@
 <div class="flex-container">
   <div class="top">
-    <div class="chat-tab">
-      <form>
-        <div class="chat-tab">
-          <label *ngFor="let chatTab of chatMessageService.chatTabs">
-            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-            <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
-          </label>
-        </div>
-      </form>
+    <div class="chat-tab-container">
+      <div class="control" style="width:8em;">
+        <span>チャットと同期</span>
+        <div class="toggle"><label>
+          <input name="showPalette" type="checkbox" [(ngModel)]="isSyncChatWindow">
+          <div><div></div></div>
+        </label></div>
+      </div>
+      <ng-container *ngIf="!isSyncChatWindow; else syncWindow" >
+        <form>
+          <div class="chat-tab">
+            <label *ngFor="let chatTab of chatMessageService.chatTabs">
+              <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
+              <div>{{chatTab.name}}</div>
+            </label>
+          </div>
+        </form>
+      </ng-container>
     </div>
     <div class="chat-input">
-      <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true" 
+      <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true"
       [sendFrom]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     </div>
     <div *ngIf="!disableControl" class="character-control">
@@ -64,10 +73,10 @@
       </button>
       <button *ngIf="showPalette && character" (click)="addPalette()">
       追加
-      </button>      
+      </button>
       <button *ngIf="showPalette && paletteIndex > -1" (click)="removePalette()">
       削除
-      </button>      
+      </button>
     </div>
     <div class="character-add">
       <div class="control">
@@ -83,3 +92,6 @@
     </div>
   </div>
 </div>
+<ng-template #syncWindow>
+  <span style="font-size: 12px;">選択されたチャットタブ - {{chatTab ? chatTab.name : ''}}</span>
+</ng-template>

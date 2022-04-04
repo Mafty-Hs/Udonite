@@ -17,6 +17,7 @@ import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'ser
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { Player } from '@udonarium/player';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'player-palette',
@@ -30,6 +31,16 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
   @ViewChild('characterSelect') characterSelect: ElementRef;
 
+  private chatTabSubscriber:Subscription;
+
+  private _isSyncChatWindow:boolean = true;
+  get isSyncChatWindow():boolean {
+    return this._isSyncChatWindow
+  }
+  set isSyncChatWindow(isSyncChatWindow :boolean){
+    if (isSyncChatWindow) this.chatTabidentifier = this.playerService.primaryChatTabIdentifier;
+    this._isSyncChatWindow = isSyncChatWindow;
+  }
 
   get character() {
     return this.gameCharacterService.get(this.sendFrom);
@@ -267,10 +278,15 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       .on<string>('WRITING_A_MESSAGE', event => {
         this.changeDetector.markForCheck();
       });
-   if(!this.playerService.myPalette) this.playerService.myPalette = this;
+    if(!this.playerService.myPalette) this.playerService.myPalette = this;
+    this.chatTabSubscriber = this.playerService.primaryChatTabIdentifierEmit.subscribe((chatTabIdentifier) => {
+      if (this.isSyncChatWindow) this.chatTabidentifier = chatTabIdentifier;
+      this.changeDetector.detectChanges();
+    });
   }
 
   ngOnDestroy() {
+    this.chatTabSubscriber.unsubscribe();
     EventSystem.unregister(this);
     this.playerService.myPalette = null;
   }

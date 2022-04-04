@@ -196,9 +196,6 @@ export class GameCharacterService {
 
   paletteInit() {
     EventSystem.unregister(this);
-    for (let identifier of this.playerService.paletteList) {
-      if (!this.get(identifier)) this.playerService.removeList(identifier);
-    }
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.aliasName !== GameCharacter.aliasName) return;

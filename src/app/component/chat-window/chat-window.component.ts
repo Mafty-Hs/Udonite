@@ -3,7 +3,6 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -38,7 +37,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  identifier:string;
+  chatWindowID:string;
   isEase:boolean = false;
   isLogOnly:boolean = true;
   localFontsize:number = 14;
@@ -67,6 +66,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   set chatTabidentifier(chatTabidentifier: string) {
     let hasChanged: boolean = this._chatTabidentifier !== chatTabidentifier;
     this._chatTabidentifier = chatTabidentifier;
+    if (this.isPrimary) this.playerService.primaryChatTabIdentifier = chatTabidentifier;
     this.updatePanelTitle();
     if (hasChanged) {
       this.scrollToBottom(true);
@@ -74,6 +74,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
+
+  get isPrimary():boolean {
+    return this.playerService.primaryChatWindowID === this.chatWindowID;
+  }
+
   isAutoScroll: boolean = true;
   scrollToBottomTimer: NodeJS.Timer = null;
 
@@ -84,9 +89,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
-  ngOnInit() {
-    this._chatTabidentifier = 0 < this.chatMessageService.chatTabs.length ? this.chatMessageService.chatTabs[0].identifier : '';
-
+  ngOnInit():void {
     EventSystem.register(this)
       .on('MESSAGE_ADDED', event => {
         if (event.data.tabIdentifier !== this.chatTabidentifier) return;
@@ -99,33 +102,50 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
       })
       .on('CHAT_WINDOW_CONF', event => {
-        if (event.data[0] == this.identifier) {
+        if (event.data[0] == this.chatWindowID) {
           this.localFontsize = event.data[1];
           this.bgColor = event.data[2];
           this.isEase = event.data[3];
           this.isLogOnly = event.data[4];
           this.controlType = event.data[5];
         }
-      })
-    Promise.resolve().then(() => this.updatePanelTitle());
+      });
+    Promise.resolve().then(() => {
+      this.chatWindowID = UUID.generateUuid() ;
+      if (!this.playerService.primaryChatWindowID) {
+        this.playerService.primaryChatWindowID = this.chatWindowID;
+      }
+      if (this.isPrimary && this.playerService.primaryChatTabIdentifier) {
+          this._chatTabidentifier = this.playerService.primaryChatTabIdentifier;
+          if (!this.chatTab) {
+            this._chatTabidentifier = 0 < this.chatMessageService.chatTabs.length ? this.chatMessageService.chatTabs[0].identifier : '';
+            this.playerService.primaryChatTabIdentifier = this._chatTabidentifier;
+          }
+      }
+      else {
+        this._chatTabidentifier = 0 < this.chatMessageService.chatTabs.length ? this.chatMessageService.chatTabs[0].identifier : '';
+        if (this.isPrimary) this.playerService.primaryChatTabIdentifier = this._chatTabidentifier;
+      }
+      this.updatePanelTitle();
+    });
   }
 
-  ngAfterViewInit() {
-    this.identifier = UUID.generateUuid() ;
+  ngAfterViewInit():void {
     this.scrollToBottom(true);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
+    if (this.isPrimary) this.playerService.primaryChatWindowID = "";
     EventSystem.unregister(this);
   }
 
-  messageEdit(value: { chatMessage: ChatMessage} ) {
+  messageEdit(value: { chatMessage: ChatMessage} ):void {
     this.editMessage = value.chatMessage;
     this.isEdit = true;
   }
 
   // @TODO やり方はもう少し考えた方がいいい
-  scrollToBottom(isForce: boolean = false) {
+  scrollToBottom(isForce: boolean = false):void {
     if (!this.canAutoScroll) return;
     if (isForce) this.isAutoScroll = true;
     if (this.scrollToBottomTimer != null || !this.isAutoScroll) return;
@@ -142,7 +162,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // @TODO
-  checkAutoScroll() {
+  checkAutoScroll():void {
     if (!this.panelService.scrollablePanel) return;
     let top = this.panelService.scrollablePanel.scrollHeight - this.panelService.scrollablePanel.clientHeight;
     if (top - 150 <= this.panelService.scrollablePanel.scrollTop) {
@@ -152,24 +172,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  updatePanelTitle() {
+  updatePanelTitle():void {
+    let title = this.isPrimary ? '*チャットウィンドウ*' : 'チャットウィンドウ';
     if (this.chatTab) {
-      this.panelService.title = 'チャットウィンドウ - ' + this.chatTab.name;
+      this.panelService.title = title + ' - ' + this.chatTab.name;
     } else {
-      this.panelService.title = 'チャットウィンドウ';
+      this.panelService.title = title;
     }
   }
 
-  onSelectedTab(identifier: string) {
-    this.updatePanelTitle();
-  }
-
-  showTabSetting() {
+  showTabSetting():void {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x - 300, top: coordinate.y - 250, width: 500, height: 500 };
     let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
     component.selectedTab = this.chatTab;
-    component.identifier = this.identifier;
+    component.identifier = this.chatWindowID;
     component.localFontsize = this.localFontsize;
     component.bgColor = this.bgColor;
     component.isEase = this.isEase;
@@ -178,7 +195,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
-    isUseFaceIcon?:boolean ,isCharacter?: boolean, standName?: string, isUseStandImage?: boolean }) {
+    isUseFaceIcon?:boolean ,isCharacter?: boolean, standName?: string, isUseStandImage?: boolean }):void {
     if (this.chatTab) {
       this.chatMessageService.sendMessage(
         this.chatTab,
@@ -194,7 +211,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  trackByChatTab(index: number, chatTab: ChatTab) {
+  trackByChatTab(index: number, chatTab: ChatTab):string {
     return chatTab.identifier;
   }
 }

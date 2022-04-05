@@ -10,12 +10,12 @@ export class BillBoardService {
 
   get billBoard(): BillBoard{
     return BillBoard.instance;
-  } 
+  }
 
   list() :BillBoardCard[] {
    return this.billBoard.list;
 
-  } 
+  }
 
   add(_title:string ,_text:string, _dataType: number, _allowPlayers?: string[], _imageIdentifier?: string){
     let result = this.billBoard.create({
@@ -37,17 +37,17 @@ export class BillBoardService {
   loadCard(gameObject :BillBoard) {
     let board = gameObject.children as BillBoardCard[];
     for (let card of board) {
-    this.billBoard.create({
+      this.billBoard.create({
         title: card.title,
         text: card.text,
         dataType:card.dataType,
-        ownerName: card.ownerName,
-        ownerPlayer: card.ownerPlayer ? card.ownerPlayer  : [],
-        allowPlayers: card.allowPlayers ? card.allowPlayers  : [],
+        ownerName: this.playerService.myPlayer.name,
+        ownerPlayer: [this.playerService.myPlayer.playerId],
+        allowPlayers: [],
         imageIdentifier: card.imageIdentifier ? card.imageIdentifier : "",
       });
     }
-    gameObject.destroy;
+    gameObject.destroy();
   }
   constructor(
     private playerService: PlayerService,

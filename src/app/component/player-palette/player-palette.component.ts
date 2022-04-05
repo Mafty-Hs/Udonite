@@ -283,12 +283,22 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       if (this.isSyncChatWindow) this.chatTabidentifier = chatTabIdentifier;
       this.changeDetector.detectChanges();
     });
+    this.refleshList()
   }
 
   ngOnDestroy() {
     this.chatTabSubscriber.unsubscribe();
     EventSystem.unregister(this);
     this.playerService.myPalette = null;
+  }
+
+  private refleshList():void {
+    let list = this.playerService.paletteList;
+    for (let identifier of list) {
+      let character = this.gameCharacterService.get(identifier);
+      if (!character) this.playerService.removeList(identifier);
+    }
+    this.changeDetector.detectChanges();
   }
 
   selectPalette(line: string) {

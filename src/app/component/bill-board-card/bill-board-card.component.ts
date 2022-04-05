@@ -112,11 +112,13 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   save() {
     this.card.title = this.title;
     this.card.text = this.encode(this.text);
+    this.card.allowPlayers = this.players;
     this.card.dataType = String(this.dataType);
     if (this.isImage) this.card.imageIdentifier = this.imageIdentifier;
     else this.imageIdentifier = "";
     this.isEdit = false;
     this.panelService.height -= 30 ;
+
     EventSystem.call('BOARD_UPDATE', this.card.identifier);
 
   }

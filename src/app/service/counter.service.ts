@@ -10,7 +10,7 @@ import { GameCharacterService } from './game-character.service';
   providedIn: 'root'
 })
 export class CounterService {
-  get round(): Round {return IRound.instance;} 
+  get round(): Round {return IRound.instance;}
   private nullCounter:Counter = new Counter;
 
   create( _name: string, _desc: string, _canDuplicate: boolean, _isPermanent: boolean, _age: number, _uniqueIdentifier?: string) {
@@ -75,7 +75,7 @@ export class CounterService {
       maxAge: counter.age,
       desc: counter.desc,
       comment: _comment
-    }); 
+    });
   }
 
   getList(gameCharacter :GameCharacter): AssignedCounterList {
@@ -104,8 +104,8 @@ export class CounterService {
 
   loadCounter(object :CounterList){
     for (let counter of object.children as Counter[]) {
-      this.create(counter.name,counter.desc,Boolean(counter._canDuplicate),Boolean(counter._isPermanent),Number(counter.age), counter.uniqueIdentifier) 
+      this.create(counter.name,counter.desc,Boolean(counter._canDuplicate),Boolean(counter._isPermanent),Number(counter.age), counter.uniqueIdentifier)
     }
-    object.destroy;
+    object.destroy();
   }
 }

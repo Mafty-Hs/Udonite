@@ -29,16 +29,19 @@ export class PlayerService {
   peerCursors:PeerCursor[] = [];
 
   //プレイヤーパレット
-  localpalette: ChatPalette = null;
+  _localpalette: ChatPalette = null;
   myPalette = null;
+  get localpalette(): ChatPalette {
+    if (!this._localpalette) {
+      this._localpalette =  new ChatPalette(this.myPlayer.playerId + '_LocalPalette');
+    }
+    return this._localpalette;
+  }
 
   isShowStatusBar:boolean = true;
 
   get paletteList():string[] {
-    return this.myPlayer.paletteList;
-  }
-  set paletteList(paletteList :string[]) {
-    this.myPlayer.paletteList = paletteList;
+    return this.myPlayer.paletteList
   }
 
   get primaryChatTabIdentifier():string {
@@ -50,22 +53,25 @@ export class PlayerService {
   }
 
   addList(identifier: string):void {
-    if (this.checkList(identifier)) { return }
+    if (this.checkList(identifier)) return;
     this.paletteList.push(identifier);
+    this.myPlayer.update();
   }
 
   removeList(identifier: string):void {
-    if (identifier == this.myPlayer.playerId) {return}
+    if (identifier == this.myPlayer.playerId) return;
     const index = this.paletteList.indexOf(identifier);
     if (index > -1) {
       this.paletteList.splice(index, 1);
     }
+    this.myPlayer.update();
   }
 
   checkList(identifier: string):boolean {
     if (this.paletteList.indexOf(identifier) >= 0) { return true }
     return false;
   }
+
   playerCreate(playerName :string, color :string ,imageIdentifier :string):Player {
     let player = new Player();
     player.initialize();
@@ -146,7 +152,6 @@ export class PlayerService {
   }
 
   constructor() {
-    this.localpalette =  new ChatPalette('LocalPalette');
     EventSystem.register(this)
     .on('NEED_UPDATE', event => {
       PeerCursor.myCursor.context = {peerId: IONetwork.peerId ,playerIdentifier: PeerCursor.myCursor.playerIdentifier};

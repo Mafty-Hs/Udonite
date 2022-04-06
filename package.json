@@ -7,8 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "prod": "ng build --configuration production --base-href=/udonite/",
-    "test": "ng test",
-    "e2e": "ng e2e"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -71,8 +70,6 @@
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "protractor": "~7.0.0",
-    "ts-node": "^10.5.0",
     "typescript": "^4.6.2"
   }
 }

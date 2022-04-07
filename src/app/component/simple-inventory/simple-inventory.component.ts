@@ -1,11 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
+import { ContextMenuService, ContextMenuAction, ContextMenuSeparator } from 'service/context-menu.service';
 import { CounterService } from 'service/counter.service';
 import { GameCharacterService } from 'service/game-character.service';
 import { GameObjectInventoryService, ObjectInventory } from 'service/game-object-inventory.service';
 import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { PlayerService } from 'service/player.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
   selector: 'simple-inventory',
@@ -14,18 +17,63 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimpleInventoryComponent implements OnInit {
-  inventoryMode:number = 0; // 0:全て(イニシアティブ連動)　1:パレットバインダー 2:カスタム
-  statusMode:number = 0; // 0:イニシアティブ(最初の３つまで)　1:ステータスバー 2:カスタム
+  private _inventoryMode:number = 0; // 0:全て(イニシアティブ連動)　1:パレットバインダー 2:カスタム
+  private _statusMode:number = 1; // 0:イニシアティブ(最初の３つまで)　1:ステータスバー 2:カスタム
   deepReflesh:boolean = true;
 
+  get inventoryMode():number {
+    return this._inventoryMode;
+  }
+  set inventoryMode(inventoryMode :number) {
+    this._inventoryMode = inventoryMode;
+    this.changeDetector.detectChanges();
+  }
+  get statusMode():number {
+    return this._statusMode;
+  }
+  set statusMode(statusMode :number) {
+    this._statusMode = statusMode;
+    this.changeDetector.detectChanges();
+  }
+
+
+  get inventoryTags():string[] {
+    return this.inventoryService.dataTags.length > 2 ? this.inventoryService.dataTags : this.inventoryService.dataTags.concat(['','','']);
+  }
+
+  get customTags():string[] {
+    return ['','',''];
+  }
+
   get dataElmTag1():string {
-    return this.inventoryService.statusBar_1;
+    switch(this.statusMode) {
+      case 0:
+        return this.inventoryTags[0];
+      case 1:
+        return this.inventoryService.statusBar_1;
+      case 2:
+        return this.customTags[0];
+    }
   }
   get dataElmTag2():string {
-    return this.inventoryService.statusBar_2;
+    switch(this.statusMode) {
+      case 0:
+        return this.inventoryTags[1];
+      case 1:
+        return this.inventoryService.statusBar_2;
+      case 2:
+        return this.customTags[1];
+    }
   }
   get dataElmTag3():string {
-    return this.inventoryService.statusBar_3;
+    switch(this.statusMode) {
+      case 0:
+        return this.inventoryTags[2];
+      case 1:
+        return this.inventoryService.statusBar_3;
+      case 2:
+        return this.customTags[2];
+    }
   }
 
   dataElms(characterIdentifier:string):DataElement[] {
@@ -38,7 +86,17 @@ export class SimpleInventoryComponent implements OnInit {
 
 
   get characters():GameCharacter[] {
-    return this.initiative ? this.getInventoryWithInitiative : this.getInventory;
+    switch(this.inventoryMode) {
+      case 0:
+        return this.initiative ? this.getInventoryWithInitiative : this.getInventory;
+      case 1:
+        return this.customInventory(this.playerService.paletteList);
+      case 2:
+        return this.customInventory(this.customList);
+      default:
+        return this.getInventory;
+    }
+
   }
 
   get getInventory():GameCharacter[] {
@@ -48,6 +106,12 @@ export class SimpleInventoryComponent implements OnInit {
 
   get tableInventory():ObjectInventory {
     return this.inventoryService.tableInventory;
+  }
+
+  customList:string[] = [];
+
+  customInventory(identifiers :string[]):GameCharacter[] {
+    return identifiers.map(characterIdentifier => { return this.gameCharacterService.get(characterIdentifier) });
   }
 
   get initiative():string {
@@ -111,9 +175,12 @@ export class SimpleInventoryComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
+    private contextMenuService: ContextMenuService,
     private counterService: CounterService,
     private gameCharacterService: GameCharacterService,
     private inventoryService: GameObjectInventoryService,
+    private playerService: PlayerService,
+    private pointerDeviceService: PointerDeviceService
   ) {
     EventSystem.register(this)
     .on('ADD_ROUND', event => {
@@ -129,6 +196,29 @@ export class SimpleInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  displayContextMenu(e: Event):void{
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let position = this.pointerDeviceService.pointers[0];
+
+    let actions: ContextMenuAction[] = [
+      { name: "表示するキャラクター" },
+      ContextMenuSeparator,
+        { name: `${this.inventoryMode == 0 ? '◉' : '○'} 全て(イニシアティブ連動)`, action: () => this.inventoryMode = 0 },
+        { name: `${this.inventoryMode == 1 ? '◉' : '○'} パレットバインダー`, action: () => this.inventoryMode = 1 },
+        { name: `${this.inventoryMode == 2 ? '◉' : '○'} カスタム`, action: () => this.inventoryMode = 2, disabled: true},
+      ContextMenuSeparator,
+      { name: "表示するステータス" },
+      ContextMenuSeparator,
+        { name: `${this.statusMode == 0 ? '◉' : '○'} イニシアティブ`, action: () => this.statusMode = 0 },
+        { name: `${this.statusMode == 1 ? '◉' : '○'} ステータスバー`, action: () => this.statusMode = 1 },
+        { name: `${this.statusMode == 2 ? '◉' : '○'} カスタム`, action: () => this.statusMode = 2, disabled: true},
+    ];
+    this.contextMenuService.open(position, actions, '表示項目');
   }
 
   trackByCharacter(index: number, gameCharacter: GameCharacter):string {

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" (contextmenu)="displayContextMenu($event)">
   <div *ngFor="let character of characters; trackBy: trackByCharacter" class="card"
     [ngStyle]="{'background-image': character.faceIcon ? 'url(' + character.faceIcon.url + ')' :
      'url(' + character.imageFile?.url + ')' }" [attr.data-tooltip]="character.name">

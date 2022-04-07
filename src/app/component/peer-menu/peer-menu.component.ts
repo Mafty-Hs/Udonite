@@ -33,7 +33,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   help: string = '';
   isCopied = false;
 
-  get player():Player { 
+  get player():Player {
     return this.playerService.myPlayer;
   }
 
@@ -67,7 +67,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
-    private playerService: PlayerService,
+    public playerService: PlayerService,
     private roomService: RoomService,
     public diceBotService: DiceBotService,
     public appConfigService: AppConfigService
@@ -92,7 +92,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       this.player.imageIdentifier = value;
     });
   }
-  
+
   get otherPeers():PeerCursor[] {
     return this.playerService.otherPeers
   }

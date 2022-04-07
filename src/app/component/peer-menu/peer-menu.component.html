@@ -37,6 +37,17 @@
   </div>
   <div class="flex-item">
     <div class="item-name">
+      新規キャラクターの秘匿
+    </div>
+    <div class="item-data">
+      <div class="toggle"><label>
+        <input name="isHideCharacterOnLoad" type="checkbox" [(ngModel)]="playerService.isHideCharacterOnLoad">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="flex-item">
+    <div class="item-name">
       bcdiceサーバ
     </div>
     <div class="item-data">
@@ -45,7 +56,7 @@
   </div>
 </div>
 <hr/>
-<ng-container> 
+<ng-container>
   ログイン中のプレイヤー
   <div *ngFor="let peer of otherPeers">
     <div>

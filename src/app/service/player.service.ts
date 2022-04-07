@@ -39,6 +39,8 @@ export class PlayerService {
   }
 
   isShowStatusBar:boolean = true;
+  isHideCharacterOnLoad:boolean = false;
+  //isUseAnnonymousName:boolean = false;
 
   get paletteList():string[] {
     return this.myPlayer.paletteList

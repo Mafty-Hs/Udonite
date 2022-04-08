@@ -27,7 +27,7 @@ import { EventSystem } from '@udonarium/core/system';
     ]),
   ]
 })
-export class BillBoardComponent implements OnInit,OnDestroy {
+export class BillBoardComponent implements OnInit,OnDestroy,AfterViewInit {
   @ViewChild('handle') _handle:ElementRef;
   handle :HTMLElement;
   @ViewChild('content') _content:ElementRef;
@@ -99,11 +99,11 @@ export class BillBoardComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     EventSystem.unregister(this);
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.handle = this._handle.nativeElement;
     this.content = this._content.nativeElement;
     EventSystem.register(this)

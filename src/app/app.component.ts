@@ -28,7 +28,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     return this.roomService.isLobby;
   }
 
-  constructor(  
+  constructor(
     private diceBotService: DiceBotService,
     private pointerDeviceService: PointerDeviceService,
     private appConfigService: AppConfigService,
@@ -46,11 +46,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       ObjectSynchronizer.instance.initialize();
     });
     this.appConfigService.initialize();
-    this.pointerDeviceService.initialize();    
+    this.pointerDeviceService.initialize();
     PeerCursor.myCursor = new PeerCursor();
      EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
-      .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
+      .on('UPDATE_GAME_OBJECT', event => {
+        this.lazyNgZoneUpdate(event.isSendFromSelf); })
+      .on('DELETE_GAME_OBJECT', event => {
+        this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('IMAGE_SYNC', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
@@ -62,7 +64,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       })
       .on('CLOSE_NETWORK', event => {
         console.log('CLOSE_NETWORK', event.data.peerId);
-        
+
       })
       .on('CONNECT_PEER', event => {
         //if (event.isSendFromSelf) this.chatMessageService.calibrateTimeOffset();

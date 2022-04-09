@@ -100,6 +100,12 @@ export class EventSystem implements Subject {
     IONetwork.instance.call(context, sendTo)
   }
 
+  nw_trigger<T>(eventName: string, data: T): Event<T> {
+    let event = new Event(eventName, data,'Server');
+    this._trigger(event);
+    return event;
+  }
+
   trigger<T>(eventName: string, data: T): Event<T>
   trigger<T>(event: Event<T>): Event<T>
   trigger<T>(event: EventContext<T>): Event<T>

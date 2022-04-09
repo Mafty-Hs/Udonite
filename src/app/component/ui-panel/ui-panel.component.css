@@ -7,7 +7,7 @@
   background: linear-gradient(-30deg, rgba(40,40,40, 0.9), rgba(100,100,100, 0.9));
   border: solid 1px #999;
   border-bottom: ridge 4px #212121;
-  
+
   padding: 0px;
   top: 200px;
 
@@ -49,8 +49,11 @@
   height: 25px;
   padding: 2px 5px;
   width: 100%;
-  background: linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 40% ,#323232 60%,#424242 80% , #BABABA 85%, #424242 90%, #212121 100% 100%);
+  background-color:#212121;
+  box-shadow:0px -3px 2px -1px #FFF inset;
   color: #FFF;
+  border-top:solid 1px #FFF;
+  border-bottom:solid 1px #FFF;
   border-left: ridge 2px #212121;
   border-right: ridge 2px #212121;
   user-select: none;

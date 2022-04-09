@@ -67,22 +67,24 @@ export class GameRoomComponent implements OnInit {
     let chatWidth = 700;
     if (window.innerWidth < 600) {
       StandImageComponent.isShowStand = false;
-      chatWidth = 500;
-      this.standService.leftEnd = 200;
-      this.standService.width = 200;
+      this.standService.leftEnd = 0;
+      this.standService.width = window.innerWidth;
     }
     else if (window.innerWidth < 900) {
       chatWidth = 500;
       this.standService.leftEnd = 500;
       this.standService.width = (window.innerWidth - 700);
+      setTimeout(() => {
+        this.panelService.open(ChatWindowComponent, { width: 500, height: 400, left: 0, top: 490 });
+      }, 0);
     }
     else {
       this.standService.leftEnd = 700;
       this.standService.width = (window.innerWidth - 700);
+      setTimeout(() => {
+        this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
+      }, 0);
     }
-    setTimeout(() => {
-      this.panelService.open(ChatWindowComponent, { width: chatWidth, height: 400, left: 0, top: 490 });
-    }, 0);
   }
 
     isOpen(menuName: string) {

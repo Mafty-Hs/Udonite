@@ -33,6 +33,7 @@ export class ObjectSynchronizer {
       .on('NW_DELETE_GAME_OBJECT', event => {
         let identifier = event.data.identifier;
         ObjectStore.instance.delete(identifier, false);
+        EventSystem.nw_trigger('DELETE_GAME_OBJECT', { identifier: identifier });
       });
   }
 
@@ -123,7 +124,7 @@ export class ObjectSynchronizer {
   ObjectUpdate(object: GameObject, context: ObjectContext) {
     if (context.majorVersion + context.minorVersion > object.version) {
       object.apply(context);
-      EventSystem.trigger('UPDATE_GAME_OBJECT', context);
+      EventSystem.nw_trigger('UPDATE_GAME_OBJECT', context);
     }
   }
 
@@ -136,7 +137,7 @@ export class ObjectSynchronizer {
     }
     newObject.apply(context);
     ObjectStore.instance.add(newObject, false);
-    EventSystem.trigger('UPDATE_GAME_OBJECT', context);
+    EventSystem.nw_trigger('UPDATE_GAME_OBJECT', context);
   }
 
   private get(identifier :string) :GameObject {

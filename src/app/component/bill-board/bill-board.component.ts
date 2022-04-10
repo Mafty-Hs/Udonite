@@ -28,23 +28,17 @@ import { EventSystem } from '@udonarium/core/system';
   ]
 })
 export class BillBoardComponent implements OnInit,OnDestroy,AfterViewInit {
-  @ViewChild('handle') _handle:ElementRef;
-  handle :HTMLElement;
-  @ViewChild('content') _content:ElementRef;
-  content :HTMLElement;
 
-  handle_message:string = "Message Board";
-  notification :boolean = false;
-
-  newList:string[] = [];
-  updateList:string[] = [];
+  get newList():string[] {
+    return this.billBoardService.newList;
+  };
+  get updateList():string[] {
+    return this.billBoardService.updateList;
+  }
 
   get cards():BillBoardCard[] {
     return this.billBoardService.list();
   }
-
-  toggleSW:boolean = false;
-
 
   createCard() {
     let title = '新規作成';
@@ -65,35 +59,11 @@ export class BillBoardComponent implements OnInit,OnDestroy,AfterViewInit {
     component.card = card;
   }
 
-  toggle() {
-    this.toggleSW = !this.toggleSW;
-    if(this.toggleSW) {
-      this.handle.style.top = "300px";
-      this.content.style.height = "300px";
-    }
-    else {
-      this.handle.style.top = "0px";
-      this.content.style.height = "0px";
-    }
-  }
   constructor(
     private panelService: PanelService,
     private billBoardService: BillBoardService
   ) { }
 
-  alert() {
-    this.notification = true;
-    this.handle_message = "Message Update";
-    this.handle.style.zIndex = "100";
-    setTimeout(() => {
-      this.alertStop()
-    },3000);
-  }
-  alertStop() {
-    this.notification = false;
-    this.handle_message = "Message Board";
-    this.handle.style.zIndex = "";
-  }
 
 
   ngOnInit(): void {
@@ -104,18 +74,6 @@ export class BillBoardComponent implements OnInit,OnDestroy,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.handle = this._handle.nativeElement;
-    this.content = this._content.nativeElement;
-    EventSystem.register(this)
-      .on('BOARD_UPDATE', event => {
-          this.alert();
-          this.updateList.push(event.data);
-      });
-    EventSystem.register(this)
-      .on('BOARD_NEW', event => {
-          this.alert();
-          this.newList.push(event.data);
-      });
   }
 
 }

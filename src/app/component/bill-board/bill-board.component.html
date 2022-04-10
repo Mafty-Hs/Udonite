@@ -1,18 +1,12 @@
 <div #content class="content">
-  <div *ngIf="toggleSW" class="box">
-    <button style="width:200px;margin: 6px 12px;" (click)="createCard()" >新規作成</button>
-    <div *ngFor="let message of cards">
-      <div class="card" [ngClass]="{'secret' : message.dataType == '2',
-        'update' : updateList.includes(message.identifier),
-        'new' : newList.includes(message.identifier)}"
-         [@flyInOut]="'active'" (click)="openCard(message)">
-         <span [innerHTML]="message.titleAsHtml"></span>
-      </div><div></div>
-    </div>
-  </div>
+  <ng-container *ngFor="let message of cards">
+    <div class="card" [ngClass]="{'secret' : message.dataType == '2',
+      'update' : updateList.includes(message.identifier),
+      'new' : newList.includes(message.identifier)}"
+        [@flyInOut]="'active'" (click)="openCard(message)">
+        <span [innerHTML]="message.titleAsHtml"></span>
+    </div><div></div>
+  </ng-container>
+  <button style="width:260px;margin: 6px 12px;" (click)="createCard()" >新規作成</button>
 </div>
-<div #handle class="handle" (click)="toggle()" >
-  <div  [ngClass]="notification ? 'alert' : 'normal'">
-    {{handle_message}}
-  </div>
-</div>
+

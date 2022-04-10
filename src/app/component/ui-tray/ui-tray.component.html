@@ -1,0 +1,24 @@
+<div #content class="box">
+  <ng-container *ngIf="toggleSW">
+    <div class="menu">
+      <form>
+        <label>
+          <input name="menu" type="radio" value="board" [(ngModel)]="menu">
+           <div>掲示板</div>
+        </label>
+      </form>
+    </div>
+    <div class="content" [style.height.px]="maxHeight - 20">
+      <ng-container [ngSwitch]="menu">
+        <ng-container *ngSwitchCase="'board'">
+         <bill-board ></bill-board>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+<div #handle class="handle" (click)="toggle()" >
+  <div  [ngClass]="notification ? 'alert' : 'normal'">
+    {{handle_message}}
+  </div>
+</div>

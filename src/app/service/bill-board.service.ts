@@ -8,6 +8,9 @@ import { PlayerService } from 'service/player.service';
 })
 export class BillBoardService {
 
+  newList:string[] = [];
+  updateList:string[] = [];
+
   get billBoard(): BillBoard{
     return BillBoard.instance;
   }

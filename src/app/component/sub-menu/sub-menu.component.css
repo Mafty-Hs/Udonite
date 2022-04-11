@@ -23,7 +23,7 @@ nav ul {
 
 nav ul > li {
   text-align: center;
-  padding: 5px;
+  padding: 9px 5px;
   color: #FFF;
   text-shadow: 2px 2px 4px #000000;
   cursor: -moz-pointer;

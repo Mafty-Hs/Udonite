@@ -1,12 +1,7 @@
 .round {
-  padding: 4px;
-  margin: 0px;
   font-size: 14px;
   background: transparent;
-  color: #FFF; 
+  color: #FFF;
 }
 
-.round:after{
-	content: '';
-	background: transparent;
-}
+

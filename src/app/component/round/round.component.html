@@ -1,11 +1,11 @@
-<button *ngIf="!minimumMode; else minimum" class="round" (click)="add()"> 
+<ng-container *ngIf="!minimumMode; else minimum">
   <span *ngIf="round == 0">
     ラウンド開始
   </span>
   <span class="round" *ngIf="round != 0">
     ラウンド進行：{{round}}R
   </span>
-</button>
+</ng-container>
 <ng-template #minimum>
     {{round}}R
 </ng-template>

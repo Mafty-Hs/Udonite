@@ -1,4 +1,4 @@
-import { OnInit ,AfterViewInit, Component, OnDestroy, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
+import { OnInit ,AfterViewInit, Component, OnDestroy, ViewChild, ViewContainerRef, ElementRef, ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { CutIn } from '@udonarium/cut-in';
 import { DataElement } from '@udonarium/data-element';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
@@ -7,8 +7,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CutInService } from 'service/cut-in.service';
-import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
-import { EffectService } from 'service/effect.service';
+import { ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
@@ -22,7 +21,6 @@ import { HelpComponent } from 'component/help/help.component';
 import { ModalComponent } from 'component/modal/modal.component';
 import { RoundComponent } from 'component/round/round.component';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
-import { StandViewSettingComponent } from 'component/stand-view-setting/stand-view-setting.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { IRound } from '@udonarium/round';
@@ -34,7 +32,8 @@ import { AlarmComponent } from 'component/alarm/alarm.component';
 @Component({
   selector: 'game-room',
   templateUrl: './game-room.component.html',
-  styleUrls: ['./game-room.component.css']
+  styleUrls: ['./game-room.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class GameRoomComponent implements OnInit {
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
@@ -50,13 +49,13 @@ export class GameRoomComponent implements OnInit {
   constructor(
     private cutInService: CutInService,
     private contextMenuService: ContextMenuService,
-    private effectService: EffectService,
     private panelService: PanelService,
     private standService: StandService,
     private playerService: PlayerService,
     private pointerDeviceService: PointerDeviceService,
     private roomService: RoomService,
     private standImageService: StandImageService,
+    private changeDetector: ChangeDetectorRef
   ) {
     if (this.roomService.gameType && this.roomService.createRoom) this.roomService.roomAdmin.gameType = this.roomService.gameType;
     if (window.innerWidth < 600) this.minimumMode = true;
@@ -87,83 +86,11 @@ export class GameRoomComponent implements OnInit {
     }
   }
 
-    isOpen(menuName: string) {
+  isOpen(menuName: string) {
     if (this.selectMenu == menuName)
       return "▲";
     else
       return "▼";
-  }
-
-  closePanel() {
-    if (confirm('表示されているパネルを全て削除しますか？')) {
-      EventSystem.trigger('ALL_PANEL_DIE', null);
-    }
-    return;
-  }
-
-
-  showStandView() {
-    let top = window.innerHeight - (this.standService.bottomEnd + 150);
-    this.panelService.open(StandViewSettingComponent, { width: this.standService.width, height: 150, left: this.standService.leftEnd , top: top });
-  }
-
-  showViewMenu(left: number) {
-
-    const isShowStatusBar = this.playerService.isShowStatusBar;
-    const isShowStand = StandImageComponent.isShowStand;
-    const isShowNameTag = StandImageComponent.isShowNameTag;
-    const isCanBeGone = StandImageComponent.isCanBeGone;
-    const canEffect = this.effectService.canEffect;
-
-    this.contextMenuService.open(
-      { x: left, y: 50 }, [
-        { name: "パネル設定" },
-        ContextMenuSeparator,
-          { name: '全てのパネルを消去', action: () => this.closePanel() },
-        ContextMenuSeparator,
-        { name: "視点設定" },
-        ContextMenuSeparator,
-          { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
-          { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') },
-        ContextMenuSeparator,
-        { name: "立ち絵設定" },
-        ContextMenuSeparator,
-          { name: '立ち絵表示設定', action: () => this.showStandView()},
-          { name: `${ isShowStand ? '☑' : '☐' }立ち絵表示`,
-            action: () => {
-              StandImageComponent.isShowStand = !isShowStand;
-            }
-          },
-          { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`,
-            action: () => {
-              StandImageComponent.isShowNameTag = !isShowNameTag;
-            }
-          },
-          { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`,
-            action: () => {
-              StandImageComponent.isCanBeGone = !isCanBeGone;
-            }
-          },
-          { name: '表示中の立ち絵全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) },
-        ContextMenuSeparator,
-        { name: "キャラクター設定" },
-        ContextMenuSeparator,
-          { name: `${ isShowStatusBar ? '☑' : '☐' }ステータスバー表示`,
-            action: () => {
-              this.playerService.isShowStatusBar = !isShowStatusBar;
-              EventSystem.trigger('UPDATE_BAR',null)
-            }
-          },
-        ContextMenuSeparator,
-        { name: "エフェクト設定" },
-        ContextMenuSeparator,
-          { name: `${ canEffect ? '☑' : '☐' }エフェクト表示`,
-            action: () => {
-              this.effectService.canEffect = !canEffect;
-            }
-          }
-      ],
-      '自分のみ反映されます');
   }
 
   openSubMenu(e: Event , menuName: string) {
@@ -173,25 +100,21 @@ export class GameRoomComponent implements OnInit {
     }
     let button = e.srcElement as HTMLElement;
     let rect = button.getBoundingClientRect();
-    if (menuName == "view") {
-      this.selectMenu = menuName;
-      this.showViewMenu(rect.left);
-      this.closeSub();
-    }
-    else {
-      this.subMenu.nativeElement.style.top = "50px";
-      this.subMenu.nativeElement.style.left = rect.left + 'px';
-      this.selectMenu = menuName;
-      this.subMenu.nativeElement.style.display = "block";
-   }
+    this.subMenu.nativeElement.style.top = "50px";
+    this.subMenu.nativeElement.style.left = rect.left + 'px';
+    this.selectMenu = menuName;
+    this.changeDetector.markForCheck();
   }
 
   closeSub() {
     this.selectMenu = "";
-    this.subMenu.nativeElement.style.display = "none";
   }
 
-  roundContext(e:Event) {
+  roundAdd(e:Event):void {
+    this.round.add();
+  }
+
+  roundContext(e:Event):void {
     this.round.displayContextMenu(e);
   }
 

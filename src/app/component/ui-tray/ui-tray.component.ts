@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef,AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef,AfterViewInit,ChangeDetectorRef } from '@angular/core';
 import { BillBoardService } from 'service/bill-board.service';
 import { EventSystem } from '@udonarium/core/system';
 
@@ -17,13 +17,14 @@ export class UiTrayComponent implements  OnInit,OnDestroy,AfterViewInit {
   maxHeight = 500;
   menu = "board";
 
-  handle_message:string = "=";
+  handle_message:string = "▼";
   notification :boolean = false;
 
   toggleSW:boolean = false;
 
   toggle() {
     this.toggleSW = !this.toggleSW;
+    this.handle_message = this.toggleSW ? "▲" : "▼" ;
     if(this.toggleSW) {
       this.handle.style.top = this.maxHeight + 'px';
       this.content.style.height = this.maxHeight + 'px';
@@ -40,17 +41,19 @@ export class UiTrayComponent implements  OnInit,OnDestroy,AfterViewInit {
     this.handle.style.zIndex = "100";
     setTimeout(() => {
       this.alertStop()
+      this.changeDetector.detectChanges();
     },3000);
   }
   alertStop() {
     this.notification = false;
-    this.handle_message = "=";
+    this.handle_message = this.toggleSW ? "▲" : "▼" ;
     this.handle.style.zIndex = "";
   }
 
 
   constructor(
-    private billBoardService: BillBoardService
+    private billBoardService: BillBoardService,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {

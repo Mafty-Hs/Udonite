@@ -38,10 +38,13 @@
   font-size: 14px;
   color: #FFF;
   background: #424242;
-  background-size: 10px 10px;
-  background-position: 0 0, 5px 5px;
-  border:2px solid #989898;
-  box-shadow:6px 5px 8px -1px #212121 inset;
+  border:1px solid;
+  border-color: #AAA #666 #444 #FFF;
+}
+
+.select-off {
+  border-color: #111;
+  background: #222;
 }
 
 .select::after {
@@ -67,7 +70,7 @@
 .subMenu {
   position: absolute;
   z-index: 40;
-  display: none;
+  background: none;
 }
 
 .ui-tray {

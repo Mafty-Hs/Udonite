@@ -17,8 +17,8 @@
     </div>
   </ng-container>
 </div>
-<div #handle class="handle" (click)="toggle()" >
-  <div  [ngClass]="notification ? 'alert' : 'normal'">
+<div #handle class="handle" [ngClass]="notification ? 'alert' : 'normal'" (click)="toggle()" >
+  <div>
     {{handle_message}}
   </div>
 </div>

@@ -1,23 +1,40 @@
 <div class="container">
   <div id="menu" class="menu">
     <div id="menu" class="left">
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'file' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"file")'>
-          <span *ngIf="!minimumMode; else miniFile">ファイル{{isOpen("file")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'room' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"room")'>
-          <span *ngIf="!minimumMode; else miniRoom">ルーム{{isOpen("room")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'work' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"work")'>
-          <span *ngIf="!minimumMode; else miniWork">機能{{isOpen("work")}}
-      </span></button>
-      <button class="select" [ngStyle]="{'border': this.selectMenu == 'view' ? '2px solid #000' : '2px solid #989898'}"
-        (click)='openSubMenu($event,"view")'>
-           <span *ngIf="!minimumMode; else miniView">表示{{isOpen("view")}}
-      </span></button>
-      <round class="select" style="padding: 0" [minimumMode]="this.minimumMode" (contextmenu)="roundContext($event); false" ></round>
+      <button class="select" [ngClass]="{'select-off':  selectMenu == 'file' }"
+       (click)='openSubMenu($event,"file")'>
+        <span *ngIf="!minimumMode; else miniFile">ファイル{{isOpen("file")}}
+        </span>
+      </button>
+      <button class="select" [ngClass]="{'select-off':  selectMenu == 'room' }"
+       (click)='openSubMenu($event,"room")'>
+        <span *ngIf="!minimumMode; else miniRoom">ルーム{{isOpen("room")}}
+        </span>
+      </button>
+      <button class="select" [ngClass]="{'select-off':  selectMenu == 'chat' }"
+       (click)='openSubMenu($event,"chat")'>
+        <span *ngIf="!minimumMode; else miniChat">チャット{{isOpen("chat")}}
+        </span>
+     </button>
+      <button class="select"  [ngClass]="{'select-off':  selectMenu == 'data' }"
+       (click)='openSubMenu($event,"data")'>
+        <span *ngIf="!minimumMode; else miniData">リスト{{isOpen("data")}}
+        </span>
+      </button>
+      <button class="select" [ngClass]="{'select-off':  selectMenu == 'work' }"
+       (click)='openSubMenu($event,"work")'>
+        <span *ngIf="!minimumMode; else miniWork">機能{{isOpen("work")}}
+        </span>
+      </button>
+      <button class="select" [ngClass]="{'select-off':  selectMenu == 'view' }"
+       (click)='openSubMenu($event,"view")'>
+        <span *ngIf="!minimumMode; else miniView">表示{{isOpen("view")}}
+        </span>
+      </button>
+      <button class="select"
+       (click)='roundAdd($event)'  (contextmenu)="roundContext($event); false" >
+       <round style="padding: 0" [minimumMode]="this.minimumMode"></round>
+      </button>
     </div>
     <div class="right">
       <div class="select"><network-status  [minimumMode]="this.minimumMode" (contextmenu)="roomMenu($event); false"></network-status></div>
@@ -29,7 +46,17 @@
   </div>
 </div>
 <div #modalLayer></div>
-<div #subMenu class="subMenu"><sub-menu [selectMenu]="this.selectMenu" (closeMe)="closeSub()"></sub-menu></div>
+<div #subMenu class="subMenu">
+  <ng-container [ngSwitch]="selectMenu">
+    <ng-container *ngSwitchCase="''">
+    </ng-container>
+    <ng-container *ngSwitchCase="'view'">
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <sub-menu [selectMenu]="this.selectMenu" (closeMe)="closeSub()"></sub-menu>
+    </ng-container>
+  </ng-container>
+</div>
 <div class="ui-tray">
   <ui-tray></ui-tray>
 </div>
@@ -44,6 +71,16 @@
 <ng-template #miniRoom>
   <i class="material-icons">
     people
+  </i>
+</ng-template>
+<ng-template #miniChat>
+  <i class="material-icons">
+    speaker_notes
+  </i>
+</ng-template>
+<ng-template #miniData>
+  <i class="material-icons">
+    folder_shared
   </i>
 </ng-template>
 <ng-template #miniWork>

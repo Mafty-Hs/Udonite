@@ -1,7 +1,6 @@
-import { CounterAssign } from '@udonarium/counter';
+import { Component, OnInit, Input} from '@angular/core';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
-import { Component, OnInit, Input} from '@angular/core';
 import { CounterService } from 'service/counter.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuAction, ContextMenuSeparator ,ContextMenuService } from 'service/context-menu.service';
@@ -15,7 +14,7 @@ import { EventSystem } from '@udonarium/core/system';
 @Component({
   selector: 'round',
   templateUrl: './round.component.html',
-  styleUrls: ['./round.component.css']
+  styleUrls: ['./round.component.css'],
 })
 export class RoundComponent implements OnInit {
 

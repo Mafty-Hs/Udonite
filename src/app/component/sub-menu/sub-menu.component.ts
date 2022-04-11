@@ -1,4 +1,4 @@
-import {  AfterViewInit, Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {  AfterViewInit, Component, OnDestroy, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -9,6 +9,7 @@ import { SaveDataService } from 'service/save-data.service';
 import { RoomService } from 'service/room.service';
 import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
+import { CounterInventoryComponent } from 'component/counter-inventory/counter-inventory.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -27,7 +28,8 @@ import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.c
 @Component({
   selector: 'sub-menu',
   templateUrl: './sub-menu.component.html',
-  styleUrls: ['./sub-menu.component.css']
+  styleUrls: ['./sub-menu.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubMenuComponent implements OnInit,OnDestroy {
   @Input() selectMenu:string;
@@ -88,6 +90,10 @@ export class SubMenuComponent implements OnInit,OnDestroy {
         component = CounterListComponent;
         option = { width:450 , height: 700 };
         break;
+      case 'CounterInventoryComponent':
+        component = CounterInventoryComponent;
+        option =  { title: 'カウンター一覧', width: 800, height: 600 };
+        break;
       case 'PlayerPaletteComponent':
         component = PlayerPaletteComponent;
         option = { width: 645, height: 400 };
@@ -125,7 +131,8 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     private roomService: RoomService,
     private saveDataService: SaveDataService,
     private counterService: CounterService,
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnDestroy() {
@@ -144,12 +151,13 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     ? this.roomService.roomData.roomName
     : 'chatlog';
       await this.saveDataService.saveRoomAsync(roomName, percent => {
+      this.changeDetector.detectChanges();
       this.progresPercent = percent;
     });
-
     setTimeout(() => {
       this.isSaveing = false;
       this.progresPercent = 0;
+      this.changeDetector.detectChanges();
     }, 500);
   }
 

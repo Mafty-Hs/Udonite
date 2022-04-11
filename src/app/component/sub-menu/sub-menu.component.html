@@ -20,19 +20,13 @@
       <li *ngIf="isOpen('file') && !disableAllDataSave && !isSaveing" (click)="save()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">sd_storage</i></div>
-          <div>保存</div>
+          <div>ルーム保存</div>
         </a>
       </li>
       <li *ngIf="isOpen('file')   && !disableAllDataSave && isSaveing" style="pointer-events: none;">
         <a>
           <div><i class="material-icons vibration-amine">sd_storage</i></div>
           <div>{{progresPercent}}%</div>
-        </a>
-      </li>
-      <li *ngIf="isOpen('file')" (click)="htmlsave()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">web</i></div>
-          <div>チャットログ</div>
         </a>
       </li>
       <li *ngIf="isOpen('room')" (click)="open('RoomControlComponent')">
@@ -71,34 +65,46 @@
           <div>ラウンドをリセット</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('ChatWindowComponent')">
+      <li *ngIf="isOpen('chat')" (click)="open('ChatWindowComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">speaker_notes</i></div>
-          <div>チャット画面</div>
+          <div>チャットウィンドウ</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('GameObjectInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
-        </a>
-      </li>
-      <li *ngIf="isOpen('work')" (click)="open('SimpleInventoryComponent')">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">view_list</i></div>
-          <div>イニシアティブリスト</div>
-        </a>
-      </li>
-      <li *ngIf="isOpen('work')" (click)="open('PlayerPaletteComponent')">
+      <li *ngIf="isOpen('chat')" (click)="open('PlayerPaletteComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">library_books</i></div>
           <div>パレットバインダー</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('CounterListComponent')">
+      <li *ngIf="isOpen('chat')" (click)="htmlsave()">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">web</i></div>
+          <div>ログ保存</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('data')" (click)="open('GameObjectInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">folder_shared</i></div>
+          <div>インベントリ</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('data')" (click)="open('SimpleInventoryComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">view_list</i></div>
+          <div>イニシアティブリスト</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('data')" (click)="open('CounterInventoryComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">blur_linear</i></div>
-          <div>カウンターリスト</div>
+          <div>配布カウンター一覧</div>
+        </a>
+      </li>
+      <li *ngIf="isOpen('work')" (click)="open('CounterListComponent')">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">grain</i></div>
+          <div>カウンター設定</div>
         </a>
       </li>
       <li *ngIf="isOpen('work')" (click)="open('DiceRollTableSettingComponent')">
@@ -110,13 +116,13 @@
       <li *ngIf="isOpen('work')" (click)="open('CutInSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">perm_media</i></div>
-          <div>カットイン</div>
+          <div>カットイン設定</div>
         </a>
       </li>
       <li *ngIf="isOpen('work')" (click)="open('EffectViewComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">water_drop</i></div>
-          <div>エフェクトビュー</div>
+          <div>エフェクト</div>
         </a>
       </li>
     </ul>

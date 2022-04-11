@@ -53,13 +53,13 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   private isDrag:boolean = false;
 
   private chatTabidentifier:string;
-  get chatTab(): ChatTab { 
+  get chatTab(): ChatTab {
     if(!this.chatTabidentifier) {
        this.chatTabidentifier = ChatTabList.instance.chatTabs[0].identifier
     }
-    return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier);     
+    return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier);
   }
-  
+
   get counterList():Counter[] {
     return this.counterService.list();
   }
@@ -76,12 +76,12 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   getCharacter(identifier: string): GameCharacter {
     return this.gameCharacterService.get(identifier);
   }
- 
+
   getCounter(identifier: string): Counter {
     return this.counterService.get(identifier);
   }
 
-  get isPointerDragging(): boolean { 
+  get isPointerDragging(): boolean {
   return this.pointerDeviceService.isDragging; }
 
   makeElm(selectElm :HTMLElement) : HTMLElement {
@@ -109,13 +109,13 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
 
    onSelect(characterIdentifier: string) {
      document.body.removeChild(this.selectElm);
-     if (this.getCharacter(characterIdentifier)){       
+     if (this.getCharacter(characterIdentifier)){
        let message :string = this.getCounter(this.selectCount).name + "を"　+ this.getCharacter(characterIdentifier).name + "に付与 :" + this.inputComment;
        this.chat(message);
        this.counterService.assign(this.selectCount, characterIdentifier, this.inputComment);
      }
      this.selectCount = "";
-     this.isDrag = false; 
+     this.isDrag = false;
   }
 
   @HostListener("document:mousemove", ["$event"])
@@ -183,7 +183,7 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
 
   openInventory(){
     let coordinate = this.pointerDeviceService.pointers[0];
-    let title = 'カウンターインベントリ';
+    let title = 'カウンター一覧';
     let option: PanelOption = { title: title, width: 800, height: 600 }
     let component = this.panelService.open<CounterInventoryComponent>(CounterInventoryComponent, option);
   }
@@ -216,7 +216,7 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
       actions.push({ name: '削除', action: () => { _counter.destroy(); } });
     this.contextMenuService.open(position, actions, 'カウンター詳細');
   }
-  
+
   private strcut(text :string , length :number):string[] {
     let result:string[] = [];
     let start:number = 0;

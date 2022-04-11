@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef,ChangeDetectionStrategy } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService , PanelSize } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -8,6 +8,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   selector: 'ui-panel',
   templateUrl: './ui-panel.component.html',
   styleUrls: ['./ui-panel.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default,
   providers: [
     PanelService,
   ],
@@ -33,8 +34,8 @@ export class UIPanelComponent implements OnInit {
 
   @Input() set title(title: string) { this.panelService.title = title; }
   @Input() set left(left: number) { this.panelService.left = left; }
-  @Input() set top(top: number) { 
-    this.panelService.top = top; 
+  @Input() set top(top: number) {
+    this.panelService.top = top;
   }
   @Input() set width(width: number) { this.panelService.width = width; }
   @Input() set height(height: number) {
@@ -67,9 +68,9 @@ export class UIPanelComponent implements OnInit {
   constructor(
     public panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
-  ) { 
+  ) {
     EventSystem.register(this)
-      .on('ALL_PANEL_DIE', event => { 
+      .on('ALL_PANEL_DIE', event => {
         this.close();
     });
   }
@@ -119,7 +120,7 @@ export class UIPanelComponent implements OnInit {
 
   toggleMinimize() {
     if (this.isFullScreen) return;
- 
+
     let body  = this.scrollablePanel.nativeElement;
     let panel = this.draggablePanel.nativeElement;
     if (this.isMinimized) {

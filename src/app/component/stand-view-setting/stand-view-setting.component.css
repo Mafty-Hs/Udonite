@@ -2,7 +2,7 @@
   margin: -3px;
   padding: 0;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   height: 100%;
   width: 100%;
 }
@@ -10,8 +10,8 @@
 .menu {
   height: 30px;
   width: 100%;
-  display:flex; 
-  flex-direction: row; 
+  display:flex;
+  flex-direction: row;
   justify-content:space-between;
 }
 
@@ -40,4 +40,12 @@
   position: absolute;
   bottom: 0px;
   font-size: 10px;
+}
+
+.hollow {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+.black-paint {
+  filter: brightness(0);
 }

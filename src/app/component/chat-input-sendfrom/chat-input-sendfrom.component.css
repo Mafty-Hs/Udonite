@@ -6,10 +6,11 @@
 
 .setting {
   left: 180px;
-  top: 0px;
+  top: 3px;
   position: absolute;
   height: 30px;
   width: calc(100% - 180px);
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
@@ -31,7 +32,7 @@
 
 .name {
   width: 8em;
-  white-space: nowrap; 
+  white-space: nowrap;
   font-size: 14px;
   font-weight: bold;
   font-family: 'Noto Sans JP', sans-serif;

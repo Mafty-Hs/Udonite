@@ -1,19 +1,21 @@
 .container {
   height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-wrap: nowrap;
   flex-flow: row;
   overflow-x: auto;
+  overflow-y: hidden;
   margin: -6px -2px;
 }
 
 .container::-webkit-scrollbar {
-  height: 5px;
+  height: 9px;
 }
 .container::-webkit-scrollbar-thumb {
-  background-color: #444;
-  border: 1px #FFF;
-  border-radius: 5px;
+  background-color: #222;
+  border: solid 1px #FFF;
+  border-radius: 3px;
 }
 .container::-webkit-scrollbar-track {
   background: #CCC;

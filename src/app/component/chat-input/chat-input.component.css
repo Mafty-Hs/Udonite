@@ -22,6 +22,7 @@
 
 .sendFrom {
   height: 75px;
+  box-sizing: border-box;
   width:100%;
   padding: 0;
   margin: 0;

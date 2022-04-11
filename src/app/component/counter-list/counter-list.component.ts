@@ -141,7 +141,7 @@ export class CounterListComponent implements OnInit,OnDestroy,AfterViewInit {
   }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.panelService.title = 'カウンターリスト');
+    Promise.resolve().then(() => this.panelService.title = 'カウンター設定');
     EventSystem.register(this)
       .on('SELECT_TABLETOP_OBJECT', -1000, event => {
         if (this.isDrag) {

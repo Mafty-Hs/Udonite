@@ -35,7 +35,7 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
   setEffect() {
     if(!this.isDrag && this.effectName) {
       this.isDrag = true;
-    } 
+    }
   }
 
   cancel() {
@@ -43,23 +43,23 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
   }
 
   onSelect(characterIdentifier: string) {
-     if (characterIdentifier){       
+     if (characterIdentifier){
        let eventstat = [this.effectName , [characterIdentifier]]
        EventSystem.call('CHARACTER_EFFECT', eventstat);
      }
-     this.isDrag = false; 
+     this.isDrag = false;
   }
 
   private setContext() {
         this.context = this.effectService.createContext(this.renderer);
         this.effects = this.effectService.addEffectDemo(this.context)
-        this.ngZone.runOutsideAngular(() => { 
+        this.ngZone.runOutsideAngular(() => {
         const mainLoop = () => {
           requestAnimationFrame(mainLoop.bind(this));
           this.animate();
         };
         mainLoop();
-    }); 
+    });
   }
 
   animate() {
@@ -77,16 +77,16 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
     this.camera.position.set(20, 20, 20);
     this.camera.lookAt(new Vector3(0, 0, 0));
   }
- 
+
   constructor(
     private panelService: PanelService,
     private effectService: EffectService,
     private ngZone: NgZone
-  ) { 
+  ) {
  }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.panelService.title = 'エフェクトビュー');
+    Promise.resolve().then(() => this.panelService.title = 'エフェクト');
     EventSystem.register(this)
      .on('SELECT_TABLETOP_OBJECT', -1000, event => {
         if (this.isDrag) {

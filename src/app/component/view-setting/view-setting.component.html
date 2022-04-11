@@ -1,0 +1,63 @@
+<div class="sub">
+  <div class="card">
+    <div class="title">
+      パネル
+    </div>
+    <div class="item">
+      <button class="button" (click)="closePanel()">全てのパネルを消去</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="title">
+      視点
+    </div>
+    <div class="item">
+      <button class="button" (click)="resetViewDefault()">初期視点に戻す</button>
+      <button class="button" (click)="resetViewTop()">真上から視る</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="title">
+      立ち絵
+    </div>
+    <div class="item">
+      <button class="button"  (click)="showStandView()">立ち絵表示設定</button><br/>
+      <button class="button"  (click)="destroyStandImage()">立ち絵全消去</button><br/>
+      <div class="toggle"><label>
+        <input name="isShowStand" type="checkbox" [(ngModel)]="isShowStand">
+        <div><div></div></div>
+      </label></div>立ち絵表示<br/>
+      <div class="toggle"><label>
+        <input name="isShowNameTag" type="checkbox" [(ngModel)]="isShowNameTag">
+        <div><div></div></div>
+      </label></div>ネームタグ表示<br/>
+      <div class="toggle"><label>
+        <input name="isCanBeGone" type="checkbox" [(ngModel)]="isCanBeGone">
+        <div><div></div></div>
+      </label></div>透明化、自動退去<br/>
+    </div>
+  </div>
+  <div class="card">
+    <div class="title">
+      キャラクター
+    </div>
+    <div class="item">
+      <div class="toggle"><label>
+        <input name="isShowStatusBar" type="checkbox" [(ngModel)]="isShowStatusBar">
+        <div><div></div></div>
+      </label></div>ステータスバー表示
+    </div>
+  </div>
+  <div class="card">
+    <div class="title">
+      エフェクト
+    </div>
+    <div class="item">
+      <div class="toggle"><label>
+        <input name="canEffect" type="checkbox" [(ngModel)]="canEffect">
+        <div><div></div></div>
+      </label></div>エフェクト表示
+    </div>
+  </div>
+  <div class="footer"></div>
+</div>

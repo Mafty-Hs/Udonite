@@ -101,7 +101,7 @@ export class GameRoomComponent implements OnInit {
     let button = e.srcElement as HTMLElement;
     let rect = button.getBoundingClientRect();
     this.subMenu.nativeElement.style.top = "50px";
-    this.subMenu.nativeElement.style.left = rect.left + 'px';
+    this.subMenu.nativeElement.style.left = menuName === 'view' ? (rect.left - 50) + 'px' : rect.left + 'px';
     this.selectMenu = menuName;
     this.changeDetector.markForCheck();
   }

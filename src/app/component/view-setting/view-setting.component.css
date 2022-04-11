@@ -1,0 +1,40 @@
+.sub {
+  width: 200px;
+  background: #424242;
+  border:2px solid #989898;
+  border-top-style:none;
+  border-bottom-style:outset;
+  box-shadow:6px 5px 8px -1px #212121 inset;
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
+
+.card {
+  padding: 0;
+  margin: 0;
+  color: #FFF;
+}
+
+.title {
+  width: 100%;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 1em;
+}
+
+.item {
+  width: 100%;
+  font-size: 12px;
+  padding-left: 2em;
+}
+
+.button {
+  width: 160px;
+}
+
+.footer {
+  height: 10px;
+  background:linear-gradient(0deg, #212121 5%, #424242 15%, #FAFAFA 40%, #424242 55%, #212121 95% 100%);
+}
+

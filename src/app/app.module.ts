@@ -115,6 +115,7 @@ import { DiceSymbolFlatComponent } from './component/dice-symbol-flat/dice-symbo
 import { LogSaveComponent } from './component/log-save/log-save.component';
 import { SimpleInventoryComponent } from './component/simple-inventory/simple-inventory.component';
 import { UiTrayComponent } from './component/ui-tray/ui-tray.component';
+import { ViewSettingComponent } from './component/view-setting/view-setting.component';
 
 @NgModule({
   declarations: [
@@ -214,6 +215,7 @@ import { UiTrayComponent } from './component/ui-tray/ui-tray.component';
     LogSaveComponent,
     SimpleInventoryComponent,
     UiTrayComponent,
+    ViewSettingComponent,
   ],
   imports: [
     BrowserModule,

@@ -51,6 +51,7 @@
     <ng-container *ngSwitchCase="''">
     </ng-container>
     <ng-container *ngSwitchCase="'view'">
+      <view-setting (closeMe)="closeSub()"></view-setting>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <sub-menu [selectMenu]="this.selectMenu" (closeMe)="closeSub()"></sub-menu>

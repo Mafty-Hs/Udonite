@@ -7,7 +7,6 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { element } from 'protractor';
 import { ModalService } from 'service/modal.service';
 
 @Component({
@@ -46,7 +45,7 @@ export class StandElementComponent implements OnInit {
       elm = this.standElement.getFirstElementByName('imageIdentifier');
     }
     if (elm) {
-      if (this._imageFile.identifier !== elm.value) { 
+      if (this._imageFile.identifier !== elm.value) {
         let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
         this._imageFile = file ? file : ImageFile.Empty;
       }
@@ -80,7 +79,7 @@ export class StandElementComponent implements OnInit {
     let elm = this.standElement.getFirstElementByName('postfix');
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + this.standElement.identifier));
   }
- 
+
   get applyImageEffectElement() {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('applyImageEffect');
@@ -163,7 +162,7 @@ export class StandElementComponent implements OnInit {
       elm.value = value;
     });
   }
- 
+
   openSpeakingModal() {
     this.openModal('speakingImageIdentifier', true);
   }
@@ -205,14 +204,14 @@ export class StandElementComponent implements OnInit {
   }
 
   testStandUp() {
-    EventSystem.trigger('POPUP_STAND_IMAGE', { 
-      characterIdentifier: this.gameCharacter.identifier, 
-      standIdentifier: this.standElement.identifier, 
+    EventSystem.trigger('POPUP_STAND_IMAGE', {
+      characterIdentifier: this.gameCharacter.identifier,
+      standIdentifier: this.standElement.identifier,
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null
     });
-    EventSystem.trigger('POPUP_CHAT_BALLOON', { 
-      characterIdentifier: this.gameCharacter.identifier, 
-      text: 'これはテストです、あなたにだけ見えています。立ち絵の設定を行う際は、メニューの「立ち絵表示設定」を開くと全ての設定状況・表示範囲の確認を行うことができます。', 
+    EventSystem.trigger('POPUP_CHAT_BALLOON', {
+      characterIdentifier: this.gameCharacter.identifier,
+      text: 'これはテストです、あなたにだけ見えています。立ち絵の設定を行う際は、メニューの「立ち絵表示設定」を開くと全ての設定状況・表示範囲の確認を行うことができます。',
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null,
       dialogTest: true
     });

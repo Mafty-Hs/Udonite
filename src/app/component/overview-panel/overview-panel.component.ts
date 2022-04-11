@@ -26,7 +26,6 @@ import { ModalService } from 'service/modal.service';
 import { Counter, CounterAssign } from '@udonarium/counter';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
-import { element } from 'protractor';
 
 @Component({
   selector: 'overview-panel',

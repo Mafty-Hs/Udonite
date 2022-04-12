@@ -8,7 +8,7 @@ table {
 }
 
 th {
-  border: solid 1px; 
+  border: solid 1px;
   padding: 3px;
   display: table-cell;
   vertical-align: inherit;
@@ -17,7 +17,7 @@ th {
 }
 
 td {
-  border: solid 1px; 
+  border: solid 1px;
   padding: 3px;
   font-size: 14px;
   display: table-cell;
@@ -31,10 +31,11 @@ td {
 }
 
 .character {
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(200,200,200,0.8);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
+  filter:grayscale(100%);
   background-blend-mode:darken;
   font-weight: bolder;
   color: #FFF;
@@ -54,3 +55,4 @@ td {
   background-color: red;
   color: white;
 }
+

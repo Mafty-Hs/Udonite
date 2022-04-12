@@ -9,7 +9,8 @@
        <th style="width:4em">削除</th>
      <tr>
     <tr *ngFor="let counterinfo of myList; let i = index" [ngStyle]="{'background-color': counterinfo.age === 0 && !counterinfo.isPermanent ? 'maroon' : 'black'}">
-       <td *ngIf="isFirst(i)"class="character" [attr.rowspan]="mergeRow(counterinfo.characterIdentifier)" [ngStyle]="{'background-image': 'url(' + counterinfo.characterImage + ')'}">
+       <td *ngIf="isFirst(i)"class="character" [attr.rowspan]="mergeRow(counterinfo.characterIdentifier)"
+       [ngStyle]="{'background-image': counterinfo.isBlackPaint ? 'url()' : 'url(' + counterinfo.characterImage + ')'}">
          <span class="name">{{counterinfo.characterName}}</span>
         </td>
        <td>{{counterinfo.name}}</td>

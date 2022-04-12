@@ -2,6 +2,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { GameCharacter } from './game-character';
 import { ObjectStore } from './core/synchronize-object/object-store';
+import { TabletopObject } from './tabletop-object';
 
 export interface CounterContext {
   identifier?: string;
@@ -16,7 +17,7 @@ export interface CounterContext {
 export interface CounterAssignContext {
   identifier?: string;
   name: string;
-  counterIdentifier: string; 
+  counterIdentifier: string;
   isPermanent: boolean;
   age: number;
   maxAge: number;
@@ -52,27 +53,33 @@ export class Counter extends ObjectNode {
 @SyncObject('counter-assign')
 export class CounterAssign extends ObjectNode {
   @SyncVar() name: string;
-  @SyncVar() counterIdentifier: string; 
+  @SyncVar() counterIdentifier: string;
   @SyncVar() _isPermanent: string;
   @SyncVar() _age: string;
   @SyncVar() _maxAge: string;
   @SyncVar() desc: string = "";
   @SyncVar() comment: string;
 
-  get characterName() {
+  get characterName():string {
     let character = this.parent.parent as GameCharacter;
     return character.name;
   }
-  get characterImage() {
+  get characterImage():string {
     let character = this.parent.parent as GameCharacter;
     if (character.imageFile?.url?.length > 0)
      return character.imageFile.url;
     else
-     return ""; 
+     return "";
   }
-  get characterIdentifier() {
+  get characterIdentifier():string {
     return this.parent.parent.identifier;
   }
+
+  get isBlackPaint():boolean {
+    let object = this.parent.parent as TabletopObject;
+    return object.isBlackPaint;
+  }
+
   get isPermanent():boolean {
     return this._isPermanent === "1" ? true : false;
   }
@@ -96,7 +103,7 @@ export class CounterAssign extends ObjectNode {
     if (!this.isPermanent) {
       this.age -= 1;
       if (this.age < 0) {
-        this.remove(); 
+        this.remove();
       }
     }
   }

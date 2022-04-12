@@ -1,16 +1,13 @@
-div {
+.box {
+  height: 26px;
+  box-sizing: border-box;
   padding: 0px;
   margin: 0px;
   text-align: center;
   font-weight: bold;
   font-size: 14px;
-}
-
-label {
-  font-weight: bold;
-}
-
-.box {
+  line-height: 26px;
+  white-space: nowrap;
 }
 
 .boxAlert {
@@ -26,8 +23,8 @@ label {
   50% {
     opacity: 0;
   }
-  
-  
+
+
   100% {
     opacity: 1;
   }

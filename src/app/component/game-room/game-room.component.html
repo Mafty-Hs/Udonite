@@ -37,7 +37,7 @@
       </button>
     </div>
     <div class="right">
-      <div class="select"><network-status  [minimumMode]="this.minimumMode" (contextmenu)="roomMenu($event); false"></network-status></div>
+      <network-status class="select" [minimumMode]="this.minimumMode" (contextmenu)="roomMenu($event); false"></network-status>
       <button class="select" *ngIf="!minimumMode"  (click)='menuHelp()'>？</button>
     </div>
   </div>

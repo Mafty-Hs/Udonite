@@ -88,7 +88,7 @@ export class GameCharacterService {
   }
 
   getDetail(character :GameCharacter):DataElement[] {
-    return  character.detailDataElement.children as DataElement[];
+    return  character.detailDataElement?.children ? character.detailDataElement.children as DataElement[] : [];
   }
 
   findDataElm(identifier :string,resouce :string):DataElement|null {

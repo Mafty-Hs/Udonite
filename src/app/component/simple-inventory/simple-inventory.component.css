@@ -26,7 +26,6 @@
   width: 96px;
   height: 44px;
   background-color: #212121;
-  background-position: center top;
   background-repeat: no-repeat;
   background-size:cover;
   padding: 2px;
@@ -113,4 +112,9 @@
   0px -2px 1px #000000;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.black-paint {
+  filter:grayscale(100%);
+  background-blend-mode:color-burn;
 }

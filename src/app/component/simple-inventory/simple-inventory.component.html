@@ -1,7 +1,12 @@
 <div class="container" (contextmenu)="displayContextMenu($event)">
   <div *ngFor="let character of characters; trackBy: trackByCharacter" class="card"
-    [ngStyle]="{'background-image': character.faceIcon ? 'url(' + character.faceIcon.url + ')' :
-     'url(' + character.imageFile?.url + ')' }" [attr.data-tooltip]="character.name">
+    [ngClass]="{'black-paint': character.isBlackPaint}"
+    [ngStyle]="{
+      'background-image': 'url(' + character.imageFile?.url + ')' ,
+      'background-position': character.imageFile?.aspect > 1.25 ?
+        character.imageFile?.aspect > 1.75 ? 'center 25% ' : 'center 15% '
+      : 'center center'
+    }" [attr.data-tooltip]="character.name">
     <div *ngIf="initiative" class="init-count">
       <span style="transform: translateY(-1px);">{{initDataElm(character.identifier)}}</span>
     </div>

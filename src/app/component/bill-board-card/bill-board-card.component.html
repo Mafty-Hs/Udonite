@@ -47,10 +47,13 @@
       <button class="control-text" (click)="close()">閉じる</button>
     </div>
   </div>
-  <div *ngIf="card" class="allowPlayers">
-    <span>オーナー: {{card.ownerName}}  </span>
+  <div class="allowPlayers">
+    <span *ngIf="card">オーナー: {{card.ownerName}}  </span>
     <span>許可されたプレイヤー:</span>
-    <span *ngFor="let name of allowPlayerName">{{name}}</span>
+    <div class="player" *ngFor="let player of allowPlayers">
+      {{player.playerName}}
+      <div class="erase" *ngIf="isEdit" (click)="removePlayer(player.playerId)" >☓</div>
+    </div>
   </div>
 </div>
 

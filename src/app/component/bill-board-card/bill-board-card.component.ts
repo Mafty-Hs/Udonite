@@ -10,6 +10,12 @@ import { ModalService } from 'service/modal.service';
 import { EventSystem } from '@udonarium/core/system';
 import { Buffer } from 'buffer';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { RoomService } from 'service/room.service';
+
+interface allowedPlayer {
+  playerName: string;
+  playerId: string;
+}
 
 @Component({
   selector: 'bill-board-card',
@@ -26,7 +32,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   password:string = "";
   title:string = "";
   text:string = "";
-  allowPlayerName :string[] = [];
+  allowPlayers :allowedPlayer[] = [];
   players:string[] = [];
   imageIdentifier:string = ""
 
@@ -47,12 +53,12 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
       this.text = this.decode(card.text);
     }
     this.players = card.allowPlayers;
-    this.allowPlayerName = this.playerService.otherPlayers
+    this.allowPlayers = this.playerService.otherPlayers
       .filter( player =>
         this.players.includes(player.playerId)
       )
       .map( player => {
-        return player.name
+        return { playerName: player.name, playerId: player.playerId }
       });
     if (card.isImage) {
       this.isImage = true;
@@ -126,13 +132,29 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
   addPlayer() {
     if (!this.players.includes(this.player)) {
       this.players.push(this.player);
-      this.allowPlayerName.push(this.playerService.getPlayerById(this.player).name);
+      this.allowPlayers.push({ playerName: this.playerService.getPlayerById(this.player).name, playerId: this.player });
+      this.player = '';
+    }
+  }
+
+  removePlayer(playerId :string) {
+    if (this.players.includes(playerId)) {
+      this.players = this.players.filter( _playerid => _playerid != playerId );
+      this.allowPlayers = this.playerService.otherPlayers
+      .filter( player =>
+        this.players.includes(player.playerId)
+      )
+      .map( player => {
+        return { playerName: player.name, playerId: player.playerId }
+      });
     }
   }
 
   auth():boolean {
     return ( (this.card.ownerPlayer.includes(this.playerService.myPlayer.playerId))
-     || (this.card.allowPlayers.includes(this.playerService.myPlayer.playerId)) );
+     || (this.card.allowPlayers.includes(this.playerService.myPlayer.playerId))
+     || (this.roomService.adminAuth && this.roomService.roomAdmin.transparentMode)
+     );
   }
 
   encode(text: string):string {
@@ -151,6 +173,7 @@ export class BillBoardCardComponent implements OnInit,AfterViewInit {
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
+    private roomService: RoomService,
     private billBoardService: BillBoardService
   ) {
   }

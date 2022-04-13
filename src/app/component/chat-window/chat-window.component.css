@@ -79,8 +79,11 @@
   vertical-align: middle;
   outline: 0;
   font-size: 13px;
-  background-color: #777;
+  background-color: #555;
   border: solid 2px #222;
+  box-shadow:1px -1px 3px 0px #FFF inset,
+  0px 1px 3px 0px #000 inset;
+  color: #FFF;
   padding-top : 0px;
   margin-top : 0px;
   padding: 2px 8px;
@@ -91,14 +94,17 @@
 }
 
 .chat-tab input[type="radio"] + div:hover {
+  border-top: none;
   background-color: #AAA;
+  box-shadow:1px -1px 3px 0px #FFF inset;
   color: #000;
 }
 
 .chat-tab input[type="radio"]:checked + div {
   border-top: none;
   font-weight: bold;
-  background: #CCC;
+  background-color: #EEE;
+  box-shadow:1px -1px 3px 0px #222 inset;
   color: #222;
 }
 

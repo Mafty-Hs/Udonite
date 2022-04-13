@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   display:flex;
-  flex-flow: column nowrap; 
+  flex-flow: column nowrap;
   justify-content: flex-start;
 }
 
@@ -16,11 +16,11 @@
 .section {
   width: 100%;
   display:flex;
-  flex-flow: row nowrap; 
+  flex-flow: row nowrap;
 }
 
 .image {
-  width: 160px;
+  width: 200px;
 }
 
 .description {

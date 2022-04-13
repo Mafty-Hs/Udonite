@@ -1,13 +1,17 @@
 .menu {
   display: flex;
   height: 50px;
-  font-size: 14px;
-  flex-direction: row;
+  box-sizing: border-box;
+  font-size: 16px;
   flex-wrap: nowrap;
   overflow-x: scroll;
 }
 
 .menu form {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  align-items: flex-end;
   white-space: nowrap;
 }
 
@@ -22,28 +26,37 @@
 
 .menu input[type="radio"] + div {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: bottom;
   outline: 0;
-  background-color: #777;
-  border: solid 2px #222;
-  padding-top : 0px;
+  background-color: #BBB;
+  border: solid 1px #444;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  box-shadow:1px 1px 3px 0px #FFF inset,
+  0px -1px 3px 0px #000 inset;
+  font-weight: bolder;
+  color: #444;
+  padding: 4px 12px;
+  padding-bottom : 2px;
   margin-top : 0px;
-  padding: 2px 8px;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px; 
   cursor: pointer;
 }
 
 .menu input[type="radio"] + div:hover {
-  background-color: #AAA;
-  color: #000;
+  background-color: #999;
+  border: solid 2px #444;
+  border-bottom: none;
+  box-shadow:1px 1px 3px 0px #DDD inset;
+  color: #222;
 }
 
 .menu input[type="radio"]:checked + div {
-  border-top: none;
+  border: solid 2px #222;
   font-weight: bold;
-  background: #CCC;
-  color: #222;
+  border-bottom: none;
+  box-shadow:1px 1px 3px 0px #DDD inset;
+  background: #666;
+  color: #FFF;
 }
 
 .menu::-webkit-scrollbar {
@@ -60,10 +73,12 @@
 
 .help {
   width:100%;
-  height:calc(100% - 50px);
+  box-sizing: border-box;
+  border: solid 1px #222;
+  background-color: #444;
 }
 
-.content {
+.main-content {
   width:100%;
   height:100%;
   padding: 0;

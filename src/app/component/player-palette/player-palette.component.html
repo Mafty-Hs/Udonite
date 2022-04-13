@@ -12,8 +12,11 @@
         <form>
           <div class="chat-tab">
             <label *ngFor="let chatTab of chatMessageService.chatTabs">
-              <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-              <div>{{chatTab.name}}</div>
+              <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [(ngModel)]="chatTabidentifier">
+              <div>
+                <span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>
+                {{chatTab.name}}
+              </div>
             </label>
           </div>
         </form>

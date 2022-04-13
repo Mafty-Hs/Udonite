@@ -15,6 +15,11 @@ import { SaveDataService } from 'service/save-data.service';
 
 import { LogSaveComponent } from 'component/log-save/log-save.component';
 
+interface allowedPlayer {
+  playerName: string;
+  playerId: string;
+}
+
 @Component({
   selector: 'app-chat-tab-setting',
   templateUrl: './chat-tab-setting.component.html',
@@ -36,7 +41,19 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
   get disableTabSetting(): boolean { return this.roomService.disableTabSetting; }
-  isSaveing: boolean = false;
+
+  get adminAuth():boolean { return this.roomService.adminAuth;}
+
+  get allowPlayers():allowedPlayer[] {
+    if (this.selectedTab) {
+      return this.selectedTab.allowedPlayers.map(playerId => {
+        return {playerName: this.playerService.getPlayerById(playerId).name,playerId: playerId }
+      })
+    }
+    return []
+  }
+
+  isSaveing:boolean = false;
   progresPercent: number = 0;
 
   identifier: string;
@@ -149,5 +166,22 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.selectedTab);
     }
+  }
+
+  select_player:string ="";
+
+  addPlayer() {
+    if (!this.selectedTab) return;
+    if (this.selectedTab.allowedPlayers.includes(this.select_player)) return;
+    this.selectedTab.allowedPlayers.push(this.select_player);
+    this.selectedTab.update();
+    this.select_player = "";
+  }
+
+  removePlayer(playerId :string) {
+    if (!this.selectedTab) return;
+    if (!this.selectedTab.allowedPlayers.includes(playerId)) return;
+    this.selectedTab.allowedPlayers = this.selectedTab.allowedPlayers.filter( _playerid => _playerid != playerId );
+    this.selectedTab.update();
   }
 }

@@ -1,16 +1,17 @@
 <!--<h2>チャットシステム</h2>-->
 <div class="component"  [class]="bgColor">
 <div *ngIf="!isEase ; else ease" class="log">
-  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab>
+  <chat-tab *ngIf="chatTab && chatTab.isAllowed" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab>
   <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
+  <div *ngIf="chatTab && !chatTab.isAllowed" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※このチャットタブへの権限がありません</div>
 </div>
 <div class="sticky-bottom">
   <div class="set-area">
     <div class="chat-tab">
       <form>
         <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
-          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-          <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed"  [(ngModel)]="chatTabidentifier">
+          <div><span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
         </label>
       </form>
     </div>
@@ -43,4 +44,6 @@
 <ng-template #ease>
   <chat-tab-ease *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab-ease>
   <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
+  <div *ngIf="chatTab && !chatTab.isAllowed" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※このチャットタブへの権限がありません</div>
 </ng-template>
+

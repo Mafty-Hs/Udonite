@@ -197,6 +197,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
     isUseFaceIcon?:boolean ,isCharacter?: boolean, standName?: string, isUseStandImage?: boolean }):void {
     if (this.chatTab) {
+      if (!this.chatTab.isAllowed) return;
       this.chatMessageService.sendMessage(
         this.chatTab,
         value.text,

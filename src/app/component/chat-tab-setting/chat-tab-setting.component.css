@@ -77,6 +77,10 @@
   flex-wrap: wrap;
 }
 
+.buttons button {
+  padding: 0.3em 1em;
+}
+
 .no-grow{
   -webkit-flex-grow: 0; /* Safari */
   flex-grow: 0;
@@ -96,4 +100,23 @@
   left: 0;
   right: 0;
   font-size: 0.9em;
+}
+
+.permission {
+  font-size: 12px;
+}
+
+.player {
+  padding: 2px;
+  display: inline-block;
+  background-color: #222;
+  border-radius: 10px;
+}
+
+.erase {
+  padding: 2px 6px;
+  display: inline-block;
+  background-color: rgb(122, 0, 0);
+  border-radius: 100%;
+  cursor: pointer;
 }

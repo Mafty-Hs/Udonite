@@ -93,6 +93,10 @@
   cursor: pointer;
 }
 
+.chat-tab input[type="radio"] + div:disabled {
+  color: #BBB;
+}
+
 .chat-tab input[type="radio"] + div:hover {
   border-top: none;
   background-color: #AAA;
@@ -121,7 +125,7 @@
 
 .badge {
   position: absolute;
-  top: -4px;
+  top: -6px;
   right: 0;
 }
 

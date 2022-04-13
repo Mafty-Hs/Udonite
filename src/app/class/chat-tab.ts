@@ -24,7 +24,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
   }
 
   get isAllowed():boolean {
-    if (!this.allowedPlayers) return true;
+    if (this.allowedPlayers.length < 1) return true;
     return  (RoomAdmin.auth || this.allowedPlayers.includes(RoomAdmin.myPlayerID));
   }
 
@@ -33,7 +33,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     super.onChildAdded(child);
     if (child.parent === this && child instanceof ChatMessage && child.isDisplayable) {
       this._unreadLength++;
-      this.messageAdd(child.identifier);     
+      this.messageAdd(child.identifier);
     }
   }
 

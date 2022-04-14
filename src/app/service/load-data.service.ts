@@ -1,6 +1,10 @@
-import { EventSystem } from '@udonarium/core/system';
 import { Injectable } from '@angular/core';
+
+import { EventSystem, IONetwork } from '@udonarium/core/system';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+
 
 import { BillBoard } from '@udonarium/bill-board';
 import { BillBoardCard } from '@udonarium/bill-board-card';
@@ -21,6 +25,8 @@ import { BillBoardService } from './bill-board.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameTable } from '@udonarium/game-table';
 import { GameCharacter } from '@udonarium/game-character';
+import { DataElement } from '@udonarium/data-element';
+
 
 
 
@@ -77,9 +83,19 @@ export class LoadDataService {
 
   tabletopDataLoad(xmlElement :Element ,nodeName :string):void {
     if (this.roomService.disableTabletopLoad) return;
-    let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
+    let gameObject = ObjectSerializer.instance.parseXml(xmlElement) as TabletopObject;
     if (this.playerService.isHideCharacterOnLoad && (gameObject instanceof GameCharacter)) {
       gameObject.owner = this.playerService.myPlayer.playerId;
+    }
+    if (gameObject.imageDataElement) {
+      let images = gameObject.imageDataElement.children as DataElement[]
+      for (let image of images) {
+        let identifier = String(image.value);
+        if (identifier && StringUtil.validUrl(identifier)) {
+          if (!ImageStorage.instance.setMine(identifier))
+            IONetwork.imageUrl(identifier ,this.playerService.myPlayer.playerId , ['外部URL']);
+        }
+      }
     }
     EventSystem.trigger('TABLETOP_OBJECT_LOADED',gameObject.identifier);
     return;

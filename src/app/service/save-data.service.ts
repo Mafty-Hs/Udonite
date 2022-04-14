@@ -116,7 +116,7 @@ export class SaveDataService {
     for (let identifier in images) {
       let image = images[identifier];
       let file :File;
-      if (image && !image?.owner.includes('SYSTEM')) file = await this.downloadImage(image.url);
+      if (image && !image?.owner.includes('SYSTEM') && image?.type != 'URL') file = await this.downloadImage(image.url);
       if (file) {
         files.push(file);
       }

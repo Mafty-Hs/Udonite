@@ -22,6 +22,7 @@ export class ImageFile {
   get url(): string { return this.context.url ? this.context.url : this.context.thumbnail.url; };
   get thumbnail(): ThumbnailContext { return this.context.thumbnail };
   get tag(): string[] { return this.context.tag };
+  get type(): string { return this.context.type };
   get owner(): string[] { return this.context.owner };
   set owner(owner :string[]) {this.context.owner = owner; IONetwork.imageUpdate(this.context);}
   get aspect():number { return this._aspect}

@@ -1,4 +1,3 @@
-
 import { socketio } from "./socketio";
 import { RoomContext, RoomList, ServerInfo } from "./netowrkContext";
 import { StringUtil } from "../util/string-util";
@@ -156,6 +155,21 @@ export class IONetwork {
     return result as ImageContext[];
   }
 
+  async imageUrl(imageUrl :string, owner :string, tags :string[]):Promise<void> {
+    let context:ImageContext = {
+      identifier: imageUrl ,
+      type: "URL",
+      url: imageUrl,
+      thumbnail: {type: "" , url: ""}, 
+      filesize: 0, 
+      isHide: false,
+      owner: [owner],
+      tag: tags
+    }
+    this.socket.send('imageUpdate', context);
+    return;
+  }
+
   async imageUpdate(context :ImageContext):Promise<void> {
     this.socket.send('imageUpdate', context);
     return;
@@ -169,6 +183,21 @@ export class IONetwork {
   async audioMap():Promise<AudioContext[]> {
     let result = await this.socket.send('audioMap',{});
     return result as AudioContext[];
+  }
+  
+  async audioUrl(audioUrl :string ,owner :string ,filename :string):Promise<void> {
+    let context:AudioContext = {
+      identifier: audioUrl ,
+      name: filename,
+      type: "URL",
+      url: audioUrl,
+      filesize: 0, 
+      owner: owner,
+      volume: 100,
+      isHidden: false
+    }
+    this.socket.send('audioUpdate', context);
+    return;
   }
 
   async audioUpdate(context :AudioContext):Promise<void> {

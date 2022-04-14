@@ -13,8 +13,12 @@
     <div class="data-container">
       <ng-container *ngIf="!character.hasOwner || character.isTransparent ; else forbidden" >
         <div class="data" *ngFor="let dataElm of dataElms(character.identifier)">
-          <ng-container *ngIf="dataElm">
+          <ng-container *ngIf="dataElm && dataElm.name.length < 7">
             <ng-container *ngTemplateOutlet="swDataElm; context:{DataElm :dataElm}">
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="dataElm && dataElm.name.length >= 7">
+            <ng-container *ngTemplateOutlet="swDataElmShort; context:{DataElm :dataElm}">
             </ng-container>
           </ng-container>
         </div>
@@ -39,6 +43,26 @@
     </ng-container>
     <ng-container *ngSwitchDefault>
       {{dataElm.name}}: {{dataElm.value}}
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #swDataElmShort let-dataElm="DataElm">
+  <ng-container [ngSwitch]="dataElm.type">
+    <ng-container *ngSwitchCase="'simpleNumber'">
+      {{dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'numberResource'">
+      {{dataElm.currentValue}}/{{!+dataElm.value ? '???' : dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'checkProperty'">
+      {{dataElm.name}} <input type="checkbox" style="width: 2em;" checked="{{dataElm.value ? 'checked' : ''}}">
+    </ng-container>
+    <ng-container *ngSwitchCase="'abilityScore'">
+      {{dataElm.value}}
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      {{dataElm.value}}
     </ng-container>
   </ng-container>
 </ng-template>

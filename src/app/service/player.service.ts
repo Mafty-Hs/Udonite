@@ -21,7 +21,8 @@ export class PlayerService {
   readonly CHAT_WHITETEXT_COLOR = Player.CHAT_WHITETEXT_COLOR;
   readonly CHAT_BLACKTEXT_COLOR = Player.CHAT_BLACKTEXT_COLOR;
 
-  primaryChatWindowID:string = "";
+  primaryChatWindow:boolean = false;
+  primaryChatWindowSetting = null;
   private _primaryChatTabIdentifier:string = "";
   primaryChatTabIdentifier$ = new Subject<string>();
   primaryChatTabIdentifierEmit = this.primaryChatTabIdentifier$.asObservable();

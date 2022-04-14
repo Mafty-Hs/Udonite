@@ -18,6 +18,14 @@ import { LogSaveComponent } from 'component/log-save/log-save.component';
 interface allowedPlayer {
   playerName: string;
   playerId: string;
+};
+export class ChatWindowSetting {
+  chatWindowIdentifier :string;
+  localFontsize :number;
+  bgColor :string;
+  isEase :boolean;
+  isLogOnly :boolean;
+  controlType :string;
 }
 
 @Component({
@@ -28,6 +36,7 @@ interface allowedPlayer {
 export class ChatTabSettingComponent implements OnInit, OnDestroy {
   selectedTab: ChatTab = null;
   selectedTabXml: string = '';
+  chatWindowSetting: ChatWindowSetting = null;
 
   get tabName(): string { return this.selectedTab.name; }
   set tabName(tabName: string) { if (this.isEditable) this.selectedTab.name = tabName; }
@@ -56,17 +65,18 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   isSaveing:boolean = false;
   progresPercent: number = 0;
 
-  identifier: string;
-  localFontsize: number;
-  bgColor: string;
-  isEase: boolean;
-  isLogOnly: boolean;
-  controlType: string = "";
-
-  setConf() {
-   let mySetData: any[] = [this.identifier,this.localFontsize,this.bgColor,this.isEase,this.isLogOnly,this.controlType]
-    EventSystem.trigger('CHAT_WINDOW_CONF', mySetData);
-  }
+  get identifier(): string { return this.chatWindowSetting.chatWindowIdentifier; }
+  set identifier(identifier :string){ this.chatWindowSetting.chatWindowIdentifier = identifier; }
+  get localFontsize(): number { return this.chatWindowSetting.localFontsize; }
+  set localFontsize(localFontSize : number) { this.chatWindowSetting.localFontsize = localFontSize; }
+  get bgColor(): string { return this.chatWindowSetting.bgColor; }
+  set bgColor(bgColor :string) { this.chatWindowSetting.bgColor = bgColor; }
+  get isEase(): boolean { return this.chatWindowSetting.isEase; }
+  set isEase(isEase :boolean) { this.chatWindowSetting.isEase = isEase; }
+  get isLogOnly(): boolean { return this.chatWindowSetting.isLogOnly; }
+  set isLogOnly(isLogOnly :boolean) { this.chatWindowSetting.isLogOnly = isLogOnly; }
+  get controlType(): string  { return this.chatWindowSetting.controlType; }
+  set controlType(controlType :string) { this.chatWindowSetting.controlType = controlType; }
 
   constructor(
     private modalService: ModalService,

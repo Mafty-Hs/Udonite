@@ -3,7 +3,7 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
+import { ChatTabSettingComponent ,ChatWindowSetting } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -18,6 +18,14 @@ import { PlayerService } from 'service/player.service';
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   _sendFrom: string = this.playerService.myPlayer.playerId;
   canAutoScroll:boolean = true;
+  chatWindowSetting: ChatWindowSetting = {
+   chatWindowIdentifier: "",
+   localFontsize: 14,
+   bgColor: 'black',
+   isEase: false,
+   isLogOnly: true,
+   controlType: 'resource'
+  };;
 
   get sendFrom(): string { return this._sendFrom; }
   set sendFrom(sendFrom: string) {
@@ -36,17 +44,19 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return false;
   }
+  
+  
+  get chatWindowID(): string { return this.chatWindowSetting.chatWindowIdentifier; }
+  get localFontsize(): number { return this.chatWindowSetting.localFontsize; }
+  get bgColor(): string { return this.chatWindowSetting.bgColor; }
+  get isEase(): boolean { return this.chatWindowSetting.isEase; }
+  get isLogOnly(): boolean { return this.chatWindowSetting.isLogOnly; }
+  get controlType(): string  { return this.chatWindowSetting.controlType; }
 
-  chatWindowID:string;
-  isEase:boolean = false;
-  isLogOnly:boolean = true;
-  localFontsize:number = 14;
-  bgColor:string = "black";
   get isBlack():boolean {
     return (this.bgColor === 'black')
   }
 
-  controlType:string = "resource";
   _disableControl: boolean = true;
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
@@ -76,7 +86,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
   get isPrimary():boolean {
-    return this.playerService.primaryChatWindowID === this.chatWindowID;
+    return this.playerService.primaryChatWindowSetting === this.chatWindowSetting;
   }
 
   isAutoScroll: boolean = true;
@@ -100,20 +110,20 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.checkAutoScroll();
         }
         if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
-      })
-      .on('CHAT_WINDOW_CONF', event => {
-        if (event.data[0] == this.chatWindowID) {
-          this.localFontsize = event.data[1];
-          this.bgColor = event.data[2];
-          this.isEase = event.data[3];
-          this.isLogOnly = event.data[4];
-          this.controlType = event.data[5];
-        }
       });
     Promise.resolve().then(() => {
-      this.chatWindowID = UUID.generateUuid() ;
-      if (!this.playerService.primaryChatWindowID) {
-        this.playerService.primaryChatWindowID = this.chatWindowID;
+      if (!this.playerService.primaryChatWindow) {
+        if (this.playerService.primaryChatWindowSetting) {
+          this.chatWindowSetting = this.playerService.primaryChatWindowSetting;
+        }
+        else {
+          this.chatWindowSetting.chatWindowIdentifier = UUID.generateUuid();
+          this.playerService.primaryChatWindowSetting = this.chatWindowSetting;
+        }
+        this.playerService.primaryChatWindow = true;
+      }
+      else {
+        this.chatWindowSetting.chatWindowIdentifier = UUID.generateUuid();
       }
       if (this.isPrimary && this.playerService.primaryChatTabIdentifier) {
           this._chatTabidentifier = this.playerService.primaryChatTabIdentifier;
@@ -135,7 +145,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy():void {
-    if (this.isPrimary) this.playerService.primaryChatWindowID = "";
+    if (this.isPrimary) this.playerService.primaryChatWindow = false;
     EventSystem.unregister(this);
   }
 
@@ -186,12 +196,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let option: PanelOption = { left: coordinate.x - 300, top: coordinate.y - 250, width: 500, height: 500 };
     let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
     component.selectedTab = this.chatTab;
-    component.identifier = this.chatWindowID;
-    component.localFontsize = this.localFontsize;
-    component.bgColor = this.bgColor;
-    component.isEase = this.isEase;
-    component.isLogOnly = this.isLogOnly;
-    component.controlType = this.controlType;
+    component.chatWindowSetting = this.chatWindowSetting;
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,

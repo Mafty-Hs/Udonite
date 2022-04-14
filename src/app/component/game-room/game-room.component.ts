@@ -17,6 +17,7 @@ import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { HelpComponent } from 'component/help/help.component';
 import { ModalComponent } from 'component/modal/modal.component';
 import { RoundComponent } from 'component/round/round.component';
@@ -108,6 +109,15 @@ export class GameRoomComponent implements OnInit {
 
   closeSub() {
     this.selectMenu = "";
+  }
+  
+  chatOpen(e:Event):void {
+    if (this.playerService.primaryChatWindow) return;
+    this.panelService.open(ChatWindowComponent, { width: 700, height: 500, left: 50, top: 50 });
+  }
+  
+  inventoryOpen(e:Event):void {
+    this.panelService.open(GameObjectInventoryComponent, { width: 550, height: 700, left: 50, top: 50 });
   }
 
   roundAdd(e:Event):void {

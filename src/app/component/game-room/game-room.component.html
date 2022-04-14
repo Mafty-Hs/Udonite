@@ -12,12 +12,12 @@
         </span>
       </button>
       <button class="select" [ngClass]="{'select-off':  selectMenu == 'chat' }"
-       (click)='openSubMenu($event,"chat")'>
+       (click)='openSubMenu($event,"chat")'  (contextmenu)="chatOpen($event); false">
         <span *ngIf="!minimumMode; else miniChat">チャット{{isOpen("chat")}}
         </span>
      </button>
       <button class="select"  [ngClass]="{'select-off':  selectMenu == 'data' }"
-       (click)='openSubMenu($event,"data")'>
+       (click)='openSubMenu($event,"data")'  (contextmenu)="inventoryOpen($event); false">
         <span *ngIf="!minimumMode; else miniData">リスト{{isOpen("data")}}
         </span>
       </button>

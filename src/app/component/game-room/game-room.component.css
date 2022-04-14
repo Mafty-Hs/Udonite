@@ -26,9 +26,10 @@
 .game-table {
   position: absolute;
   left: 0px;
-  top: 40px;
+  top: 50px;
   width: 100%;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 50px);
+  box-sizing: border-box;
   overflow: hidden;
 }
 

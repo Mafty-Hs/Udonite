@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef,ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectionStrategy } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService , PanelSize } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -26,7 +26,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
     ])
   ]
 })
-export class UIPanelComponent implements OnInit {
+export class UIPanelComponent implements OnInit ,OnDestroy , AfterViewInit{
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('scrollablePanel', { static: true }) scrollablePanel: ElementRef<HTMLDivElement>;
   @ViewChild('titleBar', { static: true }) titleBar: ElementRef<HTMLDivElement>;
@@ -63,7 +63,24 @@ export class UIPanelComponent implements OnInit {
   isFullScreen: boolean = false;
   isMinimized: boolean = false;
 
+  moveTimer:NodeJS.Timer;
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  observer = new MutationObserver(records => {
+    if (this.moveTimer) clearTimeout(this.moveTimer);
+    setTimeout(() => this.onMove(),1000)
+  })
+
+  onMove() {
+    let panel = this.draggablePanel.nativeElement;
+    if (panel.offsetTop < 50) {
+      this.top = 50;
+      panel.style.top = this.top + 'px';
+      if (this.panelService.fullPanelSize.height < panel.offsetHeight) {
+        this.height = this.panelService.fullPanelSize.height;
+        panel.style.height = this.height + 'px';
+      }
+    }
+  }
 
   constructor(
     public panelService: PanelService,
@@ -77,6 +94,18 @@ export class UIPanelComponent implements OnInit {
 
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+    this.observer.observe(this.draggablePanel.nativeElement, {
+      attributes: true,
+      attributeFilter: ['style']
+    })},500);
+  }
+
+  ngOnDestroy(): void {
+    this.observer.disconnect();
   }
 
   toggleFullScreen() {

@@ -25,7 +25,7 @@ export class PanelService {
   static UIPanelComponentClass: { new(...args: any[]): any } = null;
 
   get fullPanelSize():PanelSize {
-    return { 
+    return {
       width: window.innerWidth ,
       height: (window.innerHeight - 50)
     };
@@ -48,7 +48,14 @@ export class PanelService {
   }
   set height(_height:number) {
      this._height = ( _height > this.fullPanelSize.height ) ? this.fullPanelSize.height : _height;
+     setTimeout(() => this.topfix() ,500 );
   }
+
+  topfix() {
+    console.log('top:' + this.top)
+    console.log('height:' + this.height)
+  }
+
   isAbleFullScreenButton: boolean = true;
   isAbleMinimizeButton: boolean = true;
   isAbleCloseButton: boolean = true;

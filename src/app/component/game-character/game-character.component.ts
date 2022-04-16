@@ -258,45 +258,59 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
-        }),
+        })
       }),
       (this.gameCharacter.imageFiles.length <= 1 ? null : ContextMenuSeparator),
-      (this.isUseIconToOverviewImage
-        ? {
-          name: '☑ オーバービューに顔ICを使用', action: () => {
-            this.isUseIconToOverviewImage = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ オーバービューに顔ICを使用', action: () => {
-            this.isUseIconToOverviewImage = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      (this.gameCharacter.isShowChatBubble
-        ? {
-          name: '☑ 💭の表示', action: () => {
-            this.gameCharacter.isShowChatBubble = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 💭の表示', action: () => {
-            this.gameCharacter.isShowChatBubble = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      (this.isDropShadow
-        ? {
-          name: '☑ 影の表示', action: () => {
-            this.isDropShadow = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 影の表示', action: () => {
-            this.isDropShadow = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
+      { name: '表示設定', action: null, subActions:[
+        (this.isUseIconToOverviewImage
+          ? {
+            name: '☑ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.gameCharacter.isShowChatBubble
+          ? {
+            name: '☑ 💭の表示', action: () => {
+              this.gameCharacter.isShowChatBubble = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 💭の表示', action: () => {
+              this.gameCharacter.isShowChatBubble = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.isDropShadow
+          ? {
+            name: '☑ 影の表示', action: () => {
+              this.isDropShadow = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 影の表示', action: () => {
+              this.isDropShadow = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.isAltitudeIndicate
+          ? {
+            name: '☑ 高度の表示', action: () => {
+              this.isAltitudeIndicate = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 高度の表示', action: () => {
+              this.isAltitudeIndicate = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+      ]},
       { name: '画像効果', action: null, subActions: [
         (this.isInverse
           ? {
@@ -350,42 +364,32 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           }
       ]},
       ContextMenuSeparator,
-      (!this.isNotRide
-        ? {
-          name: '☑ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      (this.stopRotate
-        ? {
-          name: '☑ 回転を禁止', action: () => {
-            this.stopRotate = false;
-            SoundEffect.play(PresetSound.unlock);
-          }
-        } : {
-          name: '☐ 回転を禁止', action: () => {
-            this.stopRotate = true;
-            SoundEffect.play(PresetSound.lock);
-          }
-        }),
-      (this.isAltitudeIndicate
-        ? {
-          name: '☑ 高度の表示', action: () => {
-            this.isAltitudeIndicate = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 高度の表示', action: () => {
-            this.isAltitudeIndicate = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
+      { name: '動作設定', action: null, subActions:[
+        (!this.isNotRide
+          ? {
+            name: '☑ 他のキャラクターに乗る', action: () => {
+              this.isNotRide = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 他のキャラクターに乗る', action: () => {
+              this.isNotRide = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.stopRotate
+          ? {
+            name: '☑ 回転を禁止', action: () => {
+              this.stopRotate = false;
+              SoundEffect.play(PresetSound.unlock);
+            }
+          } : {
+            name: '☐ 回転を禁止', action: () => {
+              this.stopRotate = true;
+              SoundEffect.play(PresetSound.lock);
+            }
+          }),
+      ] },
       {
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {

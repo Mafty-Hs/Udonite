@@ -122,45 +122,47 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
-        }),
+        })
       }),
       (this.gameCharacter.imageFiles.length <= 1 ? null : ContextMenuSeparator),
-      (this.isUseIconToOverviewImage
-        ? {
-          name: '☑ オーバービューに顔ICを使用', action: () => {
-            this.isUseIconToOverviewImage = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ オーバービューに顔ICを使用', action: () => {
-            this.isUseIconToOverviewImage = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      (this.gameCharacter.isShowChatBubble
-        ? {
-          name: '☑ 💭の表示', action: () => {
-            this.gameCharacter.isShowChatBubble = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 💭の表示', action: () => {
-            this.gameCharacter.isShowChatBubble = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
-      (this.isDropShadow
-        ? {
-          name: '☑ 影の表示', action: () => {
-            this.isDropShadow = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 影の表示', action: () => {
-            this.isDropShadow = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }),
+      { name: '表示設定', action: null, subActions:[
+        (this.isUseIconToOverviewImage
+          ? {
+            name: '☑ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.gameCharacter.isShowChatBubble
+          ? {
+            name: '☑ 💭の表示', action: () => {
+              this.gameCharacter.isShowChatBubble = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 💭の表示', action: () => {
+              this.gameCharacter.isShowChatBubble = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+        (this.isDropShadow
+          ? {
+            name: '☑ 影の表示', action: () => {
+              this.isDropShadow = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 影の表示', action: () => {
+              this.isDropShadow = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
+      ]},
       { name: '画像効果', action: null, subActions: [
         (this.isInverse
           ? {

@@ -2,7 +2,7 @@
   margin-left: 10px;
 }
 .table {
-  display:table; 
+  display:table;
   /*padding-left: 10px;*/
   /*border:1px solid #FF0000;*/
   width :100%;
@@ -22,7 +22,7 @@
   vertical-align: bottom;
   padding: 0.5em 0.0em 0.1em 0.5em;
   /*border:1px solid #0000FF;*/
-  border-bottom:1px dotted #888;
+  border-bottom:1px dotted #AAA;
   box-sizing: border-box;
 }
 .table-cell_solid {
@@ -38,8 +38,8 @@
   box-sizing: border-box;
 }
 .table-cell_inner-table-title {
-  border-bottom: 1px solid #444;
-  border-left: 8px solid #444;
+  border-bottom: 1px solid #DDD;
+  border-left: 8px solid #FFF;
   padding-left:8px;
 }
 .box {
@@ -64,7 +64,7 @@ input, button, textarea, select{
   border-radius: 2px;
   outline: none;
 
-  color: #000;
+  color: #FFF;
   font-family: Cambria, Georgia;
   font-size: 1.0em;
   padding: 2px;
@@ -72,10 +72,10 @@ input, button, textarea, select{
 }
 
 input:hover, textarea:hover, select:hover  {
-  background: #EEE;
+  background: #444;
 }
 input:focus, textarea:focus, select:focus  {
-  background: #FFF;
+  background: #212121;
 }
 button i {
   font-size: 1.0rem;
@@ -86,14 +86,22 @@ button:hover  {
   color: #CCC;
 }
 
+.element-button {
+  content: '';
+}
+
+.element-button::after {
+  background: none;
+}
+
 .table-cell button{
   font-size: 0.5rem;
 }
 
 input[type='range'] {
   --slider-track-color: transparent; /* #ccc */
-  --slider-fill-color: #555; /*#777 */
-  --slider-border-color: #777;
+  --slider-fill-color: #888; /*#777 */
+  --slider-border-color: #AAA;
   --slider-height: 0.8em;
   --slider-thumb-size: 1.0em;
   --range: calc(var(--max) - var(--min));
@@ -160,7 +168,7 @@ input[type='range']::-webkit-slider-thumb {
   box-sizing: border-box;
   border: solid 1px  var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 
@@ -170,7 +178,7 @@ input[type='range']::-moz-range-thumb {
   box-sizing: border-box;
   border: solid 1px  var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 
@@ -181,7 +189,7 @@ input[type='range']::-ms-thumb {
   box-sizing: border-box;
   border: solid 1px  var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 

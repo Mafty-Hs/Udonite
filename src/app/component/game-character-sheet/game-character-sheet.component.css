@@ -5,7 +5,7 @@
   */
   width: 250px;
   height: 250px;
-  
+
   z-index: 0;
 }
 .main-image {
@@ -152,18 +152,15 @@
   padding: 10px;
   -webkit-flex: 1 0 auto; /* Safari */
   flex: 1 0 auto;
-  /*border: 1px solid #999;*/
+  border: 1px solid #444;
   box-sizing: border-box;
   min-width: 25px;
 
-  background-color: rgba(240,240,240, 0.9);
-  background-color: rgba(240,240,240, 0.9);
-  color: #000;
+  background-color: rgba(33,33,33, 0.9);
+  color: #FFF;
 
-  /*
-  border-top: 1px solid #444;
-  border-bottom: 1px solid #444;
-  */
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
 
   /*
   background-color: rgba(70, 70, 70, 0.8);
@@ -196,7 +193,7 @@ input {
 
 .inverse {
   transform: scaleX(-1);
- 
+
 }
 .inverser {
   transition: transform 132ms 0s ease;
@@ -262,7 +259,7 @@ input {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  
+
   font-weight: bolder;
   text-align: center;
   white-space: pre-wrap;
@@ -270,17 +267,17 @@ input {
   overflow-wrap: anywhere;
   word-break: break-word;
   font-size: 24px;
-  color: #444;
+  color: #FFF;
   z-index: 5;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px;
+  text-shadow:
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px;
 }

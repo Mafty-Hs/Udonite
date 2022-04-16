@@ -24,7 +24,7 @@
     </div>
     <div class="table-cell">
       <ng-container *ngIf="isCommonValue">
-        <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
+        <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
           [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
         <br />
         <input style="width:40%; max-width:8em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
@@ -33,7 +33,7 @@
         <ng-container [ngSwitch]="gameDataElement.type">
         <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
-            <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div> 
+            <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
             <input type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; min-width: 3em; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
@@ -114,9 +114,9 @@
   </ng-container>
 </ng-container>
 <ng-template #editButtons>
-  <button (click)="addElement()"><i class="material-icons">add_circle</i></button>
-  <button (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+  <button class="element-button" (click)="addElement()"><i class="material-icons">add_circle</i></button>
+  <button class="element-button" (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
   <br>
-  <button (click)="deleteElement()"><i class="material-icons">remove_circle_outline</i></button>
-  <button (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
+  <button class="element-button" (click)="deleteElement()"><i class="material-icons">remove_circle_outline</i></button>
+  <button class="element-button" (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
 </ng-template>

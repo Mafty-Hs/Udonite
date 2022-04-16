@@ -88,8 +88,6 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
   @ViewChild('characterImage') characterImage: ElementRef;
   @ViewChild('chatBubble') chatBubble: ElementRef;
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-
   get canEffect():boolean {
     return this.effectService.canEffect;
   }

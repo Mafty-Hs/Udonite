@@ -78,8 +78,6 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-
   gridSize: number = 50;
 
   movableOption: MovableOption = {};

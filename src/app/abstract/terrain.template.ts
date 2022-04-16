@@ -71,8 +71,6 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
     if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
   }
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-
   get slopeDirection(): number {
     if (!this.terrain.isSlope) return SlopeDirection.NONE;
     if (this.terrain.isSlope && this.terrain.slopeDirection === SlopeDirection.NONE) return SlopeDirection.BOTTOM;
@@ -82,7 +80,7 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
     this.terrain.isSlope = (slopeDirection != SlopeDirection.NONE);
     this.terrain.slopeDirection = slopeDirection;
   }
-  
+
   get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
 
@@ -234,7 +232,7 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
 
   protected showPopup(x: number , y: number , z: number) {
     let modal = this.modalService.open(PopupEditComponent, { x: x ,y: y,z: z});
-    
+
   }
 
   protected adjustMinBounds(value: number, min: number = 0): number {

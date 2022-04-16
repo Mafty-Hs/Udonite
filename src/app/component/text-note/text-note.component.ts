@@ -70,8 +70,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     return StringUtil.escapeHtmlAndRuby(this.text);
   }
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;

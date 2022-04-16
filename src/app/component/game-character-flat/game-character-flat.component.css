@@ -10,11 +10,6 @@
   cursor: grabbing;
 }
 
-.is-3d {
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-
 .is-transition {
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
@@ -89,13 +84,6 @@
   width: 100%;
   box-sizing: border-box;
   border: solid 2px #212121;
-}
-
-.upright-transform {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 
 .is-fit-width {

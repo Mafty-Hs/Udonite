@@ -4,7 +4,7 @@
   max-width: 100%;
   box-sizing: border-box;
   overflow: visible;
-  color: #444;
+  color: #FFF;
   z-index: 9000;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -35,8 +35,8 @@
 }
 
 .component-background {
-  background: linear-gradient(-30deg, rgba(232,232,232, 0.9), rgba(244, 244, 244, 0.9));
-  border-bottom: solid 1px #999;
+  background: linear-gradient(-30deg, rgba(40,40,40, 0.9), rgba(100,100,100, 0.9));
+  border-bottom: solid 1px #FFF;
 }
 
 .component-title {
@@ -64,9 +64,9 @@
 
 .title-background {
   background:linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 60%, #D0D0D0 80%, #424242 90%, #212121 100% 100%);
-  border-top: solid 1px #999;
-  border-left: solid 1px #999;
-  border-right: solid 1px #999;
+  border-top: solid 1px #BBB;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
 }
 
 .component-owner {
@@ -160,8 +160,8 @@
   box-sizing: border-box;
   overflow: hidden auto;
   line-height: 1.8;
-  border-left: solid 1px #999;
-  border-right: solid 1px #999;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
 }
 
 .character-image-box {
@@ -246,8 +246,8 @@
   max-height: 250px;
   overflow: hidden auto;
   box-sizing: border-box;
-  border-left: solid 1px #999;
-  border-right: solid 1px #999;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
 }
 
 .grid-container {
@@ -293,7 +293,7 @@
   border: none;
   border-radius: 2px;
   outline: none;
-  color: #444;
+  color: #FFF;
   padding: 0;
   box-sizing: border-box;
   resize: both;
@@ -312,7 +312,7 @@
   border: none;
   border-radius: 2px;
   outline: none;
-  color: #444;
+  color: #FFF;
   padding: 0;
   box-sizing: border-box;
   resize: both;
@@ -324,11 +324,11 @@
 }
 
 .textarea:hover {
-  background: #EEE;
+  background: #212121;
 }
 
 .textarea:focus {
-  background: #FFF;
+  background: #212121;
 }
 
 .tag {
@@ -377,17 +377,17 @@
   border: none;
   border-radius: 2px;
   outline: none;
-  color: #444;
+  color: #FFF;
   padding: 0;
   box-sizing: border-box;
 }
 
 .input:hover {
-  background: #EEE;
+  background: #212121;
 }
 
 .input:focus {
-  background: #FFF;
+  background: #212121;
 }
 
 input[type=number] {
@@ -399,12 +399,12 @@ input[type=number]:hover, input[type=number]:focus {
 }
 
 .border {
-  border-bottom: 1px dotted #888;
+  border-bottom: 1px dotted #BBB;
 }
 
 .separator {
   padding: 2px 0 2px 0;
-  border-bottom: 1px solid #888;
+  border-bottom: 1px solid #BBB;
 }
 
 .with-button-marign {
@@ -435,10 +435,10 @@ input[type=number]:hover, input[type=number]:focus {
 
 input[type='range'] {
   --slider-track-color: transparent; /* #ccc */
-  --slider-fill-color: #555; /*#777 */
+  --slider-fill-color: #BBB; /*#777 */
   --slider-border-color: #777;
   --slider-height: 0.8em;
-  --slider-thumb-size: 1.0em;
+  --slider-thumb-size: 1.5em;
   --range: calc(var(--max) - var(--min));
   --ratio: calc((var(--val) - var(--min))/var(--range));
   --sx: calc(.5*var(--slider-thumb-size) + var(--ratio)*(100% - var(--slider-thumb-size)));
@@ -503,7 +503,7 @@ input[type='range']::-webkit-slider-thumb {
   box-sizing: border-box;
   border: solid 1px  var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 
@@ -513,7 +513,7 @@ input[type='range']::-moz-range-thumb {
   box-sizing: border-box;
   border: solid 1px var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 
@@ -524,7 +524,7 @@ input[type='range']::-ms-thumb {
   box-sizing: border-box;
   border: solid 1px var(--slider-border-color);
   border-radius: 2em;
-  background: #ddd;
+  background: #FFF;
   cursor: pointer;
 }
 
@@ -582,7 +582,7 @@ button.link {
   border-radius: 2px;
   outline: none;
 
-  color: #444;
+  color: #FFF;
   font-family: Cambria, Georgia;
   font-size: 1.0em;
   padding: 2px;
@@ -591,14 +591,14 @@ button.link {
 
 button.link i {
   font-size: 1.0rem;
+  color: #FFF
 }
 
-button.link:hover  {
-  background: #444;
+button.link:hover i {
   color: #CCC;
 }
 
-button.link:disabled {
+button.link:disabled i {
   color: gray;
 }
 button.link:disabled:hover {
@@ -621,19 +621,19 @@ button.link:disabled:hover {
   overflow-wrap: anywhere;
   word-break: break-word;
   font-size: 24px;
-  color: #444;
+  color: #FFF;
   z-index: 5;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow:
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px,
-  #fff 0px 0px 2px;
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px;
 }
 
 .counter-container {
@@ -735,7 +735,7 @@ is-pointer-events-none {
 }
 
 .note-text {
-  color: #444;
+  color: #FFF;
   min-width: 3em;
   height: auto;
   min-height: 24px;

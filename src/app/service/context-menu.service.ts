@@ -45,7 +45,7 @@ export class ContextMenuService {
   title: string = '';
   actions: ContextMenuAction[] = [];
   position: ContextMenuPoint = { x: 0, y: 0 };
-  titleColor: string = Player.CHAT_BLACKTEXT_COLOR;
+  titleColor: string = Player.CHAT_WHITETEXT_COLOR;
   titleBold: boolean = false;
 
   constructor(
@@ -82,7 +82,7 @@ export class ContextMenuService {
     if (titleColor) {
       childPanelService.titleColor = titleColor;
     } else {
-      childPanelService.titleColor = Player.CHAT_BLACKTEXT_COLOR;
+      childPanelService.titleColor = this.titleColor;
     }
     childPanelService.titleBold = titleBold;
 

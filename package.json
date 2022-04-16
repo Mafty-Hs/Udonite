@@ -1,6 +1,6 @@
 {
   "name": "udonite",
-  "version": "1.0.4",
+  "version": "1.0.4.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

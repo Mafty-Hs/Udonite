@@ -17,7 +17,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
-  @Input() titleColor: string = this.playerService.CHAT_BLACKTEXT_COLOR;
+  @Input() titleColor: string = this.playerService.CHAT_WHITETEXT_COLOR;
   @Input() titleBold = false;
 
   @Input() isSubmenu: boolean = false;
@@ -31,7 +31,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   private callbackOnOutsideClick = (e) => this.onOutsideClick(e);
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
-  get altitudeHande(): TabletopObject { 
+  get altitudeHande(): TabletopObject {
     for (let action of this.actions) {
       if (action && action.altitudeHande) return action.altitudeHande;
     }

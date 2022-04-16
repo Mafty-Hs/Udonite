@@ -2,8 +2,8 @@
   box-sizing: border-box;
   overflow: visible;
   position: absolute;
-  background: linear-gradient(-30deg, rgba(200,200,200, 0.9), rgba(232, 232, 232, 0.9));
-  color: #000;
+  background: linear-gradient(-30deg, rgba(40,40,40, 0.9), rgba(100,100,100, 0.9));
+  color: #FFF;
   border: solid 1px #999;
   padding: 0px;
 
@@ -39,6 +39,11 @@
   max-height: 100%;
   max-width: 100%;
 }
+
+.title-area {
+  background-color: #444;
+}
+
 .title{
   overflow: hidden;
   white-space: nowrap;
@@ -48,7 +53,7 @@
   text-align: center;
   padding: 4px 16px;
   margin: 0 2px;
-  color: #222;
+  color: #FFF;
   border-bottom: 1px solid #AAA;
 }
 .menu-title {
@@ -80,11 +85,11 @@ ul > li {
 
   padding: 2px 20px;
   font-size: 12px;
-  color: #000;
+  color: #FFF;
 }
 ul > li.hasHighlight:hover {
-  color: #CCC;
-  background-color: rgba(30, 30, 30, 0.8);
+  color: #222;
+  background-color: rgba(232, 232, 232, 0.9);
 }
 
 .menu-title:not(.icon-menu) {
@@ -94,16 +99,17 @@ ul > li.hasHighlight:hover {
 }
 .bar-root {
   position: relative;
-  width: 20px;
+  width: 30px;
 }
 
 td.altitude {
   vertical-align: middle;
 }
 
+
 input.altitude {
   /*
-  writing-mode: bt-lr;   
+  writing-mode: bt-lr;
   appearance: slider-vertical;
   width: 8px;
   height: 100%;
@@ -122,16 +128,16 @@ input.altitude {
 
 .bar::-webkit-slider-thumb {
   border:3px #000;
-  background: #FFF; 
+  background: #FFF;
 }
 
 .bar::-moz-range-thumb {
   border:3px #000;
-  background: #FFF; 
+  background: #FFF;
 }
 
 .disabled .menu-title, .disabled .material-icons {
-  color: gray;
+  color: #BBB;
 }
 
 .altitude-view {
@@ -142,7 +148,6 @@ input.altitude {
 }
 
 .ruler {
-  color: #444;
   font-size: small;
   padding-left: 4px;
   padding-right: 2px;
@@ -191,7 +196,7 @@ input.altitude {
 
 .color-indicator {
   font-size: larger;
-  text-shadow: 
+  text-shadow:
   1px  1px 0px #ffffff,
   -1px  1px 0px #ffffff,
    1px -1px 0px #ffffff,

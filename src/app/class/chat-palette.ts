@@ -16,8 +16,15 @@ export interface PaletteVariable {
   value: string;
 }
 
+@SyncObject('sub-palette')
 export class SubPalette extends ObjectNode{
-  @SyncVar() palette: ChatPalette[] = [];
+  get palettes():ChatPalette[] {
+    return this.children as ChatPalette[];
+  }
+
+  palette(identifier :string): ChatPalette {
+   return this.palettes.find(chatPalette => chatPalette.identifier === identifier);
+  }
 }
 
 @SyncObject('chat-palette')
@@ -74,7 +81,7 @@ export class ChatPalette extends ObjectNode {
     let resouceWord = ''
     let resouceFlag = false;
     if (this.autoResouce.test(evaluate)){
-      resouceWord = evaluate.match(this.autoResouce)[1]; 
+      resouceWord = evaluate.match(this.autoResouce)[1];
     }
     console.log(evaluate);
     let limit = 128;

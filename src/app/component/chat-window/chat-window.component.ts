@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -13,7 +13,7 @@ import { PlayerService } from 'service/player.service';
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
-  styleUrls: ['./chat-window.component.css'],
+  styleUrls: ['./chat-window.component.css']
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   _sendFrom: string = this.playerService.myPlayer.playerId;
@@ -44,8 +44,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return false;
   }
-  
-  
+
+
   get chatWindowID(): string { return this.chatWindowSetting.chatWindowIdentifier; }
   get localFontsize(): number { return this.chatWindowSetting.localFontsize; }
   get bgColor(): string { return this.chatWindowSetting.bgColor; }
@@ -61,6 +61,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   get disableControl(): boolean { return this._disableControl };
   set disableControl(control: boolean) {
     this._disableControl = control;
+    this.scrollToBottom();
   };
 
   isEdit:boolean = false;

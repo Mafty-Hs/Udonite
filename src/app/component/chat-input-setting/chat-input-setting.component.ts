@@ -171,7 +171,7 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   get hasImage():boolean {
-    if (this.character.imageFile.url && this.character.imageFile.url?.length > 0) return true;
+    if (this.character.imageFile && this.character.imageFile?.url && this.character.imageFile?.url?.length > 0) return true;
     return false;
   }
 

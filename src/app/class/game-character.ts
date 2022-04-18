@@ -1,4 +1,4 @@
-import { ChatPalette } from './chat-palette';
+import { ChatPalette, SubPalette } from './chat-palette';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
@@ -38,6 +38,16 @@ export class GameCharacter extends TabletopObject {
   }
 
   get isTransparent(): boolean { return !this.hasOwner || this.isMine || this.canTransparent}
+
+  get subPalette(): SubPalette {
+    for (let child of this.children) {
+      if (child instanceof SubPalette) return child;
+    }
+    let subPalette = new SubPalette();
+    subPalette.initialize();
+    this.appendChild(subPalette);
+    return subPalette;
+  }
 
   get note():string {
     return this.innerNote.value + '';

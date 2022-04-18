@@ -40,12 +40,13 @@
       <label>
         <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [ngClass]="{'select-img': sendFrom === gameCharacter.identifier}"
           [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
-        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',-1'" [(ngModel)]="selectCharacter">
+        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ','" [(ngModel)]="selectCharacter">
         <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
       </label>
-      <label *ngFor="let palette of subPalette(gameCharacter)?.palette; index as i ">
-        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
-        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',' + i" [(ngModel)]="selectCharacter">
+      <label *ngFor="let palette of gameCharacter.subPalette.palettes">
+        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [ngClass]="{'select-img': sendFrom === gameCharacter.identifier}"
+        [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
+        <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',' + palette.identifier" [(ngModel)]="selectCharacter">
         <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{palette.paletteLines[0].palette}}</div>
       </label>
     </ng-container>
@@ -78,7 +79,7 @@
       <button *ngIf="showPalette && character" (click)="addPalette()">
       追加
       </button>
-      <button *ngIf="showPalette && paletteIndex > -1" (click)="removePalette()">
+      <button *ngIf="showPalette && paletteIdentifier" (click)="removePalette()">
       削除
       </button>
     </div>

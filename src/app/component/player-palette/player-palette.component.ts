@@ -66,7 +66,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     this._selectCharacter = select;
     if (this.isEdit) this.toggleEditMode();
     let array = select.split(',');
-    this.paletteIndex = Number(array[1]);
+    this.paletteIdentifier = String(array[1]);
     this.sendFrom = array[0];
     if (this.isMine(this.sendFrom)){
       this.disableControl = true;
@@ -76,37 +76,27 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     }
     this.changeDetector.detectChanges();
   }
-  paletteIndex:number = -1;
+  paletteIdentifier:string ="";
 
-  subPalette(character: GameCharacter): SubPalette {
-     for (let child of character.children) {
-      if (child instanceof SubPalette) return child;
-    }
-    return null;
-  }
   addPalette() {
-    let subPalette:SubPalette = this.subPalette(this.character);
-    if (!subPalette) {
-      subPalette = new SubPalette;
-      subPalette.initialize;
-      this.character.appendChild(subPalette);
-    }
+    let subPalette:SubPalette = this.character.subPalette;
     let palette = new ChatPalette;
-    palette.initialize;
+    palette.initialize();
     let initPalette:string = this.character.name + 'の追加パレット\n//1行目がタブに表示されるタイトルになります\n';
     palette.setPalette(initPalette);
     palette.getPalette();
-    subPalette.palette.push(palette);
+    subPalette.appendChild(palette);
   }
   removePalette() {
-    let tmp = this.paletteIndex;
-    this.paletteIndex = -1;
-    this.subPalette(this.character).palette.splice(tmp,1);
-    this.selectCharacter = this.sendFrom + ',-1';
+    let tmp = this.paletteIdentifier;
+    this.paletteIdentifier = "";
+    let palette = this.character.subPalette.palette(tmp);
+    if (palette) palette.destroy();
+    this.selectCharacter = this.sendFrom + ',';
   }
 
   get palette(): ChatPalette {
-    if (this.paletteIndex == -1) {
+    if (!this.paletteIdentifier) {
       if (this.isMine(this.sendFrom)) {
         return  this.playerService.localpalette;
       }
@@ -115,7 +105,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       }
     }
     else {
-      return this.subPalette(this.character).palette[this.paletteIndex];
+      return this.character.subPalette.palette(this.paletteIdentifier)
     }
   }
 
@@ -267,6 +257,17 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef
   ) { }
 
+  lazyUpdateTimer:NodeJS.Timer = null;
+
+  async lazyUpdate():Promise<void> {
+    if (this.lazyUpdateTimer) clearTimeout(this.lazyUpdateTimer);
+    this.lazyUpdateTimer = setTimeout(() => this.lazyUpdateDo() ,500)
+  }
+
+  lazyUpdateDo():void {
+    this.changeDetector.detectChanges();
+  }
+
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'パレットバインダー');
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
@@ -275,10 +276,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
         if (this.chatTabidentifier === event.data.identifier) {
           this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
-        this.changeDetector.detectChanges();
+        this.lazyUpdate()
       })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
-        this.changeDetector.detectChanges();
+        this.lazyUpdate()
       })
       .on<string>('WRITING_A_MESSAGE', event => {
         this.changeDetector.markForCheck();

@@ -63,7 +63,7 @@
 }
 
 .title-background {
-  background:linear-gradient(0deg, #212121 0%, #424242 10%, #D0D0D0 20%, #424242 60%, #D0D0D0 80%, #424242 90%, #212121 100% 100%);
+  background:linear-gradient(0deg, #222 0%, #444 10%, #888 20%, #333 60%, #444 70%, #AAA 80%, #444 90%, #222 100% 100%);
   border-top: solid 1px #BBB;
   border-left: solid 1px #BBB;
   border-right: solid 1px #BBB;

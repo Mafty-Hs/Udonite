@@ -2,16 +2,16 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, "M+ 1p", sans-serif;
 }
 
-h2 { 
+h2 {
   color: #444;
   /*font-family: Arial, Helvetica, sans-serif;*/
   font-weight: lighter;
 }
-body { 
-  margin: 2em; 
+body {
+  margin: 2em;
 }
-body, input[text], button { 
-  color: #888; 
+body, input[text], button {
+  color: #888;
   /*font-family: Cambria, Georgia; */
 }
 
@@ -36,7 +36,7 @@ button:after{
 	left: 2px;
 	width: calc(100% - 4px);
 	height: 50%;
-	background: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.2));
+	background: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.1));
 }
 
 button:hover{
@@ -54,8 +54,8 @@ button:disabled:after{
 
 /* everywhere else */
 /*
-* { 
-  font-family: Arial, Helvetica, sans-serif; 
+* {
+  font-family: Arial, Helvetica, sans-serif;
 }
 */
 html,
@@ -101,7 +101,7 @@ a.outer-link::after {
 
 input {
   background-color: #212121;
-  color: #fff;  
+  color: #fff;
 }
 
 select {
@@ -120,23 +120,23 @@ textarea {
 
 input[type="range"] {
   appearance: none;
-  cursor: pointer; 
-  outline: none; 
+  cursor: pointer;
+  outline: none;
   height: 5px;
-  background: black; 
-  border: solid 2px grey; 
+  background: black;
+  border: solid 2px grey;
 }
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
-  background: #DDDDDD; 
-  width: 0.6em; 
-  height: 1.7em; 
+  background: #DDDDDD;
+  width: 0.6em;
+  height: 1.7em;
 }
 input[type="range"]::-moz-range-thumb {
-  background: #DDDDDD; 
-  width: 0.6em; 
-  height: 1.7em; 
-  border: none; 
+  background: #DDDDDD;
+  width: 0.6em;
+  height: 1.7em;
+  border: none;
 }
 input[type="range"]::-moz-focus-outer {
   border: 0;

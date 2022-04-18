@@ -32,13 +32,14 @@
   </div>
   <div #characterSelect class="character-select">
     <label>
-      <img *ngIf="myImage" class="imgicon" [src]="myImage.url | safe: 'resourceUrl'" />
+      <img *ngIf="myImage" class="imgicon" [ngClass]="{'select-img': selectCharacter === myPlayerId + ',-1'}" [src]="myImage.url | safe: 'resourceUrl'" />
       <input type="radio" name="chara-tab" [value]="myPlayerId + ',-1'" [(ngModel)]="selectCharacter">
       <div>{{myPlayer.name}}</div>
     </label>
     <ng-container *ngFor="let gameCharacter of characterPaletteList">
       <label>
-        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
+        <img *ngIf="gameCharacter.imageFile?.url.length > 0" class="imgicon" [ngClass]="{'select-img': sendFrom === gameCharacter.identifier}"
+          [src]="gameCharacter.imageFile.url | safe: 'resourceUrl'" />
         <input type="radio" name="chara-tab" [value]="gameCharacter.identifier + ',-1'" [(ngModel)]="selectCharacter">
         <div  (contextmenu)="displayContextMenu($event,gameCharacter); false">{{gameCharacter.name}}</div>
       </label>
@@ -53,7 +54,7 @@
     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
-          <option value="{{palette}}" [style.color]="color === '#444444' ? '#ddd' : color">{{palette}}</option>
+          <option value="{{palette}}" [ngStyle]="{'color':color}">{{palette}}</option>
         </ng-container>
       </ng-container>
     </select>

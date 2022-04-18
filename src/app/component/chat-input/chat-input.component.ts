@@ -66,7 +66,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   isDirect: boolean = false;
   @Input('isPalette') isPalette: boolean = false;
   isUseFaceIcon: boolean = true;
-  color:string = this.playerService.myColor;
   public chatSetting(e :chatDataContext) {
     this.chatData = e;
     this.isDirect = (this.sendTo != null && this.sendTo.length) ? true : false;

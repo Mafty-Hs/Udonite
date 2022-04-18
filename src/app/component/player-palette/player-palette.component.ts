@@ -74,6 +74,7 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
     else {
       this.disableControl = false;
     }
+    this.changeDetector.detectChanges();
   }
   paletteIndex:number = -1;
 
@@ -125,7 +126,10 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   };
 
   get color(): string {
-    return this.chatInputComponent.color;
+    if (this.character) {
+      return this.character.chatPalette?.color ? this.character.chatPalette?.color : this.playerService.myColor;
+    }
+    return this.playerService.myColor;
   }
   private doubleClickTimer: NodeJS.Timer = null;
   private selectedPaletteIndex = -1;

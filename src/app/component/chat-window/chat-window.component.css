@@ -125,7 +125,7 @@
 
 .badge {
   position: absolute;
-  top: -6px;
+  bottom: 0;
   right: 0;
 }
 

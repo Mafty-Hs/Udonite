@@ -1,10 +1,11 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'badge',
   templateUrl: './badge.component.html',
   styleUrls: ['./badge.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('bounce', [
       state('active', style({ transform: '' })),
@@ -21,8 +22,19 @@ import { Component, Input, OnChanges } from '@angular/core';
   ]
 })
 export class BadgeComponent implements OnChanges {
-  @Input() count: number = 0;
+  _count: number = 0;
+  get count():number { return this._count}
+  @Input() set count(count: number) {
+    if (this.count != count) {
+      this._count = count;
+      this.changeDetector.detectChanges();
+    }
+  }
   animeState: string = 'active';
+
+  constructor(
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   ngOnChanges() {
     this.animeState = 'inactive';

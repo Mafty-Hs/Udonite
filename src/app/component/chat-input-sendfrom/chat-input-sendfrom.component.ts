@@ -19,8 +19,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
     this.character = this.gameCharacterService.get(sendFrom)
-    this.changeDetector.detectChanges();
     this.sendFromChange.emit(sendFrom);
+    this.lazyUpdate()
   }
   get sendFrom(): string { return this._sendFrom };
   @Output() sendFromChange = new EventEmitter<string>();
@@ -30,9 +30,21 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     this.chatSetting.emit(e);
   }
 
+  lazyUpdateTimer:NodeJS.Timer = null;
+
+  async lazyUpdate():Promise<void> {
+    if (this.lazyUpdateTimer) clearTimeout(this.lazyUpdateTimer);
+    this.lazyUpdateTimer = setTimeout(() => this.lazyUpdateDo() ,200)
+  }
+
+  lazyUpdateDo():void {
+    this.changeDetector.detectChanges();
+  }
+
   touched:boolean = false;
   touch() {
     this.touched = true;
+    this.lazyUpdate()
   }
 
   isUseFaceIcon: boolean = true;

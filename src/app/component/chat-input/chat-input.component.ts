@@ -56,7 +56,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   _text: string = '';
   @Output() textChange = new EventEmitter<string>();
   get text(): string { return this._text };
-  @Input('text') set text(text: string) { this._text = text; this.textChange.emit(text); }
+  @Input('text') set text(text: string) {
+    this._text = text;
+    this.lazyUpdate();
+    this.textChange.emit(text);
+  }
 
   @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string,
@@ -195,5 +199,16 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   rubi() {
     this.text += '|ルビを振られる文字《ルビ》'
+  }
+
+  lazyUpdateTimer:NodeJS.Timer = null;
+
+  async lazyUpdate():Promise<void> {
+    if (this.lazyUpdateTimer) clearTimeout(this.lazyUpdateTimer);
+    this.lazyUpdateTimer = setTimeout(() => this.lazyUpdateDo() ,100)
+  }
+
+  lazyUpdateDo():void {
+    this.changeDetector.detectChanges();
   }
 }

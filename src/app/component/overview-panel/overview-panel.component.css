@@ -629,15 +629,6 @@ button.link:disabled:hover {
   z-index: 5;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow:
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px,
-  #222 0px 0px 2px;
 }
 
 .counter-container {
@@ -650,7 +641,10 @@ button.link:disabled:hover {
 
 .counter {
   border: solid 1px #222;
-  padding: 2px 4px;
+  background-color: #DDD;
+  font-weight: bolder;
+  text-shadow: #FFF 1px 1px 0px;
+  padding: 2px 6px;
   margin: 2px;
   border-radius: 100px;
 }

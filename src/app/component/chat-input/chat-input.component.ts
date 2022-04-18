@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -24,7 +24,8 @@ interface chatDataContext {
 @Component({
   selector: 'chat-input',
   templateUrl: './chat-input.component.html',
-  styleUrls: ['./chat-input.component.css']
+  styleUrls: ['./chat-input.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatInputComponent implements OnInit, OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
@@ -47,6 +48,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @Input('sendFrom') set sendFrom(sendFrom: string) {
     this._sendFrom = sendFrom;
     this.sendFromChange.emit(sendFrom);
+    this.changeDetector.detectChanges();
   }
   @Output() sendFromChange = new EventEmitter<string>();
   get sendFrom(): string { return this._sendFrom };
@@ -69,7 +71,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   public chatSetting(e :chatDataContext) {
     this.chatData = e;
     this.isDirect = (this.sendTo != null && this.sendTo.length) ? true : false;
-
+    this.changeDetector.detectChanges();
   }
 
   private writingEventInterval: NodeJS.Timer = null;
@@ -85,6 +87,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     private batchService: BatchService,
     private playerService: PlayerService,
     private pointerDeviceService: PointerDeviceService,
+    private changeDetector: ChangeDetectorRef,
 
   ) { }
 
@@ -125,6 +128,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.writingPeerNameAndColors = Array.from(this.writingPeers.keys()).map(peerId => {
       return this.playerService.findPeerNameAndColor(peerId);
     });
+    this.changeDetector.detectChanges();
   }
 
   onInput() {
@@ -166,6 +170,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = '';
     this.calcFitHeight();
+    this.changeDetector.detectChanges();
   }
 
   calcFitHeight() {

@@ -1,13 +1,15 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit,Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
+import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'data-element',
   templateUrl: './data-element.component.html',
-  styleUrls: ['./data-element.component.css']
+  styleUrls: ['./data-element.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataElementComponent implements OnInit {
 
@@ -38,7 +40,15 @@ export class DataElementComponent implements OnInit {
 
   constructor(
     private modalService: ModalService,
-  ) { }
+    private changeDetector: ChangeDetectorRef
+  ) {
+    EventSystem.register(this)
+    .on('UPDATE_GAME_OBJECT', -1000, event => {
+      if (event.data.identifier === this.dataElement.identifier
+        ) {
+          this.changeDetector.detectChanges();
+      }});
+  }
 
   ngOnInit(): void {
   }
@@ -48,7 +58,7 @@ export class DataElementComponent implements OnInit {
       window.open(url.trim(), '_blank', 'noopener');
     } else {
       this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
-    } 
+    }
   }
 
 }

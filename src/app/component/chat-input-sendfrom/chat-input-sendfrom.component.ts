@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter, ChangeDetectionStrategy,  ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input ,Output ,EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';

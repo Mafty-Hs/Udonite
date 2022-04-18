@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectionStrategy,  ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { Player } from '@udonarium/player';
 import { DiceBotService } from 'service/dice-bot.service';

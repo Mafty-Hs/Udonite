@@ -1,5 +1,5 @@
 <div *ngIf="!isEdit; else edit" class="component">
-  <ng-container *ngIf="isTranparent; else forbidden">
+  <ng-container *ngIf="isTransparent; else forbidden">
     <div class="frame" *ngFor="let dataElm of inventoryDataElms">
       <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
         <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">

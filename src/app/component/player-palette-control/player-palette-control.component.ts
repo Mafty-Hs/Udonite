@@ -1,16 +1,22 @@
-import { Component, Input, Output, EventEmitter,OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter,OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { GameCharacterService } from 'service/game-character.service';
+import { EventSystem } from '@udonarium/core/system';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
+import { GameCharacter } from '@udonarium/game-character';
 
 
 @Component({
   selector: 'player-palette-control',
   templateUrl: './player-palette-control.component.html',
-  styleUrls: ['./player-palette-control.component.css']
+  styleUrls: ['./player-palette-control.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
+  private gameCharacter: GameCharacter = null;
   private _sendFrom: string = "";
   get sendFrom(){
     return this._sendFrom;
@@ -18,12 +24,11 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   @Input() set sendFrom(sendFrom:string){
     this.cancelEdit();
     this._sendFrom = sendFrom;
-    let character = this.gameCharacterService.get(sendFrom)
-    if (character) this.name = character.name;
-    this.isTranparent = character.isTransparent;
+    let character = this.gameCharacterService.get(sendFrom);
+    if (character) this.gameCharacter = character;
   }
-  private name:string;
-  isTranparent:boolean = true;
+  get name():string {return this.gameCharacter.name};
+  get isTransparent():boolean {return this.gameCharacter.isTransparent};
 
   @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string
@@ -56,8 +61,19 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
   constructor(
     private inventoryService: GameObjectInventoryService,
-    private gameCharacterService: GameCharacterService
-  ) {}
+    private gameCharacterService: GameCharacterService,
+    private changeDetector: ChangeDetectorRef
+  ) {
+    EventSystem.register(this)
+    .on('UPDATE_GAME_OBJECT', -1000, event => {
+      let object = ObjectStore.instance.get(event.data.identifier);
+      if (!this.gameCharacter || !object) return;
+      if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object)) ||
+          event.data.aliasName === "summary-setting"
+        ) {
+          this.changeDetector.detectChanges();
+      }});
+  }
 
   ngOnInit(): void {
   }

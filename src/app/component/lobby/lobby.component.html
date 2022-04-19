@@ -9,7 +9,8 @@
       <div class="infomation">
         <i class="material-icons" style="font-size:0.9rem;">lock</i> パスワードロック<br/>
         <i class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i> オンライン<br/>
-        オンライン状態のルームは削除できません。
+        オンライン状態のルームは削除できません。<br/>
+        参加者が0人になっても1分間はオンライン状態が維持されます。
       </div>
     </div>
     <div class="room-select">
@@ -66,7 +67,7 @@
           <td>{{room.roomNo}}</td>
           <td class="room-name">{{room.roomName}}<div class="is2d" *ngIf="room.is2d">2D</div></td>
           <td>
-            <i *ngIf="room.password > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
+            <i *ngIf="room.password.length > 0" class="material-icons" style="font-size:0.9rem;">lock</i>
             <i *ngIf="room.isOpen" class="material-icons" style="font-size:0.9rem;color:#0F0">light_mode</i>
           </td>
           <td>{{dateString(room.lastAccess)}}</td>

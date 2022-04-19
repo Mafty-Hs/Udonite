@@ -142,7 +142,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   connect(room :RoomList) {
-    if (room.password) {
+    if (room.password.length > 0) {
       this.room = room;
       this.roomService.roomState = RoomState.PASSWORD;
       return;

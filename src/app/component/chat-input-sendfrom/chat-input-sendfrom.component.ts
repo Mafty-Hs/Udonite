@@ -4,6 +4,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { GameCharacterService } from 'service/game-character.service';
 import { PlayerService } from 'service/player.service';
 import { Player } from '@udonarium/player';
+import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'chat-input-sendfrom',
@@ -97,7 +98,13 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     private gameCharacterService: GameCharacterService,
     private playerService: PlayerService
   ) {
-
+    EventSystem.register(this)
+    .on('UPDATE_GAME_OBJECT', -1000, event => {
+      if (event.data.aliasName === 'player' || event.data.aliasName === 'character' )  this.lazyUpdate();
+    })
+    .on('DELETE_GAME_OBJECT', -1000, event => {
+      if (event.data.aliasName === 'character' )  this.lazyUpdate();
+    })
   }
 
   ngOnInit(): void {

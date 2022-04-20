@@ -147,6 +147,7 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
+        this.updateObject();
         this.changeDetector.markForCheck();
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {

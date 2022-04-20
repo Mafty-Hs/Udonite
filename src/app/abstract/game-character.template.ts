@@ -313,7 +313,9 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
           clearInterval(this.chatIntervalId);
         }
       })
-      ;
+      .on('IMAGE_SYNC', -1000, event => {
+        this.changeDetector.markForCheck();
+      });
 
     this.movableOption = {
       tabletopObject: this.gameCharacter,

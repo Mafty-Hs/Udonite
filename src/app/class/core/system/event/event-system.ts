@@ -192,15 +192,15 @@ export class EventSystem implements Subject {
         break;
       case 'IMAGE_ADD':
         ImageStorage.instance.create(<ImageContext>data);
-        this.trigger('IMAGE_SYNC',null);
+        this.trigger('IMAGE_SYNC',data.identifier);
         break;
       case 'IMAGE_UPDATE':
         ImageStorage.instance.update(<ImageContext>data);
-        this.trigger('IMAGE_SYNC',null);
+        this.trigger('IMAGE_SYNC',data.identifier);
         break;
       case 'IMAGE_REMOVE':
         ImageStorage.instance.destroy(<string>data);
-        this.trigger('IMAGE_SYNC',null);
+        this.trigger('IMAGE_SYNC',data);
         break;
       case 'AUDIO_ADD':
         AudioStorage.instance.create(<AudioContext>data);

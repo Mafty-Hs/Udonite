@@ -155,6 +155,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
+        this.updateObject();
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

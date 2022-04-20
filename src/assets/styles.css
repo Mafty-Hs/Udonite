@@ -212,4 +212,5 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .will-change {
   will-change: transform;
+  backface-visibility: visible;
 }

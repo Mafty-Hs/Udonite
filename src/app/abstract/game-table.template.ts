@@ -62,8 +62,6 @@ export class GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewI
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
-  isViewed:boolean = false;
-
   viewPotisonX: number = 0;
   viewPotisonY: number = 0;
   viewPotisonZ: number = 0;
@@ -158,8 +156,7 @@ export class GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewI
     this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
     this.setTransform(0, 0, 0, 0, 0, 0);
     this.coordinateService.tabletopOriginElement = this.gameObjects.nativeElement;
-    this.isViewed = true;
-  }
+   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);

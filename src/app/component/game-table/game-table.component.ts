@@ -25,11 +25,6 @@ export class GameTableComponent extends GameTableComponentTemplate implements On
     super.ngOnDestroy();
   }
 
-  get isTranslate(): boolean { return this.pointerDeviceService.isTranslate};
-  set isTranslate(isTranslate :boolean) { 
-    this.pointerDeviceService.isTranslate = isTranslate;
-  }
-
   viewPotisonX: number = 100;
   viewPotisonY: number = 0;
   viewPotisonZ: number = 0;
@@ -38,10 +33,9 @@ export class GameTableComponent extends GameTableComponentTemplate implements On
   viewRotateY: number = 0;
   viewRotateZ: number = 10;
 
-  translateTimer;
+
 
   setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, isAbsolute: boolean=false) {
-    if (this.isViewed) this.isTranslate = true;
     if (isAbsolute) {
       this.viewRotateX = rotateX;
       this.viewRotateY = rotateY;
@@ -71,7 +65,5 @@ export class GameTableComponent extends GameTableComponentTemplate implements On
     }
 
     this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
-    if (this.translateTimer) this.translateTimer = null;
-    if (this.isViewed) this.translateTimer = setTimeout(() => {this.isTranslate = false;},500);
   }
 }

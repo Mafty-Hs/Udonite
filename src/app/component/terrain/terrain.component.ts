@@ -149,8 +149,8 @@ export class TerrainComponent extends TerrainComponentTemplate implements OnInit
         }),
       {
         name: '高度を0にする', action: () => {
-          if (this.altitude != 0) {
-            this.altitude = 0;
+          if (this.terrain.altitude != 0) {
+            this.terrain.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
           }
         },
@@ -169,7 +169,7 @@ export class TerrainComponent extends TerrainComponentTemplate implements OnInit
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.terrain.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,

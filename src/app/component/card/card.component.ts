@@ -81,22 +81,14 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() is3D: boolean = false;
 
   get name(): string { return this.card.name; }
-  get state(): CardState { return this.card.state; }
-  set state(state: CardState) { this.card.state = state; }
-  get rotate(): number { return this.card.rotate; }
-  set rotate(rotate: number) { this.card.rotate = rotate; }
+  state: CardState = CardState.FRONT;
+  rotate: number = 0;
   get owner(): string { return this.card.owner; }
-  set owner(owner: string) { this.card.owner = owner; }
-  get zindex(): number { return this.card.zindex; }
-  get size(): number { return this.adjustMinBounds(this.card.size); }
-
-  get fontSize(): number { return this.card.fontsize; }
-  set fontSize(fontSize: number) { this.card.fontsize = fontSize; }
-  get text(): string { return this.card.text; }
-  set text(text: string) { this.card.text = text; }
-  get color(): string { return this.card.color; }
-  set color(color: string) { this.card.color = color; }
-
+  zindex: number = 0;
+  size: number = 2;
+  fontSize: number = 18;
+  text: string = '';
+  color: string = '#444444';
   get canView(): boolean { return this.card.canView; }
   get isHand(): boolean { return this.card.isHand; }
   get canTransparent(): boolean { return  this.hasOwner && this.card.canTransparent}
@@ -105,11 +97,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get hasOwner(): boolean { return this.card.hasOwner; }
   get ownerName(): string { return this.card.ownerName; }
   get ownerColor(): string { return this.card.ownerColor; }
-
-  get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.card.imageFile); }
-  get frontImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.frontImage); }
-  get backImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.backImage); }
-
+  imageFile: ImageFile = this.imageService.skeletonImage;
+  frontImage: ImageFile = this.imageService.skeletonImage;
+  backImage: ImageFile = this.imageService.skeletonImage;
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
@@ -139,13 +129,28 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private chatMessageService: ChatMessageService
   ) { }
 
+  updateObject() {
+    this.state  = this.card.state;
+    this.rotate = this.card.rotate;
+    this.zindex  = this.card.zindex;
+    this.size  = this.adjustMinBounds(this.card.size);
+    this.fontSize = this.card.fontsize;
+    this.text = this.card.text;
+    this.color = this.card.color;
+    this.imageFile = this.imageService.getSkeletonOr(this.card.imageFile);
+    this.frontImage = this.imageService.getSkeletonOr(this.card.frontImage);
+    this.backImage  = this.imageService.getSkeletonOr(this.card.backImage);
+  }
+
   ngOnInit() {
+    this.updateObject();
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.card || !object) return;
         if ((this.card === object)
           || (object instanceof ObjectNode && this.card.contains(object))) {
+          this.updateObject();
           this.changeDetector.markForCheck();
         }
       })
@@ -221,8 +226,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (distance < 10 ** 2) {
       console.log('onDoubleClick !!!!');
       if (this.hasOwner && !this.isHand) return;
-      this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
-      this.owner = '';
+      this.card.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
+      this.card.owner = '';
       if (this.state === CardState.FRONT) this.chatMessageService.sendOperationLog(this.card.name + ' を公開',"card");
       SoundEffect.play(PresetSound.cardDraw);
     }
@@ -274,7 +279,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             SoundEffect.play(PresetSound.cardDraw);
             this.chatMessageService.sendOperationLog(`${this.card.isFront ? this.card.name : '伏せたカード'} を自分だけ見た`,"card");
             this.card.faceDown();
-            this.owner = this.playerService.myPlayer.playerId;
+            this.card.owner = this.playerService.myPlayer.playerId;
           }
         }),
       ContextMenuSeparator,

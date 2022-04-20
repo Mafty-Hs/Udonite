@@ -6,6 +6,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -35,7 +36,8 @@ import { GameCharacterService } from 'service/game-character.service';
 
 @Component({
   selector: 'game-character-template',
-  template: `<div></div>`
+  template: `<div></div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   gameCharacter: GameCharacter = null;

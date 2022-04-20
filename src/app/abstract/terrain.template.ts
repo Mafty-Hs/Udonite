@@ -33,7 +33,8 @@ import { TabletopActionService } from 'service/tabletop-action.service';
 
 @Component({
   selector: 'terrein-template',
-  template: `<div></div>`
+  template: `<div></div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   terrain: Terrain = null;
@@ -45,17 +46,16 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
 
   get isLocked(): boolean { return this.terrain.isLocked; }
   set isLocked(isLocked: boolean) { this.terrain.isLocked = isLocked; }
-  get hasWall(): boolean { return this.terrain.hasWall; }
-  get hasFloor(): boolean { return this.terrain.hasFloor; }
+  hasWall: boolean = true ;
+  hasFloor: boolean = true ;
 
-  get wallImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.wallImage); }
-  get floorImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.floorImage); }
+  wallImage: ImageFile = this.imageService.skeletonImage;
+  floorImage: ImageFile = this.imageService.skeletonImage;
 
-  get height(): number { return this.adjustMinBounds(this.terrain.height); }
-  get width(): number { return this.adjustMinBounds(this.terrain.width); }
-  get depth(): number { return this.adjustMinBounds(this.terrain.depth); }
-  get altitude(): number { return this.terrain.altitude; }
-  set altitude(altitude: number) { this.terrain.altitude = altitude; }
+  height: number = 1;
+  width: number = 1;
+  depth: number = 1;
+  altitude: number = 0;
 
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
@@ -124,12 +124,25 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
 
   viewRotateZ = 10;
 
+  updateObject() {
+    this.width = this.adjustMinBounds(this.terrain.width);
+    this.height = this.adjustMinBounds(this.terrain.height);
+    this.depth = this.adjustMinBounds(this.terrain.depth);
+    this.wallImage = this.imageService.getSkeletonOr(this.terrain.wallImage);
+    this.floorImage = this.imageService.getSkeletonOr(this.terrain.floorImage);
+    this.hasWall = this.terrain.hasWall;
+    this.hasFloor = this.terrain.hasFloor;
+    this.altitude = this.terrain.altitude;
+  }
+
   ngOnInit() {
+    this.updateObject();
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.terrain || !object) return;
         if (this.terrain === object || (object instanceof ObjectNode && this.terrain.contains(object))) {
+          this.updateObject()
           this.changeDetector.markForCheck();
         }
       })

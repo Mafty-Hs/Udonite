@@ -152,7 +152,8 @@
   padding: 0px;
   width: 40px;
   height: 40px;
-  display: table-cell;
+  max-width: 32px;
+  max-height: 32px;
   vertical-align: top;
 }
 

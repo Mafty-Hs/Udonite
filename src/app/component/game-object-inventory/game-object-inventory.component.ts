@@ -31,8 +31,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   selectTab: string = 'table';
   selectedIdentifier: string = '';
+  multiMoveTargets: Set<string> = new Set();
 
   isEdit: boolean = false;
+  isMultiMove: boolean = false;
   stringUtil = StringUtil;
 
   get sortTag(): string { return this.inventoryService.sortTag; }
@@ -419,6 +421,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     EventSystem.call('UPDATE_BAR',null)
   }
 
+  toggleMultiMove() {
+    if (this.isMultiMove) {
+      this.multiMoveTargets.clear();
+    }
+    this.isMultiMove = !this.isMultiMove;
+  }
+
   cleanInventory() {
     let tabTitle = this.getTabTitle(this.selectTab);
     let gameObjects = this.getGameObjects(this.selectTab);
@@ -427,6 +436,86 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       this.deleteGameObject(gameObject);
     }
     SoundEffect.play(PresetSound.sweep);
+  }
+
+  existsMultiMoveSelectedInTab(): boolean {
+    return this.getGameObjects(this.selectTab).some(x => this.multiMoveTargets.has(x.identifier))
+  }
+
+  toggleMultiMoveTarget(e: Event, gameObject: GameCharacter) {
+    if (!(e.target instanceof HTMLInputElement)) { return; }
+    if (e.target.checked) {
+      this.multiMoveTargets.add(gameObject.identifier);
+    } else {
+      this.multiMoveTargets.delete(gameObject.identifier);
+    }
+  }
+
+  allTabBoxCheck() {
+    if (this.existsMultiMoveSelectedInTab()) {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.delete(x.identifier));
+    } else {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.add(x.identifier));
+    }
+  }
+
+  onMultiMoveContextMenu() {
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+
+    let position = this.pointerDeviceService.pointers[0];
+    let actions: ContextMenuAction[] = [];
+    let locations = [
+      { name: 'table', alias: 'テーブルに移動' },
+      { name: 'common', alias: '共有イベントリに移動' },
+      { name: this.playerService.myPlayer.playerId, alias: '個人イベントリに移動' },
+      { name: 'graveyard', alias: '墓場に移動' }
+    ];
+    for (let location of locations) {
+      if (this.selectTab === location.name) continue;
+      actions.push({
+        name: location.alias, action: () => {
+          this.multiMove(location.name);
+          this.toggleMultiMove();
+          SoundEffect.play(PresetSound.piecePut);
+        }
+      });
+    }
+    if (this.selectTab == 'graveyard') {
+      actions.push({
+        name: '墓場から削除', action: () => {
+          this.multiDelete();
+          this.toggleMultiMove();
+          SoundEffect.play(PresetSound.sweep);
+        }
+      })
+    }
+
+    this.contextMenuService.open(position, actions, "一括移動");
+  }
+
+  multiMove(location: string) {
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter) {
+        gameObject.setLocation(location);
+      }
+    }
+  }
+
+  multiDelete() {
+    let inGraveyard: Set<GameCharacter> = new Set();
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject: GameCharacter = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter && gameObject.location.name == 'graveyard') {
+        inGraveyard.add(gameObject);
+      }
+    }
+    if (inGraveyard.size < 1) return;
+
+    if (!confirm(`選択したもののうち墓場に存在する${inGraveyard.size}個の要素を完全に削除しますか？`)) return;
+    for (const gameObject of inGraveyard) {
+      this.deleteGameObject(gameObject);
+    }
   }
 
   private cloneGameObject(gameObject: TabletopObject) {
@@ -478,6 +567,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject) {
+    if (this.isMultiMove) {
+      if (this.multiMoveTargets.has(gameObject.identifier)) {
+        this.multiMoveTargets.delete(gameObject.identifier);
+      } else {
+        this.multiMoveTargets.add(gameObject.identifier);
+      }
+    }
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
   }

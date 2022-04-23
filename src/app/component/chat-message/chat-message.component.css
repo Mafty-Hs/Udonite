@@ -62,7 +62,9 @@
   object-fit: cover;
   object-position: 50% 0%;
   border-radius: 0.5rem;
+  image-rendering: -webkit-optimize-contrast;
 }
+
 .message .body {
   flex-grow: 1;
 }
@@ -71,16 +73,6 @@
   font-size: 14px;
   padding-left: 12px;
   padding-right: 12px;
-}
-.inverse {
-  transform: scaleX(-1);
-}
-.hollow {
-  opacity: 0.6;
-  filter: blur(1px);
-}
-.black-paint {
-  filter: brightness(0);
 }
 
 .message .text {
@@ -141,33 +133,4 @@
 
 .edited.is-black {
   color: #888;
-}
-
-.aura {
-  transition: filter 0.3s ease-in-out;
-}
-
-.aura.black {
-  filter: drop-shadow(0 -4px 4px black);
-}
-.aura.blue {
-  filter: drop-shadow(0 -4px 4px #00f);
-}
-.aura.green {
-  filter: drop-shadow(0 -4px 4px #3f3);
-}
-.aura.cyan {
-  filter: drop-shadow(0 -4px 4px #3ff);
-}
-.aura.red {
-  filter: drop-shadow(0 -4px 4px #f00);
-}
-.aura.magenta {
-  filter: drop-shadow(0 -4px 4px #f0f);
-}
-.aura.yellow {
-  filter: drop-shadow(0 -4px 4px #ff3);
-}
-.aura.white {
-  filter: drop-shadow(0 -4px 6px #ccc) drop-shadow(0 -4px 4px #fff);
 }

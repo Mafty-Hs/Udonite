@@ -4,6 +4,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { PeerCursor } from './peer-cursor';
 import { StringUtil } from './core/system/util/string-util';
+import { imageStyle } from './tabletop-object';
 
 export interface ChatMessageContext {
   identifier?: string;
@@ -103,6 +104,35 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 
   get escapeHtmlAndRuby():string {
     return StringUtil.escapeHtmlAndRuby(this.text,true);
+  }
+
+  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
+  get imgStyle():object {
+    let imgStyle: imageStyle = {};
+    let filter:string[] = [];
+    let transition:string[] = [];
+     if (this.aura != -1) {
+      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
+      transition.push('filter 0.2s ease-in-out');
+    }
+    if (this.isInverseIcon == 1) {
+      imgStyle.transform = 'rotateY(-180deg)';
+      transition.push('transform 132ms 0s ease');
+    }
+    if (this.isHollowIcon == 1) {
+      imgStyle.opacity = "0.6"
+      filter.push('blur(1px)');
+    }
+    if (this.isBlackPaint == 1) {
+      filter.push('brightness(0)');
+    }
+    if (filter.length > 0) {
+      imgStyle.filter = filter.join(' ')
+    }
+    if (transition.length > 0) {
+      imgStyle.transition = transition.join(',')
+    }
+    return imgStyle;
   }
 
 

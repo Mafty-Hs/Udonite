@@ -35,8 +35,10 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() localFontsize: number = 14;
   @Input() bgColor: string = "black";
 
+  imgStyle:object = {};
+
   get isBlack():boolean {
-    if (this.bgColor == 'black') 
+    if (this.bgColor == 'black')
       return true;
     else
       return false;
@@ -51,6 +53,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     if (file) this.imageFile = file;
     let time = this.chatMessageService.getTime();
     if (time - 10 * 1000 < this.chatMessage.timestamp) this.animeState = 'active';
+    this.imgStyle = this.chatMessage.imgStyle;
   }
 
   ngAfterViewInit() {

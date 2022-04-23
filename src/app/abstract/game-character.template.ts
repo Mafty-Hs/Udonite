@@ -33,6 +33,14 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacterService } from 'service/game-character.service';
 
+export interface imageStyle {
+  transformOrigin?:string;
+  transform?:string;
+  opacity?:string;
+  filter?:string;
+  transition?:string;
+}
+
 
 @Component({
   selector: 'game-character-template',
@@ -135,6 +143,36 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
 
+  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
+
+  get imgStyle():object {
+    let styleObject: imageStyle = {};
+    let filter:string[] = [];
+    let transition:string[] = [];
+     if (this.aura != -1) {
+      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
+      transition.push('filter 0.2s ease-in-out');
+    }
+    if (this.isInverse) {
+      styleObject.transform = 'rotateY(-180deg)';
+      transition.push('transform 132ms 0s ease');
+    }
+    if (this.isHollow) {
+      styleObject.opacity = "0.6"
+      filter.push('blur(1px)');
+    }
+    if (this.isBlackPaint) {
+      filter.push('brightness(0)');
+    }
+    if (filter.length > 0) {
+      styleObject.filter = filter.join(' ')
+    }
+    if (transition.length > 0) {
+      styleObject.transition = transition.join(',')
+    }
+    return styleObject;
+  }
+
 
 
   set dialog(dialog) {
@@ -217,21 +255,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     const altitude1 = (this.characterImageHeight + (this.name ? 36 : 0)) * cos + 4;
     const altitude2 = (this.gridSize * this.size / 2) * sin + 4 + this.gridSize * this.size / 2;
     return altitude1 > altitude2 ? altitude1 : altitude2;
-  }
-
-  // 元の高さからマイナスする値
-  get nameplateOffset(): number {
-    if (!this.imageFile) return this.gridSize * this.size * this.heightWidthRatio;
-    return this.gridSize * this.size * this.heightWidthRatio - this.characterImageHeight;
-  }
-
-  get nameTagRotate(): number {
-    let x = (this.viewRotateX % 360) - 90;
-    let z = (this.viewRotateZ + this.rotate) % 360;
-    let roll = this.roll % 360;
-    z = (z > 0 ? z : 360 + z);
-    roll = (roll > 0 ? roll : 360 + roll);
-    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1) * (90 <= roll && roll <= 270 ? -1 : 1);
   }
 
   get isListen(): boolean {
@@ -358,10 +381,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
       EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
     }
     SoundEffect.play(PresetSound.piecePut);
-  }
-
-  onImageLoad() {
-    EventSystem.trigger('UPDATE_GAME_OBJECT', this.gameCharacter);
   }
 
   protected adjustMinBounds(value: number, min: number = 0): number {

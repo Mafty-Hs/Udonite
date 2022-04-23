@@ -1,17 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap');
 
-@supports (-moz-user-select: -moz-none) {
-  /* 汚いけどとりあえず */
-  .chat-bubble p:after {
-    bottom: -28px !important;
-  }
-   /*
-  .chat-bubble p.is-whisper:after {
-    bottom: -11px !important;
-  }
-  */
-}
-
 .is-grab {
   cursor: -moz-grab;
   cursor: -webkit-grab;
@@ -146,59 +134,6 @@
   width: 100%;
   height: auto;
   vertical-align: bottom;
-}
-.image-box {
-  display: inline-block;
-  text-align: center;
-}
-.image-box img {
-  object-fit: contain;
-  object-position: 50% 100%;
-  margin-bottom: 0px;
-  margin-top: auto;
-}
-
-.inverse {
-  transform: rotateY(-180deg);
-}
-.inverser {
-  transition: transform 132ms 0s ease;
-}
-.hollow {
-  opacity: 0.6;
-  filter: blur(1px);
-}
-.black-paint {
-  filter: brightness(0);
-}
-
-.aura {
-  transition: filter 0.2s ease-in-out;
-}
-
-.aura.black {
-  filter: drop-shadow(0 -4px 4px black);
-}
-.aura.blue {
-  filter: drop-shadow(0 -4px 4px #33f);
-}
-.aura.green {
-  filter: drop-shadow(0 -4px 4px #3f3);
-}
-.aura.cyan {
-  filter: drop-shadow(0 -4px 4px #3ff);
-}
-.aura.red {
-  filter: drop-shadow(0 -4px 4px #f00);
-}
-.aura.magenta {
-  filter: drop-shadow(0 -4px 4px #f0f);
-}
-.aura.yellow {
-  filter: drop-shadow(0 -4px 4px #ff3);
-}
-.aura.white {
-  filter: drop-shadow(0 -4px 4px #fff);
 }
 
 .name-tag {
@@ -461,10 +396,6 @@
   100% {
     transform: rotateY(-180deg) scale3d(1, 1, 1);
   }
-}
-
-.drop-shadow {
-  pointer-events: none;
 }
 
 .face-icon-box {

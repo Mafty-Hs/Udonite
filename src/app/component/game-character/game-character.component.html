@@ -12,62 +12,42 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="is-pointer-events-none" >
-        <div class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="pointer-events: none;"
-          [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'transform': 'translateY(-10%) scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + roll + 'deg)'}">
-          <div class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-            <div style="pointer-events: none; transition: transform 132ms 0s ease;"
-              [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">
-                <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'"
-                  style="filter: brightness(0) blur(1px);"
-                  [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7}" [@switchImageShadow]="gameCharacter.currntImageIndex">
-              </div>
-            </div>
-        </div>
-      </div>
+      <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)"
+        class="is-pointer-events-none image is-3d"
+        [ngStyle]="shadowStyle" [style.height.px]="size * gridSize * heightWidthRatio"
+        [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'"
+        [@switchImageShadow]="gameCharacter.currntImageIndex">
       <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" (dblclick)="nextImage()"
         [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
           <div class="rotate-inner is-3d">
-            <div class="is-3d top-container"
-            [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
-              <div *ngIf="0 < name.length"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}"
-                class="name-tag is-nowrap is-black-background is-3d">
-                <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
-                <div class="back-tag has-length-limit is-3d">{{name}}</div>
-              </div>
-              <div *ngIf="statusBar1 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar1 + 'px' , 'background-color': statusColor1}"
-                ></div>
-              </div>
-              <div *ngIf="statusBar2 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar2 + 'px' , 'background-color': statusColor2}"
-                ></div>
-              </div>
-              <div *ngIf="statusBar3 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
-                ></div>
-              </div>
-
+            <div *ngIf="0 < name.length"
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}"
+              class="name-tag is-nowrap is-black-background is-3d">
+              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
+              <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
-              <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
-                <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                  <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
-                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
-                    [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
-                  </span>
-                </span>
-              </div>
+            <div *ngIf="statusBar1 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar1 + 'px' , 'background-color': statusColor1}"
+              ></div>
             </div>
+            <div *ngIf="statusBar2 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar2 + 'px' , 'background-color': statusColor2}"
+              ></div>
+            </div>
+            <div *ngIf="statusBar3 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base is-3d">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
+              ></div>
+            </div>
+            <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'"
+              [@switchImage]="gameCharacter.currntImageIndex">
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (nameplateOffset - 10) + 'px)'}">
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <i class="material-icons">autorenew</i>
               </div>
               <div class="rotate-grab rotate-grab-icon of-bottom"
@@ -78,7 +58,7 @@
           </div>
         </div>
         <div #chatBubble class="chat-bubble is-3d"
-          [ngStyle]="{'bottom': (chatBubbleAltitude - (isEmote ? gridSize / 2 : 0) - 4) + 'px',
+          [ngStyle]="{'bottom': (chatBubbleAltitude - (isEmote ? gridSize / 2 : 0) + 4) + 'px',
             'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)',
             'visibility': gameCharacter.isShowChatBubble ? 'visible' : 'hidden'}">
           <div *ngIf="isListen" [@fadeAndScaleInOut]="isEmote" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
@@ -117,3 +97,4 @@
     </div>
   </div>
 </div>
+

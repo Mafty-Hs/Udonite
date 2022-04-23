@@ -16,38 +16,27 @@
         <div class="rotate-frame" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
           <div class="rotate-inner">
-            <div class="top-container"
+            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <div class="fornt-tag has-length-limit">{{name}}</div>
-              </div>
-              <div *ngIf="statusBar1 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar1 + 'px' , 'background-color': statusColor1}"
-                ></div>
-              </div>
-              <div *ngIf="statusBar2 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar2 + 'px' , 'background-color': statusColor2}"
-                ></div>
-              </div>
-              <div *ngIf="statusBar3 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
-                <div class="status-bar"
-                  [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
-                ></div>
-              </div>
+              <div class="fornt-tag has-length-limit">{{name}}</div>
             </div>
-            <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
-              <div class="inverser" [ngClass]="{inverse: isInverse}">
-                <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                  <span class="image-box" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
-                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
-                    [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" (load)="onImageLoad()">
-                  </span>
-                </span>
-              </div>
+            <div *ngIf="statusBar1 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar1 + 'px' , 'background-color': statusColor1}"
+              ></div>
             </div>
+            <div *ngIf="statusBar2 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar2 + 'px' , 'background-color': statusColor2}"
+              ></div>
+            </div>
+            <div *ngIf="statusBar3 != null" [ngStyle]="{'width': size * gridSize + 'px'}" class=" status-bar-base">
+              <div class="status-bar"
+                [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
+              ></div>
+            </div>
+            <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'"
+              [@switchImage]="gameCharacter.currntImageIndex">
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { EffectService } from 'service/effect.service';
 import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
 import { Subscription } from 'rxjs'
-import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.template';
+import { GameCharacterComponentTemplate , imageStyle } from 'src/app/abstract/game-character.template';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
@@ -99,6 +99,29 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
+
+  get nameTagRotate(): number {
+    let x = (this.viewRotateX % 360) - 90;
+    let z = (this.viewRotateZ + this.rotate) % 360;
+    let roll = this.roll % 360;
+    z = (z > 0 ? z : 360 + z);
+    roll = (roll > 0 ? roll : 360 + roll);
+    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1) * (90 <= roll && roll <= 270 ? -1 : 1);
+  }
+
+  get shadowStyle():object {
+    let styleObject: imageStyle = {};
+    styleObject.filter = 'brightness(0) blur(1px)';
+    styleObject.transition = 'transform 132ms 0s ease';
+    if (this.aura != -1) {
+      styleObject.filter += ' drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')';
+      styleObject.transition += ', filter 0.2s ease-in-out'
+    }
+    styleObject.transformOrigin = '50% ' + (this.size * this.gridSize) + 'px' ;
+    styleObject.transform = 'scaleX(' + (this.isInverse ? '-1' : '1') + ') scale(1.0,' + (1.0 / this.heightWidthRatio) + ') translateY( -' + (99 / this.heightWidthRatio) + '%) rotateZ(' + this.roll + 'deg)';
+    styleObject.opacity = this.isHollow ? '0.4' : '0.7';
+    return styleObject;
+  }
 
   canvas:HTMLCanvasElement;
   private effect$: Subscription;

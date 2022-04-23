@@ -71,10 +71,15 @@ export class StandImageComponent implements OnInit, OnDestroy {
   isBackyard = false;
   isVisible = false;
   isSecret = false;
-  standImageTransformOrigin = 'center';
 
-  private naturalWidth = 0;
-  private naturalHeight = 0;
+  get standImageTransformOrigin():string {
+    let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
+    if (ratio > 0.66) ratio = 0.66;
+    return 'center ' + (ratio * 100) + '%';
+  };
+
+  private get naturalWidth():number { return this.standImage.width; }
+  private get naturalHeight():number { return this.standImage.height; }
 
   isSpeaking = false;
   math = Math;
@@ -286,13 +291,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  calcStandImageTransformOrigin(): string {
-    if (!this.standImageElement) return 'center';
-    let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
-    if (ratio > 0.66) ratio = 0.66;
-    return 'center ' + (ratio * 100) + '%';
-  }
-
   toGhostly() {
     this.ngZone.run(() => {
       this.isGhostly = true;
@@ -327,9 +325,4 @@ export class StandImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onImageLoad() {
-    this.naturalWidth = this.standImageElement.nativeElement.naturalWidth;
-    this.naturalHeight = this.standImageElement.nativeElement.naturalHeight;
-    this.standImageTransformOrigin = this.calcStandImageTransformOrigin();
-  }
 }

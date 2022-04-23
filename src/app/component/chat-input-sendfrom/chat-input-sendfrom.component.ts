@@ -60,11 +60,18 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   get imageFile(): ImageFile {
     let image: ImageFile = null;
     if (this.character) {
-      image = this.character.imageFile;
+      if (this.isUseFaceIcon && this.character.faceIcon != null && 0 < this.character.faceIcon?.url?.length)
+        image = this.character.faceIcon;
+      else
+        image = this.character.imageFile;
     } else if (this.playerService.myImage) {
       image = this.playerService.myImage
     }
     return image ? image : ImageFile.Empty;
+  }
+
+  get imgStyle(): object {
+    return this.character ? this.character.imgStyle : {};
   }
 
   canSelect() {

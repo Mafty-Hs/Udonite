@@ -5,8 +5,8 @@
     <span class="message">→</span>
   </div>
   <div class="pos-list">
-    <img *ngFor="let data of posList" class="image"  [ngClass]="{'black-paint': data.isBlackPaint, 'hollow': data.isHollow}"  [ngStyle]="{'left': data.pos + '%' }" [src]="data.image.url | safe: 'resourceUrl'" />
-    <span *ngFor="let pos of scaleList" class="scale" [ngStyle]="{'left': pos + '%' }">
+    <img *ngFor="let data of posList" class="image" [style.left.%]="data.pos" [ngStyle]="data.imgStyle" [src]="data.image.url | safe: 'resourceUrl'" />
+    <span *ngFor="let pos of scaleList" class="scale" [style.left.%]="pos">
       {{pos}}
     </span>
   </div>

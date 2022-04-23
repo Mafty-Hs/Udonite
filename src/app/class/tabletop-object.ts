@@ -14,6 +14,14 @@ export interface TabletopLocation {
   y: number;
 }
 
+export interface imageStyle {
+  transformOrigin?:string;
+  transform?:string;
+  opacity?:string;
+  filter?:string;
+  transition?:string;
+}
+
 @SyncObject('TabletopObject')
 export class TabletopObject extends ObjectNode {
   @SyncVar() owner?:string = '';
@@ -65,18 +73,42 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
-  @SyncVar() currntImageIndex: number = 0;
-  /*
-  get imageFile(): ImageFile {
-    if (!this.imageDataElement) return this._imageFile;
-    let imageIdElement: DataElement = this.imageDataElement.getFirstElementByName('imageIdentifier');
-    if (imageIdElement && this._imageFile.identifier !== imageIdElement.value) {
-      let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
-      this._imageFile = file ? file : ImageFile.Empty;
+  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
+  _imgStyle: imageStyle = null;
+  get imgStyle():object {
+    if (this._imgStyle === null) this._imgStyle = {};
+    let filter:string[] = [];
+    let transition:string[] = [];
+     if (this.aura != -1) {
+      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
+      transition.push('filter 0.2s ease-in-out');
     }
-    return this._imageFile;
+    if (this.isInverse) {
+      this._imgStyle.transform = 'rotateY(-180deg)';
+      transition.push('transform 132ms 0s ease');
+    }
+    else { this._imgStyle.transform = undefined; }
+    if (this.isHollow) {
+      this._imgStyle.opacity = "0.6"
+      filter.push('blur(1px)');
+    }
+    else { this._imgStyle.opacity = undefined; }
+    if (this.isBlackPaint) {
+      filter.push('brightness(0)');
+    }
+    if (filter.length > 0) {
+      this._imgStyle.filter = filter.join(' ')
+    }
+    else { this._imgStyle.filter = undefined; }
+    if (transition.length > 0) {
+      this._imgStyle.transition = transition.join(',')
+    }
+    else { this._imgStyle.transition = undefined; }
+    return this._imgStyle;
   }
-  */
+
+  @SyncVar() currntImageIndex: number = 0;
+
   get imageElement(): DataElement {
     if (!this.imageDataElement) return null;
     let imageIdElements: DataElement[] = this.imageDataElement.getElementsByName('imageIdentifier');

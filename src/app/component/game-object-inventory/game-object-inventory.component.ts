@@ -148,8 +148,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects.filter((tabletopObject) => { return inventoryType != 'table' || this.indicateAll || tabletopObject.isInventoryIndicate });
+  getGameObjects(inventoryType: string): GameCharacter[] {
+    return this.getInventory(inventoryType).tabletopObjects.filter((tabletopObject) => { return inventoryType != 'table' || this.indicateAll || tabletopObject.isInventoryIndicate }) as GameCharacter[];
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {

@@ -138,35 +138,6 @@
     bottom: -39px !important;
   }
 }
-/* 吹き出しの横向きベロがカッコよくならないのでとりあえずコメントアウト
-.dialog:after {
-  box-sizing: border-box;
-  content: '';
-  position: absolute;
-  margin: 0px;
-  padding: 0px;
-  line-height: 1;
-	vertical-align: baseline;
-  left: -10px;
-  margin-left: -10px;
-  margin-top: -14px;
-  border: 10px solid transparent;
-  border-right-color: inherit;
-}
-*/
-/*
-.dialog-secret:before {
-  position: absolute;
-  border: none;
-  color: #555;
-  text-shadow: 0px 0px 2px #ccc;
-  content: '。〇';
-  margin-left: -36px;
-  margin-top: 8%;
-  font-weight: bold;
-  font-size: 16px;
-}
-*/
 
 .chat-bubble-buyo {
   /* transform-origin: 12px calc(100% + 12px); */
@@ -188,50 +159,7 @@
   }
 }
 
-  .inverse {
-    transform: scaleX(-1);
-  }
-  .inverser {
-    transition: transform 132ms 0s ease;
-  }
-  .hollow {
-    opacity: 0.6;
-    filter: blur(1px);
-  }
-  .black-paint {
-    filter: brightness(0);
-  }
-
-  .aura {
-    transition: filter 0.2s ease-in-out;
-  }
-
-  .aura.black {
-    filter: drop-shadow(0 -8px 8px black);
-  }
-  .aura.blue {
-    filter: drop-shadow(0 -8px 8px #33f);
-  }
-  .aura.green {
-    filter: drop-shadow(0 -8px 8px #3f3);
-  }
-  .aura.cyan {
-    filter: drop-shadow(0 -8px 8px #3ff);
-  }
-  .aura.red {
-    filter: drop-shadow(0 -8px 8px #f00);
-  }
-  .aura.magenta {
-    filter: drop-shadow(0 -8px 8px #f0f);
-  }
-  .aura.yellow {
-    filter: drop-shadow(0 -8px 8px #ff3);
-  }
-  .aura.white {
-    filter: drop-shadow(0 -8px 8px #fff);
-  }
-
-  ::ng-deep .rubytext {
-    font-family: 'Zen Antique', serif;
-    font-size: 150%;
-  }
+::ng-deep .rubytext {
+  font-family: 'Zen Antique', serif;
+  font-size: 150%;
+}

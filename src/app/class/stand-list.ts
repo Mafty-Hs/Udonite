@@ -72,11 +72,11 @@ export class StandList extends DataElement {
     }
     //} else {
     let maxPriority = 1;
-    let isUseDfault = true;  
+    let isUseDfault = true;
     let defautStands: DataElement[] = [];
     let matchStands: DataElement[] = [];
     // 優先順位を「それ以外→デフォルト」から変更する過程の効率悪い処理
-    
+
     for (const standElement of this.standElements) {
       if (!standElement.getFirstElementByName('imageIdentifier') || !standElement.getFirstElementByName('conditionType')) continue;
       const conditionType = standElement.getFirstElementByName('conditionType').value;
@@ -88,7 +88,7 @@ export class StandList extends DataElement {
         const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
         let conditionPostfix = false;
         let conditionImage = false;
-        if (postfixes 
+        if (postfixes
           && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
           for (let postfix of postfixes.split(/[\r\n]+/g)) {
             if (postfix == null || postfix.trim().length == 0) continue;
@@ -98,7 +98,7 @@ export class StandList extends DataElement {
             }
           }
         }
-        if (targetImageIdentifiers.length > 0 
+        if (targetImageIdentifiers.length > 0
           && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
           conditionImage = (imageIdentifier && targetImageIdentifiers.indexOf(imageIdentifier) >= 0);
         }
@@ -128,7 +128,7 @@ export class StandList extends DataElement {
       standElementIdentifier: null,
       matchMostLongText: textTagMatch,
       farewell: farewell
-    }; 
+    };
     if (useStands && useStands.length > 0) {
       ret.standElementIdentifier = useStands[Math.floor(Math.random() * useStands.length)].identifier;
     }

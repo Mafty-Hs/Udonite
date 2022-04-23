@@ -174,26 +174,6 @@ export class GameCharacterService {
     return this._gameCharacters;
   }
 
-  //イメージ
-  aura :string[] = ["black", "blue", "green", "cyan", "red", "magenta", "yellow", "white" ]
-  effectClass(identifier: string) :string[] {
-    let myClass :string[] = ["aura"];
-    let character = this.get(identifier);
-    if(character.isInverse) myClass.push("inverse");
-    if(character.isHollow) myClass.push("hollow");
-    if(character.aura != -1) myClass.push(this.aura[Number(character.aura)]);
-    return myClass;
-  }
-
-  imageUrl(identifier: string ,isUseFaceIcon :boolean): string {
-    let character = this.get(identifier);
-    if (isUseFaceIcon && character.faceIcon != null && 0 < character.faceIcon?.url?.length)
-      return character.faceIcon?.url;
-    if (character.imageFile != null && 0 < character.imageFile.url.length)
-      return character.imageFile.url;
-    return "";
-  }
-
   paletteInit() {
     EventSystem.unregister(this);
     EventSystem.register(this)

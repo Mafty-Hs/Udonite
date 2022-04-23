@@ -9,8 +9,7 @@ import { DataElement } from '@udonarium/data-element';
 interface standInfo {
   image: ImageFile;
   pos: string;
-  isBlackPaint: boolean;
-  isHollow: boolean;
+  imgStyle: object;
 }
 
 @Component({
@@ -44,10 +43,10 @@ export class StandViewSettingComponent implements OnInit, AfterViewInit, OnDestr
          if (character.standList.position == 5) {
            let standList = character.standList.standElements as DataElement[];
            let pos = this.searchPos(standList);
-           info = {image: character.imageFile ,pos: pos ,isBlackPaint: character.isBlackPaint ,isHollow: character.isHollow};
+           info = {image: character.imageFile ,pos: pos ,imgStyle: character.imgStyle};
          }
          else {
-           info = {image: character.imageFile ,pos: String(character.standList.position) ,isBlackPaint: character.isBlackPaint ,isHollow: character.isHollow}
+           info = {image: character.imageFile ,pos: String(character.standList.position) ,imgStyle: character.imgStyle}
          }
          return info;
        }

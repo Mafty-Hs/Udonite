@@ -32,6 +32,10 @@ export class StandElementComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  get imgStyle():object {
+    return this.isApplyImageEffect ? this.gameCharacter.imgStyle : {};
+  }
+
   get standImage(): ImageFile {
     if (!this.standElement) return this._imageFile;
     let elm = null;
@@ -112,10 +116,7 @@ export class StandElementComponent implements OnInit {
 
   get isApplyImageEffect(): boolean {
     let elm = this.applyImageEffectElement;
-    if (elm && elm.value) {
-      return true;
-    }
-    return false;
+    return elm ? Boolean(elm.value) : false;
   }
 
   get isApplyRoll(): boolean {

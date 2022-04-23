@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
+import { imageStyle } from '@udonarium/tabletop-object';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ContextMenuSeparator, ContextMenuAction } from 'service/context-menu.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { EffectService } from 'service/effect.service';
 import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
 import { Subscription } from 'rxjs'
-import { GameCharacterComponentTemplate , imageStyle } from 'src/app/abstract/game-character.template';
+import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.template';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
@@ -114,7 +115,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     styleObject.filter = 'brightness(0) blur(1px)';
     styleObject.transition = 'transform 132ms 0s ease';
     if (this.aura != -1) {
-      styleObject.filter += ' drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')';
+      styleObject.filter += ' drop-shadow(0 -4px 4px ' + this.gameCharacter.auraColor[this.aura] + ')';
       styleObject.transition += ', filter 0.2s ease-in-out'
     }
     styleObject.transformOrigin = '50% ' + (this.size * this.gridSize) + 'px' ;

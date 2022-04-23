@@ -85,6 +85,15 @@ export class StandImageComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) { }
 
+  get isApplyImageEffect(): boolean {
+    let dataElm = this.standElement ? this.standElement.getFirstElementByName('applyImageEffect') : null;
+    return this.gameCharacter && dataElm ? Boolean(dataElm.value) : false;
+  }
+
+  get imgStyle():object {
+    return this.isApplyImageEffect ? this.gameCharacter.imgStyle : {};
+  }
+
   onSpeaking(event: AnimationEvent) {
     //キャラクターの吹き出し表示に合わせる
     if (this.gameCharacter && this.gameCharacter.text && (this.isApplyDialog || this.isSpeakable || this.gameCharacter.isShowChatBubble)) {
@@ -248,16 +257,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
     let offset = (this.imageWidth / 2) - this.position * document.documentElement.clientWidth / 100;
     if (offset < 32) offset = 32;
     return (-this.imageWidth / 2) + offset;
-  }
-
-  get isApplyImageEffect(): boolean {
-    if (!this.standElement || !this.gameCharacter) return false;
-    let elm = this.standElement.getFirstElementByName('applyImageEffect');
-    // 真偽判定のもっといい方法ない？
-    if (elm && elm.value) {
-      return true;
-    }
-    return false;
   }
 
   get isApplyRoll(): boolean {

@@ -33,15 +33,6 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacterService } from 'service/game-character.service';
 
-export interface imageStyle {
-  transformOrigin?:string;
-  transform?:string;
-  opacity?:string;
-  filter?:string;
-  transition?:string;
-}
-
-
 @Component({
   selector: 'game-character-template',
   template: `<div></div>`,
@@ -133,7 +124,9 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     return this.gameObjectInventoryService.statusColor_3;
   }
 
-
+  get imgStyle():object {
+    return this.gameCharacter.imgStyle;
+  }
 
   stopRotate:boolean = false;
   gridSize: number = 50;
@@ -142,38 +135,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
-
-  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
-
-  get imgStyle():object {
-    let styleObject: imageStyle = {};
-    let filter:string[] = [];
-    let transition:string[] = [];
-     if (this.aura != -1) {
-      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
-      transition.push('filter 0.2s ease-in-out');
-    }
-    if (this.isInverse) {
-      styleObject.transform = 'rotateY(-180deg)';
-      transition.push('transform 132ms 0s ease');
-    }
-    if (this.isHollow) {
-      styleObject.opacity = "0.6"
-      filter.push('blur(1px)');
-    }
-    if (this.isBlackPaint) {
-      filter.push('brightness(0)');
-    }
-    if (filter.length > 0) {
-      styleObject.filter = filter.join(' ')
-    }
-    if (transition.length > 0) {
-      styleObject.transition = transition.join(',')
-    }
-    return styleObject;
-  }
-
-
 
   set dialog(dialog) {
     if (!this.gameCharacter) return;

@@ -3,8 +3,8 @@
     <select name="sendFrom" class="select" (change)="touch()" [(ngModel)]="sendFrom"
      [ngStyle]="{'background-color':isBlack ? '#212121' : '#FFF'  ,'color': getColor() , 'font-weight': (sendFrom != myPlayerId ? 'normal' : 'bolder')}">
        <option value="{{myPlayerId}}" [style.color]="colorValication(myColor)" style="font-weight: bolder;">{{player?.name}}（あなた）</option>
-       <option *ngFor="let gameCharacter of gameCharacters" 
-          [style.color]="colorValication(this.gameCharacterService.color(gameCharacter.identifier))" 
+       <option *ngFor="let gameCharacter of gameCharacters"
+          [style.color]="colorValication(this.gameCharacterService.color(gameCharacter.identifier))"
          value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
        </option>
     </select>
@@ -14,21 +14,12 @@
   <chat-input-setting  [character]='character' (chatSetting)='_chatSetting($event)'></chat-input-setting>
 </div>
 <ng-template #images>
-  <div *ngIf="!character; else isCharacter" class="imagebox">
-    <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
-  </div>
+  <img *ngIf="0 < imageFile.url.length" class="image" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'" />
   <div class="text-space" (click)="canSelect()">
     <div *ngIf="!character;else characterName"><span class="name" [style.color]="getColor()">
       {{player?.name}}
     </span><span class="tag">▼</span></div>
   </div>
-    <ng-template #isCharacter>
-      <div *ngIf="this.gameCharacterService.imageUrl(sendFrom,isUseFaceIcon)" class="imagebox">
-        <span [ngClass]="this.gameCharacterService.effectClass(sendFrom)">
-          <img class="image" [src]="this.gameCharacterService.imageUrl(sendFrom,isUseFaceIcon) | safe:'resourceUrl'"  [ngClass]="{'black-paint': character.isBlackPaint}">
-        </span>
-      </div>
-    </ng-template>
 </ng-template>
 <ng-template #characterName>
   <span class="name" [style.color]="getColor()"  [ngStyle]="{'background-color':isBlack ? 'rgba(30,30,30,0.8)' : 'rgba(200,200,200,0.8)' }">

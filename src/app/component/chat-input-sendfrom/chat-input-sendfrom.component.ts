@@ -71,7 +71,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }
 
   get imgStyle(): object {
-    return this.character ? this.character.imgStyle : {};
+    return (this.character && !this.isUseFaceIcon) ? this.character.imgStyle : {};
   }
 
   canSelect() {

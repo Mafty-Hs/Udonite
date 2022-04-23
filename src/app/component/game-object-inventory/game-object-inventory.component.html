@@ -1,6 +1,7 @@
 <div class="component">
   <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
+  <ng-container *ngTemplateOutlet="inventoryMultiMove"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
     (click)="selectGameObject(gameObject)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
@@ -55,6 +56,24 @@
     </table>
   </ng-container>
 </ng-template>
+<ng-template #inventoryMultiMove>
+  <ng-container *ngIf="isMultiMove">
+    <div style="font-size: 0.8em;">
+      <span style="font-weight: bold">一括移動:</span>
+      <button class="tab-setting small-font" (click)="allTabBoxCheck();">
+        <ng-container *ngIf="existsMultiMoveSelectedInTab(); else selectAll">全解除<i class="material-icons small-font">remove_done</i></ng-container>
+        <ng-template #selectAll>全選択<i class="material-icons small-font">done_all</i></ng-template>
+      </button>
+      <button class="tab-setting small-font" (click)="onMultiMoveContextMenu()"><i class="material-icons small-font">settings</i>実行</button>
+      <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>キャンセル</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isMultiMove">
+    <div>
+      <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>一括移動</button>
+    </div>
+  </ng-container>
+</ng-template>
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
     <div class="object-name">{{gameObject.name}}
@@ -63,8 +82,13 @@
       </button>
     </div>
     <div class="object-tags-box">
-      <div class="table-cell image-box">
-        <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+      <div class="table-cell"  *ngIf="isMultiMove">
+        <input type="checkbox" [checked]="multiMoveTargets.has(gameObject.identifier)" (change)="toggleMultiMoveTarget($event, gameObject)" />
+      </div>
+      <div class="table-cell">
+        <div class="image-box">
+          <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+        </div>
       </div>
       <ng-container *ngIf="!gameObject.hasOwner || gameObject.isMine || gameObject.canTransparent; else forbidden">
         <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">

@@ -91,11 +91,7 @@
       [ngClass]="{ 'has-icon': isUseIcon,'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <ng-container *ngIf="!isUseIcon">
         <div [ngStyle]="{'transform': ('rotate(' + roll + 'deg)') }">
-          <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}">
-            <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-              <img class="character-image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'">
-            </span>
-          </div>
+          <img class="character-image" [ngStyle]="character.imgStyle" [src]="imageUrl | safe: 'resourceUrl'">
         </div>
       </ng-container>
       <ng-container *ngIf="isUseIcon">

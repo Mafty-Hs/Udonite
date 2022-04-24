@@ -14,7 +14,7 @@
         [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
         [style.width.px]="imageWidth"
         [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
-        [style.color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
+        [style.color]="color ? color : chatWHITECOLOR"
         [style.bottom.px]="dialogBoxCssBottom + (imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16)"
         [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
       <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
@@ -29,19 +29,21 @@
   </div>
   <span *ngIf="isShowStand && !isFarewell && (isVisible || !isCanBeGone) && isShowNameTag && gameCharacter && gameCharacter.name" class="name-tag"
     style="pointer-events: none;"
-    [style.color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
+    [style.text-shadow]="'1px 1px 2px ' + color"
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
     [style.left]="position + 'px'"
     [style.bottom.px]="(standBottom + 2)"
     [style.margin-bottom.px]="adjustY > 0 ? adjustY : 0"
     [style.border-color]="(color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
+    [style.box-shadow]="'2px 2px 2px ' + color + ' inset,-2px -2px 2px ' + color + ' inset'"
     [style.margin-left.px]="nameTagCSSMarginLeft"
     ><b>{{ gameCharacter.name }}</b></span>
   <div @fadeAndScaleInOut *ngIf="!isFarewell && isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
     (click)="toGhostly(); toBackyard();"
-    style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
+    style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; pointer-events: none;"
     [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
-    [style.color]="isSecret ? '#ccc' : (color && color != chatWHITECOLOR ) ? color : chatBLACKCOLOR"
+    [style.color]="isSecret ? '#FFF' : '#222'"
+    [style.text-shadow]="isSecret ? '2px 2px #222' : ('1px 1px 1px ' + color)"
     [style.left.px]="dialogBoxCSSLeft"
     [style.bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? dialogBoxCssBottom : 12"
     [style.max-width.px]="dialogBoxCSSMaxWidth"

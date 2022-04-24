@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500&display=swap');
 
 .is-grab {
   cursor: -moz-grab;
@@ -285,7 +285,9 @@
   display: inline-block;
   max-width: 100%;
   min-width: 130px;
-  font-size: 11px;
+  font-size: 12px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-weight: 500;
   background: linear-gradient(-30deg, rgba(189, 189, 189, 0.9), rgba(244, 244, 244, 0.9));
   border: 1px solid;
   border-radius: 24px;
@@ -301,10 +303,11 @@
   text-align: center;
   font-size: 38px;
   font-weight: bold;
+  font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", "Meiryo", "verdana", sans-serif;
   border: none;
   background: none;
   min-width: 300px;
-  -webkit-text-stroke: 1px rgb(189, 189, 189);
+  -webkit-text-stroke: 2px #222;
   letter-spacing: -8px;
   white-space: pre-wrap;
   word-break: break-word;
@@ -312,8 +315,9 @@
 
 .chat-bubble p.is-whisper {
   border-radius: 24px 12px;
-  font-size: 11px;
-  background: rgba(85, 85, 85, 0.8);
+  font-size: 12px;
+  color: #FFF;
+  background: rgba(64, 64, 64, 0.8);
   box-shadow: 0px 0px 2px 0px #ccc;
 }
 
@@ -345,21 +349,7 @@
 .chat-bubble p.emote:after {
   border: 0px none transparent;
 }
-/*
-.chat-bubble p.emote:after {
-  border-top-color: transparent;
-}
 
-.chat-bubble p.is-whisper:after {
-  border: none;
-  color: #555;
-  text-shadow: 0px 0px 2px #ccc;
-  content: '〇。';
-  font-size: 12px;
-  font-weight: bold;
-  bottom: -10px;
-}
-*/
 .chat-bubble p.is-whisper.emote:after {
   content: none;
 }
@@ -445,7 +435,3 @@ p.is-wisper .face-icon {
   height: 5px;
 }
 
-::ng-deep .rubytext {
-  font-family: 'Zen Antique', serif;
-  font-size: 150%;
-}

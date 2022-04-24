@@ -169,6 +169,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(this.color)
   }
 
   ngOnDestroy(): void {
@@ -230,7 +231,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCSSLeft(): number {
-    return (this.imageWidth * (this.position > this.halfWindow ? 0.33 : 0.66) - this.imageWidth / 2 - 12)
+    return (this.imageWidth * (this.position > this.halfWindow ? 0.4 : 0.7) - this.imageWidth / 2 - 10)
      + this.position
      - (this.position > this.halfWindow ? this.dialogBoxCSSMaxWidth : 0);
   }
@@ -247,7 +248,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCssBottom(): number {
-    let ret = this.imageHeight * 0.66;
+    let ret = this.imageHeight * 0.7;
     if (ret < 48) ret = 48;
     return ret + this.standBottom;
   }

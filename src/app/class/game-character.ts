@@ -21,7 +21,7 @@ export class GameCharacter extends TabletopObject {
 
   _text = '';
   set text(text :string) { this._text = text};
-  get text():string { return StringUtil.escapeHtmlAndRuby(this._text,true)};
+  get text():string { return StringUtil.escapeHtmlAndRuby(this._text,false)};
 
   isEmote = false;
 

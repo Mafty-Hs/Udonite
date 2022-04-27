@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
+import { ChatTabEaseComponent } from 'component/chat-tab-ease/chat-tab-ease.component';
 import { ChatTabSettingComponent ,ChatWindowSetting } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -157,9 +159,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // @TODO やり方はもう少し考えた方がいいい
   scrollToBottom(isForce: boolean = false):void {
-    if (!this.canAutoScroll) return;
     if (isForce) this.isAutoScroll = true;
     if (this.scrollToBottomTimer != null || !this.isAutoScroll) return;
+    if (!this.canAutoScroll) return;
     this.scrollToBottomTimer = setTimeout(() => {
       if (this.chatTab) this.chatTab.markForRead();
       this.scrollToBottomTimer = null;

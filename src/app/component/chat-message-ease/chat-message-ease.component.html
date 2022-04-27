@@ -1,0 +1,21 @@
+<div class="message" [class]="bgColor" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''"
+  [style.font-size.px]="localFontsize" [style.font-size.px]="localFontsize"
+  [ngClass]="{'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}" >
+  <div class="name">
+    {{chatMessage.name}}
+  </div>
+  <div class="text">
+    <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''"
+    [innerHTML]="chatMessage.escapeHtmlAndRuby"></span>
+    <span *ngIf="chatMessage.tags.includes('edit')" class="edited" [ngClass]="{'is-black': isBlack}" [style.font-size.px]="localFontsize - 2">
+      (<i class="material-icons" [style.font-size.px]="localFontsize - 2">create</i>
+      編集済み)
+    </span>
+    <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">結果を公開</button>
+  </div>
+</div>
+
+<ng-template #secret>
+  <span>（シークレットダイス）</span>
+</ng-template>
+

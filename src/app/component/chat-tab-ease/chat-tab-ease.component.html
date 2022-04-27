@@ -1,21 +1,15 @@
-<div class="log" #logContainer>
-  <div class="virtual-scroll-container" [class]="bgColor" #messageContainer>
+<div class="log" [ngStyle]="{'minHeight.px':  minScrollHeight}"  #logContainer>
+  <div class="virtual-scroll-container" [style.marginBottom.px]="bottomSpace" #messageContainer>
     <ng-container *ngIf="0 < chatMessages.length">
-      <ng-container *ngFor="let chatMessage of chatMessages; index as i">
-        <p class="message" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret)}"  [style.font-size.px]="localFontsize">
-        <span [style.color]="chatMessage.color">{{chatMessage.name}}</span> : <span  [style.color]="chatMessage.color">
-          <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; else secret">
-            <span [innerHTML]="chatMessage.html"></span>
-            <button *ngIf="chatMessage.isSecret" (click)="discloseMessage(i,chatMessage.identifier)">結果を公開</button>
-          </ng-container>
-        </span></p>
+      <ng-container *ngFor="let chatMessage of chatMessages; trackBy: trackByChatMessage">
+        <chat-message-ease *ngIf="chatMessage.isDisplayable" [chatMessage]="chatMessage" [localFontsize]='this.localFontsize' [bgColor]='this.bgColor' (dblclick)="editMessage(chatMessage)">
+        </chat-message-ease>
       </ng-container>
     </ng-container>
     <ng-container *ngIf="chatMessages.length <= 0">
-        <p class="message"  [style.font-size.px]="localFontSize"><span style="color:#444">SYSTEM</span>::<span style="color:#444">ログがありません</span></p>
+      <chat-message-ease *ngFor="let chatMessage of sampleMessages" [chatMessage]="chatMessage">
+      </chat-message-ease>
     </ng-container>
+    <div class="spacer" [class]="bgColor"></div>
   </div>
 </div>
-<ng-template #secret>
-  <span>（シークレットダイス）</span>
-</ng-template>

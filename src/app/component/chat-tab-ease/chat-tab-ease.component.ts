@@ -1,131 +1,121 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  ChangeDetectorRef,
   Input,
-  Output,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
+
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem } from '@udonarium/core/system';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
-
-interface easeMessage {
-  name :string;
-  html: string;
-  color: string;
-  identifier: string;
-  isDirect :boolean;
-  isSecret :boolean;
-  isSendFromSelf :boolean;
-}
+import { ChatTabComponentTemplate , ScrollPosition , ua , isiOS } from 'abstract/chat-tab.template';
+import { setZeroTimeout } from '@udonarium/core/system/util/zero-timeout';
+import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 
 @Component({
   selector: 'chat-tab-ease',
   templateUrl: './chat-tab-ease.component.html',
   styleUrls: ['./chat-tab-ease.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChatTabEaseComponent implements OnInit {
-  @ViewChild('messageContainer') messageContainer: ElementRef;
+export class ChatTabEaseComponent extends ChatTabComponentTemplate implements  OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
+  @Input() localFontsize: number = 14;
+  @Input() bgColor: string;
+  @Input() chatWindowIdentifier = "";
+  @Output() edit = new EventEmitter<{ chatMessage : ChatMessage}>();
+  @ViewChild('logContainer', { static: true }) logContainerRef: ElementRef<HTMLDivElement>;
+  @ViewChild('messageContainer', { static: true }) messageContainerRef: ElementRef<HTMLDivElement>;
 
-  _localFontsize: number = 14;
-  @Input() set localFontsize(localFontsize :number){
-    this._localFontsize = localFontsize;
-    this.needUpdate = true;
-    this.changeDetectorRef.detectChanges();
-  }
-  get localFontsize(): number {return this._localFontsize;}
-  _bgColor: string = "grey";
-  @Input() set bgColor(bgColor :string){
-    this._bgColor = bgColor;
-    this.needUpdate = true;
-    this.changeDetectorRef.detectChanges();
-  }
-  get bgColor(): string {return this._bgColor;}
-  private _chatTab: ChatTab;
-  @Input() set chatTab(chatTab: ChatTab){
-    this._chatTab = chatTab;
-    this.needUpdate = true;
-  }
-  get chatTab(): ChatTab {return this._chatTab;}
-  get isBlack() {return (this.bgColor == "black")}
-  needUpdate:boolean = true;
+  isEase = true;
 
+  @Input() chatTab: ChatTab;
   @Output() onAddMessage: EventEmitter<null> = new EventEmitter();
-  private addMessageEventTimer: NodeJS.Timer = null;
 
-  private _chatMessages: easeMessage[] = [];
-  get chatMessages(): easeMessage[] {
-    if (!this.chatTab) return [];
-    if (this.needUpdate) {
-      this._chatMessages = this.chatTab ? this.chatTab.chatMessages
-       .map(message => {
-         let color:string = message.color;
-         if (message.isDirect || message.isSecret) color = "#DDD";
-         if (message.isSystem) color = "#444444";
-         if (this.isBlack && color == "#444444") color = "#EEE";
-         if (message.isDicebot || message.isCalculate) color = this.isBlack ? "#CCF"  : "#22F";
-         let newMessage:easeMessage = {
-           name: message.name,
-           html: this.escapeHtmlAndRuby(message.text),
-           color: color,
-           identifier: message.identifier,
-           isDirect: message.isDirect,
-           isSecret: message.isSecret,
-           isSendFromSelf: message.isSendFromSelf
-         };
-         return newMessage;
-      }) : [];
-      this.needUpdate = false;
-    }
-    return this._chatMessages;
+  ngOnInit() {
+    super.ngOnInit();
   }
 
-  escapeHtmlAndRuby(text :string):string {
-   return StringUtil.escapeHtmlAndRuby(text);
-  }
-
-  ngOnInit(){
-  }
-
-  discloseMessage(index :number,identifier :string) {
-    let message = this.chatTab.chatMessages[index];
-    if (message.identifier != identifier) {
-      message = this.chatTab.getMessage(identifier);
-      if(!message) return;
-    }
-    message.tag = message.tag.replace('secret', '');
-    this.needUpdate = true;
-  }
-
-  constructor(
-    private ngZone: NgZone,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
-    EventSystem.register(this)
-      .on('MESSAGE_ADDED', event => {
-        let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        if (!message || !this.chatTab.contains(message)) return;
-        this.needUpdate = true;
-        this.onMessageInit();
-     })
-  }
-
-  onMessageInit() {
-    if (this.addMessageEventTimer != null) return;
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     this.ngZone.runOutsideAngular(() => {
-      this.addMessageEventTimer = setTimeout(() => {
-        this.addMessageEventTimer = null;
-        this.ngZone.run(() => this.onAddMessage.emit());
-      }, 0);
+      this.scrollEventShortTimer = new ResettableTimeout(() => this.lazyScrollUpdate(), 33);
+      this.scrollEventLongTimer = new ResettableTimeout(() => this.lazyScrollUpdate(false), 66);
+      this.onScroll();
+      this.panelService.scrollablePanel.addEventListener('scroll', this.callbackOnScroll, false);
+      this.panelService.scrollablePanel.addEventListener('scrolltobottom', this.callbackOnScrollToBottom, false);
     });
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
+  ngOnChanges() {
+    super.ngOnChanges();
+  }
+
+  ngAfterViewChecked() {
+    super.ngAfterViewChecked();
+  }
+
+  lazyScrollUpdate(isNormalUpdate: boolean = true) {
+    this.scrollEventShortTimer.stop();
+    this.scrollEventLongTimer.stop();
+
+    let chatMessageElements = this.messageContainerRef.nativeElement.querySelectorAll<HTMLElement>('chat-message-ease');
+
+    let messageBoxTop = this.messageContainerRef.nativeElement.offsetTop;
+    let messageBoxBottom = messageBoxTop + this.messageContainerRef.nativeElement.clientHeight;
+
+    let preTopIndex = this.topIndex;
+    let preBottomIndex = this.bottomIndex;
+
+    let scrollPosition = this.getScrollPosition();
+    this.scrollSpeed = scrollPosition.top - this.preScrollTop;
+    this.preScrollTop = scrollPosition.top;
+
+    let hasTopBlank = scrollPosition.top < messageBoxTop;
+    let hasBotomBlank = messageBoxBottom < scrollPosition.bottom && scrollPosition.bottom < scrollPosition.scrollHeight;
+
+    if (!isNormalUpdate) {
+      this.scrollEventShortTimer.reset();
+    }
+
+    if (!isNormalUpdate && !hasTopBlank && !hasBotomBlank) {
+      return;
+    }
+
+    let scrollWideTop = scrollPosition.top - (!isNormalUpdate && hasTopBlank ? 100 : 1200);
+    let scrollWideBottom = scrollPosition.bottom + (!isNormalUpdate && hasBotomBlank ? 100 : 1200);
+
+    this.markForReadIfNeeded();
+    this.calcItemIndexRange(messageBoxTop, messageBoxBottom, scrollWideTop, scrollWideBottom, scrollPosition, chatMessageElements);
+
+    let isChangedIndex = this.topIndex != preTopIndex || this.bottomIndex != preBottomIndex;
+    if (!isChangedIndex) return;
+
+    this.needUpdate = true;
+
+    this.topElm = chatMessageElements[0];
+    this.bottomElm = chatMessageElements[chatMessageElements.length - 1];
+    this.topElmBox = this.topElm.getBoundingClientRect();
+    this.bottomElmBox = this.bottomElm.getBoundingClientRect();
+
+    setZeroTimeout(() => {
+      let scrollPosition = this.getScrollPosition();
+      this.scrollSpeed = scrollPosition.top - this.preScrollTop;
+      this.preScrollTop = scrollPosition.top;
+      this.changeDetector.markForCheck();
+      this.ngZone.run(() => { });
+    });
+  }
 }

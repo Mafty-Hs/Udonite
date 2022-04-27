@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Zen+Antique&display=swap');
+
+.white {
+  width: 100%;
+  overflow-x: hidden;
+  background: #FFF;
+  color: #000;
+}
+.grey {
+  width: 100%;
+  overflow-x: hidden;
+  background: #CCC;
+  color: #000;
+}
+.black {
+  width: 100%;
+  overflow-x: hidden;
+  background: #212121;
+  color: #FFF;
+}
+
+.message {
+  display: flex;
+  flex-flow: row nowrap;
+  box-sizing: border-box;
+  padding: 0 2px;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  border-bottom:1px dotted #999;
+}
+
+.name {
+  border-right:2px dotted #999;
+  font-family: 'Noto Sans JP', sans-serif;
+  text-shadow    :
+  -0.1px  -0.1px 0px #222,
+  0.1px  0.1px 0px #666;
+  width: 10em;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.text {
+  padding-left: 8px;
+  font-family: 'Noto Sans JP', sans-serif;
+  width: calc(100% - 12em);
+  text-shadow    :
+       -0.1px  -0.1px 0px #222,
+       0.1px  0.1px 0px #666;
+  white-space: pre-wrap;
+}
+
+.dicebot-message .text {
+  color:#22F;
+}
+
+.direct-message.dicebot-message .text {
+  color:#CCF;
+}
+
+.is-black.dicebot-message .text {
+  color: #CCF;
+}
+
+.is-black.direct-message.dicebot-message .text {
+  color:#EEF;
+}
+
+.dicebot-message {
+  border-left: 4px transparent;
+}
+
+.edited {
+  margin-left: 0.5em;
+  color: #666;
+}
+
+.edited.is-black {
+  color: #888;
+}

@@ -66,17 +66,22 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   progresPercent: number = 0;
 
   get identifier(): string { return this.chatWindowSetting.chatWindowIdentifier; }
-  set identifier(identifier :string){ this.chatWindowSetting.chatWindowIdentifier = identifier; }
   get localFontsize(): number { return this.chatWindowSetting.localFontsize; }
-  set localFontsize(localFontSize : number) { this.chatWindowSetting.localFontsize = localFontSize; }
+  set localFontsize(localFontSize : number) { this.chatWindowSetting.localFontsize = localFontSize;this.settingUpdate(); }
   get bgColor(): string { return this.chatWindowSetting.bgColor; }
-  set bgColor(bgColor :string) { this.chatWindowSetting.bgColor = bgColor; }
+  set bgColor(bgColor :string) { this.chatWindowSetting.bgColor = bgColor;this.settingUpdate();  }
   get isEase(): boolean { return this.chatWindowSetting.isEase; }
-  set isEase(isEase :boolean) { this.chatWindowSetting.isEase = isEase; }
+  set isEase(isEase :boolean) { this.chatWindowSetting.isEase = isEase;this.settingUpdate();  }
   get isLogOnly(): boolean { return this.chatWindowSetting.isLogOnly; }
-  set isLogOnly(isLogOnly :boolean) { this.chatWindowSetting.isLogOnly = isLogOnly; }
+  set isLogOnly(isLogOnly :boolean) { this.chatWindowSetting.isLogOnly = isLogOnly;}
   get controlType(): string  { return this.chatWindowSetting.controlType; }
   set controlType(controlType :string) { this.chatWindowSetting.controlType = controlType; }
+
+  updateTimer:NodeJS.Timer;
+  settingUpdate() {
+    if (this.updateTimer) clearTimeout(this.updateTimer);
+    this.updateTimer = setTimeout(()=>{EventSystem.trigger('CHAT_WINDOW_UPDATE',this.identifier)} , 300)
+  }
 
   constructor(
     private modalService: ModalService,

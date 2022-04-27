@@ -1,7 +1,8 @@
 <!--<h2>チャットシステム</h2>-->
 <div class="component"  [class]="bgColor">
-<div *ngIf="!isEase ; else ease" class="log">
-  <chat-tab *ngIf="chatTab && chatTab.isAllowed" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab>
+<div class="log">
+  <chat-tab *ngIf="chatTab && !isEase && chatTab.isAllowed" [chatTab]="chatTab" [chatWindowIdentifier]="chatWindowID" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab>
+  <chat-tab-ease *ngIf="chatTab && isEase && chatTab.isAllowed" [chatTab]="chatTab" [chatWindowIdentifier]="chatWindowID" (onAddMessage)="scrollToBottom()" (edit)="messageEdit($event)" [localFontsize]="localFontsize" [bgColor]="bgColor"></chat-tab-ease>
   <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
   <div *ngIf="chatTab && !chatTab.isAllowed" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※このチャットタブへの権限がありません</div>
 </div>
@@ -41,9 +42,4 @@
   </div>
   <chat-edit *ngIf="isLogOnly && isEdit" [isBlack]="isBlack" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>
 </div>
-<ng-template #ease>
-  <chat-tab-ease *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()" [localFontsize]="this.localFontsize" [bgColor]="this.bgColor"></chat-tab-ease>
-  <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
-  <div *ngIf="chatTab && !chatTab.isAllowed" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※このチャットタブへの権限がありません</div>
-</ng-template>
 

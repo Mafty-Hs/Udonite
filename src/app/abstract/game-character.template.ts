@@ -42,11 +42,13 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   gameCharacter: GameCharacter = null;
   is3D: boolean
 
-  get name(): string { return this.gameCharacter.name; }
-  get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
-  get altitude(): number { return this.gameCharacter.altitude; }
-  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
-  get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
+  name: string = "";
+  size: number = 1;
+  altitude:number = 0;
+  imageFile: ImageFile = ImageFile.Empty;
+  shadowImageFile: ImageFile = ImageFile.Empty;
+  imgStyle:object = {};
+
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
   get roll(): number { return this.gameCharacter.roll; }
@@ -76,9 +78,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     if (!this.dialog || !this.dialog.faceIconIdentifier) return null;
     return ImageStorage.instance.get(<string>this.dialog.faceIconIdentifier);
   }
-
-  get shadowImageFile(): ImageFile { return this.gameCharacter.shadowImageFile; }
-
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
@@ -122,10 +121,6 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   }
   get statusColor3():string {
     return this.gameObjectInventoryService.statusColor_3;
-  }
-
-  get imgStyle():object {
-    return this.gameCharacter.imgStyle;
   }
 
   stopRotate:boolean = false;
@@ -242,6 +237,15 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  updateObject() {
+    this.name = this.gameCharacter.name;
+    this.size = this.adjustMinBounds(this.gameCharacter.size);
+    this.imageFile = this.gameCharacter.imageFile;
+    this.imgStyle = this.gameCharacter.imgStyle;
+    this.shadowImageFile = this.gameCharacter.shadowImageFile;
+    this.altitude = this.gameCharacter.altitude;
+  }
+
   constructor(
     protected contextMenuService: ContextMenuService,
     protected gameCharacterService: GameCharacterService,
@@ -256,6 +260,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   ) { }
 
   ngOnInit() {
+    this.updateObject();
     EventSystem.register(this)
       .on('UPDATE_BAR', -1000, event => {
         this.changeDetector.markForCheck();
@@ -264,6 +269,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameCharacter || !object) return;
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
+          this.updateObject();
           this.changeDetector.markForCheck();
         }
       })

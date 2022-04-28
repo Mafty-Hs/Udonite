@@ -415,7 +415,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
       {
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {
-            this.altitude = 0;
+            this.gameCharacter.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
           }
         },

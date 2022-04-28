@@ -132,7 +132,6 @@ text2Byte () : string {
 
 calcValue(targetNum:number , targetText:string):number {
  let result : any;
-  console.log(targetText);
  switch (targetText.slice( 0, 1 )) {
   case "+":
     result = targetNum + this.myeval(targetText.slice( 1 ));

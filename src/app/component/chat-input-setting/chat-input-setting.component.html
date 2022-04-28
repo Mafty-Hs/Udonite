@@ -1,7 +1,7 @@
 <div #setting class="flex-box" (contextmenu)="config($event); false">
   <div class="flex-column" *ngIf="isSendTo">
         ➡
-        <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
+        <select style="width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
           <option value="" class="not-specified">全員</option>
           <option *ngFor="let player of otherPlayers" value="{{(player && player?.playerId) ? player.playerId : '' }}" [style.color]="(player && player?.color )? player.color : playerService.CHAT_WHITETEXT_COLOR" style="font-weight: bolder;">{{(player && player?.name) ? player.name : '接続中' }}
             <ng-container *ngIf="player === myPlayer">（あなた）</ng-container>
@@ -9,7 +9,7 @@
         </select>
   </div>
   <div class="flex-column" *ngIf="isGameType">
-        <select *ngIf="diceBotInfosIndexed.length < 1" style="max-width: 12em;">
+        <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 12em;">
           <option value="" class="not-specified">ダイスボット読込中..</option>
         </select>
         <select *ngIf="diceBotInfosIndexed.length > 0" style="width:12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
@@ -40,7 +40,7 @@
     <b style="font-size: 0.7em;">色: </b>
     <input type="color" style="width:4em;" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
   </div>
-  <button *ngIf="!minimumMode" style="padding:0;"(click)="showDicebotHelp()"><img src="./assets/icons/dice_icon.png"></button>
+  <button *ngIf="!minimumMode" class="setting" style="padding:0;"(click)="showDicebotHelp()"><img src="./assets/icons/dice_icon.png"></button>
   <div *ngIf="!minimumMode" class="material-icons setting" (click)="config($event)">
     settings
   </div>

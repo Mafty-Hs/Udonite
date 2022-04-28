@@ -1,8 +1,8 @@
 .flex-box {
   padding: 0px;
   margin: 0px;
-  display:flex; 
-  flex-direction: row; 
+  display:flex;
+  flex-direction: row;
   justify-content: flex-start;
 }
 
@@ -10,14 +10,18 @@
   width: 160px;
   border: solid 1px black;
   box-shadow: 1px 1px 1px 0px black;
-  vertical-align: middle;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
   white-space: nowrap;
 }
 
 .setting {
   border: solid 1px black;
   box-shadow: 1px 1px 1px 0px black;
-  vertical-align: middle;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .not-specified {

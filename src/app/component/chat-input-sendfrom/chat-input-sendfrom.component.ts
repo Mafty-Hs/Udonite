@@ -60,7 +60,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   get imageFile(): ImageFile {
     let image: ImageFile = null;
     if (this.character) {
-      if (this.isUseFaceIcon && this.character.faceIcon != null && 0 < this.character.faceIcon?.url?.length)
+      if (this.isUseFaceIcon && this.character.faceIcon != null && this.character.faceIcon?.url.length > 0)
         image = this.character.faceIcon;
       else
         image = this.character.imageFile;
@@ -71,7 +71,8 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }
 
   get imgStyle(): object {
-    return (this.character && !this.isUseFaceIcon) ? this.character.imgStyle : {};
+    if (!this.character) return {};
+    return (this.isUseFaceIcon && this.character.faceIcon &&  this.character.faceIcon?.url.length > 0 ) ? {} : this.character.imgStyle ;
   }
 
   canSelect() {
@@ -107,7 +108,9 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   ) {
     EventSystem.register(this)
     .on('UPDATE_GAME_OBJECT', -1000, event => {
-      if (event.data.aliasName === 'player' || event.data.aliasName === 'character' )  this.lazyUpdate();
+      if (event.data.aliasName === 'player' || event.data.aliasName === 'character' || event.data.aliasName == 'data' ) {
+        this.lazyUpdate();
+      }
     })
     .on('DELETE_GAME_OBJECT', -1000, event => {
       if (event.data.aliasName === 'character' )  this.lazyUpdate();

@@ -41,26 +41,20 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() isFlat: boolean = false;
 
   get name(): string { return this.gameTableMask.name; }
-  get width(): number { return this.adjustMinBounds(this.gameTableMask.width); }
-  get height(): number { return this.adjustMinBounds(this.gameTableMask.height); }
-  get opacity(): number { return this.gameTableMask.opacity; }
-  get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
   get blendType(): number { return this.gameTableMask.blendType; }
   set blendType(blendType: number) { this.gameTableMask.blendType = blendType; }
-
-  get fontSize(): number { return this.gameTableMask.fontsize; }
-  set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
   get text(): string { return this.gameTableMask.text; }
   set text(text: string) { this.gameTableMask.text = text; }
-  get color(): string { return this.gameTableMask.color; }
-  set color(color: string) { this.gameTableMask.color = color; }
-  get bgcolor(): string { return this.gameTableMask.bgcolor; }
-  set bgcolor(bgcolor: string) { this.gameTableMask.bgcolor = bgcolor; }
-
-  get altitude(): number { return this.isFlat ? 0 : this.gameTableMask.altitude; }
-  set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
+  width: number = 1;
+  height: number = 1;
+  opacity: number = 1;
+  imageFile: ImageFile = ImageFile.Empty;
+  fontSize: number = 14;
+  color: string = "";
+  bgcolor: string = "";
+  altitude: number = 0;
 
   get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
@@ -73,13 +67,23 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   math = Math;
   viewRotateZ = 10;
 
-  get rubiedText(): string {
-    return StringUtil.escapeHtmlAndRuby(this.text)
-  }
+  rubiedText: string = "";
 
   movableOption: MovableOption = {};
 
   private input: InputHandler = null;
+
+  updateObject() {
+    this.width = this.adjustMinBounds(this.gameTableMask.width);
+    this.height = this.adjustMinBounds(this.gameTableMask.height);
+    this.opacity = this.gameTableMask.opacity;
+    this.imageFile = this.gameTableMask.imageFile;
+    this.fontSize = this.gameTableMask.fontsize;
+    this.rubiedText = StringUtil.escapeHtmlAndRuby(this.text);
+    this.color = this.gameTableMask.color;
+    this.bgcolor = this.gameTableMask.bgcolor;
+    this.altitude = this.isFlat ? 0 : this.gameTableMask.altitude;
+  }
 
   constructor(
     private ngZone: NgZone,
@@ -94,11 +98,13 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   ) { }
 
   ngOnInit() {
+    this.updateObject();
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameTableMask || !object) return;
         if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
+          this.updateObject();
           this.changeDetector.markForCheck();
         }
       })
@@ -176,7 +182,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           { name: `${this.blendType == 1 ? '◉' : '○'} 背景色と重ねる`,  action: () => { this.blendType = 1; SoundEffect.play(PresetSound.cardDraw) } },
           { name: `${this.blendType == 2 ? '◉' : '○'} 背景色と混ぜる`,  action: () => { this.blendType = 2; SoundEffect.play(PresetSound.cardDraw) } },
           ContextMenuSeparator,
-          { name: '色の初期化', action: () => { this.color = '#555555'; this.bgcolor = '#0a0a0a'; SoundEffect.play(PresetSound.cardDraw) } }
+          { name: '色の初期化', action: () => { this.gameTableMask.color = '#555555'; this.gameTableMask.bgcolor = '#0a0a0a'; SoundEffect.play(PresetSound.cardDraw) } }
         ]
       },
       ContextMenuSeparator,
@@ -245,7 +251,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           { name: `${this.blendType == 1 ? '◉' : '○'} 背景色と重ねる`,  action: () => { this.blendType = 1; SoundEffect.play(PresetSound.cardDraw) } },
           { name: `${this.blendType == 2 ? '◉' : '○'} 背景色と混ぜる`,  action: () => { this.blendType = 2; SoundEffect.play(PresetSound.cardDraw) } },
           ContextMenuSeparator,
-          { name: '色の初期化', action: () => { this.color = '#555555'; this.bgcolor = '#0a0a0a'; SoundEffect.play(PresetSound.cardDraw) } }
+          { name: '色の初期化', action: () => { this.gameTableMask.color = '#555555'; this.gameTableMask.bgcolor = '#0a0a0a'; SoundEffect.play(PresetSound.cardDraw) } }
         ]
       },
       ContextMenuSeparator,
@@ -262,7 +268,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       {
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {
-            this.altitude = 0;
+            this.gameTableMask.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
           }
         },

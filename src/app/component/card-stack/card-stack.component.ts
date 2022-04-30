@@ -508,8 +508,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private splitStack(split: number) {
-    if (split < 2) return;
+    if ((split < 2)||(this.cards.length < split)) return;
     let cardStacks: CardStack[] = [];
+
     for (let i = 0; i < split; i++) {
       let cardStack = CardStack.create(`${this.cardStack.name}_${('0' + (i+1).toString()).slice(-2)}`);
       cardStack.location.x = this.cardStack.location.x + 50 - (Math.random() * 100);

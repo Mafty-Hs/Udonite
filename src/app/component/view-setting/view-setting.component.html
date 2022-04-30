@@ -7,7 +7,7 @@
       <button class="button" (click)="closePanel()">全てのパネルを消去</button>
     </div>
   </div>
-  <div class="card">
+  <div *ngIf="!is2d" class="card">
     <div class="title">
       視点
     </div>

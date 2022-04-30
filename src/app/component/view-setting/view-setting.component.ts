@@ -6,6 +6,7 @@ import { EffectService } from 'service/effect.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { StandService } from 'service/stand.service';
 import { EventSystem } from '@udonarium/core/system';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'view-setting',
@@ -14,6 +15,10 @@ import { EventSystem } from '@udonarium/core/system';
 })
 export class ViewSettingComponent implements OnInit {
   @Output() closeMe = new EventEmitter();
+
+  get is2d():boolean {
+    return this.roomService.roomData.is2d;
+  }
 
   get isShowStand() :boolean { return StandImageComponent.isShowStand;}
   set isShowStand(isShowStand :boolean) {
@@ -78,6 +83,7 @@ export class ViewSettingComponent implements OnInit {
     private effectService: EffectService,
     private playerService: PlayerService,
     private panelService: PanelService,
+    private roomService: RoomService,
     private standService: StandService
   ) { }
 

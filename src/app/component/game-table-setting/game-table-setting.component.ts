@@ -170,8 +170,13 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   selectGameTable(identifier: string) {
     let gameTable  = ObjectStore.instance.get<GameTable>(identifier);
     if (this.jukeBox && this.autoPlayBGM && gameTable.bgmIdentifier) {
-      let audio = AudioStorage.instance.get(gameTable.bgmIdentifier);
-      if (audio) this.jukeBox.play(gameTable.bgmIdentifier,true);
+      if (gameTable.bgmIdentifier === '--stop--') {
+        this.jukeBox.stop();
+      }
+      else {
+        let audio = AudioStorage.instance.get(gameTable.bgmIdentifier);
+        if (audio) this.jukeBox.play(gameTable.bgmIdentifier,true);
+      }
     }
     if (this.autoPlayCutin && gameTable.cutinIdentifier) {
       let cutin = ObjectStore.instance.get(gameTable.cutinIdentifier)

@@ -86,6 +86,7 @@
           初期BGM
           <select [(ngModel)]="sceneBGM" name="sceneBGM" [attr.disabled]="!isEditable ? '' : null">
             <option value="">なし</option>
+            <option value="--stop--">停止</option>
             <option *ngFor="let audio of audios" value="{{audio.identifier}}">{{ audio.name }}</option>
           </select>
         </div>

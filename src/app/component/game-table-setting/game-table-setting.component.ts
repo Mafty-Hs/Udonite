@@ -1,16 +1,22 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AudioFile } from '@udonarium/core/file-storage/audio-file';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, IONetwork } from '@udonarium/core/system';
+import { CutIn } from '@udonarium/cut-in';
+import { CutInList } from '@udonarium/cut-in-list';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+import { Jukebox } from '@udonarium/Jukebox';
 import { TableSelecter } from '@udonarium/table-selecter';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { PlayerService } from 'service/player.service';
 import { RoomService } from 'service/room.service';
 import { SaveDataService } from 'service/save-data.service';
 
@@ -22,6 +28,10 @@ import { SaveDataService } from 'service/save-data.service';
 export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   minSize: number = 1;
   maxSize: number = 100;
+  autoPlayBGM:boolean = true;
+  autoPlayCutin:boolean = true;
+
+  jukeBox: Jukebox = null;
 
   get tableBackgroundImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.imageIdentifier : null);
@@ -60,6 +70,33 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   get tableDistanceviewFilter(): FilterType { return this.selectedTable.backgroundFilterType; }
   set tableDistanceviewFilter(filterType: FilterType) { if (this.isEditable) this.selectedTable.backgroundFilterType = filterType; }
 
+  get audios():AudioFile[] {
+    return AudioStorage.instance.audios
+  }
+
+  get cutIns():CutIn[] {
+    return CutInList.instance.cutIns
+  }
+
+  get sceneBGM():string {
+    if (this.selectedTable.bgmIdentifier === null || this.selectedTable.bgmIdentifier === undefined) {
+      this.selectedTable.bgmIdentifier = '';
+    }
+    return this.selectedTable.bgmIdentifier
+  }
+  set sceneBGM(sceneBGM :string) {
+    this.selectedTable.bgmIdentifier = sceneBGM;
+  }
+  get sceneCutin():string {
+    if (this.selectedTable.cutinIdentifier === null || this.selectedTable.cutinIdentifier === undefined) {
+      this.selectedTable.cutinIdentifier = '';
+    }
+    return this.selectedTable.cutinIdentifier;
+  }
+  set sceneCutin(sceneCutin :string) {
+    this.selectedTable.cutinIdentifier = sceneCutin;
+  }
+
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
   selectedTable: GameTable = null;
@@ -81,6 +118,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     private modalService: ModalService,
     private saveDataService: SaveDataService,
     private imageService: ImageService,
+    private playerService: PlayerService,
     private panelService: PanelService,
     public roomService: RoomService,
   ) { }
@@ -96,6 +134,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
           this.selectedTableXml = object.toXml();
         }
       });
+    this.jukeBox = ObjectStore.instance.get('Jukebox')
   }
 
   ngAfterViewInit() { }
@@ -107,7 +146,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   upTableIndex() {
     if (!this.selectedTable) return;
     let gameTables = this.getGameTables();
-    console.log(gameTables);
     let currentTableIndex = this.selectedTable.index;
     if (currentTableIndex < 2) return;
     let beforeTable = gameTables[gameTables.indexOf(this.selectedTable) - 1]
@@ -130,8 +168,25 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   selectGameTable(identifier: string) {
+    let gameTable  = ObjectStore.instance.get<GameTable>(identifier);
+    if (this.jukeBox && this.autoPlayBGM && gameTable.bgmIdentifier) {
+      let audio = AudioStorage.instance.get(gameTable.bgmIdentifier);
+      if (audio) this.jukeBox.play(gameTable.bgmIdentifier,true);
+    }
+    if (this.autoPlayCutin && gameTable.cutinIdentifier) {
+      let cutin = ObjectStore.instance.get(gameTable.cutinIdentifier)
+      if (cutin && cutin instanceof CutIn) {
+        const sendObj = {
+          identifier: gameTable.cutinIdentifier,
+          secret: false,
+          sender: this.playerService.myPeer.peerId
+        };
+        EventSystem.call('PLAY_CUT_IN', sendObj);
+      }
+    }
+
     EventSystem.call('SELECT_GAME_TABLE', { identifier: identifier }, IONetwork.peerId);
-    this.selectedTable = ObjectStore.instance.get<GameTable>(identifier);
+    this.selectedTable = gameTable;
     this.selectedTableXml = '';
   }
 

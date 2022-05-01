@@ -46,6 +46,17 @@
   justify-content:space-between;
 }
 
+.auto-play {
+  display: block;
+  box-sizing: border-box;
+}
+
+.auto-play-setting {
+  display: block;
+  box-sizing: border-box;
+  font-size: smaller;
+}
+
 .images-select {
   display: flex;
 }

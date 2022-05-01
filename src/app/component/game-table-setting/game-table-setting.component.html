@@ -10,6 +10,22 @@
         <button style="display: block; padding: 0.6em;" (click)="downTableIndex()">↓</button>
       </div>
     </div>
+    <div  class="flex-item auto-play">
+      <label class="auto-play-setting">
+        BGM自動再生
+        <div class="toggle">
+        <input type="checkbox" [(ngModel)]="autoPlayBGM" name="autoPlayBGM" />
+        <div><div></div></div>
+        </div>
+      </label>
+      <label class="auto-play-setting">
+        カットイン自動再生
+        <div class="toggle">
+        <input type="checkbox" [(ngModel)]="autoPlayCutin" name="autoPlayCutin" />
+        <div><div></div></div>
+        </div>
+      </label>
+    </div>
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty || selectedTable">
@@ -64,6 +80,22 @@
           <option value="white">ホワイト</option>
           <option value="black">ブラック</option>
         </select>
+      </div>
+      <div>
+        <div>
+          初期BGM
+          <select [(ngModel)]="sceneBGM" name="sceneBGM" [attr.disabled]="!isEditable ? '' : null">
+            <option value="">なし</option>
+            <option *ngFor="let audio of audios" value="{{audio.identifier}}">{{ audio.name }}</option>
+          </select>
+        </div>
+        <div>
+          カットイン
+          <select [(ngModel)]="sceneCutin" name="sceneCutin" [attr.disabled]="!isEditable ? '' : null">
+            <option value="">なし</option>
+            <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name }}</option>
+          </select>
+        </div>
       </div>
       <hr/>
       <div>

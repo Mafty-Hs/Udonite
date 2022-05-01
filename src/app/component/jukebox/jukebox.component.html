@@ -60,23 +60,25 @@
   </table>
 </div>
 
-
-<label>
-  <div class="drop-zone" *ngIf="!roomService.disableAudioLoad">
-    <div>
-      <i class="material-icons large-font">playlist_add</i>
+<div class="upload" *ngIf="!roomService.disableAudioLoad">
+  <ng-container *ngIf="!URLupload ;else urlUpload">
+    <label class="half">
+      <div class="drop-zone">
+        <i class="material-icons large-font">playlist_add</i>
+        <div class="small-font">ファイルをアップロード<br>１ファイルにつき10MBまで<br>ルームに誰もいなくなると削除</div>
+        <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple accept="audio/*"/>
+      </div>
+    </label>
+    <div class="half drop-zone" (click)="toggleURL()">
+      <i class="material-icons large-font">link</i>
+      <div class="small-font">外部URLを登録<br>サイズ制限なし<br>ルームに情報が保存されます</div>
     </div>
-    <div>ここに音楽をドロップ</div>
-    <div class="small-font">またはここをクリックして選択</div>
-    <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple accept="audio/*"/>
-    <div class="small-font">
-      <br>１ファイルにつき10MBまで</div>
-  </div>
-</label>
+  </ng-container>
+</div>
+
 <div style="font-size: 12px; margin-top: 3px">※「試聴<sup class="self-only">*</sup>」は自分のスピーカーだけで音楽を1回再生します。</div>
 <div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
 <div style="font-size: 12px;">※「SE」はルーム内の全員で1つの音楽を一回再生します。BGMと同時に再生することができます。</div>
-<div style="font-size: 12px;">音楽ファイルはルームに誰もいなくなると削除されます（毎回アップロードが必要です）</div>
 
 <ng-template #edit>
   <td colspan="4">
@@ -87,4 +89,15 @@
     <input type="text" width="18em" [(ngModel)]="nameAudio.name" />
     <button (click)="toggleName($event,'')">OK</button>
   </td>
+</ng-template>
+
+<ng-template #urlUpload>
+  <div class="drop-zone small-font" style="width:100%">
+    登録したい音楽の情報を入力してください。<br/>
+    名前： <input type="text" width="24em" [(ngModel)]="urlName" /><br/>
+    URL： <input type="text" width="24em" [(ngModel)]="urlUrl" /><br/>
+    <button (click)="uploadURL()">保存</button>
+    <button (click)="toggleURL()">キャンセル</button><br/>
+  </div>
+
 </ng-template>

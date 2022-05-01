@@ -10,6 +10,7 @@ import { ImageContext } from "@udonarium/core/file-storage/image-context";
 import { AudioContext } from "@udonarium/core/file-storage/audio-context";
 import { RoomControl } from "@udonarium/room-admin";
 import { Round } from "@udonarium/round";
+import { MimeType } from "@udonarium/core/file-storage/mime-type";
 
 export class IONetwork {
   private static _instance: IONetwork
@@ -156,12 +157,13 @@ export class IONetwork {
   }
 
   async imageUrl(imageUrl :string, owner :string, tags :string[]):Promise<void> {
+    if (!this.checkFileType(imageUrl)) return;
     let context:ImageContext = {
       identifier: imageUrl ,
       type: "URL",
       url: imageUrl,
-      thumbnail: {type: "" , url: ""}, 
-      filesize: 0, 
+      thumbnail: {type: "" , url: ""},
+      filesize: 0,
       isHide: false,
       owner: [owner],
       tag: tags
@@ -184,14 +186,15 @@ export class IONetwork {
     let result = await this.socket.send('audioMap',{});
     return result as AudioContext[];
   }
-  
+
   async audioUrl(audioUrl :string ,owner :string ,filename :string):Promise<void> {
+    if (!this.checkFileType(audioUrl)) return;
     let context:AudioContext = {
       identifier: audioUrl ,
       name: filename,
       type: "URL",
       url: audioUrl,
-      filesize: 0, 
+      filesize: 0,
       owner: owner,
       volume: 100,
       isHidden: false
@@ -277,6 +280,11 @@ export class IONetwork {
       console.log(error);
     }
     return;
+  }
+
+  private checkFileType(url :string):boolean {
+    let filetype = MimeType.type(url.match(".+/(.+?)([\?#;].*)?$")[1]);
+    return Boolean(filetype);
   }
 
 }

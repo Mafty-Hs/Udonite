@@ -5,12 +5,14 @@ import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { RoomService } from 'service/room.service';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'app-jukebox',
@@ -63,6 +65,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+    private playerService: PlayerService,
     public roomService: RoomService,
     private ngZone: NgZone
   ) { }
@@ -85,6 +88,22 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     if (identifier !== this.nameIdentifier) this.nameIdentifier = identifier;
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  urlName:string = "";
+  urlUrl:string = "";
+
+  URLupload:boolean = false;
+  toggleURL() {
+    this.URLupload = !this.URLupload;
+    this.urlName = "";
+    this.urlUrl = "";
+  }
+
+  uploadURL() {
+    if (this.urlName.length < 1 || this.urlUrl.length < 1 || !StringUtil.validUrl(this.urlUrl)) return;
+    IONetwork.audioUrl(this.urlUrl , this.playerService.myPlayer.playerId ,this.urlName);
+    this.toggleURL();
   }
 
   play(identifier :string) {

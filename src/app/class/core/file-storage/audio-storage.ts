@@ -37,7 +37,7 @@ export class AudioStorage {
 
   create(context :AudioContext) {
     let audio = this.set(context);
-    this.audioHash[audio.identifier] = audio; 
+    this.audioHash[audio.identifier] = audio;
   }
 
   update(context :AudioContext) {
@@ -69,7 +69,7 @@ export class AudioStorage {
     let audios = await IONetwork.audioMap()
     for (let audio of audios) {
       if (!this.audioHash[audio.identifier])
-        this.audioHash[audio.identifier] = this.set(audio); 
+        this.audioHash[audio.identifier] = this.set(audio);
     }
   }
 }

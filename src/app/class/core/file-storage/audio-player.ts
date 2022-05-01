@@ -118,15 +118,16 @@ export class AudioPlayer {
     this.audio = audio;
   }
 
-  play(audio: AudioFile = this.audio, volume: number = 1.0) {
+  async play(audio: AudioFile = this.audio, volume: number = 1.0) {
     this.stop();
     this.audio = audio;
     if (!this.audio) return;
 
-    let url = this.audio.url;
+    let url = await this.audio.url();
 
     this.mediaElementSource.connect(this.getConnectingAudioNode());
     this.audioElm.src = url;
+    this.audioElm.crossOrigin = 'anonymous';
     this.audioElm.load();
     this.volume =  AudioPlayer.calcVolume(audio);
     this.audioElm.play().catch(reason => { console.warn(reason); });

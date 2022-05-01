@@ -8,12 +8,23 @@
   background-color: #444;
 }
 
+.upload {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.half {
+  width: 50%;
+  box-sizing: border-box;
+}
+
 .drop-zone {
+  box-sizing: border-box;
   border: 2px dashed #aaa;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  padding: 25px;
+  padding: 18px;
   text-align: center;
   font: 24px bold 'Vollkorn';
   color: #fff;

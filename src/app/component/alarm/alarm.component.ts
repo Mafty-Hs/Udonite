@@ -12,8 +12,14 @@ export class AlarmComponent implements OnInit, AfterViewInit {
   public timer :number
   nodeTimer = null;
 
+  get hour():number {
+    let hour = Math.floor(this.timer / 3600);
+    return hour;
+  }
+
   get minute():string {
-    return ('00' + Math.floor(this.timer / 60)).slice( -2 );
+    let remaintimer = this.timer - (this.hour * 3600)
+    return ('00' + Math.floor(remaintimer / 60)).slice( -2 );
   }
 
   get second():string {

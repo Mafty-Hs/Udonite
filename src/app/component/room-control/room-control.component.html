@@ -70,7 +70,10 @@
         アラーム
       </div>
       <div class="item-data">
-        <div><input type="number" style="width:4em" name="alarmTime" [(ngModel)]="alarmTime"  />秒後</div>
+        <div>
+          <input type="number" style="width:3em" min="0" max="999" step="1" name="alarmTime" [(ngModel)]="alarmMinute"  />分
+          <input type="number" style="width:2em" min="0" max="60" step="1" name="alarmTime" [(ngModel)]="alarmSecond"  />秒 後
+        </div>
         <div>送信先:
         <select name="sendTo" style="width:10em" [(ngModel)]="sendTo" >
           <option value="" class="not-specified">全員</option>

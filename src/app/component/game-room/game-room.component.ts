@@ -110,12 +110,12 @@ export class GameRoomComponent implements OnInit {
   closeSub() {
     this.selectMenu = "";
   }
-  
+
   chatOpen(e:Event):void {
     if (this.playerService.primaryChatWindow) return;
     this.panelService.open(ChatWindowComponent, { width: 700, height: 500, left: 50, top: 50 });
   }
-  
+
   inventoryOpen(e:Event):void {
     this.panelService.open(GameObjectInventoryComponent, { width: 550, height: 700, left: 50, top: 50 });
   }
@@ -168,7 +168,7 @@ export class GameRoomComponent implements OnInit {
           if (event.data.time > 1) {
             let option: PanelOption = { left: 200, top: 250, width: 200, height: 230 };
             let component = this.panelService.open(AlarmComponent, option);
-            component.timer = event.data.time / 1000;
+            component.timer = event.data.time;
           }
           else {
             setTimeout(() => {

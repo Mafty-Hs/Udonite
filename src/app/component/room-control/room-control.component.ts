@@ -21,7 +21,8 @@ import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 export class RoomControlComponent implements OnInit {
 
   alarmInterval:boolean = false;
-  alarmTime:number = 0;
+  alarmMinute:number = 0;
+  alarmSecond:number = 0;
   get myPeer(): PeerCursor { return this.playerService.myPeer; }
   get otherPeers(): PeerCursor[] { return this.playerService.otherPeers; }
   sendTo:string = "";
@@ -77,7 +78,8 @@ export class RoomControlComponent implements OnInit {
       peer = this.sendTo;
       this.sendTo = "";
     }
-    EventSystem.call('PLAY_ALARM', {identifier: peer  ,time: this.alarmTime * 1000});
+    let alarmTime = this.alarmMinute * 60 + this.alarmSecond;
+    EventSystem.call('PLAY_ALARM', {identifier: peer  ,time: alarmTime});
     setTimeout(() => {
       this.alarmInterval = false;
     }, 3000);

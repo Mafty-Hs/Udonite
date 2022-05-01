@@ -1,11 +1,15 @@
 <div class="flex-container">
-  <div class="flex-item no-grow">
-    <div>
-      <button style="margin-bottom: 2px; font-size: smaller" (click)="createGameTable()">新しいテーブルを作る</button>
+  <div class="flex-item no-grow selecter">
+    <button style="display: block; width: 190px; font-size: smaller" (click)="createGameTable()">新しいテーブルを作る</button>
+    <div  class="flex-item selecter-item">
+      <select style="display: block;width: 155px" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+        <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
+      </select>
+      <div class="flex-item switch">
+        <button style="display: block; padding: 0.6em;" (click)="upTableIndex()">↑</button>
+        <button style="display: block; padding: 0.6em;" (click)="downTableIndex()">↓</button>
+      </div>
     </div>
-    <select style="width: 100%; max-width: 155px" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
-      <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
-    </select>
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty || selectedTable">

@@ -71,7 +71,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
         break;
       case 'GameTableSettingComponent':
         component = GameTableSettingComponent;
-        option = { width: 610, height: 420, left: 100 };
+        option = { width: 650, height: 420, left: 100 };
         break;
       case 'FileStorageComponent':
         component = FileStorageComponent;

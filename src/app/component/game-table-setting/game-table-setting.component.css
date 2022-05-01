@@ -27,6 +27,25 @@
   flex-grow: 0;
 }
 
+.selecter {
+  display: flex;
+  flex-flow:column nowrap;
+  box-sizing: border-box;
+}
+
+.selecter-item {
+  display: flex;
+  box-sizing: border-box;
+  flex-flow:row nowrap;
+}
+
+.switch {
+  display: flex;
+  box-sizing: border-box;
+  flex-flow: column;
+  justify-content:space-between;
+}
+
 .images-select {
   display: flex;
 }
@@ -59,7 +78,7 @@ input[type='number'] {
 }
 
 .grow {
-  text-shadow    : 
+  text-shadow    :
        1px  1px 0px #ffffff,
       -1px  1px 0px #ffffff,
        1px -1px 0px #ffffff,
@@ -67,7 +86,7 @@ input[type='number'] {
        1px  0px 0px #ffffff,
        0px  1px 0px #ffffff,
       -1px  0px 0px #ffffff,
-       0px -1px 0px #ffffff; 
+       0px -1px 0px #ffffff;
 }
 
 .blackout {

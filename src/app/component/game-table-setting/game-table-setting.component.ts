@@ -104,6 +104,31 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     EventSystem.unregister(this);
   }
 
+  upTableIndex() {
+    if (!this.selectedTable) return;
+    let gameTables = this.getGameTables();
+    console.log(gameTables);
+    let currentTableIndex = this.selectedTable.index;
+    if (currentTableIndex < 2) return;
+    let beforeTable = gameTables[gameTables.indexOf(this.selectedTable) - 1]
+    if (!beforeTable) return;
+    let beforeTableIndex = beforeTable.index;
+    this.selectedTable.index = beforeTableIndex;
+    beforeTable.index = currentTableIndex;
+  }
+
+  downTableIndex() {
+    if (!this.selectedTable) return;
+    let gameTables = this.getGameTables();
+    let currentTableIndex = this.selectedTable.index;
+    if (currentTableIndex >= gameTables.length) return;
+    let afterTable = gameTables[gameTables.indexOf(this.selectedTable) + 1]
+    if (!afterTable) return;
+    let afterTableIndex = afterTable.index;
+    this.selectedTable.index = afterTableIndex;
+    afterTable.index = currentTableIndex;
+  }
+
   selectGameTable(identifier: string) {
     EventSystem.call('SELECT_GAME_TABLE', { identifier: identifier }, IONetwork.peerId);
     this.selectedTable = ObjectStore.instance.get<GameTable>(identifier);
@@ -111,7 +136,15 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   getGameTables(): GameTable[] {
-    return ObjectStore.instance.getObjects(GameTable);
+    let gameTables = ObjectStore.instance.getObjects(GameTable);
+    if (gameTables.find(gameTable => gameTable.index < 1)) this.reassignIndex(gameTables);
+    return gameTables.sort((a, b) => a.index - b.index);
+  }
+
+  reassignIndex(gameTables :GameTable[]):void {
+    for (let index = 1; index <= gameTables.length; index++) {
+      gameTables[index - 1].index = index + Math.random();
+    }
   }
 
   createGameTable() {

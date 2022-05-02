@@ -17,6 +17,9 @@ import * as Beautify from 'vkbeautify';
 
 import { ChatTab } from '@udonarium/chat-tab';
 import { CutInList } from '@udonarium/cut-in-list';
+import { RoomService } from './room.service';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
+import { AudioUrls } from '@udonarium/core/file-storage/audio-context';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -27,6 +30,7 @@ export class SaveDataService {
   private static queue: PromiseQueue = new PromiseQueue('SaveDataServiceQueue');
 
   constructor(
+    private roomService:RoomService,
     private ngZone: NgZone
   ) { }
 
@@ -50,6 +54,10 @@ export class SaveDataService {
     files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
     files.push(new File([cutInXml], 'cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
+    if (this.roomService.adminAuth) {
+      let audioJson = this.getAudioJson();
+      if (audioJson) files.push(new File([audioJson], 'audio.json', { type: 'text/plain' }));
+    }
 
     files = files.concat(await this.searchImageFiles(roomXml));
     files = files.concat(await this.searchImageFiles(chatXml));
@@ -153,4 +161,18 @@ export class SaveDataService {
     return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
   }
 
+  private getAudioJson():string {
+    let audios = AudioStorage.instance.audios.filter(audio => audio.type === 'URL').map(audio => {return audio.context})
+    if (audios.length > 0) {
+      let effects:AudioUrls[] = audios.map(audio => {
+        return {message: audio.name , soundSource: audio.url , udoniteVolume: audio.volume }
+      })
+      let json = JSON.stringify(effects);
+      return json;
+    }
+    return "";
+  }
+
 }
+
+

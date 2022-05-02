@@ -7,9 +7,11 @@ import { FileReaderUtil } from './file-reader-util';
 import { MimeType } from './mime-type';
 import { RoomAdmin } from '../../room-admin';
 
-import { PeerCursor } from '../../peer-cursor' 
+import { PeerCursor } from '../../peer-cursor'
 import { ImageStorage } from './image-storage';
 import { AudioStorage } from './audio-storage';
+import { AudioUrls } from './audio-context';
+import { StringUtil } from '../system/util/string-util';
 
 
 type MetaData = { percent: number, currentFile: string };
@@ -89,6 +91,7 @@ export class FileArchiver {
       await this.handleAudio(file);
       await this.handleText(file);
       await this.handleZip(file);
+      await this.handleJson(file);
       EventSystem.trigger('FILE_LOADED', { file: file });
     }
   }
@@ -140,6 +143,7 @@ export class FileArchiver {
 
   private async handleZip(file: File) {
     if (!(0 <= file.type.indexOf('application/') || file.type.length < 1)) return;
+    if (MimeType.type(file.name) === 'application/json') return;
     let zip = new JSZip();
     try {
       zip = await zip.loadAsync(file);
@@ -157,6 +161,34 @@ export class FileArchiver {
       } catch (reason) {
         console.warn(reason);
       }
+    }
+  }
+
+  private async handleJson(file: File) {
+    if (MimeType.type(file.name) !== 'application/json') return;
+    try {
+      let effects:any;
+      let json = JSON.parse(await FileReaderUtil.readAsTextAsync(file));
+      if (json.saveDataAll && json.saveDataAll?.effects) {
+        effects = json.saveDataAll?.effects?.effects as any[];
+      }
+      else if (json.effects) {
+        effects = json.effects?.effects as any[]
+      }
+      else if (Array.isArray(json)) effects = json as any[];
+      else {
+        return;
+      }
+      let audioUrls:AudioUrls[] = [];
+      for (let effect of effects) {
+        if (effect.message && effect.soundSource && StringUtil.validUrl(effect.soundSource)) {
+          let volume = effect.udoniteVolume ? Number(effect.udoniteVolume) : 100;
+          audioUrls.push({message: effect.message , soundSource: effect.soundSource , udoniteVolume: volume });
+        }
+      }
+      if (audioUrls.length > 0) EventSystem.trigger('AUDIO_URL_LOADED', audioUrls);
+    } catch (reason) {
+      console.warn(reason);
     }
   }
 

@@ -26,6 +26,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameTable } from '@udonarium/game-table';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
+import { AudioUrls } from '@udonarium/core/file-storage/audio-context';
 
 
 
@@ -150,12 +151,25 @@ export class LoadDataService {
     return;
   }
 
+  loadBGM(audioUrls:AudioUrls[]) {
+    if (this.roomService.disableAudioLoad) return;
+    for (let audio of audioUrls) {
+      IONetwork.audioUrl(audio.soundSource,this.playerService.myPlayer.playerId,audio.message,audio.udoniteVolume);
+    }
+  }
+
   initialize():void {
     EventSystem.register(this)
       .on('XML_LOADED', event => {
         let xmlElement:Element = event.data.xmlElement;
         this.loadData(xmlElement);
-    });
+      })
+      .on('AUDIO_URL_LOADED', event => {
+        let audioUrls:AudioUrls[] = event.data;
+        this.loadBGM(audioUrls);
+      });
+
+
   }
 
   constructor(

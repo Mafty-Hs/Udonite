@@ -8,3 +8,9 @@ export interface AudioContext {
   volume: number;
   isHidden: boolean;
 }
+
+export interface AudioUrls {
+  message: string;
+  soundSource:string;
+  udoniteVolume:number;
+}

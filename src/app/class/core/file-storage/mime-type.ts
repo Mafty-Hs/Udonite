@@ -28,7 +28,8 @@ export namespace MimeType {
     mpg: 'video/mpeg',
     mpeg: 'video/mpeg',
     mp4: 'video/mp4',
-    webm: 'video/webm'
+    webm: 'video/webm',
+    sav: 'application/json'
   };
 
   export function type(fileName: string): string {

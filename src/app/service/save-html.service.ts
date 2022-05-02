@@ -53,6 +53,7 @@ export class SaveHtmlService {
     for (let chatTab of chatTabList) {
       let targetFilename:string = "";
       let logfile:File = null;
+      if (!chatTab.isAllowed) continue;
       switch(logType) {
         case 'text':
           targetFilename = roomName + "_" + chatTab.name  + "_" + this.timestamp() + ".txt";
@@ -69,7 +70,7 @@ export class SaveHtmlService {
       }
       files.push(logfile)
     }
-    FileArchiver.instance.saveAsync(files, fileName);
+    if ( files.length > 0 ) FileArchiver.instance.saveAsync(files, fileName);
   }
 
   private makeText(fileName: string ,targetTab: ChatTab):File {

@@ -55,6 +55,11 @@ export class RoomControlComponent implements OnInit {
     return Math.floor(AudioStorage.instance.dataSize / 1024) + " / " + (IONetwork.server.audioStorageMaxSize * 1024);
   }
 
+  get currentDicebot():string {
+    if (!this.roomService.roomAdmin.gameType) return "ダイスボット指定なし";
+    return this.diceBotInfos.find(dicebot => dicebot.script == this.roomService.roomAdmin.gameType).game
+  }
+
   toggleEdit() {
     if (this.adminAuth) {
       if (this.isEdit) {

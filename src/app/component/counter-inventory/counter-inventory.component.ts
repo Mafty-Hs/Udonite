@@ -2,6 +2,7 @@ import { Counter , CounterAssign } from '@udonarium/counter';
 import { GameCharacterService } from 'service/game-character.service';
 import { CounterService } from 'service/counter.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'counter-inventory',
@@ -9,6 +10,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./counter-inventory.component.css']
 })
 export class CounterInventoryComponent implements OnInit {
+
+  disableRemove:boolean = this.roomService.disableSetCounter;
 
   get myList():CounterAssign[]  {
     return this.counterService.assignedList().sort(function(a,b){
@@ -34,7 +37,7 @@ export class CounterInventoryComponent implements OnInit {
 
   mergeRow(characterIdentifier:string) :number {
     let locallist = this.myList.filter(counter => counter.characterIdentifier == characterIdentifier);
-    return locallist.length; 
+    return locallist.length;
  }
 
   remove(identifier: string){
@@ -45,6 +48,7 @@ export class CounterInventoryComponent implements OnInit {
   constructor(
     private counterService: CounterService,
     private gameCharacterService: GameCharacterService,
+    private roomService: RoomService
    ) {
   }
 

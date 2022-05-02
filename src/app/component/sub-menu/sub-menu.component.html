@@ -53,13 +53,13 @@
           <div>音楽</div>
         </a>
       </li>
-     <li *ngIf="isOpen('room')" (click)="diceAllOpne()">
+     <li *ngIf="isOpen('room') && adminAuth" (click)="diceAllOpne()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">all_out</i></div>
           <div>ダイス一斉公開</div>
         </a>
       </li>
-      <li *ngIf="isOpen('room')" (click)="resetRound()">
+      <li *ngIf="isOpen('room') && !disableRoundControl" (click)="resetRound()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">refresh</i></div>
           <div>ラウンドをリセット</div>
@@ -101,19 +101,19 @@
           <div>配布カウンター一覧</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('CounterListComponent')">
+      <li *ngIf="isOpen('work') && !disableCutinSetting" (click)="open('CounterListComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">grain</i></div>
           <div>カウンター設定</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('DiceRollTableSettingComponent')">
+      <li *ngIf="isOpen('work') && !disableAllDataSave" (click)="open('DiceRollTableSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">build</i></div>
           <div>ダイスボット表</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work')" (click)="open('CutInSettingComponent')">
+      <li *ngIf="isOpen('work') && !disableCutinSetting" (click)="open('CutInSettingComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">perm_media</i></div>
           <div>カットイン設定</div>

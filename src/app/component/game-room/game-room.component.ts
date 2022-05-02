@@ -121,10 +121,12 @@ export class GameRoomComponent implements OnInit {
   }
 
   roundAdd(e:Event):void {
+    if (this.roomService.disableRoundControl) return;
     this.round.add();
   }
 
   roundContext(e:Event):void {
+    if (this.roomService.disableRoundControl) return;
     this.round.displayContextMenu(e);
   }
 

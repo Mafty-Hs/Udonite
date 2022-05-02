@@ -88,11 +88,27 @@ export class RoomService {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTabSetting as boolean;
   }
+  get disableSetCounter():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableSetCounter as boolean;
+  }
+  get disableCutinSetting():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableCutinSetting as boolean;
+  }
+  get disableDiceRollSetting():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableDiceRollSetting as boolean;
+  }
+  get disableRoundControl():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableRoundControl as boolean;
+  }
   get disableAllDataSave():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableAllDataSave as boolean;
   }
-  get disableSeparateDataSave():boolean{
+  get disableSeparateDataSave():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableSeparateDataSave as boolean;
   }

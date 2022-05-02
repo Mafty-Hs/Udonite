@@ -17,7 +17,7 @@
        <td>{{counterinfo.desc}}</td>
        <td class="center"><p *ngIf="!counterinfo.isPermanent; else permanent">{{counterinfo.age}}/{{counterinfo.maxAge}}</p></td>
        <td>{{counterinfo.comment}}</td>
-       <td class="center"><button class="close" (click)="remove(counterinfo.identifier)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
+       <td class="center"><button *ngIf="!disableRemove" class="close" (click)="remove(counterinfo.identifier)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
     </tr>
   </table>
 </div>

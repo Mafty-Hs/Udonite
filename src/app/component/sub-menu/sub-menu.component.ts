@@ -38,12 +38,32 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
-  get disableAllDataSave() {
+  get adminAuth():boolean {
+    return this.roomService.adminAuth
+  }
+
+  get disableAllDataSave():boolean {
     return this.roomService.disableAllDataSave;
   }
 
-  get disableTableSetting() {
+  get disableTableSetting():boolean {
     return this.roomService.disableTableSetting;
+  }
+
+  get disableSetCounter():boolean {
+    return this.roomService.disableSetCounter;
+  }
+
+  get disableCutinSetting():boolean {
+    return this.roomService.disableCutinSetting;
+  }
+
+  get disableDiceRollSetting():boolean {
+    return this.roomService.disableDiceRollSetting;
+  }
+
+  get disableRoundControl():boolean {
+    return this.roomService.disableRoundControl;
   }
 
   isOpen(itemType :string):boolean {

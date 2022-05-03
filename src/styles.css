@@ -86,6 +86,10 @@ input {
   color: #fff;
 }
 
+input:focus {
+  background: #000;
+}
+
 select {
   background-color: #212121;
   color: #fff;
@@ -98,6 +102,78 @@ textarea {
 
 ::placeholder {
   color: #AAA;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  margin: 4px;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  box-sizing: border-box;
+  cursor: pointer;
+  vertical-align: middle;
+  border: solid 3px #BBB;
+  box-shadow:
+  1px 1px 2px -1px #FFF inset,
+  2px 2px 1px 0px #000;
+  background-color: #222;
+  background-image: none;
+  background-repeat: no-repeat;
+  outline: none;
+}
+
+input[type="checkbox"]:checked {
+  background-image: -webkit-radial-gradient(  50%   0%,  8% 50%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient(  50% 100%, 12% 50%, hsla(0,0%,100%,.6) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient(   0%  50%, 50%  7%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient( 100%  50%, 50%  5%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   3%, hsla(0,0%,  0%,.1) 3.5%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%,.1) 7.5%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.2) 2.2%),
+  -webkit-radial-gradient( 50% 50%, 200% 50%, hsla(0,0%,90%,1) 5%, hsla(0,0%,85%,1) 30%, hsla(0,0%,60%,1) 100%);
+  border: solid 3px #222;
+  box-shadow:
+   1px 1px 2px -1px #000 inset,
+   2px 2px 1px 0px #FFF
+}
+
+input[type="radio"] {
+  appearance: none;
+  margin: 4px;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  vertical-align: middle;
+  border: solid 3px #BBB;
+  box-shadow:
+  1px 1px 2px -1px #FFF inset,
+  2px 2px 1px 0px #000;
+  background-color: #222;
+  background-image: none;
+  background-repeat: no-repeat;
+  outline: none;
+}
+
+input[type="radio"]:checked {
+  background-image: -webkit-radial-gradient(  50%   0%,  8% 50%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient(  50% 100%, 12% 50%, hsla(0,0%,100%,.6) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient(   0%  50%, 50%  7%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-radial-gradient( 100%  50%, 50%  5%, hsla(0,0%,100%,.5) 0%, hsla(0,0%,100%,0) 100%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   3%, hsla(0,0%,  0%,.1) 3.5%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%,.1) 7.5%),
+  -webkit-repeating-radial-gradient( 50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.2) 2.2%),
+  -webkit-radial-gradient( 50% 50%, 200% 50%, hsla(0,0%,90%,1) 5%, hsla(0,0%,85%,1) 30%, hsla(0,0%,60%,1) 100%);
+  border: solid 3px #222;
+  box-shadow:
+   1px 1px 2px -1px #000 inset,
+   2px 2px 1px 0px #FFF
+  ;
+
+
 }
 
 input[type="range"] {

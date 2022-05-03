@@ -20,7 +20,7 @@
   <ng-container *ngSwitchCase="'checkProperty'">
     <div class="tag" [attr.title]="name">{{name}}</div>
     <div class="value">
-      <input type="checkbox" style="width: 2em;" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+      <input type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'abilityScore'">

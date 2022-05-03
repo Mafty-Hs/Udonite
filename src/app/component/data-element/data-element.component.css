@@ -27,16 +27,16 @@ input[type="number"]  {
   -moz-appearance:textfield;
 }
 
-input:hover {
+input[type="number"]:hover {
   background: #222;
 }
 
-input:focus {
+input[type="number"]:focus {
   background: #000;
 }
 
-input[type="number"]::-webkit-outer-spin-button, 
-input[type="number"]::-webkit-inner-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

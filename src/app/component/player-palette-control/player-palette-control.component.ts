@@ -6,6 +6,9 @@ import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { GameCharacter } from '@udonarium/game-character';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { ModalService } from 'service/modal.service';
 
 
 @Component({
@@ -40,19 +43,58 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   get dataElms(): DataElement[] { return this.gameCharacterService.dataElements(this.sendFrom)  }
   get newLineString(): string { return this.inventoryService.newLineString; }
 
-  isEdit : boolean = false;
+  isEdit: boolean = false;
+  isString: boolean = false;
 
-  invalidcr:string[] = [ 'note' , 'checkProperty' , 'url' ];
-
-  setDataElm(dataElm: DataElement){
-    if ((dataElm.value && Number.isNaN(dataElm.value)) ||
-    (dataElm.currentValue && Number.isNaN(dataElm.currentValue)) ||
-    this.invalidcr.includes(dataElm.type)) return;
-    this.isEdit = true;
-    this.selectElm = dataElm;
+  setDataElm(event:Event ,dataElm: DataElement){
+    switch(true) {
+      case dataElm.isCheckProperty:
+        this.switchCheckValue(dataElm);
+        break;
+      case dataElm.isUrl:
+        this.openUrl(dataElm);
+        break;
+      case !Boolean(dataElm.type):
+      case dataElm.isSimpleNumber:
+      case dataElm.isNumberResource:
+      case dataElm.isAbilityScore:
+        if ( this.isNumber(dataElm.value) || dataElm.isNumberResource ){
+          this.isEdit = true;
+          this.isString = false;
+          this.selectElm = dataElm;
+          break;
+        }
+      case dataElm.isNote:
+        this.isEdit = true;
+        this.isString = true;
+        this.selectElm = dataElm;
+    }
+    this.changeDetector.detectChanges();
   }
 
   selectElm: DataElement;
+
+  switchCheckValue(dataElm :DataElement) {
+    dataElm.value = dataElm.value ? '' : dataElm.name ;
+  }
+
+  openUrl(urlElement :DataElement) {
+    const url = urlElement.value.toString();
+    return {
+      name: urlElement.name ? urlElement.name : url,
+      action: () => {
+        if (StringUtil.sameOrigin(url)) {
+          window.open(url.trim(), '_blank', 'noopener');
+        } else {
+          this.modalService.open(OpenUrlComponent, { url: url, title: this.gameCharacter.name, subTitle: urlElement.name });
+        }
+      },
+      disabled: !StringUtil.validUrl(url),
+      error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
+      isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
+    };
+
+  }
 
   cancelEdit(){
     this.innerText = '';
@@ -62,6 +104,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   constructor(
     private inventoryService: GameObjectInventoryService,
     private gameCharacterService: GameCharacterService,
+    private modalService: ModalService,
     private changeDetector: ChangeDetectorRef
   ) {
     EventSystem.register(this)
@@ -81,28 +124,35 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   ngOnDestroy() {
   }
 
+  numberPattern = new RegExp(/^[-]?([1-9]\d*|0)(\.\d+)?$/);
+  isNumber(value :string|number): boolean {
+    if (value === null || value === undefined) return false;
+    return this.numberPattern.test(String(value));
+  }
+
   innerText:string;
   text:string;
   sendCalc($event){
-    let beforeValue = this.selectElm.value;
-    let afterValue;
+    let beforeValue:number = Number(this.selectElm.value);
+    let afterValue:number = 0;
+    let overValue:number = 0;
     if (this.selectElm.type == 'numberResource') {
-      beforeValue = this.selectElm.currentValue;
-      this.selectElm.currentValue = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte());
+      beforeValue = Number(this.selectElm.currentValue);
+      let result = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte(this.innerText));
+      if (result < 0) {
+        overValue = result;
+        result = 0;
+      }
+      this.selectElm.currentValue = result;
       afterValue = this.selectElm.currentValue;
     }
     else {
-      if (!isNaN(Number(this.selectElm.value))) {
-        this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte());
-        afterValue = this.selectElm.value;
-      }
-      else {
-        this.selectElm.value = this.innerText;
-        afterValue = this.selectElm.value;
-      }
+      this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte(this.innerText));
+      afterValue = this.selectElm.value;
     }
     this.innerText = '';
-    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' -> ' + afterValue;
+    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' → ' + afterValue;
+    if (overValue < 0) resulttext += ' 超過 ' + overValue;
     this.chat.emit({
         text: resulttext,
         gameType: "",
@@ -112,48 +162,46 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     this.isEdit = false;
   }
 
-text2Byte () : string {
-  let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
-    'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
-  };
-  let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');
+  text2Byte (text :string) : string {
+    let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
+      'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
+    };
+    let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');
+    let result = text
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(str) {
+      return String.fromCharCode(str.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(calcEnc, function (str) {
+      return calcMap[str];
+    })
+    .replace(/[^\x20-\x7e]/g,'');
 
-  let baseText:string = this.innerText
-  .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(str) {
-    return String.fromCharCode(str.charCodeAt(0) - 0xFEE0);
-  })
-  .replace(calcEnc, function (str) {
-    return calcMap[str];
-  });
-  baseText = baseText.replace(/[^\x20-\x7e]/g,'');
-
-  return baseText;
-}
-
-calcValue(targetNum:number , targetText:string):number {
- let result : any;
- switch (targetText.slice( 0, 1 )) {
-  case "+":
-    result = targetNum + this.myeval(targetText.slice( 1 ));
-    break;
-  case "-":
-    result = targetNum + this.myeval(targetText);
-    break;
-  default:
-    result = this.myeval(targetText);
-    break;
+    return result;
   }
 
- if(!isNaN(result)) return Number(result);
- return targetNum;
-}
+  calcValue(targetNum:number , targetText:string):number {
+  let result : any;
+  switch (targetText.slice( 0, 1 )) {
+    case "+":
+      result = targetNum + this.myeval(targetText.slice( 1 ));
+      break;
+    case "-":
+      result = targetNum + this.myeval(targetText);
+      break;
+    default:
+      result = this.myeval(targetText);
+      break;
+    }
 
-myeval(value : string): number{
-  let result :any;
-  result = Function('"use strict";return ('+value+')')();
   if(!isNaN(result)) return Number(result);
-  return 0;
-}
+  return targetNum;
+  }
 
+  myeval(value : string): number{
+    let result :any;
+    result = Function('"use strict";return ('+value+')')();
+    if(!isNaN(result)) return Number(result);
+    return 0;
+  }
 
 }

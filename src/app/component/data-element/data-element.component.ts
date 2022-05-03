@@ -14,6 +14,7 @@ import { EventSystem } from '@udonarium/core/system';
 export class DataElementComponent implements OnInit {
 
   stringUtil = StringUtil;
+  @Input() viewOnly:boolean = false;
 
   @Input() dataElement:DataElement;
   get name():string {

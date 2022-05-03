@@ -1,11 +1,13 @@
-<div *ngIf="!isEdit; else edit" class="component">
-  <ng-container *ngIf="isTransparent; else forbidden">
-    <div class="frame" *ngFor="let dataElm of inventoryDataElms">
-      <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-        <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+<div class="component">
+  <ng-container *ngIf="!isEdit; else edit">
+    <ng-container *ngIf="isTransparent; else forbidden">
+      <div class="frame" *ngFor="let dataElm of inventoryDataElms">
+        <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
   </ng-container>
 </div>
 
@@ -13,7 +15,7 @@
   <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>
   <ng-template #thenBlock>
     <div class="section">
-      <div *ngIf="0 < dataElm.name.trim().length" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+      <div *ngIf="0 < dataElm.name.trim().length">{{dataElm.name}}</div>
       <div class="grid-container">
         <ng-container *ngFor="let childElm of dataElm.children">
           <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm }"></ng-container>
@@ -22,19 +24,34 @@
     </div>
   </ng-template>
   <ng-template #elseBlock>
-    <data-element [dataElement]="dataElm" (click)="setDataElm(dataElm)"></data-element>
+    <data-element [dataElement]="dataElm" [viewOnly]="true" (click)="setDataElm($event,dataElm)"></data-element>
   </ng-template>
 </ng-template>
 
 <ng-template #edit>
+  <ng-container *ngIf="isString;else NumberEdit">
+    <ng-template [ngTemplateOutlet]="StringEdit"></ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #NumberEdit>
   <div class="edit">
-    <data-element [dataElement]="selectElm"></data-element>
+    <data-element style="margin-right: 8px;" [dataElement]="selectElm" [viewOnly]="true"></data-element>
     <div>
     <textarea class="rc" style="height:1.6em;width:30em;" placeholder='文頭に+で加算、-で減算、他は計算後の数値で置き換え' [(ngModel)]="innerText" (keydown.enter)="sendCalc($event)"
           #textArea></textarea>
     </div>
     <button style="height:2em; padding:2px 4px; "  (click)="sendCalc(null)">SEND</button>
     <button style="height:2em; padding:2px 4px; "  (click)="cancelEdit()">戻る</button>
+  </div>
+</ng-template>
+
+<ng-template #StringEdit>
+  <div class="edit">
+    <span style="margin-right: 8px;">{{selectElm.name}}:</span>
+    <textarea class="rc" style="height:1.6em;width:30em;" [(ngModel)]="selectElm.value" (keydown.enter)="cancelEdit()"
+          #textArea></textarea>
+    <button style="height:2em; padding:2px 4px; "  (click)="cancelEdit()">確定</button>
   </div>
 </ng-template>
 

@@ -1,8 +1,11 @@
 
 .component {
+  height: 50px;
+  box-sizing: border-box;
   padding: 0px 5px;
   font-size: 14px;
   display: flex;
+  align-items: center;
 }
 
 .grid-container {
@@ -20,8 +23,9 @@
 
 
 .edit {
-  height: 2em; 
+  height: 46px;
   padding: 0px 5px;
   font-size: 14px;
   display: flex;
+  align-items: center;
 }

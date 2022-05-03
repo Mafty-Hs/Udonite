@@ -93,8 +93,8 @@
   flex-grow: 0;
 }
 
-.character-control {
-  height : 45px;
+player-palette-control {
+  height : 50px;
   overflow: auto;
 }
 

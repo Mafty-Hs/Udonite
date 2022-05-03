@@ -30,7 +30,7 @@
   <div *ngIf="isLogOnly && !isEdit">
     <ng-container [ngSwitch]="controlType">
       <ng-container *ngSwitchCase="'resource'">
-        <player-palette-control class="character-Control" *ngIf="!disableControl" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+        <player-palette-control *ngIf="!disableControl" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
       </ng-container>
       <ng-container *ngSwitchCase="'inventory'">
         <simple-inventory></simple-inventory>

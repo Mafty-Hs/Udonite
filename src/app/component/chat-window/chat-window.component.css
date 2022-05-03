@@ -168,18 +168,18 @@ simple-inventory {
   padding: 0;
 }
 
-.Character-Control {
-  height : 46px;
+player-palette-control {
+  height : 50px;
   overflow: auto;
   color: #FFF;
 }
-.Character-Control::-webkit-scrollbar {
+player-palette-control::-webkit-scrollbar {
   height: 5px;
 }
-.Character-Control::-webkit-scrollbar-thumb {
+player-palette-control::-webkit-scrollbar-thumb {
   background-color: #444;
   border-radius: 5px;
 }
-.Character-Control::-webkit-scrollbar-track {
+player-palette-control::-webkit-scrollbar-track {
   background: #DDD;
 }

@@ -92,5 +92,27 @@ export namespace StringUtil {
     return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
   }
 
+  export function text2Byte(text :string) : string {
+    let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
+      'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
+    };
+    let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');
+    let result = text
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(str) {
+      return String.fromCharCode(str.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(calcEnc, function (str) {
+      return calcMap[str];
+    })
+    .replace(/[^\x20-\x7e]/g,'');
+
+    return result;
+  }
+
+  export function calculable(text :string) :boolean {
+    let calcPattern:RegExp = new RegExp('^[0-9\\+\\-\\*\\/\\%\\(\\)]+$');
+     return calcPattern.test(text);
+  }
+
 
 }

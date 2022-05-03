@@ -30,6 +30,11 @@ export class DataElement extends ObjectNode {
     return dataElement;
   }
 
+  numberPattern = new RegExp(/^[-]?([1-9]\d*|0)(\.\d+)?$/);
+  get isNumberValue(): boolean {
+    return this.isNumberResource ? this.numberPattern.test(String(this.currentValue)) : this.numberPattern.test(String(this.value));
+  }
+
   getElementsByName(name: string): DataElement[] {
     let children: DataElement[] = [];
     for (let child of this.children) {

@@ -58,7 +58,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
       case dataElm.isSimpleNumber:
       case dataElm.isNumberResource:
       case dataElm.isAbilityScore:
-        if ( this.isNumber(dataElm.value) || dataElm.isNumberResource ){
+        if ( dataElm.isNumberValue || dataElm.isNumberResource ){
           this.isEdit = true;
           this.isString = false;
           this.selectElm = dataElm;
@@ -124,12 +124,6 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   ngOnDestroy() {
   }
 
-  numberPattern = new RegExp(/^[-]?([1-9]\d*|0)(\.\d+)?$/);
-  isNumber(value :string|number): boolean {
-    if (value === null || value === undefined) return false;
-    return this.numberPattern.test(String(value));
-  }
-
   innerText:string;
   text:string;
   sendCalc($event){
@@ -138,7 +132,7 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
     let overValue:number = 0;
     if (this.selectElm.type == 'numberResource') {
       beforeValue = Number(this.selectElm.currentValue);
-      let result = this.calcValue(Number(this.selectElm.currentValue) , this.text2Byte(this.innerText));
+      let result = this.calcValue(Number(this.selectElm.currentValue) , StringUtil.text2Byte(this.innerText));
       if (result < 0) {
         overValue = result;
         result = 0;
@@ -147,11 +141,11 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
       afterValue = this.selectElm.currentValue;
     }
     else {
-      this.selectElm.value = this.calcValue(Number(this.selectElm.value) , this.text2Byte(this.innerText));
+      this.selectElm.value = this.calcValue(Number(this.selectElm.value) , StringUtil.text2Byte(this.innerText));
       afterValue = this.selectElm.value;
     }
     this.innerText = '';
-    let resulttext : string = this.name + ' ' + this.selectElm.name + ': ' + beforeValue + ' → ' + afterValue;
+    let resulttext : string = this.name + ':' + this.selectElm.name + ' ' + beforeValue + ' → ' + afterValue;
     if (overValue < 0) resulttext += ' 超過 ' + overValue;
     this.chat.emit({
         text: resulttext,
@@ -160,23 +154,6 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
         sendTo: "",
       });
     this.isEdit = false;
-  }
-
-  text2Byte (text :string) : string {
-    let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
-      'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
-    };
-    let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');
-    let result = text
-    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(str) {
-      return String.fromCharCode(str.charCodeAt(0) - 0xFEE0);
-    })
-    .replace(calcEnc, function (str) {
-      return calcMap[str];
-    })
-    .replace(/[^\x20-\x7e]/g,'');
-
-    return result;
   }
 
   calcValue(targetNum:number , targetText:string):number {

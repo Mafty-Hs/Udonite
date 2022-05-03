@@ -21,14 +21,16 @@ interface rollDataContext {
 })
 export class DiceBotService {
   diceBot = new DiceBot();
-  get diceBotInfos(): DiceBotInfo[] {return this.diceBot.diceBotInfos;} 
-  get diceBotInfosIndexed(): DiceBotInfosIndexed[] {return this.diceBot.diceBotInfosIndexed;} 
+  get diceBotInfos(): DiceBotInfo[] {return this.diceBot.diceBotInfos;}
+  get diceBotInfosIndexed(): DiceBotInfosIndexed[] {return this.diceBot.diceBotInfosIndexed;}
   get isConnect():boolean { return this.diceBot.api.isConnect;}
-  get api(): api {return this.diceBot.api;} 
+  get api(): api {return this.diceBot.api;}
   set api(_api) { this.diceBot.api = _api;}
   private gameType:string = "";
-  private resoucePattern:RegExp = new RegExp('^(:.*)c\\(.*\\)',"i");
-  private resoucePattern2:RegExp = new RegExp('^c\\(.*\\) → (\\d+)',"i");
+  private resoucePattern:RegExp = new RegExp('^(:.*?)([c=\\+\\-])(.*)',"i");
+  private resoucePattern2:RegExp = new RegExp('^c\\(.*\\) → (\\-??\\d+)',"i");
+  private resoucePattern3:RegExp = new RegExp(' → (\\-??\\d+)','ig');
+  private resoucePattern3_2:RegExp = new RegExp(' → (\\-??\\d+)','i');
   private secretPattern:RegExp = new RegExp('^[s|ｓ|S]',"i");
   private repeatPattern:RegExp = new RegExp('^S?((repeat|rep|x)\\d+)',"i");
   private commandPattern:RegExp = new RegExp('^S?([+\\-(]*\\d+|\\d+B\\d+|C[+\\-(]*\\d+|choice|D66|(repeat|rep|x)\\d+|\\d+R\\d+|\\d+U\\d+|BCDiceVersion)',"i");
@@ -42,10 +44,27 @@ export class DiceBotService {
   private resourceFilter(text :string) {
     if (this.resoucePattern.test(text)) {
       let match = text.match(this.resoucePattern);
-      let resouce = match[1].substring(1);
-      return [text.substring(match[1].length),resouce];  
+      let resouce:string = '';
+      let resouceType:string = StringUtil.text2Byte(match[2]).toLowerCase();
+      let stringLength:number = 0;
+      resouce = match[1].substring(1);
+      stringLength = resouceType === 'c' ? (resouce.length + 1) : (resouce.length + 2);
+      let sendText = text.substring(stringLength);
+      if (resouceType !== 'c' && StringUtil.calculable(StringUtil.text2Byte(sendText))) {
+        if (resouceType === '-') {
+          sendText = 'c(-' + StringUtil.text2Byte(sendText) +')';
+        }
+        else {
+          sendText = 'c(' + StringUtil.text2Byte(sendText) +')';
+        }
+        resouceType = 'c';
+      }
+      else if (resouceType === 'c' && StringUtil.text2Byte(sendText[1]) !== '(') {
+        return [text,"",""];
+      }
+      return [sendText,resouce,resouceType];
     }
-    return [text,""];
+    return [text,"",""];
   }
 
   private async bcDiceFilter(gameType:string ,rollText:string):Promise<string> {
@@ -80,7 +99,7 @@ export class DiceBotService {
       this.textFilter(choiceText).toLocaleLowerCase() === "schoice" ) return [choiceText ,true];
       else if (this.choicePattern1.test(choiceText)) return [choiceText.replace(/\).*$/,')') ,true];
       else if (this.choicePattern2.test(choiceText)) return [choiceText.replace(/\].*$/,']') ,true];
-    } 
+    }
     return [rollText ,false]
   }
 
@@ -108,7 +127,7 @@ export class DiceBotService {
 
   private rollTableFilter(rollData :rollDataContext): rollDataContext {
     let diceRollTable = DiceRollTableList.instance.diceRollTables.find(
-      (_diceRollTable) => 
+      (_diceRollTable) =>
       _diceRollTable.command.trim().toLowerCase()
        === rollData.rollText.trim().toLowerCase() ||
       's' + _diceRollTable.command.trim().toLowerCase()
@@ -125,7 +144,7 @@ export class DiceBotService {
 
   private async rollFilter(gameType :string ,text :string):Promise<rollDataContext> {
     let isChoice:boolean = false;
-    let resultRollData:rollDataContext = 
+    let resultRollData:rollDataContext =
       {rollText: "",repeatText: "",isSecret: false,isDiceRollTable: false};
     [resultRollData.rollText ,resultRollData.repeatText] = this.repeatFilter(text);
     [resultRollData.rollText ,isChoice] = this.choiceFilter(resultRollData.rollText);
@@ -152,7 +171,8 @@ export class DiceBotService {
     let gameType: string = chatMessage.tag.replace('noface', '').trim();
     gameType = gameType ? gameType : 'DiceBot';
     let resource:string = "";
-    [text,resource] = this.resourceFilter(text);
+    let resouceType:string = "";
+    [text,resource,resouceType] = this.resourceFilter(text);
     let rollData:rollDataContext = await this.rollFilter(gameType ,text);
     let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
      isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
@@ -170,7 +190,7 @@ export class DiceBotService {
     catch(e) {
 
     }
-    this.sendResultMessage(finalResult, chatMessage,resource);
+    this.sendResultMessage(finalResult, chatMessage,resource,resouceType);
     return;
   }
 
@@ -188,7 +208,7 @@ export class DiceBotService {
         if (repeatText) {
           text = text.replace(/\n\n/g,"\t").replace(/\n/g," ").replace(/\t/g,"\n")
         }
-        return { result: text, isSecret: json.secret, 
+        return { result: text, isSecret: json.secret,
             isEmptyDice: (json.rands && json.rands.length == 0),
             isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble};
       }
@@ -196,7 +216,7 @@ export class DiceBotService {
         throw new Error(response.statusText);
       }
 
-    return dataResult; 
+    return dataResult;
   }
 
   async rollTable(message: string, repeatText?: string): Promise<DiceRollResult> {
@@ -209,14 +229,14 @@ export class DiceBotService {
       if (response.ok) {
         let json = await response.json()
         dataResult.isEmptyDice = (json.rands && json.rands.length == 0),
-        dataResult.result = String(json.text); 
+        dataResult.result = String(json.text);
         return dataResult;
       }
       else {
         throw new Error(response.statusText);
       }
 
-    return dataResult; 
+    return dataResult;
   }
 
   initialize(apiUrl:string) {
@@ -226,7 +246,7 @@ export class DiceBotService {
     this.loadDiceInfo();
     EventSystem.register(this)
       .on('SEND_MESSAGE', event => { this.diceRoll(event.data.messageIdentifier) });
-  }  
+  }
 
   getHelpMessage(gameType: string): Promise<string|string[]> {
     gameType = gameType ? gameType : 'DiceBot';
@@ -241,7 +261,7 @@ export class DiceBotService {
         );
       }
       return Promise.all(promisise)
-        .then(jsons => { 
+        .then(jsons => {
           return jsons.map(json => {
             if (json.help_message) {
               if (gameType && gameType != 'DiceBot') {
@@ -251,11 +271,11 @@ export class DiceBotService {
               return json.help_message.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
-            }                
-          }) 
+            }
+          })
         });
   }
-  
+
   async getCommandPattern(gameType: string): Promise<RegExp> {
     gameType = gameType ? gameType : 'DiceBot';
     let response:Response;
@@ -273,7 +293,7 @@ export class DiceBotService {
     return this.commandPatternBase;
   }
 
-   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage, resouce?: string) {
+   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage, resouce?: string, resouceType?: string) {
     let result: string = rollResult.result;
     const isSecret: boolean = rollResult.isSecret;
     const isEmptyDice: boolean = rollResult.isEmptyDice;
@@ -300,7 +320,7 @@ export class DiceBotService {
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: '',
       tag: tag,
-      name: rollResult.isDiceRollTable ? 
+      name: rollResult.isDiceRollTable ?
         isSecret ? '<Dice-Roll Table (Secret)：' + originalMessage.name + '>' : '<Dice-Roll Table：' + originalMessage.name + '>' :
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
       text: result,
@@ -312,7 +332,7 @@ export class DiceBotService {
     if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
       this.standService.diceBotShowStand(result,originalMessage.characterIdentifier,originalMessage.to,originalMessage.color,originalMessage.imageIdentifier);
     }
-    
+
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (!isSecret && chatTab.isUseStandImage) {
       this.standService.cutIn(result,originalMessage.to);
@@ -328,23 +348,44 @@ export class DiceBotService {
 
     if (resouce && originalMessage.characterIdentifier) {
       let dice = 0;
-      if (this.resoucePattern2.test(result)) {
-        let match = result.match(this.resoucePattern2);
-        dice = Number(match[1]); 
+      if (resouceType === 'c') {
+        if (this.resoucePattern2.test(result)) {
+          let match = result.match(this.resoucePattern2);
+          dice = Number(match[1]);
+        }
+      }
+      else {
+        if (this.resoucePattern3.test(result)) {
+          let match =  result.match(this.resoucePattern3);
+          let tmpResult = match[match.length - 1];
+          if (this.resoucePattern3_2.test(tmpResult)) {
+            match = tmpResult.match(this.resoucePattern3_2)
+          }
+          dice = Number(match[1]);
+        }
       }
       let dataElm = this.gameCharacterService.findDataElm(originalMessage.characterIdentifier,resouce);
       let beforeValue:number = 0;
       let afterValue:number = 0;
+      let overValue:number = 0;
+      if (!dataElm) return;
       if (dataElm.type == 'numberResource') {
         beforeValue = Number(dataElm.currentValue);
-        dataElm.currentValue = dice;
+        let newValue =  ['c','='].includes(resouceType) ? dice : ( resouceType === '+' ? beforeValue + dice : beforeValue - dice );
+        if (newValue < 0) {
+          overValue = newValue;
+          newValue = 0;
+        }
+        dataElm.currentValue = newValue;
         afterValue = Number(dataElm.currentValue);
       }
-      else if (!isNaN(Number(dataElm.value))) {
+      else if (dataElm.isNumberValue) {
           beforeValue = Number(dataElm.value);
-          dataElm.value = dice;
+          dataElm.value = ['c','='].includes(resouceType) ? dice : ( resouceType === '+' ? beforeValue + dice : beforeValue - dice );
           afterValue = Number(dataElm.value);
       }
+      let resulttext : string = originalMessage.name + ':' + resouce + ' ' + beforeValue + ' → ' + afterValue;
+      if (overValue < 0) resulttext += ' 超過 ' + overValue;
       let resouceMessage: ChatMessageContext = {
         identifier: '',
         tabIdentifier: originalMessage.tabIdentifier,
@@ -354,7 +395,7 @@ export class DiceBotService {
         imageIdentifier: '',
         tag: tag,
         name: 'SYSTEM' ,
-        text: originalMessage.name + ':' + resouce + ' ' + beforeValue + '→' + afterValue,
+        text: resulttext,
         color: originalMessage.color,
         isUseStandImage: originalMessage.isUseStandImage
       };
@@ -381,15 +422,15 @@ export class DiceBotService {
     const timer = setTimeout(() => { controller.abort() }, 30000);
 
       fetch(this.api.url + '/v2/game_system', {mode: 'cors'})
-        .then(response => { 
+        .then(response => {
           if (!response.ok) {
             throw new Error(response.statusText);
           }
-          return response.json() 
+          return response.json()
         })
         .then((infos:DiceBotInfos) => {
           console.log("diceBot Load END")
-          clearTimeout(timer); 
+          clearTimeout(timer);
           this.normalizeDiceInfo(infos);
         })
         .catch(error => {
@@ -399,7 +440,7 @@ export class DiceBotService {
             let nexttime:number = this.api.retry * 30 * 1000;
             setTimeout(() => { this.loadDiceInfo() }, nexttime);
           }
-        });   
+        });
   }
 
   normalizeDiceInfo(infos :DiceBotInfos) {
@@ -432,9 +473,9 @@ export class DiceBotService {
          return info;
       })
       .sort((a, b) => {
-        return a.lang < b.lang ? -1 
+        return a.lang < b.lang ? -1
          : a.lang > b.lang ? 1
-         : a.normalize == b.normalize ? 0 
+         : a.normalize == b.normalize ? 0
          : a.normalize < b.normalize ? -1 : 1;
     });
     this.diceBotInfos.push(...tempInfos.map(info => { return { script: info.id, game: info.name } }));
@@ -442,7 +483,7 @@ export class DiceBotService {
       let sentinel = tempInfos[0].normalize.substr(0, 1);
       let group:DiceBotInfosIndexed = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
       for (let info of tempInfos) {
-        let index = info.lang == 'Other' ? 'その他' 
+        let index = info.lang == 'Other' ? 'その他'
          : info.lang == 'ChineseTraditional' ? '正體中文'
          : info.lang == 'Korean' ? '한국어'
          : info.lang == 'English' ? 'English'

@@ -48,6 +48,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   imageFile: ImageFile = ImageFile.Empty;
   shadowImageFile: ImageFile = ImageFile.Empty;
   imgStyle:object = {};
+  auraStyle:object = {};
 
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -242,6 +243,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     this.size = this.adjustMinBounds(this.gameCharacter.size);
     this.imageFile = this.gameCharacter.imageFile;
     this.imgStyle = this.gameCharacter.imgStyle;
+    this.auraStyle = this.gameCharacter.auraStyle;
     this.shadowImageFile = this.gameCharacter.shadowImageFile;
     this.altitude = this.gameCharacter.altitude;
   }

@@ -43,8 +43,9 @@
                 [ngStyle]="{'width': size * gridSize * statusBar3 + 'px' , 'background-color': statusColor3}"
               ></div>
             </div>
-            <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'"
-              [@switchImage]="gameCharacter.currntImageIndex">
+            <img *ngIf="0 < imageFile.url.length && auraStyle" class="image is-3d aura" [ngStyle]="auraStyle" [src]="imageFile.url | safe: 'resourceUrl'">
+            <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d frontimage" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'"
+            [@switchImage]="gameCharacter.currntImageIndex">
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">

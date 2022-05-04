@@ -73,21 +73,29 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
-  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
+  auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ];
+  _auraStyle: imageStyle = null;
+  get auraStyle():imageStyle {
+    if (this._auraStyle === null) this._auraStyle = {};
+    this._auraStyle.filter = this.aura != -1 ? 'blur(1px) drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')' : undefined;
+    if (this.isInverse) {
+      this._auraStyle.transform = 'rotateY(-180deg)';
+    }
+    else { this._auraStyle.transform = undefined; }
+    return this._auraStyle;
+  }
   _imgStyle: imageStyle = null;
-  get imgStyle():object {
+  get imgStyle():imageStyle {
     if (this._imgStyle === null) this._imgStyle = {};
     let filter:string[] = [];
-    let transition:string[] = [];
-     if (this.aura != -1) {
-      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
-      transition.push('filter 0.2s ease-in-out');
-    }
     if (this.isInverse) {
       this._imgStyle.transform = 'rotateY(-180deg)';
-      transition.push('transform 132ms 0s ease');
+      this._imgStyle.transition = 'transform 132ms 0s ease';
     }
-    else { this._imgStyle.transform = undefined; }
+    else {
+      this._imgStyle.transform = undefined;
+      this._imgStyle.transition = undefined;
+     }
     if (this.isHollow) {
       this._imgStyle.opacity = "0.6"
       filter.push('blur(1px)');
@@ -100,10 +108,6 @@ export class TabletopObject extends ObjectNode {
       this._imgStyle.filter = filter.join(' ')
     }
     else { this._imgStyle.filter = undefined; }
-    if (transition.length > 0) {
-      this._imgStyle.transition = transition.join(',')
-    }
-    else { this._imgStyle.transition = undefined; }
     return this._imgStyle;
   }
 

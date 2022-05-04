@@ -75,6 +75,11 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
     return (this.isUseFaceIcon && this.character.faceIcon &&  this.character.faceIcon?.url.length > 0 ) ? {} : this.character.imgStyle ;
   }
 
+  get auraStyle(): object {
+    if (!this.character) return {};
+    return (this.isUseFaceIcon && this.character.faceIcon &&  this.character.faceIcon?.url.length > 0 ) ? {} : this.character.auraStyle ;
+  }
+
   canSelect() {
     this.touched = false;
   }

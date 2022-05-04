@@ -36,6 +36,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() bgColor: string = "black";
 
   imgStyle:object = {};
+  auraStyle:object = {};
 
   get isBlack():boolean {
     if (this.bgColor == 'black')
@@ -54,6 +55,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     let time = this.chatMessageService.getTime();
     if (time - 10 * 1000 < this.chatMessage.timestamp) this.animeState = 'active';
     this.imgStyle = this.chatMessage.imgStyle;
+    this.auraStyle = this.chatMessage.auraStyle;
   }
 
   ngAfterViewInit() {

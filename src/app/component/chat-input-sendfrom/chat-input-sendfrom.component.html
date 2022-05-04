@@ -14,7 +14,8 @@
   <chat-input-setting  [character]='character' (chatSetting)='_chatSetting($event)'></chat-input-setting>
 </div>
 <ng-template #images>
-  <img *ngIf="0 < imageFile.url.length" class="image" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'" />
+  <img *ngIf="0 < imageFile?.url?.length && auraStyle" class="image aura" [ngStyle]="auraStyle" [src]="imageFile.url | safe: 'resourceUrl'">
+  <img *ngIf="0 < imageFile.url.length" class="image front-image" [ngStyle]="imgStyle" [src]="imageFile.url | safe: 'resourceUrl'" />
   <div class="text-space" (click)="canSelect()">
     <div *ngIf="!character;else characterName"><span class="name" [style.color]="getColor()">
       {{player?.name}}

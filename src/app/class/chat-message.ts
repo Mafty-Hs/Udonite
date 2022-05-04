@@ -107,17 +107,20 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   }
 
   auraColor :string[] = ["#000", "#33F", "#3F3", "#3FF", "#F00", "#F0F", "#FF3", "#FFF" ]
-  get imgStyle():object {
+  get auraStyle():imageStyle {
+    let auraStyle:imageStyle = {};
+    auraStyle.filter = this.aura != -1 ? 'blur(1px) drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')' : undefined;
+    if (this.isInverseIcon) {
+      auraStyle.transform = 'rotateY(-180deg)';
+    }
+    return auraStyle;
+  }
+  get imgStyle():imageStyle {
     let imgStyle: imageStyle = {};
     let filter:string[] = [];
-    let transition:string[] = [];
-     if (this.aura != -1) {
-      filter.push('drop-shadow(0 -4px 4px ' + this.auraColor[this.aura] + ')');
-      transition.push('filter 0.2s ease-in-out');
-    }
     if (this.isInverseIcon == 1) {
       imgStyle.transform = 'rotateY(-180deg)';
-      transition.push('transform 132ms 0s ease');
+      imgStyle.transition = 'transform 132ms 0s ease';
     }
     if (this.isHollowIcon == 1) {
       imgStyle.opacity = "0.6"
@@ -128,9 +131,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     }
     if (filter.length > 0) {
       imgStyle.filter = filter.join(' ')
-    }
-    if (transition.length > 0) {
-      imgStyle.transition = transition.join(',')
     }
     return imgStyle;
   }

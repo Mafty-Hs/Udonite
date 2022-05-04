@@ -4,7 +4,8 @@
     [ngClass]="{'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
     [@flyInOut]>
     <div class="image">
-      <img class="image" *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngStyle]="imgStyle" />
+      <img *ngIf="0 < imageFile?.url?.length && auraStyle" class="image aura" [ngStyle]="auraStyle" [src]="imageFile.url | safe: 'resourceUrl'">
+      <img class="image front-image" *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngStyle]="imgStyle" />
     </div>
     <div class="body">
       <div class="title">

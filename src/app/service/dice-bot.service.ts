@@ -57,7 +57,6 @@ export class DiceBotService {
         else {
           sendText = 'c(' + StringUtil.text2Byte(sendText) +')';
         }
-        resouceType = 'c';
       }
       else if (resouceType === 'c' && StringUtil.text2Byte(sendText[1]) !== '(') {
         return [text,"",""];

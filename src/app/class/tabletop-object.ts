@@ -32,6 +32,7 @@ export class TabletopObject extends ObjectNode {
   };
 
   @SyncVar() posZ: number = 0;
+  @SyncVar() isUnite: boolean = false;
 
   set name(value:string) { this.setCommonValue('name', value); }
   get name(): string { return this.getCommonValue('name', ''); }

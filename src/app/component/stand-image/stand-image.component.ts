@@ -115,12 +115,13 @@ export class StandImageComponent implements OnInit, OnDestroy {
     }
     if (this.isSpeakable) {
       clearTimeout(this._dialogTimeoutId);
+      let speakTime:number = Math.floor(this.dialogText.length / 2 * 300);
       if (this.gameCharacter && this.gameCharacter.text) this.isSpeaking = true;
       this._dialogTimeoutId = setTimeout(() => {
         this.ngZone.run(() => {
           this.isSpeaking = false;
         });
-      }, 300);
+      }, speakTime);
     }
   }
 

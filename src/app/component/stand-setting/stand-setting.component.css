@@ -10,8 +10,8 @@
   display: inline-block;
   font-weight: bolder;
   font-size: smaller;
-  margin-top: -4px;
-  margin-right: -1px;
+  margin-top: 1px;
+  margin-right: 4px;
 }
 
 .overview-selecter {

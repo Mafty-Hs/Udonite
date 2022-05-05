@@ -19,7 +19,11 @@
         [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
       <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
         <div class="color-fillter">
-          <img class="stand-image" draggable="false"
+          <img class="stand-image aura" draggable="false"
+            [style.height]="height > 0 ? height + 'vh' : 'auto'"
+            [src]="standImage.url | safe: 'resourceUrl'"
+            [ngStyle]="auraStyle">
+          <img class="stand-image front-image" draggable="false"
             [style.height]="height > 0 ? height + 'vh' : 'auto'"
             [src]="standImage.url | safe: 'resourceUrl'"
             [ngStyle]="imgStyle">

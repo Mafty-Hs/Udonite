@@ -36,6 +36,10 @@ export class StandElementComponent implements OnInit {
     return this.isApplyImageEffect ? this.gameCharacter.imgStyle : {};
   }
 
+  get auraStyle():object {
+    return this.isApplyImageEffect ? this.gameCharacter.auraStyle : {};
+  }
+
   get standImage(): ImageFile {
     if (!this.standElement) return this._imageFile;
     let elm = null;

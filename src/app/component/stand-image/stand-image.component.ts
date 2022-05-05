@@ -99,6 +99,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return this.isApplyImageEffect ? this.gameCharacter.imgStyle : {};
   }
 
+  get auraStyle():object {
+    return this.isApplyImageEffect ? this.gameCharacter.auraStyle : {};
+  }
+
   onSpeaking(event: AnimationEvent) {
     //キャラクターの吹き出し表示に合わせる
     if (this.gameCharacter && this.gameCharacter.text && (this.isApplyDialog || this.isSpeakable || this.gameCharacter.isShowChatBubble)) {

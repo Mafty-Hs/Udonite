@@ -1,19 +1,33 @@
 .stand-container {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .stand-image-container {
-    width: 150px;
-    height: 150px;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  padding: 0;
+  margin: 0;
 }
 
 .stand-image {
-    width: 150px;
-    height: 150px;
-    object-fit: contain;
-    transform-origin: bottom;
-    z-index: 5;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  transform-origin: center;
+  left: 0;
+  top: 0;
+}
+
+.front-image {
+  z-index: 5;
+}
+
+.aura {
+  z-index: 4;
+  transition: filter 0.2s ease-in-out;
 }
 
 .stand-image-button {

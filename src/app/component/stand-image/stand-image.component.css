@@ -48,6 +48,25 @@
   opacity: 0.25;
 }
 
+.color-fillter {
+  position: relative;
+}
+
+.stand-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.front-image {
+  z-index: 1;
+}
+
+.aura {
+  z-index: 0;
+  transition: filter 0.2s ease-in-out;
+}
+
 .secret .color-fillter {
   filter: grayscale(80%);
 }

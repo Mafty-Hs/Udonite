@@ -2,17 +2,16 @@
   <div class="stand-container">
     <div class="stand-image-container">
       <ng-container *ngIf="standImage">
-        <div>
-          <div [ngStyle]="{'transform': isApplyRoll ? 'rotate(' + gameCharacter.roll + 'deg)' : ''}">
-            <img class="stand-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'"
-            [ngStyle]="imgStyle">
-          </div>
-          <button class="stand-image-button" (click)="openModal()" style="font-size: smaller; padding: 2px 3px;"><b>{{ isSpeakable ? '通常' : '' }}画像変更</b></button>
-          <div *ngIf="isSpeakable" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; filter: grayscale(100%); opacity: 0.5; cursor: default;">{{ isSpeaking ? '😃' : '🤐' }}</div>
+        <div [ngStyle]="{'transform': isApplyRoll ? 'rotate(' + gameCharacter.roll + 'deg)' : ''}">
+          <img class="stand-image aura" [src]="standImage.url | safe: 'resourceUrl'" [ngStyle]="auraStyle">
+          <img class="stand-image front-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'"
+          [ngStyle]="imgStyle">
         </div>
+        <button class="stand-image-button" (click)="openModal()" style="font-size: smaller; padding: 2px 3px;"><b>{{ isSpeakable ? '通常' : '' }}画像変更</b></button>
+        <div *ngIf="isSpeakable" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; filter: grayscale(100%); opacity: 0.5; cursor: default;">{{ isSpeaking ? '😃' : '🤐' }}</div>
       </ng-container>
     </div>
-    <div style="display: flex; flex-direction: column; padding-left: 3px; width: 100%">
+    <div style="display: flex; flex-direction: column; padding-left: 12px; width: 100%">
       <div>
         <ng-container *ngIf="nameElement">
           <span style="font-size: smaller;">

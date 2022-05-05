@@ -6,7 +6,7 @@
     <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position"><b sytle="margin-left: 3px; margin-right: 1em ">％　</b>
   </div>
   <div class="position-indicate">
-    <b>Height (0=元画像のまま): </b> 
+    <b>Height (0=元画像のまま): </b>
     <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="height">
     <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="200" [(ngModel)]="height"><b sytle="margin-left: 3px; margin-right: 1em ">％</b>
   </div>
@@ -16,7 +16,7 @@
 </div>
 <hr>
 <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-  <div *ngFor="let standElement of standElements; let i = index" style="width: 700px">
+  <div *ngFor="let standElement of standElements; let i = index" style="width: 750px">
     <div style="display: flex; flex-direction: row; justify-content: space-between;" [style.border-color]="overviewIndex == i ? 'red' : 'transparent'" class="overview-selecter">
       <div style="display: flex; align-items: center; justify-content: center;">
         <input style="z-index: 10;" type="radio" name="{{panelId}}_overviewIndex" value="{{ i }}" [checked]="overviewIndex == i" (click)="overviewIndex = i">

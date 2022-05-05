@@ -171,7 +171,7 @@
     <div class="image-area character-image-box"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
-      <img class="character-image" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine}"
+      <img class="character-image" style="width: 100px;" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine}"
         [src]="imageUrl | safe: 'resourceUrl'" />
     </div>
     <div class="void-area is-pointer-events-none"></div>

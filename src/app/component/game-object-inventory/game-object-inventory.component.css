@@ -22,7 +22,7 @@
   visibility: hidden;
   height: 0;
   font-size: 1.0em;
-  min-width:1em; 
+  min-width:1em;
   max-width : 12em;
   overflow: hidden;
   padding: 0 2px;
@@ -58,7 +58,7 @@
 
   text-align: center;
 
-  margin: 0px; 
+  margin: 0px;
   max-width: 500px;
 
   background-color: #666;
@@ -90,11 +90,11 @@
   outline: 0;
   font-size: 0.8em;
   background-color: transparent;
-  color: #FFF; 
-  
+  color: #FFF;
+
   box-sizing: border-box;
 
-  margin: 0px; 
+  margin: 0px;
   padding: 2px 8px;
 
   cursor: pointer;
@@ -115,11 +115,12 @@
 .is-sticky-top {
   position: sticky;
   top : 0;
+  z-index: 2;
 }
 
 .tab-setting {
   background-color: transparent;
-  color: #FFF; 
+  color: #FFF;
   border: solid 1px #555;
   padding: 2px 8px;
   border-radius: 5px;
@@ -149,6 +150,7 @@
 }
 
 .image-box {
+  position: relative;
   padding: 0px;
   width: 40px;
   height: 40px;
@@ -158,11 +160,20 @@
 }
 
 .image-box img{
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  width: 40px;
+  height: 40px;
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+}
+
+.front-image {
+  z-index: 0;
+}
+
+.aura {
+  z-index: -1;
 }
 
 .inventory-object {

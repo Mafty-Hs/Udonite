@@ -87,7 +87,8 @@
       </div>
       <div class="table-cell">
         <div class="image-box">
-          <img *ngIf="gameObject.imageFile.url" [ngStyle]="gameObject.imgStyle" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+          <img *ngIf="gameObject.imageFile.url" class="aura" [ngStyle]="gameObject.auraStyle" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+          <img *ngIf="gameObject.imageFile.url" class="front-image" [ngStyle]="gameObject.imgStyle" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
         </div>
       </div>
       <ng-container *ngIf="!gameObject.hasOwner || gameObject.isMine || gameObject.canTransparent; else forbidden">

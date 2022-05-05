@@ -102,7 +102,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   uploadURL() {
     if (this.urlName.length < 1 || this.urlUrl.length < 1 || !StringUtil.validUrl(this.urlUrl)) return;
-    IONetwork.audioUrl(this.urlUrl , this.playerService.myPlayer.playerId ,this.urlName, 100);
+    IONetwork.audioUrl(this.urlUrl , this.playerService.myPlayer.playerId ,this.urlName, 100,"");
     this.toggleURL();
   }
 

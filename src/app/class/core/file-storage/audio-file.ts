@@ -10,7 +10,8 @@ export class AudioFile {
     filesize: 0,
     owner: '',
     volume: 100,
-    isHidden: false
+    isHidden: false,
+    tag: ''
   };
 
   _blob:Blob = null;
@@ -47,4 +48,5 @@ export class AudioFile {
   set volume(volume :number) {this.context.volume = volume; IONetwork.audioUpdate(this.context)}
   get isHidden(): boolean { return this.context.isHidden };
   get type():string {return this.context.type}
+  get tag():string {return this.context.tag}
 }

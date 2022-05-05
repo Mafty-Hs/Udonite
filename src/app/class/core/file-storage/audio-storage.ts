@@ -9,6 +9,8 @@ export class AudioStorage {
     return AudioStorage._instance;
   }
 
+  taglist:string[] = [];
+
   get dataSize():number {
     return Object.values(this.audioHash).reduce((totalSize, Audio) => totalSize + Audio.context.filesize ,0 )
   }
@@ -32,6 +34,9 @@ export class AudioStorage {
   private set(context :AudioContext): AudioFile {
     let audio = new AudioFile();
     audio.context = context;
+    if (!context.isHidden && context.tag && context.tag?.length > 0) {
+      if (!this.taglist.includes(context.tag)) this.taglist.push(context.tag);
+    }
     return audio;
   }
 

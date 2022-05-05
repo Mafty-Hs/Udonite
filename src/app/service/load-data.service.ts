@@ -154,7 +154,7 @@ export class LoadDataService {
   loadBGM(audioUrls:AudioUrls[]) {
     if (this.roomService.disableAudioLoad) return;
     for (let audio of audioUrls) {
-      IONetwork.audioUrl(audio.soundSource,this.playerService.myPlayer.playerId,audio.message,audio.udoniteVolume);
+      IONetwork.audioUrl(audio.soundSource,this.playerService.myPlayer.playerId,audio.message,audio.udoniteVolume,audio.udoniteTag );
     }
   }
 

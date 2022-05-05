@@ -7,10 +7,12 @@ export interface AudioContext {
   owner: string;
   volume: number;
   isHidden: boolean;
+  tag?: string;
 }
 
 export interface AudioUrls {
   message: string;
   soundSource:string;
   udoniteVolume:number;
+  udoniteTag:string;
 }

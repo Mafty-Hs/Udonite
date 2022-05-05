@@ -187,7 +187,7 @@ export class IONetwork {
     return result as AudioContext[];
   }
 
-  async audioUrl(audioUrl :string ,owner :string ,filename :string ,volume:number):Promise<void> {
+  async audioUrl(audioUrl :string ,owner :string ,filename :string ,volume:number,tag:string):Promise<void> {
     if (!this.checkFileType(audioUrl)) return;
     let context:AudioContext = {
       identifier: audioUrl ,
@@ -197,7 +197,8 @@ export class IONetwork {
       filesize: 0,
       owner: owner,
       volume: volume,
-      isHidden: false
+      isHidden: false,
+      tag:tag
     }
     this.socket.send('audioUpdate', context);
     return;
@@ -257,7 +258,7 @@ export class IONetwork {
     return ;
   }
 
-  async audioUpload(audioFile: File, type :string, hash :string,owner :string):Promise<void> {
+  async audioUpload(audioFile: File, type :string, hash :string,owner :string,tag :string ):Promise<void> {
     const request = `${this.url}/_audio`;
     const formData = new FormData();
     formData.append("roomId", this.roomId);
@@ -267,6 +268,7 @@ export class IONetwork {
     formData.append("owner", owner);
     formData.append("type", type);
     formData.append("hash", hash);
+    formData.append("tag", tag);
     try {
       let response:Response = await fetch(request, {method: 'POST', body: formData , mode: 'cors'})
       if (response.ok) {

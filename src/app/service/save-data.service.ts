@@ -165,7 +165,7 @@ export class SaveDataService {
     let audios = AudioStorage.instance.audios.filter(audio => audio.type === 'URL').map(audio => {return audio.context})
     if (audios.length > 0) {
       let effects:AudioUrls[] = audios.map(audio => {
-        return {message: audio.name , soundSource: audio.url , udoniteVolume: audio.volume }
+        return {message: audio.name , soundSource: audio.url , udoniteVolume: audio.volume ,udoniteTag: audio.tag }
       })
       let json = JSON.stringify(effects);
       return json;

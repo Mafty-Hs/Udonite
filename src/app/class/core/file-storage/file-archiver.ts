@@ -127,7 +127,7 @@ export class FileArchiver {
       }
       console.log(file.name + ' type:' + file.type);
       let hash = await FileReaderUtil.calcSHA256Async(file);
-      await IONetwork.audioUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId)
+      await IONetwork.audioUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId,"");
     }
   }
 
@@ -183,7 +183,8 @@ export class FileArchiver {
       for (let effect of effects) {
         if (effect.message && effect.soundSource && StringUtil.validUrl(effect.soundSource)) {
           let volume = effect.udoniteVolume ? Number(effect.udoniteVolume) : 100;
-          audioUrls.push({message: effect.message , soundSource: effect.soundSource , udoniteVolume: volume });
+          let tag = effect.udoniteTag ? String(effect.udoniteTag) : '';
+          audioUrls.push({message: effect.message , soundSource: effect.soundSource , udoniteVolume: volume ,udoniteTag: tag });
         }
       }
       if (audioUrls.length > 0) EventSystem.trigger('AUDIO_URL_LOADED', audioUrls);

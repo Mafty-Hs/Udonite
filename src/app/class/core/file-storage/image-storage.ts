@@ -1,4 +1,4 @@
-import { IONetwork } from '../system';
+import { EventSystem, IONetwork } from '../system';
 import { ImageFile } from './image-file';
 import { ImageContext } from './image-context';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -13,7 +13,7 @@ export class ImageStorage {
 
   get dataSize():number {
     return Object.values(this.imageHash).reduce((totalSize, Image) => totalSize + Image.context.filesize ,0 )
-  } 
+  }
 
   private imageHash: { [identifier: string]: ImageFile } = {};
   taglist:string[] = [];
@@ -48,7 +48,8 @@ export class ImageStorage {
 
   create(context :ImageContext) {
     let image = this.set(context);
-    this.imageHash[image.identifier] = image; 
+    this.imageHash[image.identifier] = image;
+    EventSystem.trigger('IMAGE_SYNC',image.identifier);
   }
 
   update(context :ImageContext) {
@@ -99,7 +100,7 @@ export class ImageStorage {
     let images = await IONetwork.imageMap()
     for (let image of images) {
       if (!this.imageHash[image.identifier])
-        this.imageHash[image.identifier] = this.set(image); 
+        this.imageHash[image.identifier] = this.set(image);
     }
   }
 }

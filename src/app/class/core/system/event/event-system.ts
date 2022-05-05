@@ -192,7 +192,6 @@ export class EventSystem implements Subject {
         break;
       case 'IMAGE_ADD':
         ImageStorage.instance.create(<ImageContext>data);
-        this.trigger('IMAGE_SYNC',data.identifier);
         break;
       case 'IMAGE_UPDATE':
         ImageStorage.instance.update(<ImageContext>data);

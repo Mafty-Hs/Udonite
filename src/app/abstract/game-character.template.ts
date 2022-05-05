@@ -276,6 +276,9 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
+        if (this.gameCharacter.imageFile.identifier === event.data || this.gameCharacter.shadowImageFile.identifier === event.data) {
+          this.updateObject();
+        }
         this.changeDetector.markForCheck();
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {

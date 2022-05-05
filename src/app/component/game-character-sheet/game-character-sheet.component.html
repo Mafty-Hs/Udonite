@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div class="image-showcase" style="position: absolute; height: 50px; top: 300px">
+    <div class="image-showcase" style="position: absolute; height: 50px; top: 230px">
       <span *ngFor="let imageFile of tabletopObject.imageFiles; index as i" class="image-thumbnail" [ngClass]="{'hide': tabletopObject.currntImageIndex == i}" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i ) * 50">
         <img @bounceInOut [src]="imageFile.url | safe: 'resourceUrl'" [alt]="imageFile.name" (click)="selectImage(i)">
       </span>
@@ -65,7 +65,9 @@
       class="text" [style.width.px]="imageAreaRreact.width" [style.height.px]="imageAreaRreact.height" [ngStyle]="{transform: 'scale(' + imageAreaRreact.scale + ')'}">
       <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
     </div>
-    <img #mainImage class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
+    <img class="main-image aura" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'"
+      [ngStyle]="tabletopObject.auraStyle" />
+    <img #mainImage class="main-image front-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
       [ngStyle]="tabletopObject.imgStyle"
       [ngClass]="{small: tabletopObject.aliasName == ''}"
       (dblclick)="openMainImageModal()"
@@ -80,6 +82,10 @@
           [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
+        <div class="toggle" style="display:block;font-size: 11px;margin-left: 12px;"><label>オーバービューに顔ICを使用
+          <input name="overview-faceicon" type="checkbox" [(ngModel)]="tabletopObject.isUseIconToOverviewImage">
+          <div><div></div></div>
+        </label></div>
         <button style="font-size: 11px" (click)="showInnerNote()">メモを表示</button>
         <button style="font-size: 11px" (click)="showStandSetting()">立ち絵設定</button>
       </div>

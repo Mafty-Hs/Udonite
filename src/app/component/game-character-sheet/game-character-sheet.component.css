@@ -3,14 +3,29 @@
   top: 0px;
   left: 0;
   */
+  position: relative;
   width: 250px;
   height: 250px;
 
   z-index: 0;
 }
 .main-image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 250px;
   object-position: center bottom;
+}
+
+.front-image {
+  z-index: 1;
+
+}
+
+.aura {
+  position: absolute;
+  z-index: 0;
+  transition: filter 0.2s ease-in-out;
 }
 
 .image-showcase {
@@ -58,7 +73,7 @@
   vertical-align: top;
   text-align: center;
   position: absolute;
-  left: 216px;
+  left: 200px;
   z-index: 2;
 }
 .icon-image-box {
@@ -124,6 +139,7 @@
   vertical-align: top;
   box-sizing: border-box;
 }
+
 .box {
   display: inline-block;
   margin: 5px;

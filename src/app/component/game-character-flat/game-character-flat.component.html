@@ -14,7 +14,7 @@
       </div>
       <div class="is-fit-width">
         <div class="rotate-frame" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"  [rotable.disable]="stopRotate">
+          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" (dblclick)="nextImage()" [rotable.disable]="stopRotate">
           <div class="rotate-inner">
             <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px )translateY(-' + size * gridSize +'px'}">

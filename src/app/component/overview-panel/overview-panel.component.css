@@ -202,9 +202,24 @@
 }
 
 .character-image {
+  position: absolute;
+  bottom:-10px;
+  left: 0;
   padding: 0;
   width: 100%;
   vertical-align: bottom;
+}
+
+.front-image {
+  bottom:-34px;
+  z-index: 2;
+
+}
+
+.aura {
+  z-index: 1;
+  bottom:-34px;
+  transition: filter 0.2s ease-in-out;
 }
 
 .is-black-mask {

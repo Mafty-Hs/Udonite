@@ -91,7 +91,8 @@
       [ngClass]="{ 'has-icon': isUseIcon,'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <ng-container *ngIf="!isUseIcon">
         <div [ngStyle]="{'transform': ('rotate(' + roll + 'deg)') }">
-          <img class="character-image" [ngStyle]="character.imgStyle" [src]="imageUrl | safe: 'resourceUrl'">
+          <img class="character-image aura" [ngStyle]="character.auraStyle" [src]="imageUrl | safe: 'resourceUrl'">
+          <img class="character-image front-image" [ngStyle]="character.imgStyle" [src]="imageUrl | safe: 'resourceUrl'">
         </div>
       </ng-container>
       <ng-container *ngIf="isUseIcon">

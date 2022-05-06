@@ -172,8 +172,6 @@ input[type="radio"]:checked {
    1px 1px 2px -1px #000 inset,
    2px 2px 1px 0px #FFF
   ;
-
-
 }
 
 input[type="range"] {
@@ -187,11 +185,15 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   background: #DDDDDD;
+  border: solid 1px #666;
+  box-shadow: 1px 1px 2px -1px #222 inset;
   width: 0.6em;
   height: 1.7em;
 }
 input[type="range"]::-moz-range-thumb {
   background: #DDDDDD;
+  border: solid 1px #666;
+  box-shadow: 1px 1px 2px -1px #222 inset;
   width: 0.6em;
   height: 1.7em;
   border: none;

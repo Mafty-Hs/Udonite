@@ -80,6 +80,11 @@ export class RoomService {
     return this.roomAdmin.disableAudioLoad as boolean;
   }
 
+  get disableAudioControl():boolean {
+    if  (this.adminAuth) return false;
+    return this.roomAdmin.disableAudioControl as boolean;
+  }
+
   get disableTableSetting():boolean {
     if  (this.adminAuth) return false;
     return this.roomAdmin.disableTableSetting as boolean;

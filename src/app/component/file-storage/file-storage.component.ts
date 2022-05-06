@@ -236,6 +236,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       for (let file of this.selectedImageFiles) {
         ImageStorage.instance.remove(file.identifier);
       }
+      this.selectedImageFiles = [];
     }
   }
 

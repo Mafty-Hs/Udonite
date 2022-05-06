@@ -9,6 +9,7 @@ export class RoomControl {
   disableTabletopLoad:boolean = false;
   disableImageLoad:boolean = false;
   disableAudioLoad:boolean = false;
+  disableAudioControl:boolean = false;
   disableTableSetting:boolean = false;
   disableTabSetting:boolean = false;
   disableSetCounter:boolean = false;

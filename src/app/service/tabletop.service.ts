@@ -82,6 +82,13 @@ export class TabletopService {
           this.updateMap(object);
         }
       })
+      .on('DRAW_CARD', -1000, event => {
+        let card = ObjectStore.instance.get(event.data);
+        if (card instanceof TabletopObject) {
+          this.refreshCache(card.aliasName);
+          this.updateMap(card)
+        }
+      })
       .on('DELETE_GAME_OBJECT', -1000, event => {
         let garbage = ObjectStore.instance.get(event.data.identifier);
         if (garbage == null || garbage.aliasName.length < 1) {

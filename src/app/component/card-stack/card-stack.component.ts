@@ -492,6 +492,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       card.location.y += 25 + (Math.random() * 50);
       card.setLocation(this.cardStack.location.name);
     }
+    EventSystem.call('DRAW_CARD',card.identifier);
     return card;
   }
 

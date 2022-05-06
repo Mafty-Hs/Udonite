@@ -79,7 +79,7 @@ export class ImageStorage {
   setMine(identifier: string):boolean {
     let image: ImageFile = this.imageHash[identifier];
     if (image) {
-      image.owner.push(PeerCursor.myCursor.player.playerId);
+      image.setOwner([PeerCursor.myCursor.player.playerId]);
       return true;
     }
     return false;

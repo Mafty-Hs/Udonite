@@ -56,10 +56,10 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get images(): ImageFile[] {
     let images: ImageFile[];
-    if (this.isShowAllImages) 
+    if (this.isShowAllImages)
       images = ImageStorage.instance.images
         .filter((image) => !image.context.isHide);
-    else 
+    else
       images = ImageStorage.instance.images
         .filter((image) => !image.context.isHide && (image.owner.includes(this.playerService.myPlayer.playerId)));
     if (this.showType == 'ALL')
@@ -67,7 +67,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     else if (this.showType == 'No Tag')
       return images.filter((image) => image.tag.length < 1);
     else if (this.serchCondIsOr) {
-      return images.filter((image) => { 
+      return images.filter((image) => {
         for (let tagword of image.tag) {
           if (this.searchTags.includes(tagword))
             return true;
@@ -75,7 +75,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       });
     }
-    return images.filter((image) => { 
+    return images.filter((image) => {
       for (let tagword of this.searchTags) {
         if (!image.tag.includes(tagword))
           return false;
@@ -87,14 +87,14 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   get allTags() {
     return ImageStorage.instance.taglist;
   }
-  
+
     constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private playerService: PlayerService,
     public roomService: RoomService,
   ) { }
-  
+
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = '画像一覧');
   }
@@ -222,6 +222,15 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedImageFiles = [];
   }
 
+  imageShare() {
+    let allPlayerIds = this.playerService.otherPlayers.map(player => {return player.playerId})
+    if (window.confirm("選択した画像を全員に公開します。\nよろしいですか？")) {
+      for (let file of this.selectedImageFiles) {
+        file.setOwner(allPlayerIds)
+      }
+    }
+  }
+
   remove() {
     if (window.confirm("選択した画像を削除します。\nよろしいですか？")) {
       for (let file of this.selectedImageFiles) {
@@ -234,5 +243,5 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return image.identifier;
   }
 
- 
+
 }

@@ -38,7 +38,7 @@ export class ImageFile {
       this._width = element.naturalWidth;
       this._height = element.naturalHeight;
       this._aspect = this.height / this.width;
-    }  
+    }
   }
 
   static get Empty():ImageFile {
@@ -63,10 +63,18 @@ export class ImageFile {
     this.update();
   }
 
+  setOwner(owners :string[]) {
+    let newOwner:string[] = this.owner;
+    for (let player of owners) {
+      if (!newOwner.includes(player)) newOwner = newOwner.concat(player);
+    }
+    this.owner = newOwner;
+  }
+
   removeTag(tag :string) {
     this.context.tag = this.context.tag.filter(tagword => tagword != tag)
     this.update();
   }
 
-  constructor() { } 
+  constructor() { }
 }

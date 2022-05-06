@@ -1,5 +1,5 @@
 <label>
-  <div class="drop-zone" *ngIf="!roomService.disableImageLoad"> 
+  <div class="drop-zone" *ngIf="!roomService.disableImageLoad">
     <div>
       <i class="material-icons large-font">add_photo_alternate</i>
     </div>
@@ -18,7 +18,7 @@
     </label>
   </div>
   <span class="word-selecter">
-    <label> 
+    <label>
       <input name="word-selecter" type="checkbox" value="ALL" [checked]="showType == 'ALL'" (click)="onAll()">
       <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
     </label>
@@ -41,10 +41,10 @@
 <div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">
   <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut [ngClass]="{ selected: selected(file) }" style="text-align: center; min-width: 100px; height: 120px; position: relative;">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">
-      <ng-container *ngIf="file.tag.length > 0; then tagsBlock; else noTagBlock"></ng-container> 
+      <ng-container *ngIf="file.tag.length > 0; then tagsBlock; else noTagBlock"></ng-container>
       <ng-template #tagsBlock>
         <div style="position: absolute; bottom: 0px; z-index: 5">
-          <ng-container *ngFor="let tag of file.tag; index as i">  
+          <ng-container *ngFor="let tag of file.tag; index as i">
             <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ tag }}</label>
             <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
           </ng-container>
@@ -71,6 +71,7 @@
     </ng-container>
   </div>
   <div>
-    <button class="remove" (click)="remove()"><i class="material-icons">delete</i></button>
+    <button class="share tooltip" [attr.data-tooltip]="'画像を全員に公開'" (click)="imageShare()"><i class="material-icons">add_photo_alternate</i></button>
+    <button class="remove tooltip" [attr.data-tooltip]="'画像の削除'" (click)="remove()"><i class="material-icons">delete</i></button>
   </div>
 </div>

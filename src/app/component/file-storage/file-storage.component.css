@@ -107,7 +107,7 @@
   outline: 0;
   font-size: 12px;
   background-color: transparent;
-  color: #FFF; 
+  color: #FFF;
   border: solid 1px #555;
   padding: 2px 8px;
   margin: 2px;
@@ -134,7 +134,7 @@
 }
 
 .grow {
-  text-shadow    : 
+  text-shadow    :
        1px  1px 0px #000000,
       -1px  1px 0px #000000,
        1px -1px 0px #000000,
@@ -142,7 +142,7 @@
        1px  0px 0px #000000,
        0px  1px 0px #000000,
       -1px  0px 0px #000000,
-       0px -1px 0px #000000; 
+       0px -1px 0px #000000;
 }
 
 .red-eye {
@@ -152,6 +152,12 @@
   font-weight: bolder;
 }
 
+.share {
+  color: #eee;
+  padding: 2px 4px;
+  margin-right: 8px;
+}
+
 .remove {
   background: none;
   background-color: darkred;
@@ -159,6 +165,37 @@
   padding: 2px 4px;
 }
 
-.remove ::after {
-  background: none;
+.tooltip{
+  position: relative;
+  content: '';
 }
+
+.tooltip::before {
+  -webkit-transition: all 0.2s;
+  opacity: 0;
+  position: absolute;
+  transition: all 0.2s;
+  visibility: hidden;
+  z-index: 11;
+  background: #444;
+  border: solid 2px #000;
+  border-radius: 3px;
+  color: #fff;
+  content: attr(data-tooltip);
+  display: block;
+  font-size: 11px;
+  right: -12px;
+  padding: 3px;
+  top: -4px;
+  white-space: nowrap;
+}
+
+.tooltip:hover {
+  cursor: pointer;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+

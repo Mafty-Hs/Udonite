@@ -53,7 +53,6 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopService } from 'service/tabletop.service';
 
 import { AppComponent } from './app.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from './component/stand-setting/stand-setting.component';
@@ -225,7 +224,6 @@ import { ViewSettingComponent } from './component/view-setting/view-setting.comp
     CommonModule,
     FormsModule,
     YouTubePlayerModule,
-    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     AppConfigService,

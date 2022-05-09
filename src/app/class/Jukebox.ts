@@ -20,6 +20,9 @@ export class Jukebox extends GameObject {
     EventSystem.register(this)
     .on<string>('SOUND_EFFECT', event => {
       this.sePlay(event.data);
+    })
+    .on<string>('SE_STOP', event => {
+      this.seStop();
     });
     this.sePlayer.volumeType = VolumeType.SE;
   }
@@ -66,6 +69,10 @@ export class Jukebox extends GameObject {
   private _stop() {
     this.unregisterEvent();
     this.audioPlayer.stop();
+  }
+
+  seStop() {
+    this.sePlayer.stop();
   }
 
   private unlockAfterUserInteraction() {

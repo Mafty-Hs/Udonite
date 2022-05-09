@@ -9,10 +9,12 @@ import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelService , PanelOption } from 'service/panel.service';
 import { RoomService } from 'service/room.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PlayerService } from 'service/player.service';
+import { FileReaderUtil } from '@udonarium/core/file-storage/file-reader-util';
+import { HelpComponent } from 'component/help/help.component';
 
 @Component({
   selector: 'app-jukebox',
@@ -31,7 +33,17 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   set seVolume(seVolume: number) { AudioPlayer.seVolume = seVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
 
 
-  get audios(): AudioFile[] { return AudioStorage.instance.audios }
+  get audios(): AudioFile[] {
+    if (!this.selectedTag) {
+      return AudioStorage.instance.audios
+    }
+    else if (this.selectedTag === '--notag--') {
+      return AudioStorage.instance.audios.filter(audio => !Boolean(audio.tag));
+    }
+    else {
+      return AudioStorage.instance.audios.filter(audio => audio.tag === this.selectedTag);
+    }
+  }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
   get percentAuditionVolume(): number { return Math.floor(AudioPlayer.auditionVolume * 100); }
@@ -54,13 +66,83 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get auditionPlayerName(): string  { return this.auditionPlayer?.audio ?  this.auditionPlayer?.audio.name : ""}
   get jukeboxName(): string {  return this.jukebox.audio ? this.jukebox.audio.name : ""}
 
+  _selectedTag:string = "";
+  get selectedTag():string { return this._selectedTag}
+  set selectedTag(tag :string) {
+    this._selectedTag = tag;
+    if (this.isEdit && tag !== '--notag--') this.editingTag = tag;
+  }
+  get taglist():string[] { return AudioStorage.instance.taglist }
+
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
 
-  nameIdentifier:string = "";
-  get nameAudio():AudioFile {
-    return AudioStorage.instance.get(this.nameIdentifier);
+  selectedAudioIdentifier:string = "";
+  get selectedAudio():AudioFile {
+    return AudioStorage.instance.get(this.selectedAudioIdentifier);
   }
+
+  isEdit:boolean = false;
+  toggleEdit(isUpdate:boolean = false) {
+    if (isUpdate) {
+      this.name = this.editingAudio.name;
+      this.editingVolume = this.editingAudio.volume;
+      this.editingTag = this.editingAudio.tag  === '--notag--' ? '' : this.editingAudio.tag ;
+    }
+    else {
+      this.editingIdentifier = "";
+      this.file = null;
+      this.url = "";
+      this.name = "";
+      this.editingVolume = 100;
+      this.editingTag = this.selectedTag;
+    }
+    this.isEdit = !this.isEdit;
+  }
+
+  editingIdentifier:string = "";
+  get editingAudio() {
+    return AudioStorage.instance.get(this.editingIdentifier);
+  }
+
+  saveEdit() {
+    if (this.editingIdentifier) {
+      this.editingAudio.name = this.name;
+      this.editingAudio.volume = this.editingVolume;
+      this.editingAudio.tag = this.editingTag;
+      this.editingAudio.update();
+    }
+    else {
+      if (this.fileType === 'url') {
+        IONetwork.audioUrl(this.url , this.playerService.myPlayer.playerId ,this.name, 100,this.editingTag);
+      }
+      else {
+        const file = this.file;
+        const tag = this.editingTag;
+        FileReaderUtil.calcSHA256Async(file).then(hash => {
+          IONetwork.audioUpload(file ,file.type ,hash ,this.playerService.myPlayer.playerId,tag);
+        })
+      }
+    }
+    this.toggleEdit();
+  }
+
+  get canSave():boolean {
+    if (this.fileType === 'url') {
+      return Boolean(this.url && this.name);
+    }
+    else if (this.file && this.name) {
+      return Boolean(((10 * 1024 * 1024) > this.file.size) && ((AudioStorage.instance.dataSize + this.file.size) < (IONetwork.server.audioStorageMaxSize *1024 *1024)))
+    }
+    return false
+  }
+
+  fileType:string = "local";
+  name:string = "";
+  editingVolume:number = 100;
+  editingTag:string = "";
+  file: File = null;
+  url:string = "";
 
   constructor(
     private modalService: ModalService,
@@ -84,47 +166,27 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.stop();
   }
 
-  toggleName(e: Event,identifier :string) {
-    if (identifier !== this.nameIdentifier) this.nameIdentifier = identifier;
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  urlName:string = "";
-  urlUrl:string = "";
-
-  URLupload:boolean = false;
-  toggleURL() {
-    this.URLupload = !this.URLupload;
-    this.urlName = "";
-    this.urlUrl = "";
-  }
-
-  uploadURL() {
-    if (this.urlName.length < 1 || this.urlUrl.length < 1 || !StringUtil.validUrl(this.urlUrl)) return;
-    IONetwork.audioUrl(this.urlUrl , this.playerService.myPlayer.playerId ,this.urlName, 100,"");
-    this.toggleURL();
-  }
-
-  play(identifier :string) {
-    if (identifier === this.auditionIdentifier) {
-      this.stop();
+  selectCard(identifier :string) {
+    if (this.selectedAudioIdentifier == identifier) {
+      this.selectedAudioIdentifier = "";
       return;
     }
-    this.auditionPlayer.play(AudioStorage.instance.get(identifier));
+    this.editingIdentifier = identifier;
+    this.selectedAudioIdentifier = identifier;
+  }
+
+  play() {
+    this.auditionPlayer.play(this.selectedAudio);
+    this.selectedAudioIdentifier = "";
   }
 
   stop() {
-    console.log(this.auditionIdentifier);
     this.auditionPlayer.stop();
   }
 
-  playBGM(identifier :string) {
-    if (identifier === this.jukeboxIdentifier) {
-      this.stopBGM();
-      return;
-    }
-    this.jukebox.play(identifier, true);
+  playBGM() {
+    this.jukebox.play(this.selectedAudioIdentifier, true);
+    this.selectedAudioIdentifier = "";
   }
 
   stopBGM() {
@@ -132,22 +194,39 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   playSE(identifier :string) {
-    EventSystem.call('SOUND_EFFECT', identifier);
+    EventSystem.call('SOUND_EFFECT', this.selectedAudioIdentifier);
+    this.selectedAudioIdentifier = "";
   }
 
-  remove(identifier :string) {
-    if (window.confirm("選択した音楽を削除します。\nよろしいですか？")) {
-      AudioStorage.instance.remove(identifier);
+  stopSE() {
+    EventSystem.call('SE_STOP',null);
+  }
+
+  remove() {
+    if (window.confirm("音楽を削除します。\nよろしいですか？")) {
+      if (this.editingIdentifier === this.jukeboxIdentifier ) this.stopBGM();
+      if (this.editingIdentifier === this.auditionIdentifier) this.stop();
+      AudioStorage.instance.remove(this.editingIdentifier);
 
     }
-    if (this.nameIdentifier === identifier) this.nameIdentifier = "";
+    this.editingIdentifier = "";
+    this.selectedAudioIdentifier = "";
+    this.toggleEdit();
   }
 
   handleFileSelect(event: Event) {
     let input = <HTMLInputElement>event.target;
     let files = input.files;
-    if (files.length) FileArchiver.instance.load(files);
-    input.value = '';
+    if (files.length) {
+      this.file = files[0];
+      this.name = this.file.name;
+    }
+  }
+
+  help() {
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "image";
   }
 
   private lazyNgZoneUpdate() {

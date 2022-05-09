@@ -55,7 +55,8 @@ export class DataLoadComponent implements OnInit, AfterViewInit {
         let arraybuffer = await zipEntry.async('arraybuffer');
         let newfile = new File([arraybuffer], zipEntry.name, { type: MimeType.type(zipEntry.name) });
         if (newfile.type.indexOf('text/') != -1) this.xmlFile.push(newfile);
-        if (newfile.type.indexOf('image/') != -1) this.imageFile.push(newfile); 
+        if (newfile.type.indexOf('image/') != -1) this.imageFile.push(newfile);
+        if (MimeType.type(newfile.name) == 'application/json') this.jsonLoad(newfile);
       } catch (reason) {
         console.warn(reason);
       }
@@ -70,6 +71,10 @@ export class DataLoadComponent implements OnInit, AfterViewInit {
   async imageLoad() {
     if (this.imageFile.length < 1) return;
     await  FileArchiver.instance.load(this.imageFile);
+  }
+
+  async jsonLoad(jsonFile :File) {
+    FileArchiver.instance.load([jsonFile]);
   }
 
   ngOnInit(): void {

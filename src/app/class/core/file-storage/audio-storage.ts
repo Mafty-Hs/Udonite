@@ -47,6 +47,9 @@ export class AudioStorage {
 
   update(context :AudioContext) {
     let audio = this.get(context.identifier);
+    if (!context.isHidden && context.tag && context.tag?.length > 0) {
+      if (!this.taglist.includes(context.tag)) this.taglist.push(context.tag);
+    }
     audio.context = context;
   }
 

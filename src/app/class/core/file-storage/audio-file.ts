@@ -39,14 +39,19 @@ export class AudioFile {
     return this._blob ? URL.createObjectURL(this._blob) : this.context.url;
   }
 
+  update() {
+    IONetwork.audioUpdate(this.context)
+  }
+
   get identifier(): string { return this.context.identifier };
   get name(): string { return this.context.name };
-  set name(name :string) {this.context.name = name; IONetwork.audioUpdate(this.context)}
+  set name(name :string) {this.context.name = name;}
   async url(): Promise<string> { return this.context.type == "URL" ? await this.blob() : this.context.url };
   get owner(): string { return this.context.owner };
   get volume(): number { return this.context.volume };
-  set volume(volume :number) {this.context.volume = volume; IONetwork.audioUpdate(this.context)}
+  set volume(volume :number) {this.context.volume = volume;}
   get isHidden(): boolean { return this.context.isHidden };
   get type():string {return this.context.type}
-  get tag():string {return this.context.tag}
+  get tag():string {return this.context.tag; }
+  set tag(tag:string) {this.context.tag = tag;}
 }

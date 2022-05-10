@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'help-cutin',
   templateUrl: './help-cutin.component.html',
-  styleUrls: ['./help-cutin.component.css']
+  styleUrls: ['../help.content.css']
 })
 export class HelpCutinComponent implements OnInit {
 

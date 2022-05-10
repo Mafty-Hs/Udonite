@@ -3,8 +3,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -13,15 +15,15 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { SlopeDirection, Terrain, TerrainViewState } from '@udonarium/terrain';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
-import { TerrainComponentTemplate } from 'src/app/abstract/terrain.template';
+import { TerrainComponentTemplate } from 'component/terrain/terrain.template';
 
 @Component({
-  selector: 'terrain-flat',
-  templateUrl: './terrain-flat.component.html',
-  styleUrls: ['./terrain-flat.component.css'],
+  selector: 'terrain',
+  templateUrl: './terrain.component.html',
+  styleUrls: ['../terrain.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TerrainFlatComponent extends TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
+export class TerrainComponent extends TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
 
@@ -73,6 +75,88 @@ export class TerrainFlatComponent extends TerrainComponentTemplate implements On
           }
         }),
       ContextMenuSeparator,
+      { name: '傾斜', action: null, subActions: [
+        {
+          name: `${ this.slopeDirection == SlopeDirection.NONE ? '◉' : '○' } なし`, action: () => {
+            this.slopeDirection = SlopeDirection.NONE;
+          }
+        },
+        ContextMenuSeparator,
+        {
+          name: `${ this.slopeDirection == SlopeDirection.TOP ? '◉' : '○' } 上（北）`, action: () => {
+            this.slopeDirection = SlopeDirection.TOP;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.BOTTOM ? '◉' : '○' } 下（南）`, action: () => {
+            this.slopeDirection = SlopeDirection.BOTTOM;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.LEFT ? '◉' : '○' } 左（西）`, action: () => {
+            this.slopeDirection = SlopeDirection.LEFT;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.RIGHT ? '◉' : '○' } 右（東）`, action: () => {
+            this.slopeDirection = SlopeDirection.RIGHT;
+          }
+        }
+      ]},
+      { name: '壁の表示', action: null, subActions: [
+        {
+          name: `${ this.hasWall && this.isSurfaceShading ? '◉' : '○' } 通常`, action: () => {
+            this.mode = TerrainViewState.ALL;
+            this.isSurfaceShading = true;
+          }
+        },
+        {
+          name: `${ this.hasWall && !this.isSurfaceShading ? '◉' : '○' } 陰影なし`, action: () => {
+            this.mode = TerrainViewState.ALL;
+            this.isSurfaceShading = false;
+          }
+        },
+        {
+          name: `${ !this.hasWall ? '◉' : '○' } 非表示`, action: () => {
+            this.mode = TerrainViewState.FLOOR;
+            if (this.depth * this.width === 0) {
+              this.terrain.width = this.width <= 0 ? 1 : this.width;
+              this.terrain.depth = this.depth <= 0 ? 1 : this.depth;
+            }
+          }
+        },
+      ]},
+      ContextMenuSeparator,
+      (this.isDropShadow
+        ? {
+          name: '☑ 影を落とす', action: () => {
+            this.isDropShadow = false;
+          }
+        } : {
+          name: '☐ 影を落とす', action: () => {
+            this.isDropShadow = true;
+          }
+        }),
+      (this.isAltitudeIndicate
+        ? {
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
+          }
+        }),
+      {
+        name: '高度を0にする', action: () => {
+          if (this.terrain.altitude != 0) {
+            this.terrain.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        },
+        altitudeHande: this.terrain
+      },
+      ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       (this.terrain.getUrls().length <= 0 ? null : {
         name: '参照URLを開く', action: null,
@@ -85,7 +169,7 @@ export class TerrainFlatComponent extends TerrainComponentTemplate implements On
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.terrain.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,

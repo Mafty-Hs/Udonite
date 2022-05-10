@@ -1,4 +1,8 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { EventSystem } from '@udonarium/core/system';
+import { GameCharacter } from '@udonarium/game-character';
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -11,22 +15,14 @@ import {
   OnInit,
   ViewChild, ElementRef
 } from '@angular/core';
-import { EventSystem } from '@udonarium/core/system';
-import { GameCharacter } from '@udonarium/game-character';
-import { imageStyle } from '@udonarium/tabletop-object';
-import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { ContextMenuSeparator, ContextMenuAction } from 'service/context-menu.service';
+import { GameCharacterComponentTemplate } from 'component/game-character/game-character.template';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
-import { EffectService } from 'service/effect.service';
-import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
-import { Subscription } from 'rxjs'
-import { GameCharacterComponentTemplate } from 'src/app/abstract/game-character.template';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
-  selector: 'game-character',
-  templateUrl: './game-character.component.html',
-  styleUrls: ['./game-character.component.css'],
+  selector: 'game-character-flat',
+  templateUrl: './game-character-flat.component.html',
+  styleUrls: ['../game-character.common.css','./game-character-flat.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('switchImage', [
@@ -83,175 +79,21 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
     ])
   ]
 })
-export class GameCharacterComponent extends GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
+export class GameCharacterFlatComponent extends GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
-  @ViewChild('characterImage') characterImage: ElementRef;
-  @ViewChild('chatBubble') chatBubble: ElementRef;
 
-  get canEffect():boolean {
-    return this.effectService.canEffect;
+
+  ngOnInit():void {
+    super.ngOnInit()
   }
 
-  stopRotate:boolean = false;
-  gridSize: number = 50;
-  math = Math;
-  stringUtil = StringUtil;
-  viewRotateX = 50;
-  viewRotateZ = 10;
-  heightWidthRatio = 1.5;
-
-  get nameTagRotate(): number {
-    let x = (this.viewRotateX % 360) - 90;
-    let z = (this.viewRotateZ + this.rotate) % 360;
-    let roll = this.roll % 360;
-    z = (z > 0 ? z : 360 + z);
-    roll = (roll > 0 ? roll : 360 + roll);
-    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1) * (90 <= roll && roll <= 270 ? -1 : 1);
-  }
-
-  get shadowStyle():object {
-    let styleObject: imageStyle = {};
-    styleObject.filter = 'brightness(0) blur(1px)';
-    styleObject.transition = 'transform 132ms 0s ease';
-    if (this.aura != -1) {
-      styleObject.filter += ' drop-shadow(0 -4px 4px ' + this.gameCharacter.auraColor[this.aura] + ')';
-      styleObject.transition += ', filter 0.2s ease-in-out'
-    }
-    styleObject.transformOrigin = '50% ' + (this.size * this.gridSize) + 'px' ;
-    styleObject.transform = 'scaleX(' + (this.isInverse ? '-1' : '1') + ') scale(1.0,' + (1.0 / this.heightWidthRatio) + ') translateY( -' + (99 / this.heightWidthRatio) + '%) rotateZ(' + this.roll + 'deg)';
-    styleObject.opacity = this.isHollow ? '0.4' : '0.7';
-    return styleObject;
-  }
-
-  canvas:HTMLCanvasElement;
-  private effect$: Subscription;
-  private renderer;
-  private camera = new PerspectiveCamera( 30.0, 1, 1, 1000);
-  private scene = new Scene();
-  private clock = new Clock();
-  context : effekseer.EffekseerContext = null;
-  effects;
-  private hasEffect = null;
-
-  toggleEffect(canEffect: boolean){
-    if(canEffect) {
-      this.createMyEffect()
-    }
-    else {
-      cancelAnimationFrame(this.myLoop);
-      document.body.removeChild(this.canvas);
-      this.canvas.remove();
-    }
-  }
-  private myLoop;
-  mainLoop = () => {
-    this.myLoop = requestAnimationFrame(this.mainLoop.bind(this));
-    this.animate();
-  };
-
-  createMyEffect() {
-    this.canvas = document.createElement('canvas');
-    this.canvas.style.zIndex = "20";
-    this.canvas.style.position = "absolute";
-    this.canvas.style.display = "none";
-    this.camera.position.set(20, 20, 20);
-    this.camera.lookAt(new Vector3(0, 0, 0));
-
-    document.body.appendChild(this.canvas);
-
-  }
-
-  newContext() {
-    this.context = this.effectService.createContext(this.renderer);
-    this.ngZone.runOutsideAngular(() => {
-      this.mainLoop();
-    });
-  }
-
-  setCanvasSize(mywidth: number , myheight: number){
-    this.canvas.style.width = String(mywidth);
-    this.canvas.style.height = String(mywidth);
-    this.renderer.setSize(mywidth, myheight);
-    this.camera.aspect = mywidth / myheight;
-    this.camera.updateProjectionMatrix();
-  }
-
-  setEffect(effectName: string) {
-    if (!this.characterImage?.nativeElement) return;
-
-    let rect = this.characterImage.nativeElement.getBoundingClientRect();
-    if (!this.effectService.isValid(rect)) return;
-
-    let newWidth,newHeight,top,left: number;
-    [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName);
-    this.canvas.style.left = left + 'px';
-    this.canvas.style.top = top + 'px';
-    if (this.hasEffect) {
-      clearTimeout(this.hasEffect);
-      this.setCanvasSize(newWidth ,newHeight);
-    }
-    else {
-      this.renderer = new WebGLRenderer({canvas: this.canvas , alpha: true});
-      this.newContext();
-      this.setCanvasSize(newWidth ,newHeight);
-    }
-    this.canvas.style.display = "block";
-    this.effects = this.effectService.addEffect(this.context,effectName)
-    //this.canvas.style.backgroundColor = '#FFF';
-    setTimeout(() => {
-      this.playEffect(effectName);
-    }, 500);
-  }
-
-  playEffect(effectName:string) {
-    this.context.play(this.effects, 0, 0, 0);
-    this.hasEffect = setTimeout(() => {
-      this.stopEffect();
-    }, this.effectService.effectInfo[effectName].time);
-  }
-
-  stopEffect() {
-    this.hasEffect = null;
-    cancelAnimationFrame(this.myLoop);
-    this.canvas.style.display = "none"
-    this.renderer = null;
-  }
-
-  animate() {
-         this.context.update(this.clock.getDelta() * 60.0);
-         this.renderer.render(this.scene, this.camera);
-         this.context.setProjectionMatrix(Float32Array.from(this.camera.projectionMatrix.elements));
-         this.context.setCameraMatrix(Float32Array.from(this.camera.matrixWorldInverse.elements));
-         this.context.draw();
-         this.renderer.resetState();
-  }
-
-
-  ngOnInit() {
-    super.ngOnInit();
-    EventSystem.register(this)
-    .on('CHARACTER_EFFECT', event => {
-      let effectName = event.data[0];
-      let character = event.data[1];
-      if(this.effectService.canEffect && this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
-        this.setEffect(effectName);
-      }
-    });
-    this.effect$ = this.effectService.canEffect$.subscribe((bool: boolean) => {
-      this.toggleEffect(bool);
-    });
-  }
-
-  ngAfterViewInit() {
+  ngAfterViewInit():void {
     super.ngAfterViewInit();
-    if (this.effectService.canEffect) this.createMyEffect()
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
     super.ngOnDestroy();
-    this.effect$.unsubscribe();
-    document.body.removeChild(this.canvas);
   }
 
   @HostListener('dragstart', ['$event'])
@@ -269,7 +111,7 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let position = this.pointerDeviceService.pointers[0];
-    let actions: ContextMenuAction[] = [
+    this.contextMenuService.open(position, [
       (this.gameCharacter.imageFiles.length <= 1 ? null : {
         name: '画像切り替え',
         action: null,
@@ -317,18 +159,6 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           } : {
             name: '☐ 影の表示', action: () => {
               this.isDropShadow = true;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          }),
-        (this.isAltitudeIndicate
-          ? {
-            name: '☑ 高度の表示', action: () => {
-              this.isAltitudeIndicate = false;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          } : {
-            name: '☐ 高度の表示', action: () => {
-              this.isAltitudeIndicate = true;
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
@@ -386,41 +216,18 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           }
       ]},
       ContextMenuSeparator,
-      { name: '動作設定', action: null, subActions:[
-        (!this.isNotRide
-          ? {
-            name: '☑ 他のキャラクターに乗る', action: () => {
-              this.isNotRide = true;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          } : {
-            name: '☐ 他のキャラクターに乗る', action: () => {
-              this.isNotRide = false;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          }),
-        (this.stopRotate
-          ? {
-            name: '☑ 回転を禁止', action: () => {
-              this.stopRotate = false;
-              SoundEffect.play(PresetSound.unlock);
-            }
-          } : {
-            name: '☐ 回転を禁止', action: () => {
-              this.stopRotate = true;
-              SoundEffect.play(PresetSound.lock);
-            }
-          }),
-      ] },
-      {
-        name: '高度を0にする', action: () => {
-          if (this.altitude != 0) {
-            this.gameCharacter.altitude = 0;
-            SoundEffect.play(PresetSound.sweep);
+      (this.stopRotate
+        ? {
+          name: '☑ 回転を禁止', action: () => {
+            this.stopRotate = false;
+            SoundEffect.play(PresetSound.unlock);
           }
-        },
-        altitudeHande: this.gameCharacter
-      },
+        } : {
+          name: '☐ 回転を禁止', action: () => {
+            this.stopRotate = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
       ContextMenuSeparator,
       ( this.gameCharacter.owner != this.playerService.myPlayer.playerId
         ? {
@@ -514,9 +321,8 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
           SoundEffect.play(PresetSound.piecePut);
         }
       },
-    ];
-
-    this.contextMenuService.open(position,actions, this.name);
+    ], this.name);
   }
+
 
 }

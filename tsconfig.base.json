@@ -33,7 +33,7 @@
         "src/app/service/*"
       ],
       "abstract/*": [
-        "src/app/abstract/*"
+        "src/app/common/*"
       ]
     },
   },

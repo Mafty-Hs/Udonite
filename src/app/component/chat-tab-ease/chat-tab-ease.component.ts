@@ -17,7 +17,7 @@ import {
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
-import { ChatTabComponentTemplate , ScrollPosition , ua , isiOS } from 'abstract/chat-tab.template';
+import { ChatTabComponentTemplate , ScrollPosition , ua , isiOS } from 'common/chat-tab.template';
 import { setZeroTimeout } from '@udonarium/core/system/util/zero-timeout';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 

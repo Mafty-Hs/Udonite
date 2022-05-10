@@ -8,13 +8,12 @@ import {
   OnInit,
 } from '@angular/core';
 import { DiceSymbol } from '@udonarium/dice-symbol';
-import { DiceSymbolComponentTemplate } from 'src/app/abstract/dice-symbol.template';
-
+import { DiceSymbolComponentTemplate } from 'component/dice-symbol/dice-symbol.template';
 
 @Component({
-  selector: 'dice-symbol-flat',
-  templateUrl: './dice-symbol-flat.component.html',
-  styleUrls: ['./dice-symbol-flat.component.css'],
+  selector: 'dice-symbol',
+  templateUrl: './dice-symbol.component.html',
+  styleUrls: ['../dice-symbol.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('diceRoll', [
@@ -90,7 +89,7 @@ import { DiceSymbolComponentTemplate } from 'src/app/abstract/dice-symbol.templa
     ])
   ]
 })
-export class DiceSymbolFlatComponent extends DiceSymbolComponentTemplate implements OnInit, OnDestroy, AfterViewInit  {
+export class DiceSymbolComponent extends DiceSymbolComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() diceSymbol: DiceSymbol = null;
   @Input() is3D: boolean = false;
 

@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GameTableComponentTemplate } from 'src/app/abstract/game-table.template';
+import { GameTableComponentTemplate } from 'component/game-table/game-table.template';
 import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'game-table',
   templateUrl: './game-table.component.html',
-  styleUrls: ['./game-table.component.css'],
+  styleUrls: ['../game-table.component.css'],
 })
 export class GameTableComponent extends GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;

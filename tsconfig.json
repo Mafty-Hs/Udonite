@@ -39,8 +39,8 @@
       "service/*": [
         "src/app/service/*"
       ],
-      "abstract/*": [
-        "src/app/abstract/*"
+      "common/*": [
+        "src/app/common/*"
       ]
     },
   }

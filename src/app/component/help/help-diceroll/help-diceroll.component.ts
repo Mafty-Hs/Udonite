@@ -5,7 +5,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 @Component({
   selector: 'help-diceroll',
   templateUrl: './help-diceroll.component.html',
-  styleUrls: ['./help-diceroll.component.css']
+  styleUrls: ['../help.content.css']
 })
 export class HelpDicerollComponent implements OnInit {
 

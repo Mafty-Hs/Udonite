@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
-import { GameTableComponentTemplate } from 'src/app/abstract/game-table.template';
+import { GameTableComponentTemplate } from 'component/game-table/game-table.template';
 import { TableMouseGestureFlat } from './table-mouse-gesture-flat';
 
 @Component({
   selector: 'game-table-flat',
   templateUrl: './game-table-flat.component.html',
-  styleUrls: ['./game-table-flat.component.css']
+  styleUrls: ['../game-table.component.css']
 })
 export class GameTableFlatComponent extends GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;

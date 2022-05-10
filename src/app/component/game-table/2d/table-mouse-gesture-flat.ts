@@ -1,4 +1,4 @@
-import { TableMouseGesture , TableMouseGestureEvent } from "src/app/abstract/table-mouse-gesture";
+import { TableMouseGesture , TableMouseGestureEvent } from "../table-mouse-gesture";
 
 export class TableMouseGestureFlat extends TableMouseGesture {
   onInputMove(ev: any) {

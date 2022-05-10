@@ -1,87 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500&display=swap');
-
-.is-grab {
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-  cursor: grab;
-}
-
-.is-grabbing {
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-  cursor: grabbing;
-}
-
-.is-3d {
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-/*
-.is-transition {
-  -webkit-transition: -webkit-transform 132ms linear;
-  transition: transform 132ms linear;
-}
-
-.upright-transform {
-  -webkit-transition: -webkit-transform 132ms ease;
-  transition: transform 132ms ease;
-}
-*/
-.upright-transform.fall {
-  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
-  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
-}
-
-.is-pointer-events-none {
-  pointer-events: none;
-}
-
-.is-pointer-events-auto {
-  pointer-events: auto;
-}
-
-.component {
-  position: absolute;
-  height: 50px;
-  width: 50px;
-
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  -moz-user-drag: none;
-  -webkit-user-drag: none;
-
-}
-
-.component-content {
-  width: 100%;
-  height: 100%;
-}
-
-.pedestal-grab {
-  z-index: -1;
-  backface-visibility: hidden;
-  position: absolute;
-  top: -22px;
-  left: -6px;
-  height: calc(100% + 44px);
-  width: calc(100% + 12px);
-  cursor: default;
-  border-radius: 37px;
-}
-
-.pedestal-grab-border {
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  border-top: solid 28px #999;
-  border-left: solid 12px #999;
-  border-right: solid 12px #CCC;
-  border-bottom: solid 28px #CCC;
-  border-radius: 37px;
-}
-
 .pedestal-inner {
   backface-visibility: hidden;
   position: absolute;
@@ -103,26 +20,6 @@
   box-sizing: border-box;
   border: solid 2px #212121;
   border-radius: 25px;
-}
-
-.upright-transform {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  transform: rotateX(-90deg) translateY(-50%);
-}
-
-.is-fit-width {
-  height: auto;
-  width: 100%;
-}
-
-.fill-frame {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 
 .image {
@@ -165,15 +62,6 @@
   overflow: visible;
 }
 
-.is-nowrap {
-  white-space: nowrap;
-}
-
-.is-black-background {
-  color: #CCC;
-  background-color: rgba(30, 30, 30, 0.8);
-}
-
 .fornt-tag {
  backface-visibility: hidden;
 }
@@ -183,81 +71,6 @@
   top: 3px;
   backface-visibility: hidden;
   transform: rotateY(-180deg);
-}
-
-.has-length-limit {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 24em;
-}
-
-.rotate-grab-icon {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  box-sizing: border-box;
-  cursor: -moz-default;
-  cursor: -webkit-default;
-  cursor: default;
-  z-index: 1;
-  padding: 2px;
-  background-color: #CCCCCC;
-  border-radius: 100%;
-  color: #444;
-  font-size: 8px;
-}
-
-.of-top {
-  top: -42px;
-}
-
-.of-bottom {
-  bottom: -30px;
-}
-
-.of-front {
-  position: absolute;
-  width: 24px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  color: #444;
-}
-
-.of-back {
-  position: absolute;
-  width: 24px;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  color: #444;
-}
-
-.rotate-grab {
-  opacity: 0;
-}
-
-.component:hover .rotate-grab {
-  opacity: 0.5;
-}
-
-.component:active .rotate-grab {
-  opacity: 0;
-}
-
-.component .rotate-grab:hover, .component .rotate-grab:active {
-  opacity: 1;
-}
-
-.material-icons {
-  display: none;
-}
-
-.component:hover .material-icons, .component:active .material-icons {
-  display: inline;
 }
 
 .altitude-indicator {
@@ -419,20 +232,6 @@ p.is-wisper .face-icon {
 
 .top-container {
   padding: 0;
-}
-
-.status-bar-base {
-  position: relative;
-  height: 5px;
-  border: solid 1px #222;
-  background-color: #CCC;
-}
-
-.status-bar {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  height: 5px;
 }
 
 .front-image {

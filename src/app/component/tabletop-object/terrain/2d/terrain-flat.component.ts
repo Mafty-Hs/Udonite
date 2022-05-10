@@ -13,7 +13,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { SlopeDirection, Terrain, TerrainViewState } from '@udonarium/terrain';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
-import { TerrainComponentTemplate } from 'component/terrain/terrain.template';
+import { TerrainComponentTemplate } from '../terrain.template';
 
 @Component({
   selector: 'terrain-flat',

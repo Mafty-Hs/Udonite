@@ -16,7 +16,7 @@ import { RoomService } from 'service/room.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
-import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+import { ChatWindowComponent } from 'component/chat/chat-window/chat-window.component';
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { HelpComponent } from 'component/help/help.component';
 import { ModalComponent } from 'component/modal/modal.component';

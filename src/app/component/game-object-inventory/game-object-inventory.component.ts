@@ -11,7 +11,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
+import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';

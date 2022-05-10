@@ -15,7 +15,7 @@ import { EventSystem } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { PlayerPaletteComponent } from 'component/player-palette/player-palette.component';
+import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
 import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
@@ -26,11 +26,9 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ModalService } from 'service/modal.service';
-import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
-import { DataElement } from '@udonarium/data-element';
 import { GameCharacterService } from 'service/game-character.service';
 
 @Component({

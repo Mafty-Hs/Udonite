@@ -1,24 +1,24 @@
 <div class="content">
-  <div class="volume-panel">
-    <div class="volume-type">
-      <div class="volume-name">試聴音量</div>
-      <div class="volume-bar">
+  <div class="volume-panel" style="padding: 3px 6px;">
+    <div class="flex-row flex-between volume-type">
+      <div class="flex-row flex-center" style="width:60px">試聴音量</div>
+      <div class="flex-row flex-center" style="width: calc(100% - 64px)">
         <i class="material-icons" style="font-size: 22px">{{ auditionVolume == 0 ? 'volume_off' : auditionVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
         <input [(ngModel)]="auditionVolume" type="range" title="{{percentAuditionVolume + '%'}}" min="0" max="1" step="0.001" style="width:65%" />
         <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentAuditionVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
       </div>
     </div>
-    <div class="volume-type">
-      <div class="volume-name">再生音量</div>
-      <div class="volume-bar">
+    <div class="flex-row flex-between volume-type">
+      <div class="flex-row flex-center" style="width:60px">再生音量</div>
+      <div class="flex-row flex-center" style="width: calc(100% - 64px)">
         <i class="material-icons" style="font-size: 22px">{{ volume == 0 ? 'volume_off' : volume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
         <input [(ngModel)]="volume" type="range" min="0" title="{{percentVolume + '%'}}" max="1" step="0.001" style="width:65%" />
         <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
       </div>
     </div>
-    <div class="volume-type">
-      <div class="volume-name">SE音量</div>
-      <div  class="volume-bar">
+    <div class="flex-row flex-between volume-type">
+      <div class="flex-row flex-center" style="width:60px">SE音量</div>
+      <div class="flex-row flex-center" style="width: calc(100% - 64px)">
         <i class="material-icons" style="font-size: 22px">{{ seVolume == 0 ? 'volume_off' : seVolume <= 0.5 ? 'volume_down' : 'volume_up' }}</i>
         <input [(ngModel)]="seVolume" type="range" min="0" title="{{percentSeVolume + '%'}}" max="1" step="0.001" style="width:65%" />
         <span style="white-space: nowrap;"><input type="number" min="0" max="100" step="1" style="width: 3em" [(ngModel)]="percentSeVolume"><b style="font-size: smaller; padding-left: 3px;">%</b></span>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="audio-player">
-    <div class="player" >
+    <div class="flex-row flex-center player" >
       <ng-container *ngIf="jukeboxIdentifier && !auditionIdentifier">
         再生中：<span class="audio-name">{{jukeboxName}}</span>
       </ng-container>
@@ -81,7 +81,7 @@
 </ng-template>
 
 <ng-template #playlist_play>
-  <div class="card-play" [attr.data-volume]="'Volume : ' + selectedAudio.volume" (click)="selectCard(selectedAudio.identifier)">
+  <div class="card play" [attr.data-volume]="'Volume : ' + selectedAudio.volume" (click)="selectCard(selectedAudio.identifier)">
     <span class="audio-name">{{selectedAudio.name}}</span><br/>
     <button class="round-button" (click)="play()">試聴</button>
     <button class="round-button" (click)="playBGM()" >再生</button>
@@ -113,14 +113,16 @@
       </form>
     </div>
     <span style="display: inline-block;width: 8em;">名前：</span><input type="text" width="24em" [(ngModel)]="name" /><br/>
-    <span *ngIf="!editingIdentifier" style="display: inline-block;width: 8em;">Volume:</span><input type="text" width="6em" [(ngModel)]="editingVolume" /><br/>
+    <ng-container *ngIf="!editingIdentifier">
+      <span style="display: inline-block;width: 8em;">Volume:</span><input type="text" width="6em" [(ngModel)]="editingVolume" /><br/>
+    </ng-container>
     <span style="display: inline-block;width: 8em;">タグ:</span><input type="text" width="6em" [(ngModel)]="editingTag" /><br/>
-    <div class="buttons">
-      <div class="button-area">
+    <div class="flex-row flex-between" style="height:3em">
+      <div class="flex-row flex-center">
         <button style="height: 3em;" [disabled]="!canSave" (click)="saveEdit()">保存</button>
         <button style="height: 3em;" (click)="toggleEdit()" >キャンセル</button>
       </div>
-      <div  class="button-area">
+      <div class="flex-row flex-center">
         <button *ngIf="editingIdentifier" class="remove" style="font-size:14px; height: 3em;" (click)="remove()"><i class="material-icons">delete</i></button>
       </div>
     </div>

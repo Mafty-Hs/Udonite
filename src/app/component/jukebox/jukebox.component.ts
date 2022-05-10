@@ -19,7 +19,7 @@ import { HelpComponent } from 'component/help/help.component';
 @Component({
   selector: 'app-jukebox',
   templateUrl: './jukebox.component.html',
-  styleUrls: ['./jukebox.component.css']
+  styleUrls: ['../../common/component.common.css','../../common/round-bottun.common.css','./jukebox.component.css']
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
 
@@ -84,7 +84,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   isEdit:boolean = false;
   toggleEdit(isUpdate:boolean = false) {
-    if (isUpdate) {
+    if (isUpdate && this.editingIdentifier) {
       this.name = this.editingAudio.name;
       this.editingVolume = this.editingAudio.volume;
       this.editingTag = this.editingAudio.tag  === '--notag--' ? '' : this.editingAudio.tag ;

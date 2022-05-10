@@ -6,8 +6,7 @@ import { MimeType } from '@udonarium/core/file-storage/mime-type';
 
 @Component({
   selector: 'data-load',
-  templateUrl: './data-load.component.html',
-  styleUrls: ['./data-load.component.css']
+  templateUrl: './data-load.component.html'
 })
 export class DataLoadComponent implements OnInit, AfterViewInit {
   message:string = "ルームデータを開いています";

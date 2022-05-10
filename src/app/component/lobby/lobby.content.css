@@ -1,9 +1,9 @@
 .box {
   width: 100%;
   font-size: 14px;
-  display:flex; 
+  display:flex;
   flex-direction: column;
-  padding: 6px; 
+  padding: 6px;
 }
 
 .box-item {
@@ -13,14 +13,14 @@
 .player {
   width: 100%;
   display:flex;
-  flex-flow: column nowrap; 
+  flex-flow: column nowrap;
   justify-content: flex-start;
 }
 
 .flex-item {
   width: 100%;
-  display:flex; 
-  flex-flow: row wrap; 
+  display:flex;
+  flex-flow: row wrap;
   justify-content:flex-start;
   font-size: 14px;
 }
@@ -28,15 +28,15 @@
   width: 10em;
 }
 .item-data {
-  display:flex; 
-  flex-flow: row wrap; 
+  display:flex;
+  flex-flow: row wrap;
   justify-content:flex-start;
 
 }
 
 .icon {
   display: inline-block;
-  cursor: pointer; 
+  cursor: pointer;
   transition: 0.2s;
 }
 
@@ -54,3 +54,9 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.not-specified {
+  color: gray;
+}
+
+

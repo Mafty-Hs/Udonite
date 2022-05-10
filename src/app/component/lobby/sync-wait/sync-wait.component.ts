@@ -26,8 +26,7 @@ import { SoundEffect } from '@udonarium/sound-effect';
 
 @Component({
   selector: 'sync-wait',
-  templateUrl: './sync-wait.component.html',
-  styleUrls: ['./sync-wait.component.css']
+  templateUrl: './sync-wait.component.html'
 })
 export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
 

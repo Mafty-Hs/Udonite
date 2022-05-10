@@ -13,7 +13,7 @@ import { IONetwork } from '@udonarium/core/system';
 @Component({
   selector: 'player-select',
   templateUrl: './player-select.component.html',
-  styleUrls: ['./player-select.component.css']
+  styleUrls: ['../lobby.content.css']
 })
 export class PlayerSelectComponent implements OnInit, AfterViewInit {
   playerType :string = 'NEW';
@@ -63,7 +63,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     if (this.playerType == 'NEW') return true;
     if (this.selectedPlayer) {
       if (!this.needAuth) return true;
-      return (this.authSuccess) 
+      return (this.authSuccess)
     }
     return false;
   }
@@ -90,7 +90,7 @@ export class PlayerSelectComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {     
+  ngAfterViewInit(): void {
   }
 
   async changeIcon(event :Event) {

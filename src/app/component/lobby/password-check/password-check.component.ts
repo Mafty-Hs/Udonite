@@ -5,8 +5,7 @@ import { RoomService, RoomState } from 'service/room.service';
 
 @Component({
   selector: 'password-check',
-  templateUrl: './password-check.component.html',
-  styleUrls: ['./password-check.component.css']
+  templateUrl: './password-check.component.html'
 })
 export class PasswordCheckComponent implements OnInit, OnDestroy {
   help: string = '';

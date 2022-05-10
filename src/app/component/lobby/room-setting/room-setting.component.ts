@@ -6,7 +6,7 @@ import { RoomService , RoomState } from 'service/room.service';
 @Component({
   selector: 'room-setting',
   templateUrl: './room-setting.component.html',
-  styleUrls: ['./room-setting.component.css']
+  styleUrls: ['../lobby.content.css','./room-setting.component.css']
 })
 export class RoomSettingComponent implements OnInit, OnDestroy {
 

@@ -145,7 +145,7 @@ export class ChatMessageService {
   }
 
   private makeMessageName(name: string, sendTo: string): string {
-    return name + ' ➡ ' + this.playerService.getPlayerById(sendTo).name;
+    return name + ' 筐。 ' + this.playerService.getPlayerById(sendTo).name;
   }
 
   sendOperationLog(text: string, logType: string) {

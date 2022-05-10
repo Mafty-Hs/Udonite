@@ -15,7 +15,7 @@ export namespace StringUtil {
   export function isEmote(this: any,str: string): boolean {
     if (!str) return false;
     str = this.cr(str).replace(/[\s\r\n]/g, '');
-    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str));
+    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\¥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str));
   }
 
   export function cr(str: string): string {
@@ -30,14 +30,14 @@ export namespace StringUtil {
             ret += "\n";
             break;
           case '\\':
-          case '￥':
+          case '¥':
             ret += c;
             break;
           default:
             ret += (flg + c);
         }
         flg = '';
-      } else if (c == '\\' || c == '￥') {
+      } else if (c == '\\' || c == '¥') {
         flg = c;
       } else {
         ret += c;
@@ -93,7 +93,7 @@ export namespace StringUtil {
   }
 
   export function text2Byte(text :string) : string {
-    let calcMap = { '＋': '+' ,'－': '-' ,'×': '*' , '÷': '/' ,
+    let calcMap = { '＋': '+' ,'−': '-' ,'×': '*' , '÷': '/' ,
       'ー': '-' ,'＊': '*' ,'％': '%' ,'（': '(' ,'）': ')'
     };
     let calcEnc = new RegExp('(' + Object.keys(calcMap).join('|') + ')', 'g');

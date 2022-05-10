@@ -6,9 +6,9 @@
   <div *ngIf="!chatTab" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
   <div *ngIf="chatTab && !chatTab.isAllowed" [ngStyle]="{'color':bgColor == 'black' ? '#FFF' : '#222'}">※このチャットタブへの権限がありません</div>
 </div>
-<div class="sticky-bottom">
-  <div class="set-area">
-    <div class="chat-tab">
+<div class="sticky-bottom metal-background">
+  <div class="flex-row flex-between">
+    <div class="chat-tab-background chat-tab">
       <form>
         <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
           <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed"  [(ngModel)]="chatTabidentifier">
@@ -16,8 +16,8 @@
         </label>
       </form>
     </div>
-    <div class="setting">
-      <div class="auto-scroll">
+    <div class="flex-row setting">
+      <div class="flex-column-nowrap small-font">
         <span>自動スクロール</span>
         <div class="toggle"><label>
           <input name="autoScroll" type="checkbox" [(ngModel)]="canAutoScroll">
@@ -30,7 +30,7 @@
   <div *ngIf="isLogOnly && !isEdit">
     <ng-container [ngSwitch]="controlType">
       <ng-container *ngSwitchCase="'resource'">
-        <player-palette-control *ngIf="!disableControl" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+        <player-palette-control *ngIf="!disableControl" class="scroll" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
       </ng-container>
       <ng-container *ngSwitchCase="'inventory'">
         <simple-inventory></simple-inventory>

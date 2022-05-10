@@ -1,0 +1,101 @@
+.small-font {
+  font-size: 12px;
+}
+
+.chat-tab-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: #444;
+  box-shadow:0 -3px 3px 1px #222 inset;
+  border:none;
+  border-bottom:2px #222;
+  padding :0;
+  margin :0;
+}
+
+.chat-tab {
+  padding : 5px;
+  padding-top : 0px;
+  user-select: none;
+  white-space: nowrap;
+  overflow-y: hidden;
+}
+
+.chat-tab label {
+  display: inline-block;
+  position: relative;
+}
+
+.chat-tab input[type="radio"] {
+  display: none;
+}
+
+.chat-tab input[type="radio"] + div {
+  display: inline-block;
+  vertical-align: middle;
+  outline: 0;
+  font-size: 13px;
+  background-color: #555;
+  box-shadow:1px -1px 3px 0px #FFF inset,
+  0px 1px 3px 0px #000 inset;
+  color: #FFF;
+  border: 2px #222;
+  margin-top : 0px;
+  padding: 0 8px 2px 8px;
+  margin: 2px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  cursor: pointer;
+}
+
+
+.chat-tab input[type="radio"] + div:disabled {
+  color: #BBB;
+}
+
+.chat-tab input[type="radio"] + div:hover {
+  border-top: none;
+  background-color: #AAA;
+  box-shadow:1px -1px 3px 0px #FFF inset;
+  color: #000;
+}
+
+.chat-tab input[type="radio"]:checked + div {
+  border-top: none;
+  font-weight: bold;
+  background: #EEE;
+  box-shadow:1px -1px 3px 0px #222 inset;
+  color: #222;
+}
+
+.chat-tab::-webkit-scrollbar {
+  height: 5px;
+}
+.chat-tab::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.chat-tab::-webkit-scrollbar-track {
+  background: #444;
+}
+
+.scroll{
+  content: '';
+}
+
+.scroll::-webkit-scrollbar {
+  height: 7px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+.scroll::-webkit-scrollbar-track {
+  background: #444;
+}
+
+player-palette-control {
+  height : 50px;
+  color: #FFF;
+}

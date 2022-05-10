@@ -20,9 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest",
-              "src/card.png"
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
@@ -35,9 +33,6 @@
               "crypto-js/sha256",
               "crypto-js/lib-typedarrays",
               "file-saver",
-              "msgpack-lite",
-              "lzbase62",
-              "pako",
               "buffer"
             ],
             "vendorChunk": true,
@@ -65,16 +60,15 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "6mb",
-                  "maximumError": "8mb"
+                  "maximumWarning": "4.5mb",
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kb",
-                  "maximumError": "32kb"
+                  "maximumWarning": "3kb",
+                  "maximumError": "12kb"
                 }
-              ],
-              "serviceWorker": false
+              ]
             }
           },
           "defaultConfiguration": ""

@@ -1,7 +1,7 @@
-<div class="flex-container">
-  <div class="top">
-    <div class="chat-tab-container">
-      <div class="control" style="width:8em;">
+<div class="flex-container flex-column">
+  <div class="flex-column metal-background">
+    <div class="chat-tab-background flex-row">
+      <div class="flex-column control small-font" style="width:8em;">
         <span>チャットと同期</span>
         <div class="toggle"><label>
           <input name="showPalette" type="checkbox" [(ngModel)]="isSyncChatWindow">
@@ -10,7 +10,7 @@
       </div>
       <ng-container *ngIf="!isSyncChatWindow; else syncWindow" >
         <form>
-          <div class="chat-tab">
+          <div class="chat-tab scroll">
             <label *ngFor="let chatTab of chatMessageService.chatTabs">
               <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [(ngModel)]="chatTabidentifier">
               <div>
@@ -22,7 +22,7 @@
         </form>
       </ng-container>
     </div>
-    <div class="chat-input">
+    <div class="flex-nogrow">
       <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true"
       [sendFrom]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     </div>
@@ -31,7 +31,7 @@
     </div>
   </div>
   <div #characterSelect class="character-select">
-    <label>
+    <label class="flex-row">
       <img *ngIf="myImage" class="imgicon" [ngClass]="{'select-img': selectCharacter === myPlayerId + ',-1'}" [src]="myImage.url | safe: 'resourceUrl'" />
       <input type="radio" name="chara-tab" [value]="myPlayerId + ',-1'" [(ngModel)]="selectCharacter">
       <div>{{myPlayer.name}}</div>
@@ -61,17 +61,17 @@
     </select>
   </div>
   <div *ngIf="showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea class="palette scroll" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div class="bottom">
-    <div class="control">
+    <div class="flex-column control small-font">
       <span>チャットパレット</span>
       <div class="toggle"><label>
         <input name="showPalette" type="checkbox" [(ngModel)]="showPalette">
         <div><div></div></div>
       </label></div>
     </div>
-    <div class="bottuns" style="flex-grow: 0;">
+    <div class="control flex-nogrow">
       <button *ngIf="showPalette" type="submit" (click)="toggleEditMode()">
         <span *ngIf="!isEdit">編集</span>
         <span *ngIf="isEdit">確定</span>
@@ -83,8 +83,8 @@
       削除
       </button>
     </div>
-    <div class="character-add">
-      <div class="control">
+    <div class="flex-row">
+      <div class="flex-column control small-font">
         <span>キャラクターリスト</span>
         <select style="width: 10em" [(ngModel)]="selectedCharacter">
           <option value="default">-追加対象の選択-</option>

@@ -4,7 +4,7 @@ import { ChatMessage } from '@udonarium/chat-message';
 @Component({
   selector: 'chat-edit',
   templateUrl: './chat-edit.component.html',
-  styleUrls: ['./chat-edit.component.css']
+  styleUrls: ['../chat-input.common.css','./chat-edit.component.css','../chat-window.design.css']
 })
 export class ChatEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -30,11 +30,11 @@ export class ChatEditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    
+
   }
 
   ngOnDestroy(): void {
-      
+
   }
 
 }

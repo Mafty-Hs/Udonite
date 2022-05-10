@@ -1,16 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-::-webkit-scrollbar {
-  width: 11px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #000;
-  border-radius: 5px;
-}
-::-webkit-scrollbar-track {
-  background: #dcdcdc;
-}
-
 .handle {
   top: 0px;
   height: 20px;
@@ -21,6 +10,7 @@
   border-bottom:solid 2px #FFF;
   padding:0;
   margin:0;
+  font-size: 14px;
   position: absolute;
   width: 300px;
   display: flex;
@@ -30,24 +20,20 @@
 }
 
 .normal {
-  font-size: 14px;
   background-color:#212121;
 }
 .alert {
-  font-size: 14px;
   animation: flash 1s linear infinite;
-  background-color: #BA3030;
+  background-color: #B33;
 }
 
 @keyframes flash {
   0% {
     opacity: 1;
   }
-
   50% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
@@ -61,7 +47,7 @@
   height: 0px;
   overflow:auto;
   transition: 0.2s;
-  background-color: #424242;
+  background-color: #444;
   border-left: solid 1px #000;
   box-shadow:1px 1px 3px 0px #000 inset;
   display: flex;
@@ -76,9 +62,7 @@
   padding: 1px;
   font-size: 14px;
   color: #FFF;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-flow: row;
   overflow-y: hidden;
   background-color: #333;
   box-shadow:1px 1px 3px 0px #000 inset;
@@ -109,31 +93,18 @@
 }
 
 .menu input[type="radio"] + div:hover {
-  border-left: solid 2px #6666FF;
-  border-bottom: solid 2px #6666FF;
-  border-right: solid 2px #6666FF;
+  border: solid 2px #66F;
+  border-top: none;
 }
 
 .menu input[type="radio"]:checked + div {
-  border-left: solid 2px #4444FF;
-  border-bottom: solid 2px #4444FF;
-  border-right: solid 2px #4444FF;
+  border: solid 2px #44F;
+  border-top: none;
   font-weight: bold;
   background-color: #DDD;
   color: #222;
 }
 
-.menu::-webkit-scrollbar {
-  height: 10px;
-}
-.menu::-webkit-scrollbar-thumb {
-  background-color: #444;
-  border: 1px #FFF;
-  border-radius: 5px;
-}
-.menu::-webkit-scrollbar-track {
-  background: #CCC;
-}
 
 .content {
   width: 100%;
@@ -144,16 +115,17 @@
   margin:0;
 }
 
-.content::-webkit-scrollbar {
+.scroll::-webkit-scrollbar {
+  height:10px;
   width: 10px;
 }
-.content::-webkit-scrollbar-thumb {
+.scroll::-webkit-scrollbar-thumb {
   background-color: #222;
   box-sizing: border-box;
   border:solid 1px #FFF;
   border-radius: 5px;
 }
-.content::-webkit-scrollbar-track {
+.scroll::-webkit-scrollbar-track {
   background: #CCC;
 }
 

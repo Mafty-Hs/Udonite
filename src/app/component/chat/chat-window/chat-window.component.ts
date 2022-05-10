@@ -13,7 +13,7 @@ import { PlayerService } from 'service/player.service';
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
-  styleUrls: ['./chat-window.component.css']
+  styleUrls: ['../../../common/component.common.css','./chat-window.component.css','../chat-window.common.css','../chat-window.design.css']
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   _sendFrom: string = this.playerService.myPlayer.playerId;

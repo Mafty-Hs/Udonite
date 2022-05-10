@@ -6,7 +6,7 @@
   </div>
   <div class="rightObject">
     <div class="chatSend">
-      <textarea class="chat-input" [(ngModel)]="text" [ngClass]="{'nonblack': !isBlack}"
+      <textarea class="chat-input" [(ngModel)]="text" style=" width: calc(100% - 250px);" [ngClass]="{'nonblack': !isBlack}"
         [ngModelOptions]="{standalone: true}" (keydown.enter)="save()" (keydown.esc)="cancel()" #textArea>
       </textarea>
       <button class="send" (click)="save()"><b>SAVE</b></button>

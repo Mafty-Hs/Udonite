@@ -1,6 +1,6 @@
 <div #content class="box">
   <ng-container *ngIf="toggleSW">
-    <div class="menu">
+    <div class="menu scroll">
       <form>
         <label>
           <input name="menu" type="radio" value="board" [(ngModel)]="menu">
@@ -8,7 +8,7 @@
         </label>
       </form>
     </div>
-    <div class="content" [style.height.px]="maxHeight - 20">
+    <div class="content scroll" [style.height.px]="maxHeight - 20">
       <ng-container [ngSwitch]="menu">
         <ng-container *ngSwitchCase="'board'">
          <bill-board ></bill-board>

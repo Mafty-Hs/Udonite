@@ -24,7 +24,7 @@ interface chatDataContext {
 @Component({
   selector: 'chat-input',
   templateUrl: './chat-input.component.html',
-  styleUrls: ['./chat-input.component.css'],
+  styleUrls: ['../../../common/component.common.css','../chat-input.common.css','./chat-input.component.css','../chat-window.design.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatInputComponent implements OnInit, OnDestroy {

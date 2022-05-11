@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WebGLRenderer} from 'three';
+import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
 import { Subject } from 'rxjs';
 
 interface effectData {
@@ -23,7 +23,7 @@ export class EffectService {
   }
   set canEffect(canEffect: boolean) {
     this._canEffect$.next(canEffect);
-    this._canEffect = canEffect; 
+    this._canEffect = canEffect;
   }
 
   effectInfo:
@@ -72,13 +72,13 @@ export class EffectService {
        squareMaxCount: 8000,
     });
     context.setRestorationOfStatesFlag(false);
-    return context;  
+    return context;
   }
 
   addEffectDemo(context :effekseer.EffekseerContext) {
     let effects :{[key: string]: any} = {};
     Object.keys(this.effectInfo).forEach(
-      key => 
+      key =>
         effects[key] = context.loadEffect(this.effectInfo[key].file)
     );
     return effects;
@@ -98,13 +98,13 @@ export class EffectService {
     ) return false;
     return true;
   }
-  
+
   calcSize(rect: DOMRect , effectName:string) :number[] {
     let size:number = this.effectInfo[effectName].size;
     let width:number = this.validation((rect.right - rect.left) * 2 * size);
     let height:number = this.validation((rect.bottom - rect.top) * 2 * size);
     let top:number;
-    if (this.effectInfo[effectName].isEmotion) { 
+    if (this.effectInfo[effectName].isEmotion) {
       top = rect.top - ((rect.bottom - rect.top) * size / 2);
     }
     else {
@@ -119,7 +119,7 @@ export class EffectService {
     return number;
   }
 
-  constructor() { 
+  constructor() {
     this.canEffect = true;
   }
 }

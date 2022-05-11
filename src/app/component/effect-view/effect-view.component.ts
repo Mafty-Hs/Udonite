@@ -2,7 +2,11 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy , NgZone } from 
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
 import { EffectService } from 'service/effect.service';
-import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
+import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
+import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
+import { Scene } from 'three/src/scenes/Scene.js';
+import { Clock } from 'three/src/core/Clock.js';
+import { Vector3 } from 'three/src/math/Vector3.js';
 
 @Component({
   selector: 'effect-view',

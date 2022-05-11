@@ -17,8 +17,11 @@ import { imageStyle } from '@udonarium/tabletop-object';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ContextMenuSeparator, ContextMenuAction } from 'service/context-menu.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
-import { EffectService } from 'service/effect.service';
-import { WebGLRenderer, PerspectiveCamera, Scene, Clock,Vector3 } from 'three';
+import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
+import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
+import { Scene } from 'three/src/scenes/Scene.js';
+import { Clock } from 'three/src/core/Clock.js';
+import { Vector3 } from 'three/src/math/Vector3.js';
 import { Subscription } from 'rxjs'
 import { GameCharacterComponentTemplate } from '../game-character.template';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';

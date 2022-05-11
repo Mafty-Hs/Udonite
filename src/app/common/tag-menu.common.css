@@ -1,0 +1,61 @@
+.tag-menu {
+  display: flex;
+  height: 40px;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.tag-menu form {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  align-items: flex-end;
+  white-space: nowrap;
+}
+
+.tag-menu label {
+  display: inline-block;
+  position: relative;
+}
+
+.tag-menu input[type="radio"] {
+  display: none;
+}
+
+.tag-menu input[type="radio"] + div {
+  display: inline-block;
+  vertical-align: bottom;
+  outline: 0;
+  background-color: #CCC;
+  border: 1px #444;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  box-shadow:1px 1px 3px #FFF inset,
+  0px -1px 3px #000 inset;
+  font-weight: bolder;
+  color: #222;
+  padding: 4px 12px;
+  padding-bottom : 2px;
+  margin-top : 0px;
+  cursor: pointer;
+  height: 20px;
+}
+
+.tag-menu input[type="radio"] + div:hover {
+  background-color: #999;
+  border: 2px #444;
+  border-bottom: none;
+  box-shadow:1px 1px 3px #DDD inset;
+  color: #222;
+}
+
+.tag-menu input[type="radio"]:checked + div {
+  border: 2px #000;
+  font-weight: bold;
+  border-bottom: none;
+  box-shadow:1px 1px 3px #DDD inset;
+  background: #222;
+  color: #FFF;
+}

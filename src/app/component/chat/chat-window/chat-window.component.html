@@ -8,7 +8,7 @@
 </div>
 <div class="sticky-bottom metal-background">
   <div class="flex-row flex-between">
-    <div class="chat-tab-background chat-tab">
+    <div class="chat-tab-background chat-tab scroll-white">
       <form>
         <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
           <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed"  [(ngModel)]="chatTabidentifier">
@@ -30,7 +30,7 @@
   <div *ngIf="isLogOnly && !isEdit">
     <ng-container [ngSwitch]="controlType">
       <ng-container *ngSwitchCase="'resource'">
-        <player-palette-control *ngIf="!disableControl" class="scroll" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
+        <player-palette-control *ngIf="!disableControl" class="scroll-white" [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
       </ng-container>
       <ng-container *ngSwitchCase="'inventory'">
         <simple-inventory></simple-inventory>

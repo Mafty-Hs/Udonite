@@ -80,21 +80,6 @@
   background: #444;
 }
 
-.scroll{
-  content: '';
-}
-
-.scroll::-webkit-scrollbar {
-  height: 7px;
-}
-.scroll::-webkit-scrollbar-thumb {
-  background-color: #ddd;
-  border-radius: 5px;
-}
-.scroll::-webkit-scrollbar-track {
-  background: #444;
-}
-
 player-palette-control {
   height : 50px;
   color: #FFF;

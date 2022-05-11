@@ -44,7 +44,7 @@
       <button class="round-button" (click)="help()">？</button>
     </div>
     <div style="width: 98%;">
-      <div class="tag-menu">
+      <div class="tag-menu scroll-white">
         <form>
           <label>
             <input name="menu" type="radio" value="" [(ngModel)]="selectedTag">
@@ -60,7 +60,7 @@
           </label>
         </form>
       </div>
-      <div *ngIf="!isEdit ;else editAudio" class="play-list">
+      <div *ngIf="!isEdit ;else editAudio" class="play-list scroll-white">
         <ng-container *ngFor="let audio of audios">
           <ng-container *ngTemplateOutlet="playlist_audio; context:{ audio: audio}">
           </ng-container>

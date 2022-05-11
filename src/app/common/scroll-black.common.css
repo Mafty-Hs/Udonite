@@ -1,0 +1,16 @@
+.scroll-black {
+  overflow: auto;
+}
+
+.scroll-black::-webkit-scrollbar {
+  height: 9px;
+  width: 9px;
+}
+.scroll-black::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border: 1px #FFF;
+  border-radius: 5px;
+}
+.scroll-black::-webkit-scrollbar-track {
+  background: #CCC;
+}

@@ -9,16 +9,14 @@
         </label></div>
       </div>
       <ng-container *ngIf="!isSyncChatWindow; else syncWindow" >
-        <form>
-          <div class="chat-tab scroll">
-            <label *ngFor="let chatTab of chatMessageService.chatTabs">
-              <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [(ngModel)]="chatTabidentifier">
-              <div>
-                <span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>
-                {{chatTab.name}}
-              </div>
-            </label>
-          </div>
+        <form  class="chat-tab scroll-white" style="width:calc(100% - 84px);">
+          <label *ngFor="let chatTab of chatMessageService.chatTabs">
+            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [(ngModel)]="chatTabidentifier">
+            <div>
+              <span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>
+              {{chatTab.name}}
+            </div>
+          </label>
         </form>
       </ng-container>
     </div>
@@ -30,8 +28,8 @@
       <player-palette-control [sendFrom]="sendFrom" (chat)="sendChat($event)"></player-palette-control>
     </div>
   </div>
-  <div #characterSelect class="character-select">
-    <label class="flex-row">
+  <div #characterSelect class="character-select scroll-white">
+    <label>
       <img *ngIf="myImage" class="imgicon" [ngClass]="{'select-img': selectCharacter === myPlayerId + ',-1'}" [src]="myImage.url | safe: 'resourceUrl'" />
       <input type="radio" name="chara-tab" [value]="myPlayerId + ',-1'" [(ngModel)]="selectCharacter">
       <div>{{myPlayer.name}}</div>
@@ -52,7 +50,7 @@
     </ng-container>
   </div>
   <div *ngIf="showPalette && !isEdit" class="chat-pallete">
-    <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
+    <select class="palette scroll-white" style="overflow-x: hidden;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
           <option value="{{palette}}" [ngStyle]="{'color':color}">{{palette}}</option>
@@ -61,27 +59,29 @@
     </select>
   </div>
   <div *ngIf="showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette scroll" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea class="palette scroll-white" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
-  <div class="bottom">
-    <div class="flex-column control small-font">
-      <span>チャットパレット</span>
-      <div class="toggle"><label>
-        <input name="showPalette" type="checkbox" [(ngModel)]="showPalette">
-        <div><div></div></div>
-      </label></div>
-    </div>
-    <div class="control flex-nogrow">
-      <button *ngIf="showPalette" type="submit" (click)="toggleEditMode()">
-        <span *ngIf="!isEdit">編集</span>
-        <span *ngIf="isEdit">確定</span>
-      </button>
-      <button *ngIf="showPalette && character" (click)="addPalette()">
-      追加
-      </button>
-      <button *ngIf="showPalette && paletteIdentifier" (click)="removePalette()">
-      削除
-      </button>
+  <div class="bottom flex-between">
+    <div class="flex-row">
+      <div class="flex-column control small-font">
+        <span>チャットパレット</span>
+        <div class="toggle"><label>
+          <input name="showPalette" type="checkbox" [(ngModel)]="showPalette">
+          <div><div></div></div>
+        </label></div>
+      </div>
+      <div class="control flex-nogrow">
+        <button *ngIf="showPalette" type="submit" (click)="toggleEditMode()">
+          <span *ngIf="!isEdit">編集</span>
+          <span *ngIf="isEdit">確定</span>
+        </button>
+        <button *ngIf="showPalette && character" (click)="addPalette()">
+        追加
+        </button>
+        <button *ngIf="showPalette && paletteIdentifier" (click)="removePalette()">
+        削除
+        </button>
+      </div>
     </div>
     <div class="flex-row">
       <div class="flex-column control small-font">

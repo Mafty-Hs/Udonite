@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'player-palette',
   templateUrl: './player-palette.component.html',
-  styleUrls: ['../../../common/component.common.css','./player-palette.component.css','../chat-window.common.css','../chat-window.design.css'],
+  styleUrls: ['../../../common/component.common.css','../../../common/scroll-white.common.css','./player-palette.component.css','../chat-window.common.css','../chat-window.design.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerPaletteComponent implements OnInit, OnDestroy {

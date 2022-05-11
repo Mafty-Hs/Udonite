@@ -1,0 +1,15 @@
+.scroll-white{
+  overflow: auto;
+}
+
+.scroll-white::-webkit-scrollbar {
+  height: 9px;
+  width: 9px;
+}
+.scroll-white::-webkit-scrollbar-thumb {
+  background-color: #CCC;
+  border-radius: 5px;
+}
+.scroll-white::-webkit-scrollbar-track {
+  background: #444;
+}

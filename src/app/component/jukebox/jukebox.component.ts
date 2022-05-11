@@ -19,7 +19,7 @@ import { HelpComponent } from 'component/help/help.component';
 @Component({
   selector: 'app-jukebox',
   templateUrl: './jukebox.component.html',
-  styleUrls: ['../../common/component.common.css','../../common/round-bottun.common.css','./jukebox.component.css']
+  styleUrls: ['../../common/component.common.css','../../common/round-bottun.common.css','../../common/tag-menu.common.css','./jukebox.component.css','../../common/scroll-white.common.css']
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
 
@@ -128,11 +128,14 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   get canSave():boolean {
-    if (this.fileType === 'url') {
-      return Boolean(this.url && this.name);
+    if (this.editingIdentifier.length > 0) {
+     return true;
     }
     else if (this.file && this.name) {
       return Boolean(((10 * 1024 * 1024) > this.file.size) && ((AudioStorage.instance.dataSize + this.file.size) < (IONetwork.server.audioStorageMaxSize *1024 *1024)))
+    }
+    else if (this.fileType === 'url') {
+      return Boolean(this.url && this.name);
     }
     return false
   }

@@ -26,8 +26,8 @@
               "src/styles.css"
             ],
             "scripts": [
-               "src/assets/lib/effekseer_asmjs.min.js"
-            ],
+              "src/lib/effekseer.min.js"
+           ],
             "allowedCommonJsDependencies": [
               "hammerjs",
               "crypto-js/sha256",

@@ -23,6 +23,7 @@ import { LoadDataService } from 'service/load-data.service';
 import { Jukebox } from '@udonarium/Jukebox';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { SoundEffect } from '@udonarium/sound-effect';
+import { EffectService } from 'service/effect.service';
 
 @Component({
   selector: 'sync-wait',
@@ -34,6 +35,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
   timeout:NodeJS.Timeout;
 
   constructor(
+    private effectService: EffectService,
     public roomService: RoomService,
     private playerService: PlayerService,
     private loadDataService: LoadDataService
@@ -73,6 +75,8 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
+
+    if (!this.roomService.roomData.is2d) this.effectService.initialize();
 
     if (!TableSelecter.instance.viewTableIdentifier) {
       let gameTable = <GameTable>ObjectStore.instance.get('gameTable');

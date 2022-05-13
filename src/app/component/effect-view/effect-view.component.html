@@ -1,7 +1,7 @@
 <div class="flex">
   <div class="demo">
     <div class="canvas">
-      <canvas class="democanvas" #effect [style.width.px]="width" [style.height.px]="height"></canvas>
+      <img  #effect [style.width.px]="width" [style.height.px]="height" src="./assets/images/effect.png">
     </div>
     <div class="selecter">
        <select [style.width.px]="170" size="10" [(ngModel)]="effectName">
@@ -15,7 +15,7 @@
     <button *ngIf="isDrag" (click)="cancel()">キャンセル</button>
   </div>
   <div class="bottom">
-    <div style="width=100%">
+    <div style="width:100%">
     エフェクトを付与をクリック後、付与したいキャラクターをクリック。<br>
     または、チャット末尾に @effect(エフェクト名)
     </div>

@@ -66,6 +66,10 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     return this.roomService.disableRoundControl;
   }
 
+  get is2d():boolean {
+    return this.roomService.roomData.is2d
+  }
+
   isOpen(itemType :string):boolean {
     if (itemType == this.selectMenu)
       return true;

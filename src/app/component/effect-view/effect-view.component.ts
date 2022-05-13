@@ -2,11 +2,6 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy , NgZone } from 
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
 import { EffectService } from 'service/effect.service';
-import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
-import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
-import { Scene } from 'three/src/scenes/Scene.js';
-import { Clock } from 'three/src/core/Clock.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
 
 @Component({
   selector: 'effect-view',
@@ -18,20 +13,17 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   width:number = 200;
   height:number = 200;
+  canvas:HTMLCanvasElement = null;
   effectName:string;
   get effectsName():string[] {
     return this.effectService.effectName;
   }
 
-  private renderer;
-  private camera = new PerspectiveCamera(30.0, this.width / this.height, 1, 1000);
-  private scene = new Scene();
-  private clock = new Clock();
-  context : effekseer.EffekseerContext = null;
-  effects :{[key: string]: any} = {};
-
   play() {
-    this.context.play(this.effects[this.effectName], 0, 0, 0);
+    let rect = this.canvas.getBoundingClientRect();
+    let top = rect.top;
+    let left = rect.left;
+    this.effectService.play(top,left,this.width,this.height,this.effectName)
   }
 
   isDrag :boolean = false;
@@ -54,38 +46,9 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
      this.isDrag = false;
   }
 
-  private setContext() {
-        this.context = this.effectService.createContext(this.renderer);
-        this.effects = this.effectService.addEffectDemo(this.context)
-        this.ngZone.runOutsideAngular(() => {
-        const mainLoop = () => {
-          requestAnimationFrame(mainLoop.bind(this));
-          this.animate();
-        };
-        mainLoop();
-    });
-  }
-
-  animate() {
-         this.context.update(this.clock.getDelta() * 60.0);
-         this.renderer.render(this.scene, this.camera);
-         this.context.setProjectionMatrix(Float32Array.from(this.camera.projectionMatrix.elements));
-         this.context.setCameraMatrix(Float32Array.from(this.camera.matrixWorldInverse.elements));
-         this.context.draw();
-         this.renderer.resetState();
-  }
-
-  private renderingInit() {
-    this.renderer = new WebGLRenderer({canvas: this.effect.nativeElement as HTMLCanvasElement , alpha: true});
-    this.renderer.setSize(this.width, this.height);
-    this.camera.position.set(20, 20, 20);
-    this.camera.lookAt(new Vector3(0, 0, 0));
-  }
-
   constructor(
     private panelService: PanelService,
     private effectService: EffectService,
-    private ngZone: NgZone
   ) {
  }
 
@@ -97,11 +60,10 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
           this.onSelect(event.data.identifier);
         }
      });
+
   }
   ngAfterViewInit() {
-    this.effect.nativeElement.style.backgroundImage = 'url(assets/images/effect.png)';
-    this.renderingInit();
-    this.setContext();
+    this.canvas = this.effect.nativeElement as HTMLCanvasElement;
   }
   ngOnDestroy() {
     EventSystem.unregister(this);

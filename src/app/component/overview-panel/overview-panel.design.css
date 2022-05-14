@@ -1,0 +1,260 @@
+.is-large-size {
+  max-width: 350px;
+}
+
+.is-middle-size {
+  max-width: 270px;
+}
+
+.is-small-size {
+  max-width: 250px;
+}
+
+.is-middle-size .grid-container-root {
+  width: 270px;
+}
+
+.is-small-size .grid-container-root {
+  width: 250px;
+}
+
+.component-background {
+  background: linear-gradient(-30deg, rgba(40,40,40, 0.9), rgba(100,100,100, 0.9));
+  border-bottom: solid 1px #FFF;
+}
+
+.component-title {
+  color: #FFF;
+  text-shadow    :
+       2px  2px 4px #000000,
+      -2px  2px 4px #000000,
+       2px -2px 4px #000000,
+      -2px -2px 4px #000000,
+       2px  0px 4px #000000,
+       0px  2px 4px #000000,
+      -2px  0px 4px #000000,
+       0px -2px 4px #000000;
+  font-size: 1em;
+  font-weight : bold;
+  text-align: right;
+  vertical-align: middle;
+  height: 32px;
+  line-height: 32px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 1em;
+}
+
+.title-background {
+  background:linear-gradient(0deg, #222 0%, #444 10%, #888 20%, #333 60%, #444 70%, #AAA 80%, #444 90%, #222 100% 100%);
+  border-top: solid 1px #BBB;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
+}
+
+.component-owner {
+  font-size: 0.8em;
+  padding: 10px;
+  color: #ccc;
+  vertical-align: middle;
+  overflow: hidden;
+  text-align: right;
+  padding: 2px 1em;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.owner-tag {
+  width: min-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: 0;
+  overflow: hidden;
+  color: #222;
+  background-color: rgb(30, 30, 30);
+  box-sizing: border-box;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.9;
+}
+
+.card-image {
+  width: 250px;
+  max-height: 330px;
+  padding: 8px;
+  vertical-align: bottom;
+  object-fit: contain;
+  box-sizing: border-box;
+  background-color: rgba(204, 204, 204, 0.5);
+}
+
+.zoom-button {
+  position: absolute;
+  left : 8px;
+  bottom: -21px;
+  width: 42px;
+  height: 42px;
+  border-radius: 100px;
+  padding: 4px;
+}
+
+.zoom-button > .material-icons {
+  font-size: 24px;
+  vertical-align: bottom;
+}
+
+.zoom-button::after {
+  background: none;
+}
+
+.position-right-bottom {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.image-view-background {
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.3);
+  z-index: 9900;
+}
+
+.image-view-background .close-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.image-view-background .close-button > .material-icons {
+  font-size: 36px;
+}
+
+.contain-image {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  vertical-align: bottom;
+  object-fit: contain;
+}
+
+.text-note-container {
+  width: 100%;
+  max-height: 400px;
+  padding: 0.6em 1.2em;
+  box-sizing: border-box;
+  overflow: hidden auto;
+  line-height: 1.8;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
+}
+
+.character-image-box {
+  width: 100px;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-left: 0.5em;
+  margin-bottom: -6px;
+
+  z-index: 1;
+  overflow: visible;
+}
+.character-image-box img {
+  vertical-align: bottom;
+  object-fit: contain;
+  object-position: bottom left;
+}
+
+.character-image-box.has-icon {
+  width: 100px;
+  height: 100px;
+  max-width: 100px;
+  max-height: 100px;
+  transform: translateY(-16px);
+  margin-top: 16px;
+}
+
+.character-image-box.has-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  border-radius: 1em;
+}
+
+.is-black-mask {
+  filter: brightness(0);
+ }
+
+ .is-harf-black-mask {
+  filter: brightness(0.5);
+ }
+
+.character-grid-container {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-template-rows: 1fr auto auto auto;
+}
+
+.title-bg-area {
+  grid-area: 3 / 1 / 4 / 3;
+}
+
+.title-area {
+  grid-area: 3 / 2 / 4 / 3;
+}
+
+.owner-name-area {
+  grid-area: 2 / 2 / 3 / 3;
+}
+
+.image-area {
+  grid-area: 1 / 1 / 4 / 2;
+}
+
+.void-area {
+  grid-area: 1 / 2 / 3 / 3;
+}
+
+.dataElm-area {
+  grid-area: 4 / 1 / 5 / 3;
+}
+
+.grid-container-root {
+  padding: 0.5em 1.2em;
+  max-height: 250px;
+  overflow: hidden auto;
+  box-sizing: border-box;
+  border-left: solid 1px #BBB;
+  border-right: solid 1px #BBB;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr fit-content(80%);
+}
+
+.grid-container > div {
+  box-sizing: border-box;
+  line-height: 24px;
+}
+
+.indetnt {
+  padding-left: 0.5em;
+}
+
+.section {
+  max-width: 100%;
+  grid-column: 1 / span 2;
+}
+
+.section-text {
+  font-size: 1.1em;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

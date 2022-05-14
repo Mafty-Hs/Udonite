@@ -86,8 +86,12 @@ input {
   color: #fff;
 }
 
-input:focus {
-  background: #000;
+.input:hover {
+  background: #111;
+}
+
+.input:focus {
+  background: #111;
 }
 
 select {

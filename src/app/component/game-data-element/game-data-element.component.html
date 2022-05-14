@@ -25,7 +25,7 @@
     <div class="table-cell">
       <ng-container *ngIf="isCommonValue">
         <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
-          [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
+          [(ngModel)]="value" type="range" class="status-range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
         <br />
         <input style="width:40%; max-width:8em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
       </ng-container>
@@ -38,7 +38,7 @@
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
             <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
-              [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="{{!isNum(value) ? 1000 : value}}" />
+              [(ngModel)]="currentValue" type="range" class="status-range" title="{{currentValue}}" min="0" max="{{!isNum(value) ? 1000 : value}}" />
             <br>
             <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
             /
@@ -62,7 +62,7 @@
           </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
               <input style="width:50%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
-              <input type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+              <input type="checkbox" class="status-check" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
             <textarea style="width:100%; height:5em; min-width:50px; resize: bose; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>

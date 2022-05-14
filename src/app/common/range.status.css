@@ -1,0 +1,70 @@
+.status-range {
+  -webkit-appearance: none;
+}
+
+.status-range {
+  --slider-track-color: transparent;
+  --slider-fill-color: #CCF;
+  --slider-height: 0.8em;
+  --slider-thumb-size: 1.1em;
+  --range: calc(var(--max) - var(--min));
+  --ratio: calc((var(--val) - var(--min))/var(--range));
+  --sx: calc(.5*var(--slider-thumb-size) + var(--ratio)*(100% - var(--slider-thumb-size)));
+  margin: 0;
+  padding: 0;
+  background: #111;
+  border:none;
+  box-shadow: 1px 1px 2px #333 inset;
+  font: 1em/1 arial, sans-serif;
+  outline: 0;
+}
+.status-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+.status-range::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  border-top: solid 2px #444;
+  border-bottom: solid 2px #AAA;
+  border-radius: var(--slider-height);
+  height: var(--slider-height);
+  background: var(--slider-track-color);
+}
+.status-range::-webkit-slider-runnable-track {
+  background: linear-gradient(var(--slider-fill-color), var(--slider-fill-color)) 0/var(--sx) 100% no-repeat var(--slider-track-color);
+  cursor: pointer;
+}
+.status-range::-moz-range-track {
+  box-sizing: border-box;
+  border: solid 2px;
+  border-color:#444 #CCC #AAA #666;
+  border-radius: var(--slider-height);
+  height: var(--slider-height);
+  background: var(--slider-track-color);
+}
+.status-range::-moz-range-progress {
+  height: var(--slider-height);
+  background: var(--slider-fill-color);
+  border-radius: var(--slider-height);
+}
+
+.status-range::-webkit-slider-thumb {
+  margin-top: calc((var(--slider-height) - var(--slider-thumb-size)) / 2 - 1px);
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  box-sizing: border-box;
+  border: outset 1px  #888;
+  border-radius: 2em;
+  background-color: #FFF;
+  box-shadow: 1px 1px 2px #CCC inset;
+  cursor: pointer;
+}
+.status-range::-moz-range-thumb {
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  box-sizing: border-box;
+  border: outset 1px #888;
+  border-radius: 2em;
+  background-color: #FFF;
+  box-shadow: 1px 1px 2px #CCC inset;
+  cursor: pointer;
+}

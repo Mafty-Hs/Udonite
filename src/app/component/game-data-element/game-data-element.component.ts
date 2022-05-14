@@ -16,7 +16,7 @@ import { ModalService } from 'service/modal.service';
 @Component({
   selector: 'game-data-element, [game-data-element]',
   templateUrl: './game-data-element.component.html',
-  styleUrls: ['./game-data-element.component.css'],
+  styleUrls: ['./game-data-element.component.css','../../common/range.status.css','../../common/input.status.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -131,7 +131,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
       window.open(url.trim(), '_blank', 'noopener');
     } else {
       this.modalService.open(OpenUrlComponent, { url: url, title: this.tableTopObjectName, subTitle: this.name });
-    } 
+    }
   }
 
   private setValues(object: DataElement) {

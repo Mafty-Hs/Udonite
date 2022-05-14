@@ -8,7 +8,7 @@
 </div>
 <div class="sticky-bottom metal-background">
   <div class="flex-row flex-between">
-    <div class="chat-tab-background chat-tab scroll-white">
+    <div class="chat-tab-background chat-tab scroll-white" style="border-bottom-right-radius: 20px;">
       <form>
         <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
           <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed"  [(ngModel)]="chatTabidentifier">
@@ -17,14 +17,14 @@
       </form>
     </div>
     <div class="flex-row setting">
-      <div class="flex-column-nowrap small-font">
-        <span>自動スクロール</span>
+      <div class="flex-column-nowrap" style="padding-right:6px;">
+        <span>スクロール</span>
         <div class="toggle"><label>
           <input name="autoScroll" type="checkbox" [(ngModel)]="canAutoScroll">
           <div><div></div></div>
         </label></div>
       </div>
-      <button class="tab-setting small-font" (click)="showTabSetting()">チャット設定</button>
+      <button style="padding: 0.2em 1em;height: 2.8em;" (click)="showTabSetting()">チャット設定</button>
     </div>
   </div>
   <div *ngIf="isLogOnly && !isEdit">

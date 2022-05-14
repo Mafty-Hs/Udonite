@@ -6,9 +6,10 @@
     <div style="position:relative" (contextmenu)="helper($event); false">
       <form>
         <textarea class="chat-input" [(ngModel)]="text" [ngClass]="{'nonblack': !isBlack}"
-          placeholder='Enterで送信　Shift+Enterで改行　Ctrl+上下で履歴移動'
+          placeholder='Enterで送信　Shift+Enterで改行　Ctrl+上下で履歴移動　Ctrl+左右でタブ移動'
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           (keydown.control.arrowup)="moveHistory($event, -1)" (keydown.control.arrowdown)="moveHistory($event, 1)"
+          (keydown.control.arrowleft)="tabSwitchAction($event, -1)" (keydown.control.arrowright)="tabSwitchAction($event, 1)"
           (keydown.control.0)="selectHistory($event,9)" (keydown.esc)="cancel()"
           (keydown.control.1)="selectHistory($event,0)" (keydown.control.2)="selectHistory($event,1)" (keydown.control.3)="selectHistory($event,2)"
           (keydown.control.4)="selectHistory($event,3)" (keydown.control.5)="selectHistory($event,4)" (keydown.control.6)="selectHistory($event,5)"

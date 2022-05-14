@@ -55,6 +55,7 @@ input, button, textarea, select{
   outline: none;
   padding: 2px;
   box-sizing: border-box;
+  font-size: 1.0em;
 }
 
 button i {

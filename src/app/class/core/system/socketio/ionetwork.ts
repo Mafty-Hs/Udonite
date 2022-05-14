@@ -284,8 +284,9 @@ export class IONetwork {
     return;
   }
 
+  urlPattern = new RegExp('".+/(.+?)([\\?#;].*)?$"');
   private checkFileType(url :string):boolean {
-    let filetype = MimeType.type(url.match(".+/(.+?)([\?#;].*)?$")[1]);
+    let filetype = MimeType.type(url.match(this.urlPattern)[1]);
     return Boolean(filetype);
   }
 

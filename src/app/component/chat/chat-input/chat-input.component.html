@@ -3,15 +3,28 @@
     <chat-input-sendfrom [(sendFrom)]="sendFrom" [isLock]="isPalette" [isBlack]="isBlack" (chatSetting)='chatSetting($event)'></chat-input-sendfrom>
   </div>
   <div class="rightObject">
-    <div (contextmenu)="helper($event); false">
+    <div style="position:relative" (contextmenu)="helper($event); false">
       <form>
         <textarea class="chat-input" [(ngModel)]="text" [ngClass]="{'nonblack': !isBlack}"
           placeholder='Enterで送信　Shift+Enterで改行　Ctrl+上下で履歴移動'
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           (keydown.control.arrowup)="moveHistory($event, -1)" (keydown.control.arrowdown)="moveHistory($event, 1)"
+          (keydown.control.0)="selectHistory($event,9)" (keydown.esc)="cancel()"
+          (keydown.control.1)="selectHistory($event,0)" (keydown.control.2)="selectHistory($event,1)" (keydown.control.3)="selectHistory($event,2)"
+          (keydown.control.4)="selectHistory($event,3)" (keydown.control.5)="selectHistory($event,4)" (keydown.control.6)="selectHistory($event,5)"
+          (keydown.control.7)="selectHistory($event,6)" (keydown.control.8)="selectHistory($event,7)" (keydown.control.9)="selectHistory($event,8)"
           #textArea>
         </textarea>
         <button type="submit" class="send" (click)="sendChat(null)"><b>SEND</b></button>
+        <div class="history-log" [style.visibility]="historyStylevisibility">
+          <div class="history-tag">
+            履歴<br/>
+            <button style="padding: 4px;" (click)="cancel()"><i class="material-icons" style="font-size: 12px;">close</i></button>
+          </div>
+          <ng-container *ngFor="let text of historyText; index as i">
+            <div class="history-text" (click)="selectHistory($event,i)" >{{text}}</div>
+          </ng-container>
+        </div>
       </form>
     </div>
     <div class="writing-info">

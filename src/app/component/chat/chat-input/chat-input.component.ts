@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit,  AfterViewInit, Output, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -27,7 +27,7 @@ interface chatDataContext {
   styleUrls: ['../../../common/component.common.css','../chat-input.common.css','./chat-input.component.css','../chat-window.design.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChatInputComponent implements OnInit, OnDestroy {
+export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
   @Input() chatTabidentifier: string = '';
@@ -123,6 +123,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       });
   }
 
+  ngAfterViewInit(): void {
+  }
+
   ngOnDestroy() {
     EventSystem.unregister(this);
     this.batchService.remove(this);
@@ -154,11 +157,30 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   private history: string[] = new Array();
   private currentHistoryIndex: number = -1;
-  private static MAX_HISTORY_NUM = 1;
+  private static MAX_HISTORY_NUM = 10;
+  private keyText = ['Ctrl + 1 : ' ,'Ctrl + 2 : ' ,'Ctrl + 3 : ' ,'Ctrl + 4 : ' ,'Ctrl + 5 : ' ,
+    'Ctrl + 6 : ' ,'Ctrl + 7 : ' ,'Ctrl + 8 : ' ,'Ctrl + 9 : ' ,'Ctrl + 0 : '];
+
+  get historyStylevisibility():string {
+    return  this.currentHistoryIndex > -1 ? 'visible' : 'hidden'
+  }
+  get targetHistory():string [] {
+    let index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
+    return this.history.length <= 10 ? this.history : this.history.slice(index - 10 ,index)
+  }
+
+  get historyText():string[] {
+    let targetHistory = this.targetHistory;
+    let historytext:string[] =[];
+    for (let row = 0; row < 10; row++) {
+      let addText = targetHistory.length > row ? targetHistory[row] : '';
+      historytext.push( this.keyText[row] + addText);
+    }
+    return historytext;
+  }
 
   moveHistory(event: KeyboardEvent, direction: number) {
     if (event) event.preventDefault();
-
     if (direction < 0 && this.currentHistoryIndex < 0) {
       this.currentHistoryIndex = this.history.length - 1;
     } else if (direction > 0 && this.currentHistoryIndex >= this.history.length - 1) {
@@ -167,18 +189,39 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       this.currentHistoryIndex = this.currentHistoryIndex + direction;
     }
 
+    this.historyToText()
+  }
+
+  selectHistory(event :Event ,index :number) {
+    if (event) event.preventDefault();
+    let maxIndex = this.history.length > 9 ? 9 : this.history.length - 1;
+    if (maxIndex < index) {
+      let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+      textArea.focus();
+      return;
+    }
+    if (this.currentHistoryIndex < 0) this.currentHistoryIndex = this.history.length - 1;
+    this.currentHistoryIndex -= (maxIndex - index);
+    this.historyToText()
+  }
+
+  private historyToText() {
     let histText: string;
     if (this.currentHistoryIndex < 0) {
       histText = '';
     } else {
       histText = this.history[this.currentHistoryIndex];
     }
-
     this.text = histText;
     this.previousWritingLength = this.text.length;
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = histText;
     this.calcFitHeight();
+    textArea.focus();
+  }
+
+  cancel() {
+    this.currentHistoryIndex = -1;
   }
 
   sendChat(event: KeyboardEvent) {
@@ -228,13 +271,19 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let position = this.pointerDeviceService.pointers[0];
 
     let actions: ContextMenuAction[] = [];
-    actions.push({ name: 'ルビ入力テンプレート', action: () =>
-     { this.rubi(); } });
+    actions.push({ name: '入力履歴', action: () => {
+      this.currentHistoryIndex = this.history.length - 1;
+      this.lazyUpdate();
+    } });
+    actions.push({ name: 'ルビ入力テンプレート', action: () => {
+      this.rubi();
+     } });
     this.contextMenuService.open(position, actions, '入力支援');
   }
 
   rubi() {
     this.text += '|ルビを振られる文字《ルビ》'
+    this.lazyUpdate();
   }
 
   lazyUpdateTimer:NodeJS.Timer = null;

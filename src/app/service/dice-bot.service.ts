@@ -53,10 +53,15 @@ export class DiceBotService {
       if (resouceType !== 'c' && StringUtil.calculable(StringUtil.text2Byte(sendText))) {
         if (resouceType === '-') {
           sendText = 'c(-' + StringUtil.text2Byte(sendText) +')';
+          resouceType = '+'
         }
         else {
           sendText = 'c(' + StringUtil.text2Byte(sendText) +')';
         }
+      }
+      else if (resouceType === '-') {
+        sendText = '-' + sendText;
+        resouceType = '+'
       }
       else if (resouceType === 'c' && StringUtil.text2Byte(sendText[1]) !== '(') {
         return [text,"",""];

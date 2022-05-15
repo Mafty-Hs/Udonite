@@ -151,10 +151,46 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
+
+  private history: string[] = new Array();
+  private currentHistoryIndex: number = -1;
+  private static MAX_HISTORY_NUM = 1;
+
+  moveHistory(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+
+    if (direction < 0 && this.currentHistoryIndex < 0) {
+      this.currentHistoryIndex = this.history.length - 1;
+    } else if (direction > 0 && this.currentHistoryIndex >= this.history.length - 1) {
+      this.currentHistoryIndex = -1;
+    } else {
+      this.currentHistoryIndex = this.currentHistoryIndex + direction;
+    }
+
+    let histText: string;
+    if (this.currentHistoryIndex < 0) {
+      histText = '';
+    } else {
+      histText = this.history[this.currentHistoryIndex];
+    }
+
+    this.text = histText;
+    this.previousWritingLength = this.text.length;
+    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    textArea.value = histText;
+    this.calcFitHeight();
+  }
+
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
     if (event && event.keyCode !== 13) return;
     if (!this.sendFrom.length) this.sendFrom = this.playerService.myPlayer.playerId;;
+
+    if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
+      this.history.shift();
+    }
+    this.history.push(this.text);
+    this.currentHistoryIndex = -1;
 
     let text = this.text;
     if (StringUtil.cr(text).trim()) {

@@ -48,8 +48,8 @@
 
 .badge {
   position: absolute;
-  bottom: 0;
-  right: -2px;
+  bottom: -7px;
+  right: 1px;
 }
 
 .setting {

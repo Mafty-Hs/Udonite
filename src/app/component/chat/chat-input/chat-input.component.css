@@ -14,12 +14,16 @@
 .history-tag {
   position: absolute;
   font-size: 12px;
-  height:80px;
+  height: 80px;
   width: 3em;
+  box-sizing: border-box;
   top: 0px;
-  left: -3em;
+  left: 400px;
   z-index: 7;
+  padding: 0;
   background-color: #444;
+  border: solid #000;
+  border-width: 2px 0;
 }
 
 .history-log {
@@ -28,11 +32,13 @@
   flex-flow: column wrap;
   height:80px;
   width: 400px;
+  box-sizing: border-box;
   top: -76px;
-  left: 0px;
+  left: -20px;
   z-index: 7;
   padding: 0;
-  border: 2px #000;
+  border: solid #000;
+  border-width: 2px 0;
   background-color: #444;
 }
 
@@ -43,6 +49,7 @@
   color: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
   white-space: nowrap;
 }
 

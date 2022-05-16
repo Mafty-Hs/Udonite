@@ -166,15 +166,18 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
   }
   get targetHistory():string [] {
     let index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
-    return this.history.length <= 10 ? this.history : this.history.slice(index - 10 ,index)
+    if ( this.history.length <= 10 ) {
+      const spaceArray = [...Array( 10 - this.history.length )].map(() => '');
+      return spaceArray.concat(this.history);
+    }
+    return this.history.slice(index - 10 ,index)
   }
 
   get historyText():string[] {
     let targetHistory = this.targetHistory;
     let historytext:string[] =[];
     for (let row = 0; row < 10; row++) {
-      let addText = targetHistory.length > row ? targetHistory[row] : '';
-      historytext.push( this.keyText[row] + addText);
+      historytext.push( this.keyText[row] + targetHistory[row]);
     }
     return historytext;
   }
@@ -194,14 +197,14 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
 
   selectHistory(event :Event ,index :number) {
     if (event) event.preventDefault();
-    let maxIndex = this.history.length > 9 ? 9 : this.history.length - 1;
-    if (maxIndex < index) {
+    let minIndex = 9 - this.history.length + 1;
+    if (minIndex > index) {
       let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
       textArea.focus();
       return;
     }
     if (this.currentHistoryIndex < 0) this.currentHistoryIndex = this.history.length - 1;
-    this.currentHistoryIndex -= (maxIndex - index);
+    this.currentHistoryIndex -= (9 - index);
     this.historyToText()
   }
 

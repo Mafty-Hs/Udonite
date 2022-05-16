@@ -24,7 +24,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 @Component({
   selector: 'game-character',
   templateUrl: './game-character.component.html',
-  styleUrls: ['../game-character.common.css','./game-character.component.css'],
+  styleUrls: ['../game-character.common.css','./game-character.component.css','./game-character.chat-bubble.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('switchImage', [

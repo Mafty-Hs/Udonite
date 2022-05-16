@@ -198,7 +198,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
 
   get characterImageHeight(): number {
     if (!this.imageFile) return 0;
-    let ratio = (this.imageFile.aspect > this.heightWidthRatio) ? this.heightWidthRatio : this.imageFile.aspect;
+    let ratio = (this.imageFile.aspect > this.heightWidthRatio) ? this.imageFile.aspect : this.heightWidthRatio;
     return ratio * this.gridSize * this.size;
   }
 

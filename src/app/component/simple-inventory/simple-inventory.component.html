@@ -6,7 +6,7 @@
       'background-position': character.imageFile?.aspect > 1.25 ?
         character.imageFile?.aspect > 1.75 ? 'center 25% ' : 'center 15% '
       : 'center 10%'
-    }" [attr.data-tooltip]="character.name">
+    }" [appTooltip]="character">
     <div *ngIf="initiative" class="init-count">
       <span style="transform: translateY(-1px);">{{initDataElm(character.identifier)}}</span>
     </div>

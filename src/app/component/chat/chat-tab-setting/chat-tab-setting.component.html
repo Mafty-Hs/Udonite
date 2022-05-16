@@ -73,7 +73,7 @@
       <div>
         <button (click)="create()">チャットタブを作る</button>
       </div>
-      <select style="width: 10em;" size="8" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
+      <select name="selectedTabIdentifier" style="width: 10em;" size="8" [(ngModel)]="selectedTabIdentifier">
         <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
       </select>
     </div>

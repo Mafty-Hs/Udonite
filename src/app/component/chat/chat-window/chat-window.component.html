@@ -10,9 +10,9 @@
   <div class="flex-row flex-between">
     <div class="chat-tab-background chat-tab scroll-white" style="border-bottom-right-radius: 20px;">
       <form>
-        <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
-          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed"  [(ngModel)]="chatTabidentifier">
-          <div><span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+        <label *ngFor="let chatTab of chatMessageService.controledChatTabList">
+          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [ngModelOptions]="{ standalone: true }" [(ngModel)]="chatTabidentifier">
+          <div><span *ngIf="chatTab.isLock"><i class="material-icons" style="font-size:0.8em;color: #FFF;">lock</i></span>{{chatTab.name}}<badge *ngIf="chatTab.chatTab.hasUnread" class="badge" [count]="chatTab.chatTab.unreadLength"></badge></div>
         </label>
       </form>
     </div>

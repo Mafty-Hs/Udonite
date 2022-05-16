@@ -10,8 +10,17 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { EventSystem } from '@udonarium/core/system';
 
 const HOURS = 60 * 60 * 1000;
+
+interface ControledChatTab {
+  chatTab: ChatTab;
+  name:string;
+  identifier:string;
+  isLock: boolean;
+  isAllowed: boolean;
+}
 
 @Injectable()
 export class ChatMessageService {
@@ -25,11 +34,38 @@ export class ChatMessageService {
     private standService:  StandService,
     private playerService:  PlayerService,
     private roomService: RoomService
-  ) { }
+  ) {
+    EventSystem.register(this)
+    .on('UPDATE_GAME_OBJECT', -1000, event => {
+      if (event.data.aliasName === 'chat-tab') {
+        this.updateChatTab();
+      }
+    })
+    .on('DELETE_GAME_OBJECT', -1000, event => {
+      if (event.data.aliasName === 'chat-tab') {
+        this.updateChatTab();
+      }
+    });
+    this.updateChatTab();
+   }
 
   get chatTabs(): ChatTab[] {
     return ChatTabList.instance.chatTabs;
   }
+
+  updateChatTab() {
+    this.controledChatTabList = this.chatTabs.map( chatTab => {
+      return {
+        chatTab: chatTab,
+        name: chatTab.name,
+        identifier: chatTab.identifier,
+        isLock: Boolean(chatTab.allowedPlayers.length > 0),
+        isAllowed: chatTab.isAllowed
+      }
+    });
+  }
+
+  controledChatTabList:ControledChatTab[];
 
   getTime(): number {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
@@ -41,9 +77,9 @@ export class ChatMessageService {
     return now <= latest ? latest + 1 : now;
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, 
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string,
    sendTo?: string, isCharacter?: boolean, isUseFaceIcon?: boolean,
-   isUseStandImage?: boolean ,standName? :string) 
+   isUseStandImage?: boolean ,standName? :string)
   {
     if(isCharacter) return this.characterSend(chatTab, text, gameType, sendFrom,
       sendTo,isUseFaceIcon,isUseStandImage,standName);
@@ -54,14 +90,14 @@ export class ChatMessageService {
    sendTo?: string,isUseFaceIcon?: boolean, isUseStandImage?: boolean ,standName? :string)
   {
     let chatSet = this.gameCharacterService.chatSet(sendFrom,isUseFaceIcon,text,standName);
-    let color = chatSet.color ? chatSet.color : this.myColor; 
+    let color = chatSet.color ? chatSet.color : this.myColor;
     let name :string;
     if (sendTo) {
       name = this.makeMessageName(chatSet.name , sendTo);
     }
     else {
       name = chatSet.name;
-    } 
+    }
     if (isUseStandImage && chatSet.standInfo) {
       this.standService.showStand(text,sendFrom,sendTo,color,chatSet.standInfo,true);
     }
@@ -141,7 +177,7 @@ export class ChatMessageService {
   }
 
   colorValidation(color :string):string {
-    return color !== this.playerService.CHAT_WHITETEXT_COLOR ? color : ""; 
+    return color !== this.playerService.CHAT_WHITETEXT_COLOR ? color : "";
   }
 
   private makeMessageName(name: string, sendTo: string): string {
@@ -161,7 +197,7 @@ export class ChatMessageService {
         break;
     }
     let chatTab = ObjectStore.instance.get<ChatTab>(this.roomService.roomAdmin.chatTab)
-    if (chatTab) 
+    if (chatTab)
      this.playerSend(chatTab ,text , "", this.playerService.myPlayer.playerId ,"");
   }
 

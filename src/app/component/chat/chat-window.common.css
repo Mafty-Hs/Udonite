@@ -33,6 +33,8 @@
 
 .chat-tab input[type="radio"] + div {
   display: inline-block;
+  height: 24px;
+  line-height: 24px;
   vertical-align: middle;
   outline: 0;
   font-size: 13px;
@@ -70,6 +72,10 @@
   box-shadow:1px -1px 3px 0px #222 inset,
   1px 1px 6px -3px #000;
   color: #222;
+}
+
+.chat-tab input[type="radio"]:disabled + div {
+  color: #AAA;
 }
 
 .chat-tab::-webkit-scrollbar {

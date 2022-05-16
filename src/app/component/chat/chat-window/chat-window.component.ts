@@ -217,8 +217,4 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
   }
-
-  trackByChatTab(index: number, chatTab: ChatTab):string {
-    return chatTab.identifier;
-  }
 }

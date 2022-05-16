@@ -7,6 +7,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CutInService } from 'service/cut-in.service';
+import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -48,6 +49,7 @@ export class GameRoomComponent implements OnInit {
   }
 
   constructor(
+    private chatMessageService: ChatMessageService,
     private cutInService: CutInService,
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
@@ -64,6 +66,7 @@ export class GameRoomComponent implements OnInit {
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
+    this.chatMessageService.updateChatTab()
     let chatWidth = 700;
     if (window.innerWidth < 600) {
       StandImageComponent.isShowStand = false;

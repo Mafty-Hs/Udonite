@@ -10,10 +10,10 @@
       </div>
       <ng-container *ngIf="!isSyncChatWindow; else syncWindow" >
         <form  class="chat-tab scroll-white" style="width:calc(100% - 84px);">
-          <label *ngFor="let chatTab of chatMessageService.chatTabs">
-            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [(ngModel)]="chatTabidentifier">
+          <label *ngFor="let chatTab of chatMessageService.controledChatTabList">
+            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [disabled]="!chatTab.isAllowed" [ngModelOptions]="{ standalone: true }" [(ngModel)]="chatTabidentifier">
             <div>
-              <span *ngIf="chatTab.allowedPlayers.length > 0"><i class="material-icons" style="font-size:0.8em;">lock</i></span>
+              <span *ngIf="chatTab.isLock"><i class="material-icons" style="font-size:0.8em;;color: #FFF;">lock</i></span>
               {{chatTab.name}}
             </div>
           </label>

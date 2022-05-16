@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit , Input } from '@angular/core';
+import { Component, OnDestroy, OnInit,ChangeDetectorRef } from '@angular/core';
 
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
@@ -31,9 +31,18 @@ export class ChatWindowSetting {
 @Component({
   selector: 'app-chat-tab-setting',
   templateUrl: './chat-tab-setting.component.html',
-  styleUrls: ['./chat-tab-setting.component.css']
+  styleUrls: ['./chat-tab-setting.component.css'],
 })
 export class ChatTabSettingComponent implements OnInit, OnDestroy {
+  _selectedTabIdentifier: string = "";
+  get selectedTabIdentifier():string { return this._selectedTabIdentifier };
+  set selectedTabIdentifier(selectedTabIdentifier:string) {
+    this._selectedTabIdentifier = selectedTabIdentifier;
+    this.selectedTab = ObjectStore.instance.get<ChatTab>(this._selectedTabIdentifier);
+    this.selectedTabXml = '';
+    this.updateAllowPlayers();
+  };
+
   selectedTab: ChatTab = null;
   selectedTabXml: string = '';
   chatWindowSetting: ChatWindowSetting = null;
@@ -53,13 +62,18 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   get adminAuth():boolean { return this.roomService.adminAuth;}
 
-  get allowPlayers():allowedPlayer[] {
+  allowPlayers:allowedPlayer[] = [];
+  updateAllowPlayers():void {
     if (this.selectedTab) {
-      return this.selectedTab.allowedPlayers.map(playerId => {
-        return {playerName: this.playerService.getPlayerById(playerId).name,playerId: playerId }
-      })
+      this.allowPlayers = this.selectedTab.allowedPlayers.map(playerId => {
+        let player = this.playerService.getPlayerById(playerId);
+        if (player) return {playerName: player.name ,playerId: playerId }
+      });
     }
-    return []
+    else {
+      this.allowPlayers = [];
+    }
+    this.changeDetector.detectChanges();
   }
 
   isSaveing:boolean = false;
@@ -84,6 +98,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private modalService: ModalService,
     private panelService: PanelService,
     private playerService: PlayerService,
@@ -102,15 +117,11 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
           this.selectedTabXml = object.toXml();
         }
       });
+    this.selectedTabIdentifier = this.chatTabs[0].identifier;
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-  }
-
-  onChangeSelectTab(identifier: string) {
-    this.selectedTab = ObjectStore.instance.get<ChatTab>(identifier);
-    this.selectedTabXml = '';
   }
 
   create() {
@@ -152,6 +163,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (!this.isEmpty && this.selectedTab) {
       this.selectedTabXml = this.selectedTab.toXml();
       this.selectedTab.destroy();
+      this.selectedTabIdentifier = '';
+      this.selectedTab = null;
     }
   }
 
@@ -186,11 +199,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   select_player:string ="";
 
   addPlayer() {
-    if (!this.selectedTab) return;
+    if (!this.selectedTab || !this.select_player) return;
     if (this.selectedTab.allowedPlayers.includes(this.select_player)) return;
     this.selectedTab.allowedPlayers.push(this.select_player);
     this.selectedTab.update();
     this.select_player = "";
+    this.updateAllowPlayers();
   }
 
   removePlayer(playerId :string) {
@@ -198,5 +212,6 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (!this.selectedTab.allowedPlayers.includes(playerId)) return;
     this.selectedTab.allowedPlayers = this.selectedTab.allowedPlayers.filter( _playerid => _playerid != playerId );
     this.selectedTab.update();
+    this.updateAllowPlayers();
   }
 }

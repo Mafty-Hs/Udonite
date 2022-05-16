@@ -317,8 +317,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           return {
             name: `${n}枚`,
             action: () => {
+              let drawCount = n <= this.cardStack.cards.length ? n : this.cardStack.cards.length;
               const cards: Card[] = [];
-              for (let i = 0; i < n; i++) {
+              for (let i = 0; i < drawCount; i++) {
                 const card = this.drawCard();
                 if (card) {
                   cards.push(card);
@@ -467,8 +468,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       {
         name: '山札を削除する', action: () => {
-          this.cardStack.setLocation('graveyard');
-          this.cardStack.destroy();
+          this.destroyStack()
           SoundEffect.play(PresetSound.sweep);
         }
       },
@@ -484,6 +484,16 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ngZone.run(() => this.dispatchCardDropEvent());
   }
 
+  private checkStackZero(): void {
+    if (this.cardStack.cards.length > 0) return;
+    this.destroyStack()
+  }
+
+  private destroyStack(): void {
+    this.cardStack.setLocation('graveyard');
+    this.cardStack.destroy();
+  }
+
   private drawCard(): Card {
     let card = this.cardStack.drawCard();
     if (card) {
@@ -492,7 +502,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       card.location.y += 25 + (Math.random() * 50);
       card.setLocation(this.cardStack.location.name);
     }
-    EventSystem.call('DRAW_CARD',card.identifier);
+    this.checkStackZero();
     return card;
   }
 
@@ -504,8 +514,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       card.toTopmost();
       card.setLocation(this.cardStack.location.name);
     }
-    this.cardStack.setLocation('graveyard');
-    this.cardStack.destroy();
+    this.destroyStack()
   }
 
   private splitStack(split: number) {
@@ -524,8 +533,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     let cards = this.cardStack.drawCardAll();
-    this.cardStack.setLocation('graveyard');
-    this.cardStack.destroy();
+    this.destroyStack()
 
     let num = 0;
     let splitIndex = (cards.length / split) * (num + 1);

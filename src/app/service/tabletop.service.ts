@@ -77,16 +77,8 @@ export class TabletopService {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!object || !(object instanceof TabletopObject)) {
           this.refreshCache(event.data.aliasName);
-        } else if (this.shouldRefreshCache(object)) {
-          this.refreshCache(event.data.aliasName);
-          this.updateMap(object);
-        }
-      })
-      .on('DRAW_CARD', -1000, event => {
-        let card = ObjectStore.instance.get(event.data);
-        if (card instanceof TabletopObject) {
-          this.refreshCache(card.aliasName);
-          this.updateMap(card)
+        } else {
+          setTimeout(() => this.shouldRefreshCache(<TabletopObject>object) ,100)
         }
       })
       .on('DELETE_GAME_OBJECT', -1000, event => {
@@ -148,8 +140,12 @@ export class TabletopService {
     this.clearMap();
   }
 
-  private shouldRefreshCache(object: TabletopObject): boolean {
-    return this.locationMap.get(object.identifier) !== object.location.name || this.parentMap.get(object.identifier) !== object.parentId;
+  private shouldRefreshCache(object: TabletopObject) {
+    if (this.locationMap.get(object.identifier) !== object.location.name || this.parentMap.get(object.identifier) !== object.parentId) {
+      this.refreshCache(object.aliasName);
+      this.updateMap(object);
+    }
+    return;
   }
 
   private updateMap(object: TabletopObject) {

@@ -258,12 +258,12 @@ export class IONetwork {
     return ;
   }
 
-  async audioUpload(audioFile: File, type :string, hash :string,owner :string,tag :string ):Promise<void> {
+  async audioUpload(audioFile: File, name :string , type :string, hash :string,owner :string,tag :string ):Promise<void> {
     const request = `${this.url}/_audio`;
     const formData = new FormData();
     formData.append("roomId", this.roomId);
     formData.append("file", audioFile);
-    formData.append("name", audioFile.name);
+    formData.append("name", name);
     formData.append("filesize", String(audioFile.size));
     formData.append("owner", owner);
     formData.append("type", type);

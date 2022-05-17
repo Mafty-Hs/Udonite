@@ -117,10 +117,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
         IONetwork.audioUrl(this.url , this.playerService.myPlayer.playerId ,this.name, 100,this.editingTag);
       }
       else {
+        const name = this.name;
         const file = this.file;
         const tag = this.editingTag;
         FileReaderUtil.calcSHA256Async(file).then(hash => {
-          IONetwork.audioUpload(file ,file.type ,hash ,this.playerService.myPlayer.playerId,tag);
+          IONetwork.audioUpload(file ,name ,file.type ,hash ,this.playerService.myPlayer.playerId,tag);
         })
       }
     }

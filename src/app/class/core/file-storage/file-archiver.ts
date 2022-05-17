@@ -127,7 +127,7 @@ export class FileArchiver {
       }
       console.log(file.name + ' type:' + file.type);
       let hash = await FileReaderUtil.calcSHA256Async(file);
-      await IONetwork.audioUpload(file, file.type, hash,  PeerCursor.myCursor.player.playerId,"");
+      await IONetwork.audioUpload(file,file.name , file.type, hash,  PeerCursor.myCursor.player.playerId,"");
     }
   }
 

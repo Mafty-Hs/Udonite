@@ -21,8 +21,10 @@
             <button style="padding: 4px;" (click)="cancel()"><i class="material-icons" style="font-size: 12px;">close</i></button><br/>
             履歴
           </div>
-          <ng-container *ngFor="let text of historyText; index as i">
-            <div class="history-text" (click)="selectHistory($event,i)" >{{text}}</div>
+          <ng-container *ngFor="let history of historyText; index as i">
+            <div class="history-text" (click)="selectHistory($event,i)" >
+               <span style="color: #9F6;">{{history.keyName}} :</span>{{history.text}}
+            </div>
           </ng-container>
         </div>
       </form>

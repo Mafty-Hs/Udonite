@@ -13,6 +13,11 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { ChatTab } from '@udonarium/chat-tab';
 
+interface HistoryText {
+  keyName: string;
+  text: string;
+}
+
 interface chatDataContext {
   sendTo : string;
   gameType : string;
@@ -158,26 +163,30 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
   private history: string[] = new Array();
   private currentHistoryIndex: number = -1;
   private static MAX_HISTORY_NUM = 10;
-  private keyText = ['Ctrl + 1 : ' ,'Ctrl + 2 : ' ,'Ctrl + 3 : ' ,'Ctrl + 4 : ' ,'Ctrl + 5 : ' ,
-    'Ctrl + 6 : ' ,'Ctrl + 7 : ' ,'Ctrl + 8 : ' ,'Ctrl + 9 : ' ,'Ctrl + 0 : '];
+  private readonly keyText = ['Ctrl+1' ,'Ctrl+2' ,'Ctrl+3' ,'Ctrl+4' ,'Ctrl+5' ,
+    'Ctrl+6' ,'Ctrl+7' ,'Ctrl+8' ,'Ctrl+9' ,'Ctrl+0'];
 
   get historyStylevisibility():string {
     return  this.currentHistoryIndex > -1 ? 'visible' : 'hidden'
   }
   get targetHistory():string [] {
-    let index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
+    const index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
     if ( this.history.length <= 10 ) {
       const spaceArray = [...Array( 10 - this.history.length )].map(() => '');
       return spaceArray.concat(this.history);
     }
+    else if ((index - 10) < 0) {
+      const spaceArray = [...Array( 10 - index )].map(() => '');
+      return spaceArray.concat(this.history.slice(0 ,index));
+    }
     return this.history.slice(index - 10 ,index)
   }
 
-  get historyText():string[] {
-    let targetHistory = this.targetHistory;
-    let historytext:string[] =[];
+  get historyText():HistoryText[] {
+    const targetHistory = this.targetHistory;
+    let historytext:HistoryText[] =[];
     for (let row = 0; row < 10; row++) {
-      historytext.push( this.keyText[row] + targetHistory[row]);
+      historytext.push({ keyName: this.keyText[row] , text:targetHistory[row] })
     }
     return historytext;
   }

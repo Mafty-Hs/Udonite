@@ -66,11 +66,12 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get auditionPlayerName(): string  { return this.auditionPlayer?.audio ?  this.auditionPlayer?.audio.name : ""}
   get jukeboxName(): string {  return this.jukebox.audio ? this.jukebox.audio.name : ""}
 
+  private readonly noTag = '--notag--';
   _selectedTag:string = "";
   get selectedTag():string { return this._selectedTag}
   set selectedTag(tag :string) {
     this._selectedTag = tag;
-    if (this.isEdit && tag !== '--notag--') this.editingTag = tag;
+    if (this.isEdit && tag !== this.noTag) this.editingTag = tag;
   }
   get taglist():string[] { return AudioStorage.instance.taglist }
 
@@ -87,7 +88,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     if (isUpdate && this.editingIdentifier) {
       this.name = this.editingAudio.name;
       this.editingVolume = this.editingAudio.volume;
-      this.editingTag = this.editingAudio.tag  === '--notag--' ? '' : this.editingAudio.tag ;
+      this.editingTag = this.editingAudio.tag  === this.noTag ? '' : this.editingAudio.tag ;
     }
     else {
       this.editingIdentifier = "";
@@ -95,7 +96,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.url = "";
       this.name = "";
       this.editingVolume = 100;
-      this.editingTag = this.selectedTag;
+      this.editingTag = this.selectedTag  === this.noTag ? '' : this.selectedTag ;
     }
     this.isEdit = !this.isEdit;
   }

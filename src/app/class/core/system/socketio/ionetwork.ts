@@ -199,7 +199,7 @@ export class IONetwork {
       volume: volume,
       isHidden: false,
       tag:tag
-    }
+    };
     this.socket.send('audioUpdate', context);
     return;
   }
@@ -284,10 +284,13 @@ export class IONetwork {
     return;
   }
 
-  urlPattern = new RegExp('".+/(.+?)([\\?#;].*)?$"');
   private checkFileType(url :string):boolean {
-    let filetype = MimeType.type(url.match(this.urlPattern)[1]);
-    return Boolean(filetype);
+    let matches = url.match(".+/(.+?)([\\?#;].*)?$");
+    if (matches && matches.length > 0) {
+      let filetype = MimeType.type(matches[1]);
+      return Boolean(filetype)
+    }
+    return false;
   }
 
 }

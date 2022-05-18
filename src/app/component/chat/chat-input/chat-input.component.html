@@ -9,10 +9,10 @@
           placeholder='Enterで送信　Shift+Enterで改行　Ctrl+上下で履歴移動'
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           (keydown.control.arrowup)="moveHistory($event, -1)" (keydown.control.arrowdown)="moveHistory($event, 1)"
-          (keydown.control.0)="selectHistory($event,9)" (keydown.esc)="cancel()"
-          (keydown.control.1)="selectHistory($event,0)" (keydown.control.2)="selectHistory($event,1)" (keydown.control.3)="selectHistory($event,2)"
-          (keydown.control.4)="selectHistory($event,3)" (keydown.control.5)="selectHistory($event,4)" (keydown.control.6)="selectHistory($event,5)"
-          (keydown.control.7)="selectHistory($event,6)" (keydown.control.8)="selectHistory($event,7)" (keydown.control.9)="selectHistory($event,8)"
+          (keydown.control.0)="selectHistory($event,0)" (keydown.esc)="cancel()"
+          (keydown.control.1)="selectHistory($event,9)" (keydown.control.2)="selectHistory($event,8)" (keydown.control.3)="selectHistory($event,7)"
+          (keydown.control.4)="selectHistory($event,6)" (keydown.control.5)="selectHistory($event,5)" (keydown.control.6)="selectHistory($event,4)"
+          (keydown.control.7)="selectHistory($event,3)" (keydown.control.8)="selectHistory($event,2)" (keydown.control.9)="selectHistory($event,1)"
           #textArea>
         </textarea>
         <button type="submit" class="send" (click)="sendChat(null)"><b>SEND</b></button>

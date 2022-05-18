@@ -206,14 +206,13 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
 
   selectHistory(event :Event ,index :number) {
     if (event) event.preventDefault();
-    let minIndex = 9 - this.history.length + 1;
-    if (minIndex > index) {
+    const targetIndex = this.history.length - 1 - index;
+    if (targetIndex < 0) {
       let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
       textArea.focus();
       return;
     }
-    if (this.currentHistoryIndex < 0) this.currentHistoryIndex = this.history.length - 1;
-    this.currentHistoryIndex -= (9 - index);
+    this.currentHistoryIndex = targetIndex;
     this.historyToText()
   }
 

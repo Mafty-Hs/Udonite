@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
 .frame {
   width:100%;
   height:100%;
@@ -25,8 +23,8 @@
 
 .title {
   font-size: 16px;
-  font-weight: bold;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 700;
 }
 
 .control {

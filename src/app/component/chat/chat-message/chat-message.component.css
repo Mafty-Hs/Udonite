@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Zen+Antique&display=swap');
-
 :host {
   display: block;
 }
@@ -87,7 +85,7 @@
   padding: 2px 12px 0 12px;
 }
 
-::ng-deep .rubytext {
+:host ::ng-deep .rubytext {
   font-family: 'Zen Antique', serif;
   font-size: 120%;
 }

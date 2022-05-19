@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Counter , CounterAssign } from '@udonarium/counter';
 import { CounterList , AssignedCounterList } from '@udonarium/counter-list';
-import { Round , IRound } from '@udonarium/round';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameCharacterService } from './game-character.service';
@@ -10,7 +9,6 @@ import { GameCharacterService } from './game-character.service';
   providedIn: 'root'
 })
 export class CounterService {
-  get round(): Round {return IRound.instance;}
   private nullCounter:Counter = new Counter;
 
   create( _name: string, _desc: string, _canDuplicate: boolean, _isPermanent: boolean, _age: number, _uniqueIdentifier?: string) {
@@ -86,10 +84,6 @@ export class CounterService {
     assignedCounterList.initialize();
     gameCharacter.appendChild(assignedCounterList);
     return assignedCounterList;
-  }
-
-  reset() {
-    IRound.reset();
   }
 
   assignedList(): CounterAssign[] {

@@ -7,6 +7,7 @@ import { CounterService } from 'service/counter.service';
 import { ModalService } from 'service/modal.service';
 import { SaveDataService } from 'service/save-data.service';
 import { RoomService } from 'service/room.service';
+import { RoundService } from 'service/round.service';
 import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
 import { CounterListComponent } from 'component/counter-list/counter-list.component';
 import { CounterInventoryComponent } from 'component/counter-inventory/counter-inventory.component';
@@ -153,6 +154,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
     private modalService: ModalService,
     private panelService: PanelService,
     private roomService: RoomService,
+    private roundService: RoundService,
     private saveDataService: SaveDataService,
     private counterService: CounterService,
     private chatMessageService: ChatMessageService,
@@ -199,7 +201,7 @@ export class SubMenuComponent implements OnInit,OnDestroy {
   }
 
   resetRound() {
-    this.counterService.reset();
+    this.roundService.reset();
     this.closeMe.emit();
   }
 

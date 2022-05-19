@@ -8,12 +8,13 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CutInService } from 'service/cut-in.service';
 import { ChatMessageService } from 'service/chat-message.service';
-import { ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
+import { ContextMenuService, ContextMenuAction, ContextMenuSeparator } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PlayerService } from 'service/player.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { RoomService } from 'service/room.service';
+import { RoundService } from 'service/round.service';
 import { StandService } from 'service/stand.service';
 import { StandImageService } from 'service/stand-image.service';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -21,7 +22,6 @@ import { ChatWindowComponent } from 'component/chat/chat-window/chat-window.comp
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { HelpComponent } from 'component/help/help.component';
 import { ModalComponent } from 'component/modal/modal.component';
-import { RoundComponent } from 'component/round/round.component';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
@@ -40,7 +40,6 @@ import { AlarmComponent } from 'component/alarm/alarm.component';
 export class GameRoomComponent implements OnInit {
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   @ViewChild('subMenu') subMenu: ElementRef;
-  @ViewChild(RoundComponent) round:RoundComponent;
   minimumMode: boolean = false;
   selectMenu:string = "";
 
@@ -57,6 +56,7 @@ export class GameRoomComponent implements OnInit {
     private playerService: PlayerService,
     private pointerDeviceService: PointerDeviceService,
     private roomService: RoomService,
+    private roundService: RoundService,
     private standImageService: StandImageService,
     private changeDetector: ChangeDetectorRef
   ) {
@@ -125,23 +125,28 @@ export class GameRoomComponent implements OnInit {
 
   roundAdd(e:Event):void {
     if (this.roomService.disableRoundControl) return;
-    this.round.add();
+    this.roundService.add();
   }
 
   roundContext(e:Event):void {
-    if (this.roomService.disableRoundControl) return;
-    this.round.displayContextMenu(e);
-  }
-
-  roomMenu(e: Event) {
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu || this.roomService.disableRoundControl) return;
     e.stopPropagation();
     e.preventDefault();
+    const position = this.pointerDeviceService.pointers[0];
+    const actions: ContextMenuAction[] = this.roundService.contextMenu();
+    this.contextMenuService.open(position, actions, 'ラウンド設定');
+  }
 
+  get roundText():string {
+    return this.minimumMode ? this.roundService.round + 'R' : this.roundService.roundText;
+  }
+  roomMenu(e: Event) {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
-    let position = this.pointerDeviceService.pointers[0];
-    let actions: ContextMenuAction[] = [];
-    actions.push({ name: 'ルームから退出する', action: () =>
-     { this.leave(); } });
+    e.stopPropagation();
+    e.preventDefault();
+    const position = this.pointerDeviceService.pointers[0];
+    const actions: ContextMenuAction[] =
+    [{ name: 'ルームから退出する', action: () => { this.leave(); } }];
     this.contextMenuService.open(position, actions, 'ルームメニュー');
   }
 

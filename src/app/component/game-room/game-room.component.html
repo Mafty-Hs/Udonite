@@ -33,7 +33,7 @@
       </button>
       <button class="select"
        (click)='roundAdd($event)'  (contextmenu)="roundContext($event); false" >
-       <round style="padding: 0" [minimumMode]="this.minimumMode"></round>
+       {{roundText}}
       </button>
     </div>
     <div class="right">

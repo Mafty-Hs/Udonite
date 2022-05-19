@@ -69,7 +69,6 @@ import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
-import { RoundComponent } from './component/round/round.component';
 import { CounterListComponent } from './component/counter-list/counter-list.component';
 import { CounterInventoryComponent } from './component/counter-inventory/counter-inventory.component';
 import { EffectViewComponent } from './component/effect-view/effect-view.component';
@@ -171,7 +170,6 @@ import { ViewSettingComponent } from './component/view-setting/view-setting.comp
     CutInComponent,
     CutInSettingComponent,
     CardListImageComponent,
-    RoundComponent,
     CounterInventoryComponent,
     EffectViewComponent,
     SubMenuComponent,

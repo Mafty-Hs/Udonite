@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, } from '
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { ContextMenuService, ContextMenuAction, ContextMenuSeparator } from 'service/context-menu.service';
-import { CounterService } from 'service/counter.service';
+import { RoundService } from 'service/round.service';
 import { GameCharacterService } from 'service/game-character.service';
 import { GameObjectInventoryService, ObjectInventory } from 'service/game-object-inventory.service';
 import { EventSystem } from '@udonarium/core/system';
@@ -19,7 +19,6 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class SimpleInventoryComponent implements OnInit {
   private _inventoryMode:number = 0; // 0:全て(イニシアティブ連動)　1:パレットバインダー 2:カスタム
   private _statusMode:number = 1; // 0:イニシアティブ(最初の３つまで)　1:ステータスバー 2:カスタム
-  deepReflesh:boolean = true;
 
   get inventoryMode():number {
     return this._inventoryMode;
@@ -88,20 +87,15 @@ export class SimpleInventoryComponent implements OnInit {
   get characters():GameCharacter[] {
     switch(this.inventoryMode) {
       case 0:
-        return this.initiative ? this.getInventoryWithInitiative : this.getInventory;
+        return this.initiative ? this.roundService.getInventoryWithInitiative : this.roundService.getInventory;
       case 1:
         return this.customInventory(this.playerService.paletteList);
       case 2:
         return this.customInventory(this.customList);
       default:
-        return this.getInventory;
+        return this.roundService.getInventory;
     }
 
-  }
-
-  get getInventory():GameCharacter[] {
-    let objects = this.tableInventory.tabletopObjects.filter(character => character.isInventoryIndicate);
-    return objects as GameCharacter[];
   }
 
   get tableInventory():ObjectInventory {
@@ -115,8 +109,8 @@ export class SimpleInventoryComponent implements OnInit {
   }
 
   get initiative():string {
-    if (!this.counterService.round.isInitiative) return null;
-    return this.counterService.round.initName
+    if (!this.roundService.isInitiative) return null;
+    return this.roundService.initName;
   }
 
   initDataElm(identifier :string):number {
@@ -125,58 +119,10 @@ export class SimpleInventoryComponent implements OnInit {
     return 0;
   }
 
-  get getInventoryWithInitiative():GameCharacter[] {
-    let unsortedcharacter:{character: GameCharacter, initiative :number}[] = [];
-    let initiative = this.counterService.round.currentInitiative ? this.counterService.round.currentInitiative : 999999;
-    let inventory:Map<string,DataElement[]> =  this.tableInventory.dataElementMap;
-    inventory.forEach((value,key)=>
-    {
-      let dataElms = value as DataElement[];
-      let dataElm = dataElms.find(element => element?.name === this.initiative)
-      if (dataElm && !isNaN(Number(dataElm.value)))
-      unsortedcharacter.push(dataElm.type == 'numberResource' ?
-        {character: this.gameCharacterService.get(key) ,initiative: Number(dataElm.currentValue)}  :
-        {character: this.gameCharacterService.get(key) ,initiative: Number(dataElm.value)} );
-    });
-    if (this.deepReflesh) {
-      unsortedcharacter = unsortedcharacter.reverse()
-      this.deepReflesh = false;
-    }
-    let character:GameCharacter[] = []
-    character = unsortedcharacter
-      .filter(character_ => character_.initiative <= initiative)
-      .sort((a, b) => {
-        if (a.initiative < b.initiative) {
-          return 1;
-        }
-        if (a.initiative > b.initiative) {
-          return -1;
-        }
-        return 0;
-      })
-      .map(character_ => { return character_.character });
-    character = character.concat(
-      unsortedcharacter
-      .filter(character_ => character_.initiative > initiative)
-      .sort((a, b) => {
-        if (a.initiative < b.initiative) {
-          return 1;
-        }
-        if (a.initiative > b.initiative) {
-          return -1;
-        }
-        return 0;
-      })
-      .map(character_ => { return character_.character })
-    );
-    console.log("return list");
-    return character;
-  }
-
   constructor(
     private changeDetector: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
-    private counterService: CounterService,
+    private roundService: RoundService,
     private gameCharacterService: GameCharacterService,
     private inventoryService: GameObjectInventoryService,
     private playerService: PlayerService,
@@ -184,7 +130,6 @@ export class SimpleInventoryComponent implements OnInit {
   ) {
     EventSystem.register(this)
     .on('ADD_ROUND', event => {
-      this.deepReflesh = true;
       this.changeDetector.detectChanges();
     })
     .on('UPDATE_GAME_OBJECT', -1000, event => {

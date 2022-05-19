@@ -16,6 +16,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 interface HistoryText {
   keyName: string;
   text: string;
+  current:boolean;
 }
 
 interface chatDataContext {
@@ -165,28 +166,30 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
   private static MAX_HISTORY_NUM = 10;
   private readonly keyText = ['Ctrl+1' ,'Ctrl+2' ,'Ctrl+3' ,'Ctrl+4' ,'Ctrl+5' ,
     'Ctrl+6' ,'Ctrl+7' ,'Ctrl+8' ,'Ctrl+9' ,'Ctrl+0'];
+  private get indexFixNumber():number {
+    return this.history.length < 10 ? 10 - this.history.length : 0;
+  }
 
   get historyStylevisibility():string {
     return  this.currentHistoryIndex > -1 ? 'visible' : 'hidden'
   }
   get targetHistory():string [] {
-    const index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
     if ( this.history.length <= 10 ) {
-      const spaceArray = [...Array( 10 - this.history.length )].map(() => '');
+      const spaceArray = [...Array( this.indexFixNumber )].map(() => '');
       return spaceArray.concat(this.history);
     }
-    else if ((index - 10) < 0) {
-      const spaceArray = [...Array( 10 - index )].map(() => '');
-      return spaceArray.concat(this.history.slice(0 ,index));
-    }
-    return this.history.slice(index - 10 ,index)
+    const index = this.currentHistoryIndex === -1 ? this.history.length : this.currentHistoryIndex;
+    const startIndex = index < 10 ? 0 : index - 9;
+    const lastIndex = index < 10 ? 10 : index + 1
+    return this.history.slice(startIndex ,lastIndex)
   }
 
   get historyText():HistoryText[] {
     const targetHistory = this.targetHistory;
+    const currentIndex = (this.history.length < 10 || this.currentHistoryIndex < 10) ? ( this.indexFixNumber + this.currentHistoryIndex ) : 9;
     let historytext:HistoryText[] =[];
     for (let row = 0; row < 10; row++) {
-      historytext.push({ keyName: this.keyText[row] , text:targetHistory[row] })
+      historytext.push({ keyName: this.keyText[row], text:targetHistory[row], current: (row == currentIndex) })
     }
     return historytext;
   }
@@ -204,16 +207,20 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
     this.historyToText()
   }
 
-  selectHistory(event :Event ,index :number) {
+  selectHistory(event :Event ,selectIndex :number) {
     if (event) event.preventDefault();
-    let minIndex = 9 - this.history.length + 1;
-    if (minIndex > index) {
-      let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-      textArea.focus();
-      return;
-    }
     if (this.currentHistoryIndex < 0) this.currentHistoryIndex = this.history.length - 1;
-    this.currentHistoryIndex -= (9 - index);
+    if (this.currentHistoryIndex < 10) {
+      if(selectIndex <  this.indexFixNumber) {
+        let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+        textArea.focus();
+        return;
+      }
+      this.currentHistoryIndex = selectIndex -  this.indexFixNumber;
+    }
+    else {
+      this.currentHistoryIndex -= 9 - selectIndex;
+    }
     this.historyToText()
   }
 

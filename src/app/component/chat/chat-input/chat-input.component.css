@@ -54,6 +54,7 @@
   white-space: nowrap;
 }
 
-.lastLog {
-  border: 1px dotted #0F0;
+.currentLog {
+  border: 1px dotted #CCC;
+  background-color: #333;
 }

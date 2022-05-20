@@ -16,18 +16,18 @@
           #textArea>
         </textarea>
         <button type="submit" class="send" (click)="sendChat(null)"><b>SEND</b></button>
-        <div class="history-log" [style.visibility]="historyStylevisibility">
-          <div class="history-tag">
-            <button style="padding: 4px;" (click)="cancel()"><i class="material-icons" style="font-size: 12px;">close</i></button><br/>
-            履歴
-          </div>
-          <ng-container *ngFor="let history of historyText; index as i">
-            <div class="history-text" [ngClass]="{'currentLog':history.current}" (click)="selectHistory($event,i)" >
-               <span style="color: #9F6;">{{history.keyName}} :</span>{{history.text}}
-            </div>
-          </ng-container>
-        </div>
       </form>
+      <div class="history-log" *ngIf="canShowHistory" [style.visibility]="historyStylevisibility">
+        <div class="history-tag">
+          <button style="padding: 4px;" (click)="cancel()"><i class="material-icons" style="font-size: 12px;">close</i></button><br/>
+          履歴
+        </div>
+        <ng-container *ngFor="let history of historyText; index as i">
+          <div class="history-text" [ngClass]="{'currentLog':history.current}" (click)="selectHistory($event,i)" >
+             <span style="color: #9F6;">{{history.keyName}} :</span>{{history.text}}
+          </div>
+        </ng-container>
+      </div>
     </div>
     <div class="writing-info">
       <ng-container *ngIf="0 < writingPeerNameAndColors.length">

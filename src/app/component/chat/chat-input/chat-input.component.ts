@@ -170,6 +170,10 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
     return this.history.length < 10 ? 10 - this.history.length : 0;
   }
 
+  get canShowHistory():boolean {
+    return  window.innerWidth > 500;
+  }
+
   get historyStylevisibility():string {
     return  this.currentHistoryIndex > -1 ? 'visible' : 'hidden'
   }

@@ -27,6 +27,7 @@ import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { RoomAdmin } from '@udonarium/room-admin';
 import { IRound } from '@udonarium/round';
 import { AlarmComponent } from 'component/alarm/alarm.component';
+import { NetworkStatus } from '@udonarium/core/system/socketio/connection';
 
 
 
@@ -123,6 +124,19 @@ export class GameRoomComponent implements OnInit {
     this.panelService.open(GameObjectInventoryComponent, { width: 550, height: 700, left: 50, top: 50 });
   }
 
+  get roomName():string {
+    if (this.roomService.roomData?.roomName) return this.roomService.roomData.roomName;
+    return "なし"
+  }
+
+  get isAlert():boolean {
+    return (IONetwork.socket.status !== NetworkStatus.CONNECT)
+  }
+
+  get roomInfo():string {
+    return this.minimumMode ? this.playerService.otherPeers.length + '名' : this.roomName + ' : ' + this.playerService.otherPeers.length +'名'
+  }
+
   roundAdd(e:Event):void {
     if (this.roomService.disableRoundControl) return;
     this.roundService.add();
@@ -206,6 +220,9 @@ export class GameRoomComponent implements OnInit {
       })
       .on('UPDATE_ROUND', -1000, event => {
         IRound.set(event.data);
+      })
+      .on('ROOM_UPDATE', event => {
+        this.roomService.roomData = event.data;
       });
     this.roomService.adminAuth;
     EventSystem.trigger("ROOM_PLAY",null)

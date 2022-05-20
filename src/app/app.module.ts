@@ -64,7 +64,6 @@ import { CounterService } from 'service/counter.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { PlayerPaletteComponent } from './component/chat/player-palette/player-palette.component';
 import { PlayerPaletteControlComponent } from './component/chat/player-palette-control/player-palette-control.component';
-import { NetworkStatusComponent } from './component/network-status/network-status.component';
 import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
 import { YouTubePlayerModule } from "@angular/youtube-player";
@@ -166,7 +165,6 @@ import { ViewSettingComponent } from './component/view-setting/view-setting.comp
     DiceRollTableSettingComponent,
     PlayerPaletteComponent,
     PlayerPaletteControlComponent,
-    NetworkStatusComponent,
     CutInComponent,
     CutInSettingComponent,
     CardListImageComponent,

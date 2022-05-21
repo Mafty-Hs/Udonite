@@ -1,0 +1,9 @@
+.content {
+  width: 100%;
+  background: none;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  font-size: 12px;
+}

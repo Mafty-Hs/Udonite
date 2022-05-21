@@ -11,7 +11,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
@@ -65,7 +67,7 @@ export class ChatTabComponentTemplate implements OnInit, AfterViewInit, OnDestro
 
   protected isEase:boolean;
 
-  protected get minMessageHeight(): number {
+  public get minMessageHeight(): number {
     return this.isEase ? (Math.floor(this.localFontsize * 1.5) + 1) : 61;
   }
 

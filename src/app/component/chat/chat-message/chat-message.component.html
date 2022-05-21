@@ -37,6 +37,11 @@
         共有
       </button>
     </div>
+    <div *ngIf="isSelected && isStickyNote" class="sticky-note-jump">
+      <button (click)="jumpTab($event)">
+        ジャンプ
+      </button>
+    </div>
   </div>
 </div>
 <ng-template #visible>

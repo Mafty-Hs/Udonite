@@ -12,7 +12,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';

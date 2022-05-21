@@ -9,6 +9,8 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { PlayerService } from 'service/player.service';
+import { ChatTabComponent } from '../chat-tab/chat-tab.component';
+import { ChatTabEaseComponent } from '../chat-tab-ease/chat-tab-ease.component';
 
 @Component({
   selector: 'chat-window',
@@ -111,6 +113,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.checkAutoScroll();
         }
         if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
+      })
+      .on('STICKYNOTE_JUMP', event => {
+        if (this.isPrimary) {
+          this.chatTabidentifier = event.data.chatTabIdentifier;
+          setTimeout(() => this.scrollToMessage(event.data.messageIdentifier ),500);
+        }
       });
     Promise.resolve().then(() => {
       if (!this.playerService.primaryChatWindow) {
@@ -153,6 +161,31 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   messageEdit(value: { chatMessage: ChatMessage} ):void {
     this.editMessage = value.chatMessage;
     this.isEdit = true;
+  }
+
+  @ViewChild(ChatTabComponent) chatTabComponent : ChatTabComponent;
+  @ViewChild(ChatTabEaseComponent) chatTabEaseComponent : ChatTabEaseComponent;
+
+  scrollToMessage(meesageIdentifier: string) {
+    let posY:number = -1;
+    const diaplayableMessage = this.chatTab.chatMessages.filter( message => message.isDisplayable);
+    const index:number = diaplayableMessage.map( message => message.identifier).indexOf(meesageIdentifier);
+    if (this.isEase) {
+      if (this.chatTabEaseComponent) {
+        posY = this.chatTabEaseComponent.minMessageHeight * (index);
+        let fix = ( this.panelService.scrollablePanel.scrollHeight - this.chatTabEaseComponent.minScrollHeight ) / diaplayableMessage.length;
+        posY += Math.floor(fix *  Math.floor((index + 1) / diaplayableMessage.length * 2));
+      }
+    }
+    else {
+      if (this.chatTabComponent) {
+        posY = this.chatTabComponent.minMessageHeight * (index);
+        let fix = ( this.panelService.scrollablePanel.scrollHeight - this.chatTabComponent.minScrollHeight ) / diaplayableMessage.length;
+        posY += Math.floor(fix *  Math.floor((index + 1) / diaplayableMessage.length * 2));
+      }
+    }
+    this.panelService.scrollablePanel.scrollTo(0,posY)
+
   }
 
   // @TODO やり方はもう少し考えた方がいいい

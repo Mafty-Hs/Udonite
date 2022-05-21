@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { EventSystem } from '@udonarium/core/system';
 import { StickyNote } from '@udonarium/sticky-note';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PlayerService } from 'service/player.service';
@@ -37,6 +38,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() localFontsize: number = 14;
   @Input() bgColor: string = "black";
   @Input() isSelected: boolean = false;
+  @Input() isStickyNote: boolean = false;
 
   imgStyle:object = {};
   auraStyle:object = {};
@@ -61,6 +63,12 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     e.preventDefault();
     if (this.shareSticky) StickyNote.Shared.removeMessage(this.chatMessage.identifier);
     else StickyNote.Shared.addMessage(this.chatMessage.identifier);
+  }
+
+  jumpTab(e:Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    EventSystem.trigger('STICKYNOTE_JUMP', {chatTabIdentifier: this.chatMessage.parentId ,messageIdentifier: this.chatMessage.identifier,index: this.chatMessage.index })
   }
 
   constructor(

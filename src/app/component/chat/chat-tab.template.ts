@@ -45,6 +45,8 @@ export class ChatTabComponentTemplate implements OnInit, AfterViewInit, OnDestro
   edit = new EventEmitter<{ chatMessage : ChatMessage}>();
   chatWindowIdentifier:string = "";
 
+  selectMessageIdentifier:string = "";
+
   protected topTimestamp = 0;
   protected botomTimestamp = 0;
 
@@ -196,6 +198,14 @@ export class ChatTabComponentTemplate implements OnInit, AfterViewInit, OnDestro
         this.ngZone.run(() => this.onAddMessage.emit());
       }, 0);
     });
+  }
+
+  selectMessage(message :ChatMessage) {
+    if (this.selectMessageIdentifier === message.identifier) {
+      this.selectMessageIdentifier = "";
+      return;
+    }
+    this.selectMessageIdentifier = message.identifier;
   }
 
   editMessage(message :ChatMessage) {

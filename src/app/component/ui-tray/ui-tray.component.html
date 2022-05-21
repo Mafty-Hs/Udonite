@@ -6,12 +6,25 @@
           <input name="menu" type="radio" value="board" [(ngModel)]="menu">
            <div>掲示板</div>
         </label>
+        <label>
+          <input name="menu" type="radio" value="myStickyNote" [(ngModel)]="menu">
+           <div>自分の付箋</div>
+        </label>        <label>
+          <input name="menu" type="radio" value="allStickyNote" [(ngModel)]="menu">
+           <div>全員の付箋</div>
+        </label>
       </form>
     </div>
     <div class="content scroll" [style.height.px]="maxHeight - 20">
       <ng-container [ngSwitch]="menu">
         <ng-container *ngSwitchCase="'board'">
          <bill-board ></bill-board>
+        </ng-container>
+        <ng-container *ngSwitchCase="'myStickyNote'">
+          <sticky-note [stickyNote]="myStickyNote"></sticky-note>
+        </ng-container>
+        <ng-container *ngSwitchCase="'allStickyNote'">
+          <sticky-note [stickyNote]="sharedStickyNote"></sticky-note>
         </ng-container>
       </ng-container>
     </div>

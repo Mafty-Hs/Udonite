@@ -1,6 +1,6 @@
 <div class="message" [class]="bgColor" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''"
   [style.font-size.px]="localFontsize" [style.font-size.px]="localFontsize"
-  [ngClass]="{'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}" >
+  [ngClass]="{'isSelect': isSelected ,'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}" >
   <div class="name">
     {{chatMessage.name}}
   </div>
@@ -12,6 +12,26 @@
       編集済み)
     </span>
     <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">結果を公開</button>
+  </div>
+  <div *ngIf="isSelected" class="sticky-note">
+    <button [ngClass]="{'pushed': mySticky}" (click)="toggleMySticky($event)">
+      <i *ngIf="!mySticky" class="material-icons" style="font-size: 12px;">
+        bookmark
+      </i>
+      <i *ngIf="mySticky" class="material-icons" style="font-size: 12px;">
+        close
+      </i>
+      自分
+    </button>
+    <button [ngClass]="{'pushed': shareSticky}" (click)="toggleShareSticky($event)">
+      <i *ngIf="!shareSticky" class="material-icons" style="font-size: 12px;">
+        bookmark
+      </i>
+      <i *ngIf="shareSticky" class="material-icons" style="font-size: 12px;">
+        close
+      </i>
+      共有
+    </button>
   </div>
 </div>
 

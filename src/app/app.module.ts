@@ -75,7 +75,7 @@ import { SubMenuComponent } from './component/sub-menu/sub-menu.component';
 import { ChatInputSendfromComponent } from './component/chat/chat-input-sendfrom/chat-input-sendfrom.component';
 import { ChatInputSettingComponent } from './component/chat/chat-input-setting/chat-input-setting.component';
 import { ChatTabEaseComponent } from './component/chat/chat-tab-ease/chat-tab-ease.component';
-import { BillBoardComponent } from './component/bill-board/bill-board.component';
+import { BillBoardComponent } from './component/ui-tray/bill-board/bill-board.component';
 import { BillBoardCardComponent } from './component/bill-board-card/bill-board-card.component';
 import { StandViewSettingComponent } from './component/stand-view-setting/stand-view-setting.component';
 import { RoomControlComponent } from './component/room-control/room-control.component';
@@ -114,6 +114,7 @@ import { LogSaveComponent } from './component/log-save/log-save.component';
 import { SimpleInventoryComponent } from './component/simple-inventory/simple-inventory.component';
 import { UiTrayComponent } from './component/ui-tray/ui-tray.component';
 import { ViewSettingComponent } from './component/view-setting/view-setting.component';
+import { StickyNoteComponent } from './component/ui-tray/sticky-note/sticky-note.component';
 
 @NgModule({
   declarations: [
@@ -213,6 +214,7 @@ import { ViewSettingComponent } from './component/view-setting/view-setting.comp
     SimpleInventoryComponent,
     UiTrayComponent,
     ViewSettingComponent,
+    StickyNoteComponent,
   ],
   imports: [
     BrowserModule,

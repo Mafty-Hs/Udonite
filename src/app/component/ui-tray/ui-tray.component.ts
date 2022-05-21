@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef,AfterViewInit,ChangeDetectorRef } from '@angular/core';
 import { BillBoardService } from 'service/bill-board.service';
 import { EventSystem } from '@udonarium/core/system';
+import { PlayerService } from 'service/player.service';
+import { StickyNote } from '@udonarium/sticky-note';
 
 @Component({
   selector: 'ui-tray',
@@ -21,6 +23,14 @@ export class UiTrayComponent implements  OnInit,OnDestroy,AfterViewInit {
   notification :boolean = false;
 
   toggleSW:boolean = false;
+
+  get myStickyNote():StickyNote {
+    return this.playerService.myPlayer.stickyNote;
+  }
+
+  get sharedStickyNote():StickyNote {
+    return StickyNote.Shared;
+  }
 
   toggle() {
     this.toggleSW = !this.toggleSW;
@@ -50,10 +60,10 @@ export class UiTrayComponent implements  OnInit,OnDestroy,AfterViewInit {
     this.handle.style.zIndex = "";
   }
 
-
   constructor(
     private billBoardService: BillBoardService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    public playerService:PlayerService
   ) { }
 
   ngOnInit(): void {

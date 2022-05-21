@@ -1,7 +1,7 @@
 <div [class]="bgColor">
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
-    [ngClass]="{'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
+    [ngClass]="{'isSelect': isSelected , 'is-black': isBlack, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
     [@flyInOut]>
     <div class="image">
       <img *ngIf="0 < imageFile?.url?.length && auraStyle" class="image aura" [ngStyle]="auraStyle" [src]="imageFile.url | safe: 'resourceUrl'">
@@ -16,6 +16,26 @@
       <div class="text msg-text" [style.font-size.px]="localFontsize">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
+    </div>
+    <div *ngIf="isSelected" class="sticky-note">
+      <button [ngClass]="{'pushed': mySticky}" (click)="toggleMySticky($event)">
+        <i *ngIf="!mySticky" class="material-icons" style="font-size: 12px;">
+          bookmark
+        </i>
+        <i *ngIf="mySticky" class="material-icons" style="font-size: 12px;">
+          close
+        </i>
+        自分
+      </button>
+      <button [ngClass]="{'pushed': shareSticky}" (click)="toggleShareSticky($event)">
+        <i *ngIf="!shareSticky" class="material-icons" style="font-size: 12px;">
+          bookmark
+        </i>
+        <i *ngIf="shareSticky" class="material-icons" style="font-size: 12px;">
+          close
+        </i>
+        共有
+      </button>
     </div>
   </div>
 </div>

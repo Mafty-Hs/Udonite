@@ -3,12 +3,14 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { StickyNote } from '@udonarium/sticky-note';
 import { ChatMessageService } from 'service/chat-message.service';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'chat-message',
   templateUrl: './chat-message.component.html',
-  styleUrls: ['./chat-message.component.css'],
+  styleUrls: ['./chat-message.component.css','../chat-message.sticky-note.css'],
   animations: [
     trigger('flyInOut', [
       transition('* => active', [
@@ -34,6 +36,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   animeState: string = 'inactive';
   @Input() localFontsize: number = 14;
   @Input() bgColor: string = "black";
+  @Input() isSelected: boolean = false;
 
   imgStyle:object = {};
   auraStyle:object = {};
@@ -45,8 +48,24 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
       return false;
   }
 
+  get mySticky():boolean {return this.playerService.myPlayer.stickyNote.chatMessageIdentifiers.includes(this.chatMessage.identifier)}
+  toggleMySticky(e:Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (this.mySticky) this.playerService.myPlayer.stickyNote.removeMessage(this.chatMessage.identifier);
+    else this.playerService.myPlayer.stickyNote.addMessage(this.chatMessage.identifier);
+  }
+  get shareSticky():boolean {return StickyNote.Shared.chatMessageIdentifiers.includes(this.chatMessage.identifier)}
+  toggleShareSticky(e:Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (this.shareSticky) StickyNote.Shared.removeMessage(this.chatMessage.identifier);
+    else StickyNote.Shared.addMessage(this.chatMessage.identifier);
+  }
+
   constructor(
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private playerService: PlayerService
   ) { }
 
   ngOnInit() {

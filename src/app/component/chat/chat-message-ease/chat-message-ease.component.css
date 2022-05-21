@@ -18,6 +18,7 @@
 }
 
 .message {
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
   box-sizing: border-box;
@@ -27,6 +28,10 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   border-bottom:1px dotted #999;
+}
+
+.isSelect {
+  border:1px dotted #FFF;
 }
 
 .name {

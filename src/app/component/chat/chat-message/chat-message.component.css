@@ -21,6 +21,7 @@
   color: #FFF;
 }
 .message {
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
   box-sizing: border-box;
@@ -31,6 +32,10 @@
   word-break: break-word;
   border-bottom:1px dotted #999;
   border-left: 4px solid #555;
+}
+
+.isSelect {
+  border:1px dotted #FFF;
 }
 
 .direct-message {

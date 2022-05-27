@@ -126,11 +126,9 @@ export class GameCharacterComponent extends GameCharacterComponentTemplate imple
       let effectName = event.data[0];
       let character = event.data[1];
       if(this.characterImage?.nativeElement && this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+        this.standImageService.show(this.gameCharacter,null,null,false,effectName)
         let rect = this.characterImage.nativeElement.getBoundingClientRect();
-        if (!this.effectService.isValid(rect)) return;
-        let newWidth,newHeight,top,left: number;
-        [newWidth,newHeight,top,left] = this.effectService.calcSize(rect,effectName);
-        this.effectService.play(top,left,newWidth,newHeight,effectName)
+        this.effectService.play(rect ,effectName, true)
       }
     });
   }

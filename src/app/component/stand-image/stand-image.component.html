@@ -23,7 +23,7 @@
             [style.height]="height > 0 ? height + 'vh' : 'auto'"
             [src]="standImage.url | safe: 'resourceUrl'"
             [ngStyle]="auraStyle">
-          <img class="stand-image front-image" draggable="false"
+          <img class="stand-image front-image" draggable="false" #standImageElement
             [style.height]="height > 0 ? height + 'vh' : 'auto'"
             [src]="standImage.url | safe: 'resourceUrl'"
             [ngStyle]="imgStyle">

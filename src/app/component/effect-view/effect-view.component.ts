@@ -21,9 +21,7 @@ export class EffectViewComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   play() {
     let rect = this.canvas.getBoundingClientRect();
-    let top = rect.top;
-    let left = rect.left;
-    this.effectService.play(top,left,this.width,this.height,this.effectName)
+    this.effectService.playDemo(rect,this.effectName)
   }
 
   isDrag :boolean = false;

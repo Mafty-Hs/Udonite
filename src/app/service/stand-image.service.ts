@@ -14,8 +14,8 @@ export class StandImageService {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
-  
-  show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null, isSecret=false) {
+
+  show(gameCharacter: GameCharacter, standElement: DataElement=null , color: string=null, isSecret=false, effectName: string = '') {
     let isNewbee = true;
     for (const pair of StandImageService.currentStandImageShowing) {
       // 型を厳密にやりつつkey, valueをもう少し楽にイテレートできないか？
@@ -26,10 +26,11 @@ export class StandImageService {
       if (instance.isVisible && gameCharacter.identifier != identifier) {
         instance.toGhostly();
       } else if (gameCharacter.identifier == identifier && gameCharacter.location.name != 'graveyard') {
-        instance.standElement = standElement;
+        if (standElement) instance.standElement = standElement;
         instance.color = color ? color : gameCharacter.chatPalette.color;
         instance.isSecret = isSecret;
         instance.toFront();
+        if (effectName) instance.playEffect(effectName);
         isNewbee = false;
       } else if (instance.isFarewell || StandImageComponent.isCanBeGone) {
         standImageComponentRef.destroy();
@@ -39,10 +40,18 @@ export class StandImageService {
     if (isNewbee && gameCharacter.location.name != 'graveyard') {
       const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
       standImageComponentRef.instance.gameCharacter = gameCharacter;
+      if (!standElement) {
+        let stand = gameCharacter.standList.getDefault();
+        if (stand) {
+          standElement = stand;
+        }
+        else return;
+      }
       standImageComponentRef.instance.standElement = standElement;
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
       standImageComponentRef.instance.isSecret = isSecret;
       standImageComponentRef.instance.toFront();
+      if (effectName) standImageComponentRef.instance.playEffect(effectName);
       StandImageService.currentStandImageShowing.set(gameCharacter.identifier, standImageComponentRef);
     }
   }
@@ -79,4 +88,4 @@ export class StandImageService {
     }
   }
 }
-    
+

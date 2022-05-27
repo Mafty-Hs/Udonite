@@ -5,6 +5,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
+import { EffectService } from 'service/effect.service';
 import { PlayerService } from 'service/player.service';
 import { StandService } from 'service/stand.service';
 
@@ -85,6 +86,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   math = Math;
 
   constructor(
+    private effectService: EffectService,
     private standService: StandService,
     private playerService: PlayerService,
     private ngZone: NgZone
@@ -329,6 +331,22 @@ export class StandImageComponent implements OnInit, OnDestroy {
       this.isFarewell = true;
       this.isVisible = false;
     });
+  }
+
+  playEffect(effectName :string) {
+    if (this.gameCharacter && (this.isApplyDialog || this.isSpeakable || this.gameCharacter.isShowChatBubble)) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.isVisible = false;
+        });
+      }, 12000);
+    }
+    if (this.standImageElement) {
+      let image = this.standImageElement.nativeElement as HTMLElement;
+      let rect = image.getBoundingClientRect();
+      this.effectService.play(rect ,effectName ,false);
+    }
   }
 
 }

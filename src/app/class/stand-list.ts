@@ -49,6 +49,16 @@ export class StandList extends DataElement {
     this.removeChild(stand);
   }
 
+  getDefault(): DataElement|null {
+    for (const standElement of this.standElements) {
+      const conditionType = standElement.getFirstElementByName('conditionType').value;
+      if (conditionType == StandConditionType.Default) {
+        return standElement;
+      }
+    }
+    return null;
+  }
+
   matchStandInfo(text: string, image: ImageFile | string, standName: string=null): StandInfo {
     const imageIdentifier = (image instanceof ImageFile) ? image.identifier : image;
     let textTagMatch = '';

@@ -30,6 +30,7 @@ import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { GameCharacterService } from 'service/game-character.service';
+import { StandImageService } from 'service/stand-image.service';
 
 @Component({
   selector: 'game-character-template',
@@ -255,6 +256,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
     protected effectService: EffectService,
     protected changeDetector: ChangeDetectorRef,
     protected pointerDeviceService: PointerDeviceService,
+    protected standImageService: StandImageService,
     protected ngZone: NgZone,
     protected modalService: ModalService
   ) { }

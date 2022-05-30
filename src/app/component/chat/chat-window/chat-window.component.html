@@ -38,7 +38,7 @@
       <ng-container *ngSwitchDefault>
       </ng-container>
     </ng-container>
-    <chat-input [isBlack]="isBlack" [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+    <chat-input [isBlack]="isBlack" [chatTabidentifier]="chatTabidentifier" [(sendFrom)]="sendFrom" (chat)="sendChat($event)" (tabSwitch)="chatTabSwitchRelative($event)"></chat-input>
   </div>
   <chat-edit *ngIf="isLogOnly && isEdit" [isBlack]="isBlack" [chatMessage]="editMessage" (toggleEdit)="toggleEdit()"></chat-edit>
 </div>

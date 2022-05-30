@@ -75,6 +75,8 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
     isUseStandImage?: boolean,
     standName?: string }>();
 
+  @Output() tabSwitch = new EventEmitter<number>();
+
   isDirect: boolean = false;
   @Input('isPalette') isPalette: boolean = false;
   isUseFaceIcon: boolean = true;
@@ -245,6 +247,11 @@ export class ChatInputComponent implements OnInit  ,AfterViewInit  , OnDestroy {
 
   cancel() {
     this.currentHistoryIndex = -1;
+  }
+
+  tabSwitchAction(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+    this.tabSwitch.emit(direction);
   }
 
   sendChat(event: KeyboardEvent) {

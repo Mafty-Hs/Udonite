@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
 import { StickyNote } from '@udonarium/sticky-note';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'sticky-note',
@@ -10,7 +11,12 @@ import { StickyNote } from '@udonarium/sticky-note';
 export class StickyNoteComponent implements OnInit {
   @Input() stickyNote:StickyNote = null;
   localFontsize:number = 12;
-  bgColor:string = 'black';
+  get bgColor():string {
+    if (this.playerService.primaryChatWindowSetting) {
+      return this.playerService.primaryChatWindowSetting.bgColor;
+    }
+    return 'black';
+  }
 
   get chatMessages():ChatMessage[] {
     return this.stickyNote.getMessages();
@@ -30,7 +36,9 @@ export class StickyNoteComponent implements OnInit {
     this.selectMessageIdentifier = message.identifier;
   }
 
-  constructor() { }
+  constructor(
+    private playerService:PlayerService
+  ) { }
 
   ngOnInit(): void {
   }

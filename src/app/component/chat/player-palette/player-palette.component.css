@@ -100,5 +100,18 @@
   white-space:nowrap;
 }
 
+.white {
+  background: #FFF;
+  color: #000;
+}
+.grey {
+  background: #CCC;
+  color: #000;
+}
+.black {
+  background: #212121;
+  color: #FFF;
+}
+
 
 

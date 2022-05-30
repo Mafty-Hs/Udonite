@@ -21,7 +21,7 @@
       </ng-container>
     </div>
     <div class="flex-nogrow">
-      <chat-input [chatTabidentifier]="chatTabidentifier" [isPalette]="true"
+      <chat-input [isBlack]="isBlack" [chatTabidentifier]="chatTabidentifier" [isPalette]="true"
       [sendFrom]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     </div>
     <div *ngIf="!disableControl">
@@ -50,7 +50,7 @@
     </ng-container>
   </div>
   <div *ngIf="showPalette && !isEdit" class="chat-pallete">
-    <select class="palette scroll-white" style="overflow-x: hidden;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
+    <select [class]="bgColor" class="palette scroll-white" style="overflow-x: hidden;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
         <ng-container *ngFor="let palette of palette.getPalette()">
           <option value="{{palette}}" [ngStyle]="{'color':color}">{{palette}}</option>
@@ -59,7 +59,7 @@
     </select>
   </div>
   <div *ngIf="showPalette && isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette scroll-white" style="resize: none; color: #ddd" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea [class]="bgColor" class="palette scroll-white" style="resize: none" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div class="bottom flex-between">
     <div class="flex-row">

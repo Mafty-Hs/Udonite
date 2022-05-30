@@ -31,6 +31,11 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
   @ViewChild('characterSelect') characterSelect: ElementRef;
 
+  bgColor:string = 'black'
+  get isBlack():boolean {
+    return (this.bgColor === 'black')
+  }
+
   private chatTabSubscriber:Subscription;
 
   private _isSyncChatWindow:boolean = true;
@@ -116,10 +121,14 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
   };
 
   get color(): string {
+    let color:string = '';
     if (this.character) {
-      return this.character.chatPalette?.color ? this.character.chatPalette?.color : this.playerService.myColor;
+      color = this.character.chatPalette?.color ? this.character.chatPalette?.color : this.playerService.myColor;
     }
-    return this.playerService.myColor;
+    else color = this.playerService.myColor;
+    if (this.isBlack && color == this.playerService.CHAT_BLACKTEXT_COLOR) color = this.playerService.CHAT_WHITETEXT_COLOR;
+    if (!this.isBlack && color == this.playerService.CHAT_WHITETEXT_COLOR) color = this.playerService.CHAT_BLACKTEXT_COLOR;
+    return color;
   }
   private doubleClickTimer: NodeJS.Timer = null;
   private selectedPaletteIndex = -1;
@@ -289,6 +298,8 @@ export class PlayerPaletteComponent implements OnInit, OnDestroy {
       if (this.isSyncChatWindow) this.chatTabidentifier = chatTabIdentifier;
       this.changeDetector.detectChanges();
     });
+    if (this.playerService.primaryChatWindowSetting)
+          this.bgColor = this.playerService.primaryChatWindowSetting.bgColor;
     this.refleshList()
   }
 

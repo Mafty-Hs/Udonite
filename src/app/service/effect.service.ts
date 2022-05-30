@@ -5,10 +5,13 @@ import { Scene } from 'three/src/scenes/Scene.js';
 import { Clock } from 'three/src/core/Clock.js';
 import { Vector3 } from 'three/src/math/Vector3.js';
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { AudioPlayer, VolumeType } from '@udonarium//core/file-storage/audio-player';
+
 
 interface EffectData {
       time: number;
       file: string;
+      audio?: string;
       position: string;
       size: number;
 }
@@ -34,6 +37,7 @@ export class EffectService {
 
   canEffect : boolean = true;
   renderers:RenderData[] = [];
+  sePLayer:AudioPlayer = new AudioPlayer();
 
   async playDemo(rect :DOMRect, effectName :string) {
     if (!this.canEffect) return;
@@ -64,6 +68,7 @@ export class EffectService {
     this.renderers.push(renderer);
     let position = Position[EffectInfo[effectName].position];
     renderer.context.play(renderer.effect[effectName],position.x,position.y,position.z);
+    //if (EffectInfo[effectName].audio) this.sePLayer.play();
     setTimeout(()=> this.stop(identifier) , EffectInfo[effectName].time + 1000 );
   }
 
@@ -111,8 +116,8 @@ export class EffectService {
       camera.lookAt(new Vector3(0, 1, 0));
     }
     else {
-      camera.position.set(0, 10, 30);
-      camera.lookAt(new Vector3(0, 2, 0));
+      camera.position.set(0, 15, 30);
+      camera.lookAt(new Vector3(0, 5, 0));
     }
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -205,6 +210,7 @@ export class EffectService {
   }
 
   initialize() {
+    this.sePLayer.volumeType = VolumeType.SE;
     effekseer.initRuntime("./assets/lib/effekseer.wasm",
     () => {
       this.mainLoop();
@@ -217,10 +223,10 @@ export class EffectService {
 }
 
 const Position:{[key: string]: {x:number ,y:number , z: number }} = {
-  'head': {x: 0,y: 1,z: 0},
-  'center': {x: 0,y: 0,z: 0} ,
+  'head': {x: 0,y: 2,z: 0},
+  'center': {x: 0,y: 1,z: 0} ,
   'foot': {x: 0,y: -2,z: 0},
-  'area': {x: 0,y: -2,z: 0},
+  'area': {x: 0,y: 0,z: 0},
 }
 
 const EffectInfo:{[key: string]: EffectData} = {
@@ -230,8 +236,8 @@ const EffectInfo:{[key: string]: EffectData} = {
   '闇': {time: 2000, file: "assets/effect/dark.efk",size: 1,position: 'center'},
   '闇球': {time: 6000, file: "assets/effect/darksphere.efk",size: 1.8,position: 'area'},
   '炎': {time: 1800, file: "assets/effect/fire.efk",size: 1,position: 'foot'},
-  '炎2': {time: 2400, file: "assets/effect/fire2.efk",size: 1,position: 'foot'},
   '青炎': {time: 2400, file: "assets/effect/bluefire.efk",size: 1,position: 'foot'},
+  '黒炎': {time: 2400, file: "assets/effect/blackfire.efk",size: 1,position: 'foot'},
   '冷気': {time: 2000, file: "assets/effect/cold.efk",size: 1,position: 'foot'},
   '水': {time: 2000, file: "assets/effect/water.efk",size: 1,position: 'center'},
   '氷': {time: 2000, file: "assets/effect/ice.efk",size: 1,position: 'foot'},

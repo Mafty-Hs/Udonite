@@ -19,10 +19,15 @@ export class Room extends GameObject implements InnerXml {
     ObjectStore.instance.remove(this); // ObjectStoreには登録しない
   }
 
+  private  getGameTables(): GameTable[] {
+    let gameTables = ObjectStore.instance.getObjects(GameTable);
+    return gameTables.sort((a, b) => a.index - b.index);
+  }
+
   innerXml(): string {
     let xml = '';
     let objects: GameObject[] = [];
-    objects = objects.concat(ObjectStore.instance.getObjects(GameTable));
+    objects = objects.concat(this.getGameTables());
     objects = objects.concat(ObjectStore.instance.getObjects(GameCharacter));
     objects = objects.concat(ObjectStore.instance.getObjects(TextNote));
     objects = objects.concat(ObjectStore.instance.getObjects(CardStack));
@@ -36,7 +41,7 @@ export class Room extends GameObject implements InnerXml {
 
   parseInnerXml(element: Element) {
     let objects: GameObject[] = [];
-    objects = objects.concat(ObjectStore.instance.getObjects(GameTable));
+    objects = objects.concat(this.getGameTables());
     objects = objects.concat(ObjectStore.instance.getObjects(GameTableMask));
     objects = objects.concat(ObjectStore.instance.getObjects(Terrain));
     objects = objects.concat(ObjectStore.instance.getObjects(GameCharacter));

@@ -14,9 +14,9 @@
        </div>
     </div>
   </div>
-  <div class="window-item">
-    <div *ngIf="logType == 'html'" class="item-text">背景色</div>
-    <div *ngIf="logType == 'html'" class="item-setting">
+  <div *ngIf="logType == 'html'" class="window-item">
+    <div class="item-text">背景色</div>
+    <div class="item-setting">
       <div>
         <form>
           <input name="bgColor" type="radio" value="white" [(ngModel)]="bgColor">
@@ -25,6 +25,24 @@
             黒
         </form>
       </div>
+    </div>
+  </div>
+  <div *ngIf="!chatTab" class="window-item">
+    <div class="item-text">混合ログを含める</div>
+    <div class="item-setting">
+      <div class="toggle"><label>
+        <input name="showPalette" type="checkbox" [(ngModel)]="mergeLog">
+        <div><div></div></div>
+      </label></div>
+    </div>
+  </div>
+  <div class="window-item">
+    <div class="item-text">時刻を含める</div>
+    <div class="item-setting">
+      <div class="toggle"><label>
+        <input name="showPalette" type="checkbox" [(ngModel)]="timeStamp">
+        <div><div></div></div>
+      </label></div>
     </div>
   </div>
   <div class="window-item">

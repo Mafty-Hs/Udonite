@@ -3,6 +3,7 @@ import { ModalService } from 'service/modal.service';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ChatTab } from '@udonarium/chat-tab';
 import { SaveHtmlService } from 'service/save-html.service';
+import { PlayerService } from 'service/player.service';
 
 @Component({
   selector: 'log-save',
@@ -14,6 +15,8 @@ export class LogSaveComponent implements OnInit, AfterViewInit {
   chatTabIdentifier:string = ""
   logType:string = "html";
   bgColor:string = "white";
+  timeStamp:boolean = false;
+  mergeLog:boolean = false;
 
   get chatTab():ChatTab|null {
     if (!this.chatTabIdentifier) return null;
@@ -26,8 +29,10 @@ export class LogSaveComponent implements OnInit, AfterViewInit {
 
   constructor(
     private modalService: ModalService,
+    private playerService: PlayerService,
     private saveHtmlService: SaveHtmlService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -38,12 +43,14 @@ export class LogSaveComponent implements OnInit, AfterViewInit {
       this.chatTabIdentifier = this.modalService.option?.chatTabIdentifier;
       this.modalService.title =  'ログ保存 - ' + this.chatTabName;
       this.modalService.width = 400;
+      if (this.playerService.primaryChatWindowSetting) {
+        this.bgColor = this.playerService.primaryChatWindowSetting.bgColor == 'black' ? 'black' : 'white';
+      }
     });
-
   }
 
   saveLog() {
-    this.saveHtmlService.saveLog(this.logType,this.chatTab,this.bgColor)
+    this.saveHtmlService.saveLog(this.logType,this.chatTab,this.bgColor,this.timeStamp,this.mergeLog)
     this.modalService.resolve();
   }
 

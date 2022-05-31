@@ -18,6 +18,7 @@ export class SaveHtmlService {
     private roomService: RoomService,
   ) { }
 
+  chatTabMap = new Map<string,string>();
 
   htmlHead1: string =
   "<?xml version=\'1.0\' encoding=\'UTF-8\'?>\r\n" +
@@ -35,12 +36,13 @@ export class SaveHtmlService {
   '<div id="chatLog" style="background-color:#212121; color: #FFF">\r\n';
   htmlFoot: string = '</div>\r\n</body>\r\n</HTML>\r\n';
 
-  saveLog(logType :string ,targetTab: ChatTab|null,bgColor? :string) {
+  saveLog(logType :string ,targetTab: ChatTab|null,bgColor :string,useTimeStamp: boolean,useMergeLog :boolean) {
     let roomName:string = this.roomService.roomData.roomName
       ? this.roomService.roomData.roomName
       : 'chatlog';
     let chatTabList :ChatTab[] = [];
     let fileName:string = "";
+    this.mapUpdate();
     if (targetTab) {
       chatTabList.push(targetTab);
       fileName = roomName + "_" + targetTab.name  + "_" + this.timestamp();
@@ -54,18 +56,40 @@ export class SaveHtmlService {
       let targetFilename:string = "";
       let logfile:File = null;
       if (!chatTab.isAllowed) continue;
+      let tabName = chatTab.name;
+      let chatMessages = chatTab.chatMessages;
       switch(logType) {
         case 'text':
-          targetFilename = roomName + "_" + chatTab.name  + "_" + this.timestamp() + ".txt";
-          logfile = this.makeText(targetFilename,chatTab)
+          targetFilename = roomName + "_" + tabName  + "_" + this.timestamp() + ".txt";
+          logfile = this.makeText(targetFilename,tabName ,chatMessages, useTimeStamp)
           break;
         case 'html':
-          targetFilename = roomName + "_" + chatTab.name  + "_" + this.timestamp() + ".html";
-          logfile = this.makeHtml(targetFilename,chatTab,bgColor)
+          targetFilename = roomName + "_" + tabName  + "_" + this.timestamp() + ".html";
+          logfile = this.makeHtml(targetFilename,tabName ,chatMessages,bgColor, useTimeStamp)
           break;
         case 'csv':
-          targetFilename = roomName + "_" + chatTab.name  + "_" + this.timestamp() + ".csv";
-          logfile = this.makeCsv(targetFilename,chatTab)
+          targetFilename = roomName + "_" + tabName  + "_" + this.timestamp() + ".csv";
+          logfile = this.makeCsv(targetFilename,tabName ,chatMessages, useTimeStamp)
+          break;
+      }
+      files.push(logfile)
+    }
+    if (useMergeLog) {
+      let chatMessages:ChatMessage[] = this.mergeTabs;
+      let targetFilename:string = "";
+      let logfile:File = null;
+      switch(logType) {
+        case 'text':
+          targetFilename = roomName + "_ALL_" + this.timestamp() + ".txt";
+          logfile = this.makeText(targetFilename,"",chatMessages, useTimeStamp)
+          break;
+        case 'html':
+          targetFilename = roomName + "_ALL_" +  this.timestamp() + ".html";
+          logfile = this.makeHtml(targetFilename,"" ,chatMessages,bgColor, useTimeStamp)
+          break;
+        case 'csv':
+          targetFilename = roomName + "_ALL_" +  this.timestamp() + ".csv";
+          logfile = this.makeCsv(targetFilename,"" ,chatMessages, useTimeStamp)
           break;
       }
       files.push(logfile)
@@ -73,83 +97,91 @@ export class SaveHtmlService {
     if ( files.length > 0 ) FileArchiver.instance.saveAsync(files, fileName);
   }
 
-  private makeText(fileName: string ,targetTab: ChatTab):File {
-    let logdata: string = this.convertToText(targetTab);
+  private makeText(fileName: string ,tabName :string = "",chatMessages:ChatMessage[] ,useTimeStamp:boolean):File {
+    let logdata: string = this.convertToText(tabName ,chatMessages,useTimeStamp);
     let textfile: File = new File([logdata], fileName, { type: 'text/plain' });
     return textfile;
   }
 
-  private makeHtml(fileName: string ,targetTab: ChatTab,bgColor :string ):File {
-    let logdata: string = this.convertToHtml(targetTab ,bgColor);
+  private makeHtml(fileName: string ,tabName :string = "",chatMessages:ChatMessage[],bgColor :string ,useTimeStamp:boolean):File {
+    let logdata: string = this.convertToHtml(tabName ,chatMessages ,bgColor,useTimeStamp);
     let htmlfile: File = new File([logdata], fileName, { type: 'text/plain' });
     return htmlfile;
   }
 
-  private makeCsv(fileName: string ,targetTab: ChatTab):File {
-    let logdata: string = this.convertToCsv(targetTab);
+  private makeCsv(fileName: string ,tabName :string = "",chatMessages:ChatMessage[],useTimeStamp:boolean):File {
+    let logdata: string = this.convertToCsv(tabName ,chatMessages,useTimeStamp);
     let textfile: File = new File([logdata], fileName, { type: 'text/plain' });
     return textfile;
   }
 
-  private convertToText(targetTab: ChatTab): string {
+  private convertToText(tabName :string,chatMessages:ChatMessage[],useTimeStamp:boolean): string {
     let text:string = "";
-    let chatMessages = targetTab.chatMessages;
     for (const _chatMessage of chatMessages) {
-      text = text + this.addText(_chatMessage, targetTab.name);
+      text = text + this.addText(_chatMessage, tabName,useTimeStamp);
     }
     return text;
   }
 
-  private convertToHtml(targetTab: ChatTab,bgColor :string): string {
+  private convertToHtml(tabName :string = "",chatMessages:ChatMessage[],bgColor :string,useTimeStamp:boolean): string {
     let htmlText:string;
-    let chatMessages = targetTab.chatMessages;
     htmlText = this.htmlHead1;
-    htmlText = htmlText + '<title>' + 'チャットログ：' + targetTab.name + '</title>\r\n';
+    htmlText = htmlText + '<title>' + 'チャットログ：' + tabName + '</title>\r\n';
     htmlText = bgColor == 'white' ? htmlText + this.htmlHeadWhite : htmlText + this.htmlHeadBlack;
     for (const _chatMessage of chatMessages) {
-      htmlText = htmlText + this.addHtml(_chatMessage, targetTab.name, bgColor);
+      htmlText = htmlText + this.addHtml(_chatMessage, tabName, bgColor,useTimeStamp);
     }
     htmlText = htmlText + this.htmlFoot;
     return htmlText;
   }
 
-  private convertToCsv(targetTab: ChatTab): string {
+  private convertToCsv(tabName :string = "",chatMessages:ChatMessage[],useTimeStamp:boolean): string {
     let csv:string = "";
     //csv = this.csvTitle;
-    let chatMessages = targetTab.chatMessages;
     for (const _chatMessage of chatMessages) {
-      csv = csv + this.addCsv(_chatMessage, targetTab.name);
+      csv = csv + this.addCsv(_chatMessage, tabName,useTimeStamp);
     }
     return csv;
   }
 
-  private addText(_chatMessage:  ChatMessageContext ,tabName :string): string {
-    let chatText:string;
+  private addText(_chatMessage:  ChatMessageContext ,tabName :string,useTimeStamp:boolean): string {
+    if (tabName.length < 1) {
+      tabName = this.chatTabMap.has(_chatMessage.tabIdentifier) ? this.chatTabMap.get(_chatMessage.tabIdentifier) : "_";
+    }
+    let chatText:string = '';
     let chatTabName:string = "[" + tabName + "]";
     let text:string =  this.rubyToText(StringUtil.escapeHtmlAndRuby(_chatMessage.text));
-    chatText = chatTabName;
-    chatText = chatText + _chatMessage.name + " : ";
-    chatText = chatText + text + '\r\n';
+    if (useTimeStamp) chatText = this.castTimestamp(_chatMessage.timestamp)
+    chatText += chatTabName;
+    chatText += _chatMessage.name + " : ";
+    chatText += text + '\r\n';
     return chatText;
   }
 
-  private addHtml(_chatMessage:  ChatMessageContext ,tabName :string ,bgColor :string): string{
-    let chatText:string;
+  private addHtml(_chatMessage:  ChatMessageContext ,tabName :string ,bgColor :string,useTimeStamp:boolean): string{
+    if (tabName.length < 1) {
+      tabName = this.chatTabMap.has(_chatMessage.tabIdentifier) ? this.chatTabMap.get(_chatMessage.tabIdentifier) : "_";
+    }
+    let chatText:string = '';
     let chatTabName:string = "[" + tabName + "]";
     let text:string =  StringUtil.escapeHtmlAndRuby(_chatMessage.text).replace(/\n/g, '<br>');
     let color = bgColor == 'white' ?
     (_chatMessage.color === this.playerService.CHAT_WHITETEXT_COLOR ? this.playerService.CHAT_BLACKTEXT_COLOR : _chatMessage.color) :
     (_chatMessage.color === this.playerService.CHAT_BLACKTEXT_COLOR ? this.playerService.CHAT_WHITETEXT_COLOR : _chatMessage.color) ;
-    chatText = chatTabName;
-    chatText = chatText + '<font color="' + color + '">';
-    chatText = chatText + "<b>" + _chatMessage.name + "</b>";
-    chatText = chatText + "</font>" + ":" +
+    if (useTimeStamp) chatText = this.castTimestamp(_chatMessage.timestamp)
+    chatText += chatTabName;
+    chatText += '<font color="' + color + '">';
+    chatText += "<b>" + _chatMessage.name + "</b>";
+    chatText += "</font>" + ":" +
      ' <font color="' + _chatMessage.color + '">';
-    chatText = chatText + text + '</font><br>\r\n';
+    chatText += text + '</font><br>\r\n';
     return chatText;
   }
 
-  private addCsv(_chatMessage:  ChatMessageContext ,tabName :string): string {
+  private addCsv(_chatMessage:  ChatMessageContext ,tabName :string,useTimeStamp:boolean): string {
+    if (tabName.length < 1) {
+      tabName = this.chatTabMap.has(_chatMessage.tabIdentifier) ? this.chatTabMap.get(_chatMessage.tabIdentifier) : "_";
+    }
     let text:string =  this.rubyToText(StringUtil.escapeHtmlAndRuby(_chatMessage.text).replace(/\n/g, ' '));
     let csvData:string[] = [ tabName , this.castTimestamp(_chatMessage.timestamp) , _chatMessage.color , _chatMessage.name , text ]
     let csvText:string = "";
@@ -191,5 +223,21 @@ export class SaveHtmlService {
     let seconds = ('00' + date.getSeconds()).slice(-2);
 
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  mapUpdate() {
+    this.chatTabMap = new Map<string,string>();
+    for (let chatTab of this.chatMessageService.chatTabs) {
+      this.chatTabMap.set(chatTab.identifier, chatTab.name);
+    }
+  }
+
+  private get mergeTabs():ChatMessage[] {
+    let chatMessages:ChatMessage[] = [];
+    for (let chatTab of this.chatMessageService.chatTabs) {
+      if (!chatTab.isAllowed) continue;
+      chatMessages = chatMessages.concat(chatTab.chatMessages)
+    }
+    return chatMessages.sort((a, b) => a.timestamp - b.timestamp);
   }
 }

@@ -147,10 +147,14 @@ export class GameCharacterService {
   //リスト系
   locationCheck(gameCharacter: GameCharacter,onlyTable :boolean): boolean {
     if (!gameCharacter) return false;
-    switch (gameCharacter.location.name) {
-      case 'table':
+    switch (true) {
+      case (gameCharacter.location.name === 'table'):
         return true;
-      case 'graveyard':
+      case (gameCharacter.location.name === this.playerService.myPlayer.playerId):
+        return !onlyTable;
+      case  Boolean(this.playerService.otherPlayers.find(player =>　gameCharacter.location.name === player.playerId)):
+        return false;
+      case (gameCharacter.location.name === 'graveyard'):
         return false;
       default :
         return !onlyTable;

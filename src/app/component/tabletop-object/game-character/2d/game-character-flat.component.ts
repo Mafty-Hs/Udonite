@@ -85,7 +85,15 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
 
 
   ngOnInit():void {
-    super.ngOnInit()
+    super.ngOnInit();
+    EventSystem.register(this)
+    .on('CHARACTER_EFFECT', event => {
+      let effectName = event.data[0];
+      let character = event.data[1];
+      if(this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+        this.standImageService.show(this.gameCharacter,null,null,false,effectName)
+      }
+    });
   }
 
   ngAfterViewInit():void {

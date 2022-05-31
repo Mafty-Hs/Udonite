@@ -76,7 +76,7 @@ export class SyncWaitComponent implements OnInit, AfterViewInit, OnDestroy {
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
 
-    if (!this.roomService.roomData.is2d) this.effectService.initialize();
+    this.effectService.initialize();
 
     if (!TableSelecter.instance.viewTableIdentifier) {
       let gameTable = <GameTable>ObjectStore.instance.get('gameTable');

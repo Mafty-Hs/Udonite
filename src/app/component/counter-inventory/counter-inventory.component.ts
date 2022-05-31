@@ -7,10 +7,11 @@ import { RoomService } from 'service/room.service';
 @Component({
   selector: 'counter-inventory',
   templateUrl: './counter-inventory.component.html',
-  styleUrls: ['./counter-inventory.component.css']
+  styleUrls: ['./counter-inventory.component.css','../../common/scroll-white.common.css']
 })
 export class CounterInventoryComponent implements OnInit {
 
+  auth:boolean = this.roomService.adminAuth;
   disableRemove:boolean = this.roomService.disableSetCounter;
 
   get myList():CounterAssign[]  {
@@ -43,6 +44,27 @@ export class CounterInventoryComponent implements OnInit {
   remove(identifier: string){
     let counter = this.counterService.getAssign(identifier);
     if (counter)  counter.remove() ;
+  }
+
+  resetAge() {
+    if (confirm('全てのカウンターの寿命をリセットします。よろしいですか？')) {
+      const list = this.myList;
+      for (let counter of list) {
+        if (!counter.isPermanent) {
+          counter.age = counter.maxAge
+        }
+      }
+    }
+  }
+
+  removeAll(isForce :boolean) {
+    if (confirm('全てのカウンターを削除します。よろしいですか？')) {
+      const list = this.myList;
+      for (let counter of list) {
+        if (counter.isPermanent && !isForce) continue;
+        counter.remove() ;
+      }
+    }
   }
 
   constructor(

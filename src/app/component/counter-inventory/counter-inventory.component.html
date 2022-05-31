@@ -1,11 +1,11 @@
-<div>
-  <table>
+<div class="container scroll-white">
+  <table class="inventory">
      <tr>
-       <th style="width:12em">キャラクター</th>
-       <th style="width:12em">名前</th>
-       <th style="width:10em">説明</th>
+       <th style="width:13em">キャラクター</th>
+       <th style="width:14em">名前</th>
+       <th style="width:14em">説明</th>
        <th style="width:5em">寿命</th>
-       <th style="width:10em">コメント</th>
+       <th style="width:14em">コメント</th>
        <th style="width:4em">削除</th>
      <tr>
     <tr *ngFor="let counterinfo of myList; let i = index" [ngStyle]="{'background-color': counterinfo.age === 0 && !counterinfo.isPermanent ? 'maroon' : 'black'}">
@@ -20,6 +20,11 @@
        <td class="center"><button *ngIf="!disableRemove" class="close" (click)="remove(counterinfo.identifier)"><i class="material-icons" style="font-size: 14px;">close</i></button></td>
     </tr>
   </table>
+</div>
+<div *ngIf="auth" class="control-panel">
+  <button (click)="resetAge()">寿命をリセット</button>
+  <button (click)="removeAll(false)">全て削除</button>
+  <button (click)="removeAll(true)">全て削除(永続含む)</button>
 </div>
 <ng-template #permanent>
     永続

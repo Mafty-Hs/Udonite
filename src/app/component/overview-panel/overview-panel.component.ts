@@ -30,7 +30,7 @@ import { CardStack } from '@udonarium/card-stack';
 @Component({
   selector: 'overview-panel',
   templateUrl: './overview-panel.component.html',
-  styleUrls: ['./overview-panel.component.css','./overview-panel.design.css','./inner-note.css','../../common/range.status.css'],
+  styleUrls: ['./overview-panel.component.css','./overview-panel.design.css','./overview-panel.counter.css','./inner-note.css','../../common/range.status.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeInOut', [

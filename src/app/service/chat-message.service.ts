@@ -38,12 +38,12 @@ export class ChatMessageService {
     EventSystem.register(this)
     .on('UPDATE_GAME_OBJECT', -1000, event => {
       if (event.data.aliasName === 'chat-tab') {
-        this.updateChatTab();
+        queueMicrotask(() => this.updateChatTab());
       }
     })
     .on('DELETE_GAME_OBJECT', -1000, event => {
       if (event.data.aliasName === 'chat-tab') {
-        this.updateChatTab();
+        queueMicrotask(() => this.updateChatTab());
       }
     });
     this.updateChatTab();

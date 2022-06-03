@@ -141,7 +141,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     };
 
     this.elementRef.nativeElement.addEventListener('click', callback, true);
-    setTimeout(() => this.elementRef.nativeElement.removeEventListener('click', callback, true));
+    queueMicrotask(() => this.elementRef.nativeElement.removeEventListener('click', callback, true));
   }
 
   private adjustPosition() {
@@ -187,7 +187,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     let correction: PointerCoordinate = { x: 0, y: 0, z: 0 };
     let box = this.elementRef.nativeElement.getBoundingClientRect();
     let bounds = this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector).getBoundingClientRect();
-    
+
     if (this.allowOverHalf) {
       const boxWidth = box.right - box.left;
       const boxHeight = box.bottom - box.top;

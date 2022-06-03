@@ -94,7 +94,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           this.lazyUpdateTimer = null;
         }
         this.ngZone.run(() => { });
-      }, 0);
+      }, 1);
     } else {
       if (this.lazyUpdateTimer !== null) return;
       this.lazyUpdateTimer = setTimeout(() => {

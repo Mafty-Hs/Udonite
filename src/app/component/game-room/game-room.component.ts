@@ -78,16 +78,16 @@ export class GameRoomComponent implements OnInit {
       chatWidth = 500;
       this.standService.leftEnd = 500;
       this.standService.width = (window.innerWidth - 700);
-      setTimeout(() => {
+      queueMicrotask(() => {
         this.panelService.open(ChatWindowComponent, { width: 500, height: 400, left: 0, top: 490 });
-      }, 0);
+      });
     }
     else {
       this.standService.leftEnd = 700;
       this.standService.width = (window.innerWidth - 700);
-      setTimeout(() => {
+      queueMicrotask(() => {
         this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 0, top: 490 });
-      }, 0);
+      });
     }
   }
 
@@ -195,9 +195,9 @@ export class GameRoomComponent implements OnInit {
             component.timer = event.data.time;
           }
           else {
-            setTimeout(() => {
+            queueMicrotask(() => {
               SoundEffect.play(PresetSound.alarm);
-            },event.data.time);
+            });
           }
         }
       })

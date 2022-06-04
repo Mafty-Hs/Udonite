@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 
 import { EventSystem, IONetwork } from '@udonarium/core/system';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
@@ -6,6 +7,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
+import { ImageService } from 'service/image.service';
 import { PointerCoordinate } from 'service/pointer-device.service';
 
 @Component({
@@ -20,10 +22,19 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() cursor: PeerCursor = PeerCursor.myCursor;
   @Input() isFlat: boolean = false;
 
-  get iconUrl(): string { return this.cursor.player.image.url; }
-  get name(): string { return this.cursor.player.name }
+  get iconUrl(): string {
+    if (this.cursor && this.cursor.player) return this.imageService.getSkeletonOr(this.cursor.player.image).url;
+    return this.imageService.skeletonImage.url;
+  }
+  get name(): string {
+    if (this.cursor && this.cursor?.player && this.cursor?.player?.name) return this.cursor.player.name;
+    return "loading";
+  }
   get isMine(): boolean { return this.cursor.isMine; }
-  get color(): string { return (this.cursor.player.color && this.cursor.player.color != '#ffffff') ? this.cursor.player.color : '#f0dabd'; }
+  get color(): string {
+    if (this.cursor && this.cursor.player) return (this.cursor.player.color && this.cursor.player.color != '#ffffff') ? this.cursor.player.color : '#f0dabd';
+    return '#f0dabd'
+  }
 
   isMoving:boolean = false;
 
@@ -59,6 +70,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private batchService: BatchService,
     private coordinateService: CoordinateService,
+    private imageService:ImageService,
     private ngZone: NgZone
   ) { }
 

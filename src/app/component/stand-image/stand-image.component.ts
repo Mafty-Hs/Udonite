@@ -176,7 +176,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.color)
   }
 
   ngOnDestroy(): void {
@@ -333,7 +332,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  playEffect(effectName :string) {
+  async playEffect(effectName :string) {
     if (this.gameCharacter && (this.isApplyDialog || this.isSpeakable || this.gameCharacter.isShowChatBubble)) {
       clearTimeout(this._timeoutId);
       this._timeoutId = setTimeout(() => {
@@ -342,6 +341,11 @@ export class StandImageComponent implements OnInit, OnDestroy {
         });
       }, 12000);
     }
+    if (this.standImageElement) this._playEffect(effectName);
+    else setTimeout(() => this._playEffect(effectName),100);
+  }
+
+  private _playEffect(effectName :string) {
     if (this.standImageElement) {
       let image = this.standImageElement.nativeElement as HTMLElement;
       let rect = image.getBoundingClientRect();

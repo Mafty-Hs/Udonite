@@ -272,9 +272,3 @@ input[type="range"]:active::-webkit-slider-thumb {
 .toggle input[type="checkbox"]:checked + div > div {
     left: 32px;
 }
-
-.will-change {
-  will-change: transform;
-  backface-visibility: visible;
-}
-

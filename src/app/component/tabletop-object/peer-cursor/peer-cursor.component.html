@@ -1,4 +1,4 @@
-<div *ngIf="!isMine" #cursor class="component is-3d is-transition is-pointer-events-none" [ngClass]="{'will-change':isMoving}">
+<div *ngIf="!isMine" #cursor class="component is-3d is-transition is-pointer-events-none">
   <div class="is-3d is-transition" [ngStyle]="{'transform': 'rotateZ(' + (-rotateZ) + 'deg)'}">
     <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'" [style.transform]="isFlat ? 'translateX(-100%) translateY(-100%) rotate(45deg)' :'translateX(-100%) translateY(-100%) rotateX(-90deg) rotateZ(45deg)'">
       <div class="icon is-3d" [style.background-image]="'url(' + iconUrl + ')' | safe: 'style'">

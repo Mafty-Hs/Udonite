@@ -3,6 +3,8 @@ import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { RoomService,RoomState } from 'service/room.service';
 import * as JSZip from 'jszip/dist/jszip.min.js';
 import { MimeType } from '@udonarium/core/file-storage/mime-type';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 @Component({
   selector: 'data-load',
@@ -28,6 +30,7 @@ export class DataLoadComponent implements OnInit, AfterViewInit {
     await this.fileChecker();
     this.message = 'ルームデータを同期しています ' + this.xmlFile.length + '個';
     await this.xmlLoad();
+    this.objectPositonChecker();
     this.message = '画像データを同期しています ' + this.imageFile.length + '個';
     await this.imageLoad();
     this.xmlFile = [];
@@ -58,6 +61,15 @@ export class DataLoadComponent implements OnInit, AfterViewInit {
         if (MimeType.type(newfile.name) == 'application/json') this.jsonLoad(newfile);
       } catch (reason) {
         console.warn(reason);
+      }
+    }
+  }
+
+  objectPositonChecker() {
+    let tabletopObjects = ObjectStore.instance.getObjects<TabletopObject>(TabletopObject);
+    if (tabletopObjects.length > 0) {
+      for (let object of tabletopObjects) {
+        object.sanitizePosition();
       }
     }
   }

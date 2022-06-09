@@ -85,6 +85,7 @@ export class LoadDataService {
   tabletopDataLoad(xmlElement :Element ,nodeName :string):void {
     if (this.roomService.disableTabletopLoad) return;
     let gameObject = ObjectSerializer.instance.parseXml(xmlElement) as TabletopObject;
+    gameObject.sanitizePosition();
     if (this.playerService.isHideCharacterOnLoad && (gameObject instanceof GameCharacter)) {
       gameObject.owner = this.playerService.myPlayer.playerId;
     }

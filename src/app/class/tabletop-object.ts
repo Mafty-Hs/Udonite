@@ -260,4 +260,10 @@ export class TabletopObject extends ObjectNode {
     this.location.name = location;
     this.update();
   }
+
+  sanitizePosition() {
+    this.location.x = this.location && !isNaN(this.location.x) ? Math.round(Number(this.location.x)) : 0;
+    this.location.y = this.location && !isNaN(this.location.x) ? Math.round(Number(this.location.y)) : 0;
+    this.posZ = Math.round(Number(this.posZ));
+  }
 }

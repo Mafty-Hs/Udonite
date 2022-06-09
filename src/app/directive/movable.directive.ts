@@ -47,11 +47,11 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   private _posZ: number = 0;
 
   get posX(): number { return this._posX; }
-  set posX(posX: number) { this._posX = Math.floor(posX); this.setUpdateTimer(); }
+  set posX(posX: number) { this._posX = Math.round(posX); this.setUpdateTimer(); }
   get posY(): number { return this._posY; }
-  set posY(posY: number) { this._posY = Math.floor(posY); this.setUpdateTimer(); }
+  set posY(posY: number) { this._posY = Math.round(posY); this.setUpdateTimer(); }
   get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = Math.floor(posZ); this.setUpdateTimer(); }
+  set posZ(posZ: number) { this._posZ = Math.round(posZ); this.setUpdateTimer(); }
 
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private pointerStart3d: PointerCoordinate = { x: 0, y: 0, z: 0 };
@@ -77,6 +77,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
+    if ( !Number.isInteger(this.tabletopObject.location.x) || !Number.isInteger(this.tabletopObject.location.y) || !Number.isInteger(this.tabletopObject.posZ)) {
+      this.tabletopObject.sanitizePosition();
+    }
     this.batchService.add(() => this.initialize(), this.elementRef);
     this.setPosition(this.tabletopObject);
   }
@@ -242,9 +245,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
-    this._posX = Math.floor(object.location.x);
-    this._posY = Math.floor(object.location.y);
-    this._posZ = Math.floor(object.posZ);
+    this._posX = Math.round(object.location.x);
+    this._posY = Math.round(object.location.y);
+    this._posZ = Math.round(object.posZ);
     this.updateTransformCss();
   }
 

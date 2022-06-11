@@ -1,10 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
-
 import { EventSystem, IONetwork } from '@udonarium/core/system';
-import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { PeerCursor } from '@udonarium/peer-cursor';
-
+import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { ImageService } from 'service/image.service';
@@ -22,18 +19,24 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() cursor: PeerCursor = PeerCursor.myCursor;
   @Input() isFlat: boolean = false;
 
-  get iconUrl(): string {
-    if (this.cursor && this.cursor.player) return this.imageService.getSkeletonOr(this.cursor.player.image).url;
-    return this.imageService.skeletonImage.url;
-  }
-  get name(): string {
-    if (this.cursor && this.cursor?.player && this.cursor?.player?.name) return this.cursor.player.name;
-    return "loading";
-  }
-  get isMine(): boolean { return this.cursor.isMine; }
-  get color(): string {
-    if (this.cursor && this.cursor.player) return (this.cursor.player.color && this.cursor.player.color != '#ffffff') ? this.cursor.player.color : '#f0dabd';
-    return '#f0dabd'
+  playerIdetifier:string = null;
+  isMoving:boolean = false;
+
+  iconUrl: string = this.imageService.skeletonImage.url;
+  name: string = "loading";
+  isMine: boolean = false;
+  color: string = '#f0dabd';
+
+  update() {
+    if (this.cursor.player) {
+      this.playerIdetifier = this.cursor.playerIdentifier;
+      this.iconUrl = this.imageService.getSkeletonOr(this.cursor.player.image).url;
+      this.name = this.cursor.player.name;
+      this.color = this.cursor.player.color != '#ffffff' ? this.cursor.player.color : '#f0dabd';
+    }
+    else {
+      setTimeout(() => {this.update()}, 1000);
+    }
   }
 
   private cursorElement: HTMLElement = null;
@@ -47,22 +50,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private _y: number = 0;
   private _target: HTMLElement;
 
-  static viewRotateX = 50;
-  static viewRotateZ = 10;
-
-  get rotateZ(): number {
-    return PeerCursorComponent.viewRotateZ;
-  }
-
-  get nameTagRotate(): number {
-    let x = (PeerCursorComponent.viewRotateX % 360) - 90;
-    return -(x > 0 ? x : 360 + x);
-  }
-
-  get delayMs(): number {
-    let maxDelay = IONetwork.peerIds.length * 16.6;
-    return maxDelay < 100 ? 100 : maxDelay;
-  }
+  delayMs: number = 100;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -72,35 +60,27 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     private ngZone: NgZone
   ) { }
 
-  static ctor = (() => {
-    EventSystem.register(PeerCursorComponent)
-      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-        PeerCursorComponent.viewRotateX = event.data['x'];
-        PeerCursorComponent.viewRotateZ = event.data['z'];
-    });
-  })();
-
   ngOnInit() {
+    this.isMine = this.cursor.isMine;
+    this.update();
     if (!this.isMine) {
       EventSystem.register(this)
         .on('CURSOR_MOVE', event => {
           if (event.sendFrom !== this.cursor.peerId) return;
-          this.batchService.add(() => {
-            this.stopTransition();
-            this.setAnimatedTransition();
-            this.setPosition(event.data[0], event.data[1], event.data[2]);
-            this.resetFadeOut();
-            this.changeDetector.markForCheck();
-          }, this);
+          this.move(event.data[0],event.data[1],event.data[2]);
         })
-        .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-          this.ngZone.run(() => {
-            PeerCursorComponent.viewRotateX = event.data['x'];
-            PeerCursorComponent.viewRotateZ = event.data['z'];
-            this.changeDetector.markForCheck();
-          });
-      });
+        .on('UPDATE_GAME_OBJECT', -1000, event => {
+          if (event.data.identifier === this.playerIdetifier) {
+            this.update();
+          }
+        });
     }
+  }
+
+  async move(x :number ,y: number ,z: number) {
+    this.resetFadeOut();
+    this.stopTransition();
+    this.setPosition(x, y, z);
   }
 
   ngAfterViewInit() {
@@ -129,32 +109,47 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private onMouseMove(e: any) {
     let x = e.touches ? e.changedTouches[0].pageX : e.pageX;
     let y = e.touches ? e.changedTouches[0].pageY : e.pageY;
+    x = Math.round(x);
+    y = Math.round(y);
     if (x === this._x && y === this._y) return;
+    this._MouseMove(x,y,e.target)
+  }
+
+  private async _MouseMove(x :number, y :number, target:HTMLElement) {
     this._x = x;
     this._y = y;
-    this._target = e.target;
+    this._target = target;
     if (!this.updateInterval) {
       this.updateInterval = setTimeout(() => {
         this.updateInterval = null;
         this.calcLocalCoordinate(this._x, this._y, this._target);
       }, this.delayMs);
     }
+
   }
 
   private calcLocalCoordinate(x: number, y: number, target: HTMLElement) {
+    //あとで対処
     if (!document.getElementById('app-table-layer').contains(target)) return;
 
     let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
     coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
-
+    coordinate =  { x: Math.round(coordinate.x) , y: Math.round(coordinate.y), z: Math.round(coordinate.z) };
     EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z]);
   }
 
+  fadeOutTime = null
+
   private resetFadeOut() {
-    this.opacityElement.style.opacity = '1.0';
+    if (!this.isMoving) {
+      this.opacityElement.style.opacity = '1.0';
+      this.setAnimatedTransition();
+      this.isMoving = true;
+    }
     if (this.fadeOutTimer == null) {
       this.fadeOutTimer = new ResettableTimeout(() => {
         this.opacityElement.style.opacity = '0.0';
+        this.isMoving = false;
       }, 3000);
     }
     this.fadeOutTimer.reset();
@@ -169,6 +164,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setPosition(x: number, y: number, z: number) {
-    this.cursorElement.style.transform = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px)';
+    let css = 'translate3d(' + x + 'px,' + y + 'px,' + z + 'px) ';
+    this.cursorElement.style.transform = css;
   }
 }

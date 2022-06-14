@@ -38,25 +38,22 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
   diceSymbol: DiceSymbol = null;
   is3D: boolean = false;
 
-  get face(): string { return this.diceSymbol.face; }
+  _name = "";
+  _face = "";
+  get face(): string { return this._face; }
   set face(face: string) { this.diceSymbol.face = face; }
   get owner(): string { return this.diceSymbol.owner; }
   set owner(owner: string) { this.diceSymbol.owner = owner; }
   get rotate(): number { return this.diceSymbol.rotate; }
   set rotate(rotate: number) { this.diceSymbol.rotate = rotate; }
 
-  get name(): string { return this.diceSymbol.name; }
+  get name(): string { return this._name; }
   set name(name: string) { this.diceSymbol.name = name; }
-  get size(): number { return this.adjustMinBounds(this.diceSymbol.size); }
-
-  get faces(): string[] { return this.diceSymbol.faces; }
+  size = 1
+  faces: string[] = [];
   get nothingFaces(): string[] { return this.diceSymbol.nothingFaces; }
-  get imageFile(): ImageFile {
-    return this.imageService.getEmptyOr(this.diceSymbol.imageFile);
-  }
-  get backFaceImageFile(): ImageFile {
-    return this.imageService.getEmptyOr(this.diceSymbol.backFaceImageFile);
-  }
+  imageFile: ImageFile = ImageFile.Empty;
+  backFaceImageFile: ImageFile = ImageFile.Empty;
 
   get isMine(): boolean { return this.diceSymbol.isMine; }
   get hasOwner(): boolean { return this.diceSymbol.hasOwner; }
@@ -117,7 +114,17 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
     private chatMessageService: ChatMessageService
   ) { }
 
+  update() {
+    this._name = this.diceSymbol.name;
+    this._face = this.diceSymbol.face;
+    this.faces = this.diceSymbol.faces;
+    this.size = this.adjustMinBounds(this.diceSymbol.size);
+    this.imageFile = this.imageService.getEmptyOr(this.diceSymbol.imageFile);
+    this.backFaceImageFile = this.imageService.getEmptyOr(this.diceSymbol.backFaceImageFile);
+  }
+
   ngOnInit() {
+    this.update();
     EventSystem.register(this)
       .on('ROLL_DICE_SYNBOL', -1000, event => {
         if (event.data.identifier === this.diceSymbol.identifier) {
@@ -133,6 +140,7 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
           || (object instanceof ObjectNode && this.diceSymbol.contains(object))) {
+          this.update();
           this.changeDetector.markForCheck();
         }
       })

@@ -28,15 +28,16 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() is3D: boolean = false;
   @Input() isFlat: boolean = false;
 
-  get title(): string { return this.textNote.title; }
-  get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
-  set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
-  get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
-  get imageFile(): ImageFile { return this.textNote.imageFile; }
+  title: string = "";
+  private _text:string = "";
+  get text(): string { return this._text; }
+  set text(text: string) { this.textNote.text = text; }
+  fontSize: number = 14;
+  imageFile: ImageFile = ImageFile.Empty;
   get rotate(): number { return this.textNote.rotate; }
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
-  get height(): number { return this.adjustMinBounds(this.textNote.height); }
-  get width(): number { return this.adjustMinBounds(this.textNote.width); }
+  height: number = 1;
+  width: number = 1;
 
   get altitude(): number { return this.isFlat ? 0 : this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
@@ -91,12 +92,25 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   viewRotateZ = 10;
 
+  updateObject() {
+    this.title = this.textNote.title;
+    this._text = this.textNote.text;
+    this.fontSize = this.textNote.fontSize;
+    this.width = this.adjustMinBounds(this.textNote.width);
+    this.height = this.adjustMinBounds(this.textNote.height);
+    this.imageFile = this.textNote.imageFile;
+    this.calcFitHeightIfNeeded();
+  }
+
+
   ngOnInit() {
+    this.updateObject()
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.textNote || !object) return;
         if (this.textNote === object || (object instanceof ObjectNode && this.textNote.contains(object))) {
+          this.updateObject()
           this.changeDetector.markForCheck();
         }
       })

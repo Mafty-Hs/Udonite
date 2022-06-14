@@ -21,7 +21,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   playerIdetifier:string = null;
   isMoving:boolean = false;
-
+  transform:string = "";
   iconUrl: string = this.imageService.skeletonImage.url;
   name: string = "loading";
   isMine: boolean = false;
@@ -62,6 +62,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.isMine = this.cursor.isMine;
+    this.transform = this.isFlat ? 'translateX(-100%) translateY(-100%) rotate(45deg)' :'translateX(-100%) translateY(-100%) rotateX(-90deg) rotateZ(45deg)'
     this.update();
     if (!this.isMine) {
       EventSystem.register(this)

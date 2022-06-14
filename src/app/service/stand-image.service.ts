@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
@@ -12,7 +12,6 @@ export class StandImageService {
   static currentStandImageShowing = new Map<string, ComponentRef<StandImageComponent>>();
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   show(gameCharacter: GameCharacter, standElement: DataElement=null , color: string=null, isSecret=false, effectName: string = '') {
@@ -38,7 +37,7 @@ export class StandImageService {
       }
     }
     if (isNewbee && gameCharacter.location.name != 'graveyard') {
-      const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
+      const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(StandImageComponent);
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       if (!standElement) {
         let stand = gameCharacter.standList.getDefault();

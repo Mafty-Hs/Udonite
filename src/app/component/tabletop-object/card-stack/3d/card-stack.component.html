@@ -1,3 +1,5 @@
+<div class="dummy-will-change" appMovable [movable.option]="movableOption">
+</div>
 <div class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
   [style.width.px]="width" [style.height.px]="height"
   appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">

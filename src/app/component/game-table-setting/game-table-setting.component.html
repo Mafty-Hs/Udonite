@@ -32,6 +32,9 @@
       <div class="images-select">
         <div>
           画像
+          <div *ngIf="!tableBackgroundImage.url">
+            <button (click)="openBgImageModal()" style="height: 120px;" [attr.disabled]="!isEditable ? '' : null">テーブル画像を追加</button>
+          </div>
           <div (click)="openBgImageModal()" style="position: relative; overflow: hidden">
             <img height="120" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
           </div>

@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
-import { CardStackComponent } from 'component/tabletop-object/card-stack/card-stack.component';
+import { CardStackComponent } from 'component/tabletop-object/card-stack/3d/card-stack.component';
 import { CardComponent } from 'component/tabletop-object/card/card.component';
 import { ChatInputComponent } from 'component/chat/chat-input/chat-input.component';
 import { ChatMessageComponent } from 'component/chat/chat-message/chat-message.component';
@@ -115,6 +115,7 @@ import { SimpleInventoryComponent } from './component/simple-inventory/simple-in
 import { UiTrayComponent } from './component/ui-tray/ui-tray.component';
 import { ViewSettingComponent } from './component/view-setting/view-setting.component';
 import { StickyNoteComponent } from './component/ui-tray/sticky-note/sticky-note.component';
+import { CardStackFlatComponent } from './component/tabletop-object/card-stack/2d/card-stack-flat.component';
 
 @NgModule({
   declarations: [
@@ -215,6 +216,7 @@ import { StickyNoteComponent } from './component/ui-tray/sticky-note/sticky-note
     UiTrayComponent,
     ViewSettingComponent,
     StickyNoteComponent,
+    CardStackFlatComponent,
   ],
   imports: [
     BrowserModule,

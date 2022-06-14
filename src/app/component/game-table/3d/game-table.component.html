@@ -5,15 +5,42 @@
     <div id="app-game-table" class="game-table table-image is-3d" [style.background-image]="'url(' + tableImage.url + ')' | safe: 'style'" #gameObjects>
       <canvas class="grid-canvas is-fill is-pointer-events-none" #gridCanvas
         [ngStyle]="{'transform': 'translateZ(' + (gridHeight + 0.1) + 'px)'}"></canvas>
-      <terrain class="is-3d" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [terrain]="terrain"></terrain>
-      <game-table-mask class="is-3d" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
-      <text-note class="is-3d" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
-      <card-stack class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack>
-      <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
-      <dice-symbol class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>
-      <game-character class="is-3d" *ngFor="let character of characters; trackBy: trackByGameObject" [gameCharacter]="character" [appTooltip]="character"></game-character>
-      <popup class="is-3d" *ngFor="let popup of popups; trackBy: trackByGameObject" [popup]="popup"></popup>
-      <peer-cursor class="is-3d" *ngFor="let cursor of peerCursors; trackBy: trackByPeerId" [cursor]="cursor"></peer-cursor>
+      <div *ngIf="terrains.length > 0" class="is-fill is-3d" style="transform: translateZ(0)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <terrain class="is-3d" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [terrain]="terrain"></terrain>
+      </div>
+      <div *ngIf="tableMasks.length > 0" class="is-fill is-3d" style="transform: translateZ(0.15px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <game-table-mask class="is-3d" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
+      </div>
+      <div *ngIf="textNotes.length > 0" class="is-fill is-3d" style="transform: translateZ(0.15px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <text-note class="is-3d" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
+      </div>
+      <div *ngIf="cardStacks.length > 0" class="is-fill is-3d" style="transform: translateZ(0.15px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <card-stack class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack>
+      </div>
+      <div *ngIf="cards.length > 0" class="is-fill is-3d" style="transform: translateZ(0.15px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)" style="transform: translateZ(0.15px)"></div>
+        <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
+      </div>
+      <div *ngIf="diceSymbols.length > 0" class="is-fill is-3d" style="transform: translateZ(1px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <dice-symbol class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>
+      </div>
+      <div *ngIf="characters.length > 0" class="is-fill is-3d" style="transform: translateZ(1px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <game-character class="is-3d" *ngFor="let character of characters; trackBy: trackByGameObject" [gameCharacter]="character" [appTooltip]="character"></game-character>
+      </div>
+      <div *ngIf="popups.length > 0" class="is-fill is-3d" style="transform: translateZ(1px)">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <popup class="is-3d" *ngFor="let popup of popups; trackBy: trackByGameObject" [popup]="popup"></popup>
+      </div>
+      <div class="is-fill is-3d" style="z-index: 2">
+        <div class="dummy-will-change is-3d" style="transform: translate3d(0,0,0)"></div>
+        <peer-cursor class="is-3d" *ngFor="let cursor of peerCursors; trackBy: trackByPeerId" [cursor]="cursor"></peer-cursor>
+      </div>
     </div>
   </div>
 </div>

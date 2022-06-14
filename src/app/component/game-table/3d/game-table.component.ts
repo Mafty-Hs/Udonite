@@ -51,7 +51,7 @@ export class GameTableComponent extends GameTableComponentTemplate implements On
 
       this.viewPotisonX += transformX;
       this.viewPotisonY += transformY;
-      this.viewPotisonZ += transformZ;
+      this.viewPotisonZ += Math.floor(transformZ);
     }
 
     if (isAbsolute || rotateX != 0 || rotateY != 0 || rotateX != 0) {
@@ -64,6 +64,6 @@ export class GameTableComponent extends GameTableComponentTemplate implements On
       });
     }
 
-    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
+    this.gameTable.nativeElement.style.transform = 'translate3d(' + this.viewPotisonX + 'px,'+ this.viewPotisonY + 'px,'+ this.viewPotisonZ + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
   }
 }

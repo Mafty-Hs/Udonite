@@ -71,7 +71,7 @@ export class GameTableFlatComponent extends GameTableComponentTemplate implement
       });
     }
 
-    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateZ(' + this.viewRotateZ + 'deg) ';
+    this.gameTable.nativeElement.style.transform = 'translate3d(' + this.viewPotisonX + 'px,'+ this.viewPotisonY + 'px,'+ this.viewPotisonZ + 'px) rotateZ(' + this.viewRotateZ + 'deg) ';
   }
 
 }

@@ -41,11 +41,9 @@ export class ChatMessageService {
         queueMicrotask(() => this.updateChatTab());
       }
     })
-    .on('DELETE_GAME_OBJECT', -1000, event => {
-      if (event.data.aliasName === 'chat-tab') {
+    .on('UPDATE_CHATTAB', -1000, event => {
         queueMicrotask(() => this.updateChatTab());
-      }
-    });
+    })
     this.updateChatTab();
    }
 

@@ -165,6 +165,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       this.selectedTab.destroy();
       this.selectedTabIdentifier = '';
       this.selectedTab = null;
+      EventSystem.call('UPDATE_CHATTAB',null)
     }
   }
 

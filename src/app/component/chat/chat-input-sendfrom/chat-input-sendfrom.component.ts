@@ -39,6 +39,7 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
   }
 
   lazyUpdateDo():void {
+    if (this.character && this.character?.location?.name === 'graveyard' ) this.sendFrom = this.playerService.myPlayer.playerId;
     this.changeDetector.detectChanges();
   }
 
@@ -118,8 +119,9 @@ export class ChatInputSendfromComponent implements OnInit ,OnDestroy {
       }
     })
     .on('DELETE_GAME_OBJECT', -1000, event => {
-      if (event.data.aliasName === 'character' )  this.lazyUpdate();
-    })
+      if (event.data.identifier === this.sendFrom )
+      this.lazyUpdate();
+    });
   }
 
   ngOnInit(): void {

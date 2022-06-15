@@ -114,8 +114,8 @@
 }
 
 .scroll::-webkit-scrollbar {
-  height:10px;
-  width: 10px;
+  height:13px;
+  width: 13px;
 }
 .scroll::-webkit-scrollbar-thumb {
   background-color: #222;

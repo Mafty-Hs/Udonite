@@ -379,7 +379,7 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
       let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'メモ';
     if (this.gameCharacter.name.length) title += ' - ' + this.gameCharacter.name;
-    let option: PanelOption = { title: title ,left: coordinate.x - 330, top: coordinate.y - 330, width: 330, height: 330 };
+    let option: PanelOption = { title: title ,left: coordinate.x - 360, top: coordinate.y - 330, width: 360, height: 330 };
     let panel = this.panelService.open<InnerNoteComponent>(InnerNoteComponent, option);
     panel.character = this.gameCharacter;
   }

@@ -64,6 +64,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     this.tabletopObject = character as TabletopObject;
   }
 
+  get notelength() :number {
+    let notes = this._character.note.split('\n');
+    return notes.length + 2;
+  }
+
   @Input() left: number = 0;
   @Input() top: number = 0;
 

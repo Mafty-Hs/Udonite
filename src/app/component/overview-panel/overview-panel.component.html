@@ -138,13 +138,8 @@
 <ng-template #overviewCharacterNote>
   <div class="component-content"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
-    <div class="component-background text-note-container">
-      <div style="position: relative;">
-        <div class="is-fill">
-          <textarea class="inner-note" [(ngModel)]="_character.note" spellcheck="false"></textarea>
-        </div>
-        <div class="textarea-spacer">{{_character.note}}</div>
-      </div>
+    <div class="component-background inner-note-container">
+      <textarea class="inner-note" rows="{{notelength}}" [(ngModel)]="_character.note" spellcheck="false"></textarea>
     </div>
   </div>
 </ng-template>

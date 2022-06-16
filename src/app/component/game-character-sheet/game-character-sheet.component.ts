@@ -346,7 +346,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'メモ';
     if (this.tabletopObject.name.length) title += ' - ' + this.tabletopObject.name;
-    let option: PanelOption = { title: title ,left: coordinate.x - 330, top: coordinate.y - 330, width: 330, height: 330 };
+    let option: PanelOption = { title: title ,left: coordinate.x - 360, top: coordinate.y - 330, width: 360, height: 330 };
     let panel = this.panelService.open<InnerNoteComponent>(InnerNoteComponent, option);
     panel.character = this.tabletopObject as GameCharacter;
   }

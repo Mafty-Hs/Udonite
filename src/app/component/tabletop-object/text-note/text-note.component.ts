@@ -115,7 +115,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.changeDetector.markForCheck();
+        if (this.textNote.imageFile && this.textNote.imageFile.identifier == event.data) {
+          this.imageFile = this.textNote.imageFile;
+          this.changeDetector.markForCheck();
+        }
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {

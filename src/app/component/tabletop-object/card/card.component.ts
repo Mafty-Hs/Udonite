@@ -155,8 +155,18 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.updateObject();
-        this.changeDetector.markForCheck();
+        if (this.card.imageFile && this.card.imageFile.identifier == event.data) {
+          this.imageFile = this.imageService.getSkeletonOr(this.card.imageFile);
+          this.changeDetector.markForCheck();
+        }
+        if (this.card.frontImage && this.card.frontImage.identifier == event.data) {
+          this.frontImage = this.imageService.getSkeletonOr(this.card.frontImage);
+          this.changeDetector.markForCheck();
+        }
+        if (this.card.backImage && this.card.backImage.identifier == event.data) {
+          this.backImage  = this.imageService.getSkeletonOr(this.card.backImage);
+          this.changeDetector.markForCheck();
+        }
       });
     this.movableOption = {
       tabletopObject: this.card,

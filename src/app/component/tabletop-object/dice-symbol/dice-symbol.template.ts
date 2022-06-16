@@ -159,7 +159,14 @@ export class DiceSymbolComponentTemplate implements OnInit, AfterViewInit, OnDes
         });
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.changeDetector.markForCheck();
+        if (this.diceSymbol.imageFile && this.diceSymbol.imageFile.identifier == event.data) {
+          this.imageFile = this.imageService.getEmptyOr(this.diceSymbol.imageFile);
+          this.changeDetector.markForCheck();
+        }
+        if (this.diceSymbol.backFaceImageFile && this.diceSymbol.backFaceImageFile.identifier == event.data) {
+          this.backFaceImageFile = this.imageService.getEmptyOr(this.diceSymbol.backFaceImageFile);
+          this.changeDetector.markForCheck();
+        }
       });
     this.movableOption = {
       tabletopObject: this.diceSymbol,

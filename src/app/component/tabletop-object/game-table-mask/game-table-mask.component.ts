@@ -109,8 +109,10 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.updateObject();
-        this.changeDetector.markForCheck();
+        if (this.gameTableMask.imageFile.identifier === event.data.identifier) {
+          this.changeDetector.markForCheck();
+          this.imageFile = this.gameTableMask.imageFile;
+        }
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {

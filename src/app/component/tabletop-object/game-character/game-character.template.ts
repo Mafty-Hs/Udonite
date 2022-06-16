@@ -309,7 +309,14 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.changeDetector.markForCheck();
+        if (this.gameCharacter.imageFile && this.gameCharacter.imageFile.identifier == event.data) {
+          this.imageFile = this.gameCharacter.imageFile;
+          this.changeDetector.markForCheck();
+        }
+        if (this.gameCharacter.shadowImageFile && this.gameCharacter.shadowImageFile.identifier == event.data) {
+          this.shadowImageFile = this.gameCharacter.shadowImageFile;
+          this.changeDetector.markForCheck();
+        }
       });
 
     this.movableOption = {

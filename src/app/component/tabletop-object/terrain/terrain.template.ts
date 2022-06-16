@@ -147,8 +147,14 @@ export class TerrainComponentTemplate implements OnInit, OnDestroy, AfterViewIni
         }
       })
       .on('IMAGE_SYNC', -1000, event => {
-        this.updateObject();
-        this.changeDetector.markForCheck();
+        if (this.terrain.wallImage && this.terrain.wallImage.identifier == event.data) {
+          this.wallImage = this.imageService.getSkeletonOr(this.terrain.wallImage);
+          this.changeDetector.markForCheck();
+        }
+        if (this.terrain.floorImage && this.terrain.floorImage.identifier == event.data) {
+          this.floorImage = this.imageService.getSkeletonOr(this.terrain.floorImage);
+          this.changeDetector.markForCheck();
+        }
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {

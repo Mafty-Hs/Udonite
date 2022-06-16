@@ -151,7 +151,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   }
   logClear() {
     if (!this.isEmpty && this.selectedTab) {
-      if (confirm('選択したタブのログを全て削除します。このまま続行すると復活できません。\nよろしいですか？')) {
+      if (confirm('「' + this.selectedTab.name + '」のログを全て削除します。\nこのまま続行すると復活できません。\nよろしいですか？')) {
         this.selectedTab.clearAll();
         let text = "ログは" + this.playerService.myPlayer.name  + "が削除しました";
         this.chatMessageService.sendMessage(this.selectedTab,text,"","System");

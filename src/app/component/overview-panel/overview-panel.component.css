@@ -14,6 +14,12 @@
   font-size: 12px;
 }
 
+.dice-image {
+  padding: 0;
+  width: 100px;
+  vertical-align: bottom;
+}
+
 .character-image {
   position: absolute;
   bottom:-10px;

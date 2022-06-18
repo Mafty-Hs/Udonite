@@ -31,6 +31,46 @@
   pointer-events: none;
 }
 
+.dummy {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  content: '';
+  will-change: opacity;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0)
+}
+
+.layer {
+  transform-style: preserve-3d;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.terrain-layer {
+  transform: translateZ(0)
+}
+
+.mask-layer {
+  transform: translateZ(0.15px)
+}
+
+.character-layer {
+  transform: translateZ(1px)
+}
+
+.cursor-layer {
+  z-index: 2;
+  transform: translateZ(0)
+}
+
 .component {
   -moz-user-select: none;
   -webkit-user-select: none;

@@ -81,8 +81,7 @@ export class GameTableComponentTemplate implements OnInit, OnDestroy, AfterViewI
   get textNotes(): TextNote[] { return this.tabletopService.textNotes; }
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
   get peerCursors(): PeerCursor[] { return this.playerService.peerCursors; }
-  get popups(): Popup[] { return this.tabletopService.popups;
-   }
+  get popups(): Popup[] { return this.tabletopService.popups;}
 
   constructor(
     protected ngZone: NgZone,

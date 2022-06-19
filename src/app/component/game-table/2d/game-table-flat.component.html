@@ -15,6 +15,7 @@
       <div *ngIf="textNotes.length > 0" class="layer mask-layer">
         <div class="dummy"></div>
         <text-note class="is-3d" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [isFlat]="true" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
+      </div>
       <div *ngIf="cardStacks.length > 0" class="layer mask-layer">
         <div class="dummy"></div>
         <card-stack-flat class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack-flat>

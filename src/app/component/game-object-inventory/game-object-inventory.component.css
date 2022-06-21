@@ -199,4 +199,12 @@
   margin: 0 4px;
 }
 
-
+.initiative {
+  display: inline-block;
+  background-color: #222;
+  border: solid 2px #66F;
+  border-radius: 5px;
+  margin: 1px;
+  padding: 2px;
+  font-size: 1em;
+}

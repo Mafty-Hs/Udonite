@@ -2,6 +2,7 @@
   <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryMultiMove"></ng-container>
+  <ng-container *ngTemplateOutlet="InitiativeNumber"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
     (click)="selectGameObject(gameObject)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
@@ -23,10 +24,35 @@
 </ng-template>
 <ng-template #inventoryViewSetting>
   <ng-container *ngIf="isEdit">
-    <div>
-      <div style="font-size: 12px;">並び順</div>
-      <input [(ngModel)]="sortTag" placeholder="タグ名" />
-      <select [(ngModel)]="sortOrder">
+    <div style="font-size: 12px;">
+      <div>並び順</div>
+      <div>
+        <form>
+         <input name="sortType" type="radio" value="initiative" [disabled]="initiativeStatus.length < 1" [ngModelOptions]="{ standalone: true }" [(ngModel)]="sortType">
+         イニシアティブ
+         <input name="sortType" type="radio" value="template" [disabled]="templateStatus.length < 1" [ngModelOptions]="{ standalone: true }" [(ngModel)]="sortType">
+         テンプレートから選択
+         <input name="sortType" type="radio" value="free" [ngModelOptions]="{ standalone: true }" [(ngModel)]="sortType">
+         自由記入
+        </form>
+      </div>
+      <div style="width:180px ;padding-top: 2px;display:inline-block">
+        <ng-container [ngSwitch]="sortType">
+          <ng-container *ngSwitchCase="'initiative'">
+            {{initiativeStatus}}
+          </ng-container>
+          <ng-container *ngSwitchCase="'template'">
+            <select [(ngModel)]="sortTag">
+              <option value="name">name</option>
+              <option *ngFor="let dataElmName of templateStatus" value="{{dataElmName}}">{{dataElmName}}</option>
+            </select>
+          </ng-container>
+          <ng-container *ngSwitchCase="'free'">
+            <input [(ngModel)]="sortTag" placeholder="タグ名" />
+          </ng-container>
+        </ng-container>
+      </div>
+      <select *ngIf="!isInitiative" [(ngModel)]="sortOrder">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
       </select>
@@ -48,8 +74,13 @@
       <tr>
         <th style=" vertical-align:middle;">並び順:</th>
         <td style=" vertical-align:middle;">
-          <ng-container *ngIf="0 < sortTag.length">{{sortTag}} ({{sortOrderName}})</ng-container>
-          <ng-container *ngIf="sortTag.length < 1">-</ng-container>
+          <ng-container *ngIf="!isInitiative">
+            <ng-container *ngIf="0 < sortTag.length">{{sortTag}} ({{sortOrderName}})</ng-container>
+            <ng-container *ngIf="sortTag.length < 1">-</ng-container>
+          </ng-container>
+          <ng-container *ngIf="isInitiative">
+            イニシアティブ({{sortTag}})
+          </ng-container>
         </td>
         <td><button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>設定</button></td>
       </tr>
@@ -74,9 +105,28 @@
     </div>
   </ng-container>
 </ng-template>
+<ng-template #InitiativeNumber>
+  <div>
+    <span  style="font-size: 12px;font-weight: bold">
+      イニシアティブ修正値設定:
+    </span>
+    <button class="tab-setting small-font" (click)="toggleInitiativeNumber()"><i class="material-icons small-font">settings</i>
+      <ng-container *ngIf="!isInitiativeEdit">
+        設定
+      </ng-container>
+      <ng-container *ngIf="isInitiativeEdit">
+        完了
+      </ng-container>
+    </button>
+  </div>
+</ng-template>
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
-    <div class="object-name">{{gameObject.name}}
+    <div class="object-name">
+      <div *ngIf="selectTab === 'table'" class="initiative">
+        {{initiative(gameObject)}}
+      </div>
+      {{gameObject.name}}
       <button style="font-size: 0.8em; padding: 2px 5px;" *ngIf="selectedIdentifier === gameObject.identifier" [disabled]="!gameObject.canView" (click)="onContextMenu($event, gameObject)">
         <i class="material-icons" style="font-size: 1em;">settings</i>
       </button>
@@ -91,11 +141,16 @@
           <img *ngIf="gameObject.imageFile.url" class="front-image" [ngStyle]="gameObject.imgStyle" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
         </div>
       </div>
-      <ng-container *ngIf="!gameObject.hasOwner || gameObject.isMine || gameObject.canTransparent; else forbidden">
-        <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
-          <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
-        </ng-container>
-     </ng-container>
+      <ng-container *ngIf="!isInitiativeEdit">
+        <ng-container *ngIf="!gameObject.hasOwner || gameObject.isMine || gameObject.canTransparent; else forbidden">
+          <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
+            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
+          </ng-container>
+       </ng-container>
+      </ng-container>
+      <ng-container *ngIf="isInitiativeEdit">
+        <ng-container *ngTemplateOutlet="initiativeNumberSetting; context:{ gameObject: gameObject}"></ng-container>
+      </ng-container>
     </div>
   </div>
 </ng-template>
@@ -124,5 +179,12 @@
 
 <ng-template #forbidden>
   非公開
+</ng-template>
+
+<ng-template #initiativeNumberSetting let-gameObject="gameObject">
+  <div style="margin-left:8px;">
+    イニシアティブ修正値 ：
+    <input type="number" style="width:4em;" [(ngModel)]="gameObject.initiative" />
+  </div>
 </ng-template>
 

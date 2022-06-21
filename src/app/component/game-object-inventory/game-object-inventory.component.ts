@@ -19,6 +19,9 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
+import { RoundService } from 'service/round.service';
+import { GameCharacterService } from 'service/game-character.service';
+import { RoomService } from 'service/room.service';
 
 @Component({
   selector: 'game-object-inventory',
@@ -37,6 +40,16 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   isMultiMove: boolean = false;
   stringUtil = StringUtil;
 
+  get sortType(): string {
+    return this.inventoryService.sortType;
+   }
+  set sortType(sortType: string) {
+    if (sortType == 'initiative') {
+      this.sortTag = this.initiativeStatus;
+      this.sortOrder = SortOrder.DESC;
+    }
+    this.inventoryService.sortType = sortType;
+  }
   get sortTag(): string { return this.inventoryService.sortTag; }
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.inventoryService.sortOrder; }
@@ -44,6 +57,26 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   get dataTag(): string { return this.inventoryService.dataTag; }
   set dataTag(dataTag: string) { this.inventoryService.dataTag = dataTag; }
   get dataTags(): string[] { return this.inventoryService.dataTags; }
+
+  get isInitiative():boolean { return this.sortType === 'initiative'}
+  get initiativeStatus():string { return this.roundService.initName}
+  private templateDataElm: string[] = [];
+  private templateIdentifier:string = "";
+  private needTemplateReflesh:boolean = true;
+  get templateStatus():string[] {
+    if (this.needTemplateReflesh || this.roomService.roomAdmin.templateCharacter != this.templateIdentifier) {
+      this.refleshTemplateDataElm()
+    }
+    return this.templateDataElm;
+  }
+  private refleshTemplateDataElm():void {
+    let template = this.gameCharacterService.CharacterTemplate;
+    if (template) {
+      this.templateDataElm = this.gameCharacterService.allDataElm(template).map(dataelm => {return dataelm.name})
+    }
+    this.templateIdentifier = this.roomService.roomAdmin.templateCharacter;
+    this.needTemplateReflesh = false;
+  }
 
   get indicateAll(): boolean { return this.inventoryService.indicateAll; }
   set indicateAll(indicateAll: boolean) { this.inventoryService.indicateAll = indicateAll; }
@@ -89,6 +122,24 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.inventoryService.statusColor_3 = color;
   }
 
+  toggleInitiativeNumber():void {
+    this.isInitiativeEdit = !this.isInitiativeEdit;
+
+  }
+  isInitiativeEdit:boolean = false;
+
+  initiative(object :GameCharacter):string {
+    if (this.isInitiative) {
+      let dataElm = this.gameCharacterService.findDataElm(object.identifier ,this.initiativeStatus);
+      if (dataElm) {
+        let initiative = dataElm.isNumberResource ? String(dataElm.currentValue) : String(dataElm.value);
+        return initiative + ' (' + object.initiative + ')';
+      }
+      return '- (' + object.initiative + ')';
+    }
+    return String(object.initiative);
+  }
+
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -97,12 +148,21 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     private modalService: ModalService,
     private inventoryService: GameObjectInventoryService,
     private contextMenuService: ContextMenuService,
-    private pointerDeviceService: PointerDeviceService
-  ) { }
+    private gameCharacterService: GameCharacterService,
+    private pointerDeviceService: PointerDeviceService,
+    private roundService: RoundService,
+    private roomService: RoomService
+  ) {
+  }
 
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'インベントリ');
     EventSystem.register(this)
+      .on('UPDATE_GAME_OBJECT', -1000, event => {
+        if (event.data.identifier == this.templateIdentifier ) {
+          this.needTemplateReflesh = true;
+        }
+      })
       .on('SELECT_TABLETOP_OBJECT', -1000, event => {
         if (ObjectStore.instance.get(event.data.identifier) instanceof TabletopObject) {
           this.selectedIdentifier = event.data.identifier;

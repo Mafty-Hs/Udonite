@@ -177,6 +177,15 @@ input[type="radio"]:checked {
   ;
 }
 
+input[type="radio"]:disabled {
+  background-image: none;
+  border: solid 3px #222;
+  box-shadow:
+   1px 1px 2px -1px #000 inset,
+   2px 2px 1px 0px #FFF
+  ;
+}
+
 input[type="range"] {
   appearance: none;
   cursor: pointer;

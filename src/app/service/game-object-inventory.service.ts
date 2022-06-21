@@ -19,7 +19,11 @@ export class GameObjectInventoryService {
   private get summarySetting(): DataSummarySetting { return DataSummarySetting.instance; }
   private get myPlayerId():string { return this.playerService.myPlayer.playerId}
 
-
+  get sortType(): string {
+    if (!this.summarySetting.sortType) this.summarySetting.sortType = 'free';
+    return this.summarySetting.sortType;
+  }
+  set sortType(sortType: string) { this.summarySetting.sortType = sortType; }
   get sortTag(): string { return this.summarySetting.sortTag; }
   set sortTag(sortTag: string) { this.summarySetting.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.summarySetting.sortOrder; }
@@ -271,19 +275,25 @@ export class ObjectInventory {
   private sortTabletopObjects(objects: TabletopObject[]): TabletopObject[] {
     let sortTag = this.sortTag.length ? this.sortTag.trim() : '';
     let sortOrder = this.sortOrder === 'ASC' ? -1 : 1;
+
     if (sortTag.length < 1) return objects;
 
     objects.sort((a, b) => {
       let aElm = a.rootDataElement?.getFirstElementByName(sortTag);
       let bElm = b.rootDataElement?.getFirstElementByName(sortTag);
-      if (!aElm && !bElm) return 0;
-      if (!bElm) return -1;
-      if (!aElm) return 1;
+      if (!bElm && aElm) return -1;
+      if (!aElm && bElm) return 1;
 
-      let aValue = this.convertToSortableValue(aElm);
-      let bValue = this.convertToSortableValue(bElm);
-      if (aValue < bValue) return sortOrder;
-      if (aValue > bValue) return sortOrder * -1;
+      if (aElm && bElm) {
+        let aValue = this.convertToSortableValue(aElm);
+        let bValue = this.convertToSortableValue(bElm);
+        if (aValue < bValue) return sortOrder;
+        if (aValue > bValue) return sortOrder * -1;
+      }
+      let aCharacter = a as GameCharacter;
+      let bCharacter = b as GameCharacter;
+      if (aCharacter.initiative < aCharacter.initiative) return sortOrder;
+      if (aCharacter.initiative > bCharacter.initiative) return sortOrder * -1;
       return 0;
     });
     return objects;

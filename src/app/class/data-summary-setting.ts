@@ -26,6 +26,7 @@ export class DataSummarySetting extends GameObject implements InnerXml {
     return DataSummarySetting._instance;
   }
 
+  @SyncVar() sortType:string = 'free';
   @SyncVar() sortTag: string = 'name';
   @SyncVar() sortOrder: SortOrder = SortOrder.ASC;
   @SyncVar() dataTag: string = 'HP MP 敏捷度 生命力 精神力';

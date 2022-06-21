@@ -91,6 +91,35 @@ export class GameCharacterService {
     return  character.detailDataElement?.children ? character.detailDataElement.children as DataElement[] : [];
   }
 
+  allDataElm(character :GameCharacter):DataElement[] {
+    //処理の負荷が高いので、呼び出し側でキャッシュを持つこと
+    let source:DataElement[] = this.getDetail(character);
+    let result:DataElement[] = [];
+    for (let data of source) {
+      if (data.children.length > 0) {
+        result = result.concat(this._allDataElm(data));
+      }
+      else {
+        result.push(data);
+      }
+    }
+    return result;
+  }
+
+  private _allDataElm(dataElm :DataElement):DataElement[] {
+    let source:DataElement[] = dataElm.children as DataElement[];
+    let result:DataElement[] = [];
+    for (let data of source) {
+      if (data.children.length > 0) {
+       result = result.concat(this._allDataElm(data));
+      }
+      else {
+        result.push(data);
+      }
+    }
+    return result;
+  }
+
   findDataElm(identifier :string,resouce :string):DataElement|null {
     let dataElms = this.dataElements(identifier);
     for (let data of dataElms) {

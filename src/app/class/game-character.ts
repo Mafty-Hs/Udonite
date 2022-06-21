@@ -18,6 +18,14 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
+  @SyncVar() initiativeNumber: number = 0;
+  get initiative():number {
+    if (Number.isNaN(this.initiativeNumber)) this.initiativeNumber = 0;
+    return this.initiativeNumber;
+  }
+  set initiative(initiative:number) {
+    this.initiativeNumber = initiative;
+  }
 
   _text = '';
   set text(text :string) { this._text = text};

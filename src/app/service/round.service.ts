@@ -26,7 +26,9 @@ export class RoundService {
   get isInitiative():boolean { return this.iRound.isInitiative }
   set isInitiative(_isInitiative :boolean) { this.iRound.isInitiative = _isInitiative}
   get currentInitiative():number { return this.iRound.currentInitiative }
-  set currentInitiative(_currentInitiative :number) { this.iRound.currentInitiative = _currentInitiative}
+  set currentInitiative(currentInitiative :number) { this.iRound.currentInitiative = currentInitiative}
+  get currentInitiativeNumber():number { return this.iRound.currentInitiativeNumber }
+  set currentInitiativeNumber(currentInitiativeNumber :number) { this.iRound.currentInitiativeNumber = currentInitiativeNumber}
   get roundState():number { return this.iRound.roundState }
   set roundState(_roundState :number) { this.iRound.roundState = _roundState}
   get initName():string { return this.iRound.initName }
@@ -69,22 +71,22 @@ export class RoundService {
         this.addRound();
         this.chatMessageService.systemSend(this.chatTab,"ラウンド開始");
         this.roundState += 1;
+        this.currentInitiative = NaN;
+        this.currentInitiativeNumber = NaN;
       break;
       case 1:
         //イニシアティブ
         const sortedcharacter = this.sortedcharacter
-        this.currentInitiative = this.calcInitiative(sortedcharacter);
-        this.chatMessageService.systemSend(this.chatTab, "イニシアティブ " + this.currentInitiative);
-        this.callInitiative(sortedcharacter);
-        if(this.currentInitiative == 0) {
-          this.roundState += 1;
+        this.calcInitiative(sortedcharacter);
+        if (!Number.isNaN(this.currentInitiative)) {
+          this.chatMessageService.systemSend(this.chatTab, "イニシアティブ " + this.currentInitiative);
+          this.callInitiative(sortedcharacter);
         }
-      break;
-      case 2:
-        //ラウンド終了
-        this.chatMessageService.systemSend(this.chatTab,"ラウンド終了");
-        this.roundState = 0;
-        this.currentInitiative = -1;
+        else {
+          //ラウンド終了
+          this.chatMessageService.systemSend(this.chatTab,"ラウンド終了");
+          this.roundState = 0;
+        }
       break;
     }
     EventSystem.call("ADD_ROUND",null)
@@ -175,7 +177,8 @@ export class RoundService {
 
   private get sortedcharacter():InitiativeCharacterList[]  {
     let unsortedcharacter:InitiativeCharacterList[] = [];
-    const initiative = this.currentInitiative ? this.currentInitiative : 999999;
+    const initiative = !Number.isNaN(this.currentInitiative) ? this.currentInitiative : 999999;
+    const initiativeNumber = !Number.isNaN(this.currentInitiativeNumber ) ? this.currentInitiativeNumber : 999999;
     const inventory:Map<string,DataElement[]> =  this.inventoryService.tableInventory.dataElementMap;
     inventory.forEach((value,key)=>
     {
@@ -189,7 +192,7 @@ export class RoundService {
       }
     });
     const preUnsortedCharacter = unsortedcharacter
-    .filter(character_ => character_.initiative <= initiative)
+    .filter(character_ => character_.initiative <= initiative && character_.character.initiative <= initiativeNumber)
     .sort((a, b) => {
       if (a.initiative < b.initiative) {
         return 1;
@@ -197,11 +200,56 @@ export class RoundService {
       if (a.initiative > b.initiative) {
         return -1;
       }
+      if (a.character.initiative < b.character.initiative) {
+        return 1;
+      }
+      if (a.character.initiative > b.character.initiative) {
+        return -1;
+      }
       return 0;
     });
     return preUnsortedCharacter.concat(
       unsortedcharacter
-      .filter(character_ => character_.initiative > initiative)
+      .filter(character_ => !preUnsortedCharacter.includes(character_))
+      .sort((a, b) => {
+        if (a.initiative < b.initiative) {
+          return 1;
+        }
+        if (a.initiative > b.initiative) {
+          return -1;
+        }
+        if (a.character.initiative < b.character.initiative) {
+          return 1;
+        }
+        if (a.character.initiative > b.character.initiative) {
+          return -1;
+        }
+        return 0;
+      })
+    );
+  }
+
+  calcInitiative(sortedcharacter :InitiativeCharacterList[]):void {
+    if (sortedcharacter.length < 1) {
+      this.currentInitiative = NaN;
+      this.currentInitiativeNumber = NaN;
+      return;
+    }
+    let lastCharacter = sortedcharacter[0];
+    if (Number.isNaN(this.currentInitiative)) {
+      this.currentInitiative = sortedcharacter[0].initiative;
+      this.currentInitiativeNumber = sortedcharacter[0].character.initiative;
+      return;
+    }
+
+    let initiativeNumber = this.calcInitiativeNumber(sortedcharacter);
+    if (!Number.isNaN(initiativeNumber)) {
+      this.currentInitiativeNumber = initiativeNumber;
+      return;
+    }
+
+    let currents = sortedcharacter
+      .filter(character => character.initiative < this.currentInitiative)
       .sort((a, b) => {
         if (a.initiative < b.initiative) {
           return 1;
@@ -210,23 +258,58 @@ export class RoundService {
           return -1;
         }
         return 0;
-      })
-    );
+      });
+    if (currents.length < 1)  {
+      if (this.currentInitiative > 0) {
+        this.currentInitiative = 0;
+        this.currentInitiativeNumber = NaN;
+        return;
+      }
+      else {
+        this.currentInitiative = NaN;
+        this.currentInitiativeNumber = NaN;
+        return;
+
+      }
+    }
+    let current = currents.find(character => character.initiative < this.currentInitiative);
+    if ((this.currentInitiative != 0) &&
+      lastCharacter.initiative > 0 && current.initiative < 0 ) {
+      this.currentInitiative = 0;
+      this.currentInitiativeNumber = NaN;
+      return;
+    }
+    this.currentInitiative = current.initiative;
+    this.currentInitiativeNumber = current.character.initiative;
+    return;
   }
 
-  calcInitiative(sortedcharacter :InitiativeCharacterList[]):number {
-    if (sortedcharacter.length == 0) return 0;
-    if (this.currentInitiative == -1) return sortedcharacter[0].initiative;
-    let current = sortedcharacter.find(character => character.initiative < this.currentInitiative)
-    if (!current || current.initiative < 0) return 0;
-    return current.initiative;
+
+  private calcInitiativeNumber(sortedcharacter :InitiativeCharacterList[]):number {
+    let currentCharacters = sortedcharacter
+      .filter(character => character.initiative === this.currentInitiative)
+      .sort((a, b) => {
+        if (a.character.initiative < b.character.initiative) {
+          return 1;
+        }
+        if (a.character.initiative > b.character.initiative) {
+          return -1;
+        }
+        return 0;
+      });
+    if (currentCharacters.length <= 1) {
+      return NaN;
+    }
+    let current =  currentCharacters
+      .find(character => character.character.initiative < this.currentInitiativeNumber);
+    return current ? current.character.initiative : NaN;
   }
 
   callInitiative(sortedcharacter :InitiativeCharacterList[]):void {
     for (let character of sortedcharacter
-    .filter( character => character.initiative  === this.currentInitiative )
+    .filter( character => character.initiative  === this.currentInitiative && character.character.initiative === this.currentInitiativeNumber )
     .map(character => character.character)) {
-      this.chatMessageService.systemSend(this.chatTab,character.name);
+      this.chatMessageService.systemSend(this.chatTab, '修正値:' + character.initiative + ' → ' + character.name);
     }
   }
 

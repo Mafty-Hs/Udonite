@@ -5,7 +5,8 @@ export class Round {
   count:number = 0;
   tabIdentifier:string = "";
   isInitiative:boolean = false;;
-  currentInitiative:number = -1;
+  currentInitiative:number = NaN;
+  currentInitiativeNumber:number = NaN;
   roundState:number = 0;
   initName:string = "";
 }
@@ -25,7 +26,8 @@ export class IRound {
 
   static reset() {
     IRound.round.count = 0;
-    IRound.round.currentInitiative = -1;
+    IRound.round.currentInitiative = NaN;
+    IRound.round.currentInitiativeNumber = NaN;
     IRound.instance.roundState = 0;
   }
 

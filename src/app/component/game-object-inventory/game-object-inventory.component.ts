@@ -123,6 +123,9 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   toggleInitiativeNumber():void {
+    if (this.isInitiativeEdit) {
+      this.getInventory(this.selectTab).refreshSort();
+    }
     this.isInitiativeEdit = !this.isInitiativeEdit;
 
   }

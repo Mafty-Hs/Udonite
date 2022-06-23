@@ -18,13 +18,19 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
-  @SyncVar() initiativeNumber: number = 0;
-  get initiative():number {
-    if (Number.isNaN(this.initiativeNumber)) this.initiativeNumber = 0;
-    return this.initiativeNumber;
+
+  private get _initiative():DataElement {
+    let initiative = this.children.find(child => child.getAttribute('name') == 'initiative');
+    if (!initiative) {
+      initiative = this.appendChild(DataElement.create('initiative', 0, {}, 'initiative_' + this.identifier));
+    }
+    return initiative as DataElement;
   }
-  set initiative(initiative:number) {
-    this.initiativeNumber = initiative;
+  get initiative():number {
+    return this._initiative.value as number;
+  }
+  set initiative(initiative :number) {
+    this._initiative.value = initiative;
   }
 
   _text = '';

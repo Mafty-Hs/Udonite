@@ -248,13 +248,19 @@ export class RoundService {
       return;
     }
 
-    let currents = sortedcharacter
+    const currents = sortedcharacter
       .filter(character => character.initiative < this.currentInitiative)
       .sort((a, b) => {
         if (a.initiative < b.initiative) {
           return 1;
         }
         if (a.initiative > b.initiative) {
+          return -1;
+        }
+        if (a.character.initiative < b.character.initiative) {
+          return 1;
+        }
+        if (a.character.initiative > b.character.initiative) {
           return -1;
         }
         return 0;

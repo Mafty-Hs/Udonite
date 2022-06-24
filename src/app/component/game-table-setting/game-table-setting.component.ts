@@ -179,10 +179,10 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
       }
     }
     if (this.autoPlayCutin && gameTable.cutinIdentifier) {
-      let cutin = ObjectStore.instance.get(gameTable.cutinIdentifier)
-      if (cutin && cutin instanceof CutIn) {
+      let cutin = CutInList.instance.getUniqueCutIn(gameTable.cutinIdentifier);
+      if (cutin) {
         const sendObj = {
-          identifier: gameTable.cutinIdentifier,
+          identifier: cutin.identifier,
           secret: false,
           sender: this.playerService.myPeer.peerId
         };

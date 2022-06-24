@@ -97,7 +97,7 @@
           カットイン
           <select [(ngModel)]="sceneCutin" name="sceneCutin" [attr.disabled]="!isEditable ? '' : null">
             <option value="">なし</option>
-            <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name }}</option>
+            <option *ngFor="let cutIn of cutIns" value="{{ cutIn.uniqueIdentifier }}">{{ cutIn.name }}</option>
           </select>
         </div>
       </div>

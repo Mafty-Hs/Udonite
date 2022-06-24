@@ -26,6 +26,18 @@ export class CutInList extends ObjectNode implements InnerXml {
     }
     return CutInList._instance;
   }
+
+  load(): void {
+    let unindentifiedCutin = this.cutIns
+      .filter(cutin => !cutin.uniqueIdentifier);
+    for (let cutIn of unindentifiedCutin) {
+      cutIn.uniqueIdentifier = cutIn.identifier;
+    }
+  }
+
+  getUniqueCutIn(uniqueIdentifier :string): CutIn {
+    return this.cutIns.find(cutin => cutin.uniqueIdentifier == uniqueIdentifier)
+  }
   
   get cutIns(): CutIn[] { return this.children as CutIn[]; }
 
@@ -41,6 +53,7 @@ export class CutInList extends ObjectNode implements InnerXml {
       cutIn = new CutIn(identifier);
       cutIn.name = name;
       cutIn.initialize();
+      if (!cutIn.uniqueIdentifier) cutIn.uniqueIdentifier = cutIn.identifier
     }
     return this.appendChild(cutIn);
   }

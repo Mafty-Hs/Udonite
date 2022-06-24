@@ -7,6 +7,7 @@ import { StringUtil } from './core/system/util/string-util';
 @SyncObject('cut-in')
 export class CutIn extends ObjectNode {
   @SyncVar() name: string = '';
+  @SyncVar() uniqueIdentifier: string = '';
   @SyncVar() tag: string = '';
   @SyncVar() duration: number = 6;
 

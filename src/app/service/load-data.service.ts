@@ -110,6 +110,9 @@ export class LoadDataService {
       case (gameObject instanceof BillBoard):
         this.billBoardService.loadCard(<BillBoard>gameObject);
         break;
+      case (gameObject instanceof CutInList):
+        CutInList.instance.load();
+        break;
       case (gameObject instanceof CounterList):
         this.counterService.loadCounter(<CounterList>gameObject);
         break;

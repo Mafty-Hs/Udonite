@@ -28,17 +28,15 @@ export class CutInList extends ObjectNode implements InnerXml {
   }
 
   load(): void {
-    let unindentifiedCutin = this.cutIns
-      .filter(cutin => !cutin.uniqueIdentifier);
-    for (let cutIn of unindentifiedCutin) {
-      cutIn.uniqueIdentifier = cutIn.identifier;
+    for (let cutIn of this.cutIns) {
+      if (!cutIn.uniqueIdentifier || this.checkDupulicateIdentifier(cutIn.uniqueIdentifier)) cutIn.uniqueIdentifier = cutIn.identifier;
     }
   }
 
   getUniqueCutIn(uniqueIdentifier :string): CutIn {
     return this.cutIns.find(cutin => cutin.uniqueIdentifier == uniqueIdentifier)
   }
-  
+
   get cutIns(): CutIn[] { return this.children as CutIn[]; }
 
   addCutIn(cutIn: CutIn)
@@ -53,22 +51,27 @@ export class CutInList extends ObjectNode implements InnerXml {
       cutIn = new CutIn(identifier);
       cutIn.name = name;
       cutIn.initialize();
-      if (!cutIn.uniqueIdentifier) cutIn.uniqueIdentifier = cutIn.identifier
+      if (!cutIn.uniqueIdentifier || this.checkDupulicateIdentifier(cutIn.uniqueIdentifier)) cutIn.uniqueIdentifier = cutIn.identifier;
     }
     return this.appendChild(cutIn);
   }
+
+  private checkDupulicateIdentifier(identifier :string):boolean {
+    return Boolean(this.cutIns.filter(cutin => cutin.uniqueIdentifier == identifier ) );
+  }
+
 
   parseInnerXml(element: Element) {
     // XMLからの新規作成を許可せず、既存のオブジェクトを更新する
     for (let child of CutInList.instance.children) {
       child.destroy();
     }
-    
+
     let context = CutInList.instance.toContext();
     context.syncData = this.toContext().syncData;
     CutInList.instance.apply(context);
     CutInList.instance.update();
-    
+
     super.parseInnerXml.apply(CutInList.instance, [element]);
     this.destroy();
   }

@@ -6,6 +6,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 
 import { StandList } from './stand-list';
 import { StringUtil } from './core/system/util/string-util';
+import { LimitResource } from './limit-resource';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -104,6 +105,16 @@ export class GameCharacter extends TabletopObject {
 
     return cloneObject;
 
+  }
+
+  get limitResource(): LimitResource {
+    for (let child of this.children) {
+      if (child instanceof LimitResource) return child;
+    }
+    let limitResource = new LimitResource('LimitResource_' + this.identifier);
+    limitResource.initialize();
+    this.appendChild(limitResource);
+    return limitResource;
   }
 
   get standList(): StandList {

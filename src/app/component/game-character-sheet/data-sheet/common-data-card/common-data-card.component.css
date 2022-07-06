@@ -1,0 +1,96 @@
+.table {
+  padding: 5px;
+  display:table;
+  background-color: #444;
+  color: #FFF;
+  width :100%;
+  box-sizing: border-box;
+}
+
+.table-row {
+  display:table-row;
+  box-sizing: border-box;
+  padding: 5px;
+  border: 1px solid #444;
+}
+
+.table-cell {
+  display:table-cell;
+  vertical-align: bottom;
+  padding: 0.5em 0.0em 0.1em 0.5em;
+  border-bottom:1px dotted #AAA;
+  box-sizing: border-box;
+}
+
+.name-row {
+  display:table-row;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.name-cell {
+  display:table-cell;
+  vertical-align: bottom;
+  box-sizing: border-box;
+}
+
+.icon-select {
+  display: inline-flex;
+  flex-direction: row;
+  padding: 0;
+  margin: 0;
+}
+.select-bottun {
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.hidden-spacer {
+  font-size: 16px;
+  font-family: 'Zen Antique', serif;
+  visibility: hidden;
+  height: 0;
+  max-width : 20em;
+  overflow: hidden;
+  padding: 0 3px;
+  box-sizing: border-box;
+}
+
+.name {
+  width:100%;
+  min-width:10px;
+  font-size: 16px;
+  font-family: 'Zen Antique', serif;
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.image {
+  width: 50px;
+  height: 50px;
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 0.5rem;
+  vertical-align: bottom;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+.nullIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 12px;
+  border: 1px #FFF;
+  border-radius: 0.5rem;
+  background-color: #222;
+}

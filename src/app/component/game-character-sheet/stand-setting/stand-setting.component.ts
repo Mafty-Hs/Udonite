@@ -5,14 +5,14 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { StandElementComponent } from 'component/stand-element/stand-element.component';
+import { StandElementComponent } from 'component/game-character-sheet/stand-setting/stand-element/stand-element.component';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { HelpComponent } from 'component/help/help.component';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 
 @Component({
-  selector: 'app-stand-setting',
+  selector: 'stand-setting',
   templateUrl: './stand-setting.component.html',
   styleUrls: ['./stand-setting.component.css']
 })
@@ -83,7 +83,6 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.updatePanelTitle());
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', -1000, event => {
         if (this.character && this.character.identifier === event.data.identifier) {
@@ -107,10 +106,6 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.unregister(this);
   }
 
-  updatePanelTitle() {
-    this.panelService.title = this.character.name + ' の立ち絵設定';
-  }
-
   add() {
     this.character.standList.add(this.character.imageFile.identifier);
     this.standSettingXML = '';
@@ -132,7 +127,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
-  
+
   restore() {
     if (!this.standSettingXML) return;
     let restoreStand = <DataElement>ObjectSerializer.instance.parseXml(this.standSettingXML);
@@ -151,7 +146,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.character.standList.overviewIndex -= 1;
       } else if (this.character.standList.overviewIndex == index - 1) {
         this.character.standList.overviewIndex += 1;
-      } 
+      }
     }
   }
 
@@ -166,7 +161,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.character.standList.overviewIndex += 1;
       } else if (this.character.standList.overviewIndex == index + 1) {
         this.character.standList.overviewIndex -= 1;
-      } 
+      }
     }
   }
 

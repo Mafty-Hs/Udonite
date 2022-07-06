@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { GameCharacter } from '@udonarium/game-character';
-import { PanelOption, PanelService } from 'service/panel.service';
 
 @Component({
   selector: 'inner-note',
@@ -8,7 +7,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
   styleUrls: ['./inner-note.component.css']
 })
 export class InnerNoteComponent implements OnInit {
-  public character:GameCharacter = null;
+  @Input() character:GameCharacter = null;
 
   get note():string {
     if (this.character) return this.character.note;
@@ -19,7 +18,7 @@ export class InnerNoteComponent implements OnInit {
   }
 
   constructor(
-    public panelService: PanelService
+
   ) { }
 
   ngOnInit(): void {

@@ -16,18 +16,20 @@ import { ModalService } from 'service/modal.service';
 @Component({
   selector: 'game-data-element, [game-data-element]',
   templateUrl: './game-data-element.component.html',
-  styleUrls: ['./game-data-element.component.css','../../common/range.status.css','../../common/input.status.css'],
+  styleUrls: ['./game-data-element.component.css','../../../../common/range.status.css','../../../../common/input.status.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() tableTopObjectName: string = null;
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
-  @Input() isTagLocked: boolean = false;
+  @Input() isCommonValue: boolean = false;
   @Input() isValueLocked: boolean = false;
   @Input() isHideText: boolean = false;
 
   stringUtil = StringUtil;
+  commonTagName:string = "";
+  commonTypeIsNumber:boolean = false;
 
   private _name: string = '';
   get name(): string { return this._name; }
@@ -43,17 +45,48 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   get abilityScore(): number { return this.gameDataElement.calcAbilityScore(); }
 
-  get isCommonValue(): boolean {
-    if (this.gameDataElement) {
-      return this.isTagLocked && (this.gameDataElement.name === 'size'
-        || this.gameDataElement.name === 'width'
-        || this.gameDataElement.name === 'viewWidth'
-        || this.gameDataElement.name === 'height'
-        || this.gameDataElement.name === 'depth'
-        || this.gameDataElement.name === 'fontsize'
-        || this.gameDataElement.name === 'altitude');
+  setCommonTagName() {
+    switch(this.gameDataElement.name) {
+      case 'size':
+        this.commonTagName = 'サイズ';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'width':
+        this.commonTagName = '幅';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'viewWidth':
+        this.commonTagName = 'オーバービューの幅';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'height':
+        this.commonTagName = '高さ';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'depth':
+        this.commonTagName = '奥行き';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'fontsize':
+        this.commonTagName = 'フォントサイズ';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'altitude':
+        this.commonTagName = '高度';
+        this.commonTypeIsNumber = true;
+        break;
+      case 'title':
+        this.commonTagName = 'タイトル';
+        break;
+      case 'text':
+        this.commonTagName = 'テキスト';
+        break;
+      case 'color':
+        this.commonTagName = '色';
+        break;
+      default:
+        this.commonTagName = this.gameDataElement.name;
     }
-    return false;
   }
 
   get identifier(): string {
@@ -69,6 +102,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     if (this.gameDataElement) this.setValues(this.gameDataElement);
+    if (this.isCommonValue) this.setCommonTagName();
 
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {

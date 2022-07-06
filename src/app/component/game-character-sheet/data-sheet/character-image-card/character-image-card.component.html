@@ -1,0 +1,9 @@
+<img class="main-image aura" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'"
+      [ngStyle]="tabletopObject.auraStyle" [@hide]="tabletopObject.currntImageIndex"/>
+<img #mainImage class="main-image front-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'"
+  (dblclick)="replaceImage()"
+  [@slide]="tabletopObject.currntImageIndex" />
+<div *ngIf="images.length > 1" class="selecter">
+  <button class="selecter-button" (click)="downImageIndex()">◀</button>
+  <button class="selecter-button" (click)="upImageIndex()">▶</button>
+</div>

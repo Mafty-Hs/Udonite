@@ -1,0 +1,46 @@
+.title {
+  font-weight:bold;
+}
+
+.frame {
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.white {
+  background: #FFF;
+  color: #000;
+}
+.grey {
+  background: #CCC;
+  color: #000;
+}
+.black {
+  background: #212121;
+  color: #FFF;
+}
+
+.palette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  font-size:14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, sans-serif;
+  resize: none;
+}
+
+.hidden-spacer {
+  overflow: hidden;
+  visibility: hidden;
+  box-sizing: border-box;
+  min-height: 120px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  border: 1px solid;
+}

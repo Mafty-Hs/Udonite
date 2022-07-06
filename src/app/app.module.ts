@@ -19,7 +19,7 @@ import { FileSelecterComponent } from 'component/file-selecter/file-selecter.com
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameCharacterComponent } from 'component/tabletop-object/game-character/3d/game-character.component';
-import { GameDataElementComponent } from 'component/game-data-element/game-data-element.component';
+import { GameDataElementComponent } from 'component/game-character-sheet/data-sheet/game-data-element/game-data-element.component';
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableMaskComponent } from 'component/tabletop-object/game-table-mask/game-table-mask.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
@@ -55,8 +55,8 @@ import { TabletopService } from 'service/tabletop.service';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
-import { StandSettingComponent } from './component/stand-setting/stand-setting.component';
-import { StandElementComponent } from './component/stand-element/stand-element.component';
+import { StandSettingComponent } from './component/game-character-sheet/stand-setting/stand-setting.component';
+import { StandElementComponent } from './component/game-character-sheet/stand-setting/stand-element/stand-element.component';
 import { StandImageComponent } from './component/stand-image/stand-image.component';
 
 import { StandImageService } from 'service/stand-image.service';
@@ -81,7 +81,7 @@ import { StandViewSettingComponent } from './component/stand-view-setting/stand-
 import { RoomControlComponent } from './component/room-control/room-control.component';
 import { SimpleCreateComponent } from './component/simple-create/simple-create.component';
 import { GameRoomComponent } from './component/game-room/game-room.component';
-import { InnerNoteComponent } from './component/inner-note/inner-note.component';
+import { InnerNoteComponent } from './component/game-character-sheet/inner-note/inner-note.component';
 import { PopupEditComponent } from './component/popup-edit/popup-edit.component';
 import { PopupComponent } from './component/tabletop-object/popup/popup.component';
 import { ChatEditComponent } from './component/chat/chat-edit/chat-edit.component';
@@ -116,6 +116,14 @@ import { UiTrayComponent } from './component/ui-tray/ui-tray.component';
 import { ViewSettingComponent } from './component/view-setting/view-setting.component';
 import { StickyNoteComponent } from './component/ui-tray/sticky-note/sticky-note.component';
 import { CardStackFlatComponent } from './component/tabletop-object/card-stack/2d/card-stack-flat.component';
+import { DataSheetComponent } from './component/game-character-sheet/data-sheet/data-sheet.component';
+import { DataCardComponent } from './component/game-character-sheet/data-sheet/data-card/data-card.component';
+import { CharacterImageCardComponent } from './component/game-character-sheet/data-sheet/character-image-card/character-image-card.component';
+import { TabletopImageCardComponent } from './component/game-character-sheet/data-sheet/tabletop-image-card/tabletop-image-card.component';
+import { CommonDataCardComponent } from './component/game-character-sheet/data-sheet/common-data-card/common-data-card.component';
+import { CharacterImageComponent } from './component/game-character-sheet/character-image/character-image.component';
+import { PaletteEditComponent } from './component/game-character-sheet/palette-edit/palette-edit.component';
+import { CharacterCounterComponent } from './component/game-character-sheet/character-counter/character-counter.component';
 
 @NgModule({
   declarations: [
@@ -217,6 +225,14 @@ import { CardStackFlatComponent } from './component/tabletop-object/card-stack/2
     ViewSettingComponent,
     StickyNoteComponent,
     CardStackFlatComponent,
+    DataSheetComponent,
+    DataCardComponent,
+    CharacterImageCardComponent,
+    TabletopImageCardComponent,
+    CommonDataCardComponent,
+    CharacterImageComponent,
+    PaletteEditComponent,
+    CharacterCounterComponent,
   ],
   imports: [
     BrowserModule,

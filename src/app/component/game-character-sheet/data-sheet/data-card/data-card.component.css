@@ -1,0 +1,97 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+  background-color: #222;
+  border: 1px #000;
+  color: #FFF;
+  vertical-align: middle;
+  height: 32px;
+  padding: 0;
+  padding-left: 1em;
+}
+
+.button-area {
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  padding: 0;
+}
+
+.title-area {
+  line-height: 32px;
+  font-weight : bold;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1em;
+  text-shadow    :
+  2px  2px 4px #000000,
+ -2px  2px 4px #000000,
+  2px -2px 4px #000000,
+ -2px -2px 4px #000000,
+  2px  0px 4px #000000,
+  0px  2px 4px #000000,
+ -2px  0px 4px #000000,
+  0px -2px 4px #000000;
+}
+
+.panel-button {
+  background: #222;
+  color: #FFF;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0px 1px 4px -2px inset #000;
+  text-shadow: none;
+  padding: 0.05em 0.2em;
+  margin: 0 3px;
+}
+
+.panel-button:hover {
+  background: #222;
+  color: #CCC;
+}
+
+.panel-button:disabled {
+  color: #999;
+}
+
+.panel-button:after{
+	content: '';
+	background: transparent;
+}
+
+.tool {
+  display: flex;
+  justify-content: space-between;
+  background-color: #333;
+  color: #FFF;
+  vertical-align: middle;
+  height: 32px;
+  padding: 0;
+}
+
+.table {
+  padding: 5px;
+  display:table;
+  background-color: #444;
+  color: #FFF;
+  width :100%;
+  box-sizing: border-box;
+}
+
+.table-row {
+  display:table-row;
+  box-sizing: border-box;
+  padding: 5px;
+  border: 1px solid #444;
+}
+
+.table-row > div {
+  display:table-cell;
+  border:1px solid #FFF;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+

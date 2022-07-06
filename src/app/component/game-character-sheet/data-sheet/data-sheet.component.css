@@ -1,0 +1,47 @@
+.flex-container {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.image-area {
+  position: relative;
+  width: 250px;
+  height: 250px;
+
+  z-index: 0;
+}
+
+.image {
+  position: relative;
+  width: 250px;
+  height: auto;
+
+  z-index: 0;
+}
+
+.card {
+  display: flex;
+  justify-content: flex-start;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  z-index: 1;
+
+  margin: 5px 2px;
+  flex: 1 0 auto;
+  border: 1px solid #444;
+  border-radius: 10px;
+  box-sizing: border-box;
+  min-width: 25px;
+
+  background-color: #444;
+  color: #FFF;
+
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #222;
+  box-shadow:1px 1px 1px #000;
+}

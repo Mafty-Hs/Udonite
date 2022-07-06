@@ -31,11 +31,11 @@
 }
 
 .stand-image-button {
-    display: block;
-    margin-top: -154px;
-    margin-left: -4px;
-    position: relative;
-    z-index: 10;
+  position: absolute;
+  display: block;
+  top: 70px;
+  left:20px;
+  z-index: 10;
 }
 
 .postfix-text {

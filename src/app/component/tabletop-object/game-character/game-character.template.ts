@@ -16,7 +16,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
-import { InnerNoteComponent } from 'component/inner-note/inner-note.component';
+import { InnerNoteComponent } from 'component/game-character-sheet/inner-note/inner-note.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
@@ -28,7 +28,7 @@ import { GameObjectInventoryService } from 'service/game-object-inventory.servic
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
-import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { StandSettingComponent } from 'component/game-character-sheet/stand-setting/stand-setting.component';
 import { GameCharacterService } from 'service/game-character.service';
 import { StandImageService } from 'service/stand-image.service';
 

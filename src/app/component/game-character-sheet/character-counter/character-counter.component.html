@@ -1,0 +1,19 @@
+<div class="frame">
+  <div class="title">
+    {{character.name}} - カウンター
+  </div>
+  <table class="inventory">
+    <tr>
+      <th style="width:14em">名前</th>
+      <th style="width:14em">説明</th>
+      <th style="width:5em">寿命</th>
+      <th style="width:14em">コメント</th>
+    <tr>
+   <tr *ngFor="let counterinfo of myList; let i = index" [ngStyle]="{'background-color': counterinfo.age === 0 && !counterinfo.isPermanent ? 'maroon' : 'black'}">
+      <td>{{counterinfo.name}}</td>
+      <td>{{counterinfo.desc}}</td>
+      <td class="center"><p *ngIf="!counterinfo.isPermanent; else permanent">{{counterinfo.age}}/{{counterinfo.maxAge}}</p></td>
+      <td>{{counterinfo.comment}}</td>
+   </tr>
+ </table>
+</div>

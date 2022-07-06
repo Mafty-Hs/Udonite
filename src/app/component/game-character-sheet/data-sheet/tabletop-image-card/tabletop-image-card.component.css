@@ -1,0 +1,40 @@
+.main-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: auto;
+  object-position: center bottom;
+}
+
+.text {
+  transform-origin: left top;
+
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 24px;
+  color: #FFF;
+  z-index: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px,
+  #222 0px 0px 2px;
+}
+

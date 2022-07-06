@@ -1,0 +1,4 @@
+<div *ngIf="showCard" class="text" [style.width.px]="imageAreaRreact.width" [style.height.px]="imageAreaRreact.height" [ngStyle]="{transform: 'scale(' + imageAreaRreact.scale + ')'}">
+  <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
+</div>
+<img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" (dblclick)="replaceImage()" />

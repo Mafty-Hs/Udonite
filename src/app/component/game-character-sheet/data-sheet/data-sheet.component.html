@@ -1,0 +1,11 @@
+<div class="flex-container">
+  <ng-container *ngIf="hasImage">
+    <character-image-card *ngIf="isCharacter; else objectImage" class="image-area" [tabletopObject]="tabletopObject"></character-image-card>
+  </ng-container>
+  <common-data-card  class="card"  [gameDataElement]="commonElement" [tabletopObject]="tabletopObject" [tableTopObjectName]="tableTopObjectName"
+    [isHideText]="isHideText"></common-data-card>
+  <data-card class="card" *ngFor="let dataElm of detailElement" [gameDataElement]="dataElm" [tableTopObjectName]="tableTopObjectName" ></data-card>
+</div>
+<ng-template #objectImage>
+  <tabletop-image-card class="image" [tabletopObject]="tabletopObject"></tabletop-image-card>
+</ng-template>

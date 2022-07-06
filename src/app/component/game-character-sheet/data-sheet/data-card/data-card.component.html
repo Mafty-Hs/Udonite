@@ -1,0 +1,26 @@
+<div class="title">
+  <div class="title-area">
+    <input *ngIf="isEdit; else showTitle" style="min-width:10em;" size="1" [(ngModel)]="name" placeholder="Value" />
+  </div>
+  <div class="button-area">
+    <button class="panel-button" (click)="toggleEdit()"><i class="material-icons" style="font-size: 14px;">build</i></button>
+  </div>
+</div>
+<div  *ngIf="isEdit" class="tool">
+  <div  class="button-area">
+    <button class="panel-button" (click)="addElement()"><i class="material-icons" style="font-size: 18px;">add_circle</i></button>
+    <button class="panel-button" (click)="deleteElement()"><i class="material-icons" style="font-size: 18px;">remove_circle_outline</i></button>
+    <button class="panel-button" (click)="upElement()"><i class="material-icons" style="font-size: 18px;">arrow_upward</i></button>
+    <button class="panel-button" (click)="downElement()"><i class="material-icons" style="font-size: 18px;">arrow_downward</i></button>
+  </div>
+  <div  class="button-area">
+  </div>
+</div>
+<div class="table">
+  <div class="table-row" *ngFor="let childElement of gameDataElement.children" game-data-element [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit"></div>
+</div>
+
+<ng-template #showTitle>
+  {{gameDataElement.name}}
+</ng-template>
+

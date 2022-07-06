@@ -10,7 +10,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 import { PlayerService } from 'service/player.service';
-import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { StandSettingComponent } from 'component/game-character-sheet/stand-setting/stand-setting.component';
 import { EventSystem } from '@udonarium/core/system';
 
 interface chatDataContext {

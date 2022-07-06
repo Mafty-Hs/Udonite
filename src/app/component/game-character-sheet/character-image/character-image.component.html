@@ -1,0 +1,43 @@
+<div class="top-area">
+  <div class="control-area">
+    <div class="text">
+      *シングルクリックで表示するイメージを選択。Wクリックでイメージを変更。
+    </div>
+    <div class="toggle" style="display:block;margin-left: 12px;"><label>オーバービューに顔ICを使用
+      <input name="overview-faceicon" type="checkbox" [(ngModel)]="character.isUseIconToOverviewImage">
+      <div><div></div></div>
+    </label></div>
+  </div>
+  <div class="icon-area">
+    <div class="icon-title">アイコン(最大５つまで)</div>
+    <div class="icon-container">
+      <div class="icon-flame" *ngFor="let icon of icons; index as i" [ngClass]="{'select': iconIndex === i}" (click)="selectIcon(i)">
+        <img class="icon" [src]="icon.url | safe: 'resourceUrl'">
+        <button class="icon-remove" (click)="removeImage($event,'faceIcon',i)"><i class="material-icons" style="font-size: 10px;">close</i></button>
+      </div>
+      <div *ngIf="icons.length < 5" class="icon-flame">
+        <button class="addIcon" (click)="addImageModal('faceIcon')">追加</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="image-area">
+  <div class="image-title">キャラクターイメージ(最大５つまで)</div>
+  <div class="image-container">
+    <div class="flame" *ngFor="let image of images; index as i" [ngClass]="{'select': imageIndex === i}" >
+      <div class="click-flame" (click)="selectImage(i)">
+        <img class="image"  [src]="image.image.url | safe: 'resourceUrl'">
+      </div>
+      <button class="image-remove" (click)="removeImage($event,'imageIdentifier',i)"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      <div class="shadow-container" (dblclick)="replaceShadow(i)">
+        <span style="font-size: 12px;font-weight:bold;">影</span>
+        <img class="shadow"  [src]="image.shadowImage.url | safe: 'resourceUrl'">
+      </div>
+    </div>
+    <div *ngIf="images.length < 5" class="flame">
+      <button class="addImage" (click)="addImageModal('imageIdentifier')">追加</button>
+    </div>
+  </div>
+</div>
+
+

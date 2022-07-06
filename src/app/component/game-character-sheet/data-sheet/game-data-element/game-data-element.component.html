@@ -13,23 +13,23 @@
       </select>
     </div>
     <div class="table-cell table-cell_solid">
-      <ng-container *ngIf="isTagLocked">
-        <div style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
+      <ng-container *ngIf="isCommonValue">
+        <div style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{commonTagName}}</div>
       </ng-container>
-      <ng-container *ngIf="!isTagLocked">
+      <ng-container *ngIf="!isCommonValue">
         <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
         <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
           [(ngModel)]="name" placeholder="Value" />
       </ng-container>
     </div>
     <div class="table-cell">
-      <ng-container *ngIf="isCommonValue">
+      <ng-container *ngIf="commonTypeIsNumber">
         <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
           [(ngModel)]="value" type="range" class="status-range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
         <br />
         <input style="width:40%; max-width:8em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
       </ng-container>
-      <ng-container *ngIf="!isCommonValue">
+      <ng-container *ngIf="!commonTypeIsNumber">
         <ng-container [ngSwitch]="gameDataElement.type">
         <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
@@ -98,17 +98,17 @@
     <div class="table-cell table-cell_inner-table" style="padding:0; width:0;"></div>
     <div class="table-cell_inner-table">
       <div class="table-cell_inner-table-title">
-        <ng-container *ngIf="isTagLocked">
+        <ng-container *ngIf="isCommonValue">
           <div style="padding: 2px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;">{{name}}</div>
         </ng-container>
-        <ng-container *ngIf="!isTagLocked">
+        <ng-container *ngIf="!isCommonValue">
           <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;"
             size="1" [(ngModel)]="name" placeholder="Value" />
         </ng-container>
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isHideText]="isHideText"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isCommonValue]="isCommonValue" [isHideText]="isHideText"></div>
       </div>
     </div>
   </ng-container>

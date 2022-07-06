@@ -1,0 +1,51 @@
+<div class="table">
+  <ng-container *ngIf="hasName">
+    <div class="table-row">
+      <ng-container *ngIf="isChracater; else objectName">
+        <div class="table-cell" style="padding: 0;">
+          <div class="icon-select">
+            <div class="select-bottun" *ngIf="images.length > 1" style="margin-right:0.5em; font-weight: bold;" (click)="downImageIndex()">〈</div>
+            <div class="select-bottun" (click)="setFaceIcon()">
+              <img *ngIf="imageIcon; else nullIcon" class="image ; else nameTitle" [src]="imageIcon.url | safe: 'resourceUrl'"
+                [@slide]="tabletopObject.currntIconIndex" >
+            </div>
+            <div class="select-bottun" *ngIf="images.length > 1" style="margin-left:0.5em; font-weight: bold;" (click)="upImageIndex()">〉</div>
+          </div>
+        </div>
+        <div class="table-cell">
+          <div class="name-row">
+            <div class="name-cell"  style="font-size:12px">
+              名前
+            </div>
+          </div>
+          <div class="name-row">
+            <div class="name-cell">
+              <div class="hidden-spacer">{{name}}</div>
+              <input class="name" size="1" [(ngModel)]="name" placeholder="" />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <div class="table-row" *ngFor="let childElement of commonElement" game-data-element [gameDataElement]="childElement"
+    [tableTopObjectName]="tableTopObjectName" [isCommonValue]="true" [isHideText]="isHideText"></div>
+</div>
+
+<ng-template #objectName>
+  <div class="table-cell">
+    名前
+  </div>
+  <div class="table-cell">
+    <div class="hidden-spacer">{{name}}</div>
+    <input class="name" size="1" [(ngModel)]="name" placeholder="" />
+  </div>
+</ng-template>
+<ng-template #nullIcon>
+  <div class="nullIcon">
+    <span>
+      顔IC<br/>
+      無し
+    </span>
+  </div>
+</ng-template>

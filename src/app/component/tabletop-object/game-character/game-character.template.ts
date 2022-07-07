@@ -16,7 +16,6 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
-import { InnerNoteComponent } from 'component/game-character-sheet/inner-note/inner-note.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
@@ -28,7 +27,6 @@ import { GameObjectInventoryService } from 'service/game-object-inventory.servic
 import { ModalService } from 'service/modal.service';
 import { PlayerService } from 'service/player.service';
 import { EffectService } from 'service/effect.service';
-import { StandSettingComponent } from 'component/game-character-sheet/stand-setting/stand-setting.component';
 import { GameCharacterService } from 'service/game-character.service';
 import { StandImageService } from 'service/stand-image.service';
 
@@ -376,12 +374,15 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
   }
 
   protected showInnerNote() {
-      let coordinate = this.pointerDeviceService.pointers[0];
-    let title = 'メモ';
-    if (this.gameCharacter.name.length) title += ' - ' + this.gameCharacter.name;
-    let option: PanelOption = { title: title ,left: coordinate.x - 360, top: coordinate.y - 330, width: 360, height: 330 };
-    let panel = this.panelService.open<InnerNoteComponent>(InnerNoteComponent, option);
-    panel.character = this.gameCharacter;
+    let gameObject = this.gameCharacter as GameCharacter;
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject
+    component.mode = 'note';
+
   }
 
   protected showChatPalette(gameObject: GameCharacter) {
@@ -396,9 +397,12 @@ export class GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterV
 
   protected showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
-    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
-    component.character = gameObject;
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject;
+    component.mode = 'stand';
   }
 
   changeImage(index: number) {

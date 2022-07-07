@@ -12,7 +12,6 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { PlayerPaletteComponent } from 'component/chat/player-palette/player-palette.component';
-import { StandSettingComponent } from 'component/game-character-sheet/stand-setting/stand-setting.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -614,9 +613,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
-    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
-    component.character = gameObject;
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject;
+    component.mode = 'stand';
   }
 
   private showChatPalette(gameObject: GameCharacter) {

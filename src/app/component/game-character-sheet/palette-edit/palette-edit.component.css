@@ -44,3 +44,18 @@
   overflow-wrap: break-word;
   border: 1px solid;
 }
+
+.select {
+  background: #BBB;
+  color: #000;
+}
+
+.remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  background: #D00;
+  padding: 3px;
+  line-height: 14px;
+}

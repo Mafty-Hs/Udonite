@@ -3,16 +3,17 @@
     {{character.name}} - チャットパレット
   </div>
   <div class="menu">
-    <button>メイン</button>
-    <button *ngFor="let palette of character.subPalette.palettes">
+    <button  (click)="setPalette('')" [ngClass]="{'select':!paletteIdentifier}"  >メイン</button>
+    <button *ngFor="let palette of character.subPalette.palettes" (click)="setPalette(palette.identifier)" [ngClass]="{'select':paletteIdentifier === palette.identifier}" >
       {{palette.paletteLines[0].palette}}
     </button>
-    <button>追加</button>
+    <button style="background: #222;" (click)="addPalette()">追加</button>
   </div>
   <div style="position:relative;">
     <div class="hidden-spacer" aria-hidden="true">
-      {{editPalette + '\u200b'}}
+      {{editPalette + '\u200b'}}"
     </div>
-    <textarea [class]="bgColor" class="palette"  [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea [class]="bgColor" class="palette" (change)="update()"  [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <button *ngIf="paletteIdentifier" class="remove" (click)="removePalette()"><i class="material-icons" style="font-size: 14px;">close</i></button>
   </div>
 </div>

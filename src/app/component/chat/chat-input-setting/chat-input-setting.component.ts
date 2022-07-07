@@ -10,8 +10,9 @@ import { GameCharacter } from '@udonarium/game-character';
 import { GameCharacterService } from 'service/game-character.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService} from 'service/context-menu.service';
 import { PlayerService } from 'service/player.service';
-import { StandSettingComponent } from 'component/game-character-sheet/stand-setting/stand-setting.component';
+
 import { EventSystem } from '@udonarium/core/system';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 
 interface chatDataContext {
   sendTo : string;
@@ -183,10 +184,14 @@ export class ChatInputSettingComponent implements OnInit,AfterViewInit, OnDestro
   }
 
   showStandSetting() {
+    if (!this.character) return;
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
-    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
-    component.character = this.character;
+    let title = 'キャラクターシート';
+    if (this.character.name.length) title += ' - ' + this.character.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = this.character;
+    component.mode = 'stand';
     this.setVisible("stand");
     this.setVisible("standPos");
   }

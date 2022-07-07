@@ -26,7 +26,7 @@ import { PlayerService } from 'service/player.service';
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() tabletopObject: TabletopObject = null;
-  mode:string = "";
+  @Input() mode:string = "";
   isEdit:boolean = false;
 
   get aliasName():string {

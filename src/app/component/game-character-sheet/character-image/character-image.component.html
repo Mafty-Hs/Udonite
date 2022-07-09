@@ -25,14 +25,16 @@
   <div class="image-title">キャラクターイメージ(最大５つまで)</div>
   <div class="image-container">
     <div class="flame" *ngFor="let image of images; index as i" [ngClass]="{'select': imageIndex === i}" >
-      <div class="click-flame" (click)="selectImage(i)">
-        <img class="image"  [src]="image.image.url | safe: 'resourceUrl'">
-      </div>
-      <button class="image-remove" (click)="removeImage($event,'imageIdentifier',i)"><i class="material-icons" style="font-size: 14px;">close</i></button>
-      <div class="shadow-container" (dblclick)="replaceShadow(i)">
-        <span style="font-size: 12px;font-weight:bold;">影</span>
-        <img class="shadow"  [src]="image.shadowImage.url | safe: 'resourceUrl'">
-      </div>
+      <ng-container *ngIf="image.image.url.length > 0">
+        <div class="click-flame" (click)="selectImage(i)">
+          <img class="image"  [src]="image.image.url | safe: 'resourceUrl'">
+        </div>
+        <button class="image-remove" (click)="removeImage($event,'imageIdentifier',i)"><i class="material-icons" style="font-size: 14px;">close</i></button>
+        <div class="shadow-container" (dblclick)="replaceShadow(i)">
+          <span style="font-size: 12px;font-weight:bold;">影</span>
+          <img class="shadow"  [src]="image.shadowImage.url | safe: 'resourceUrl'">
+        </div>
+      </ng-container>
     </div>
     <div *ngIf="images.length < 5" class="flame">
       <button class="addImage" (click)="addImageModal('imageIdentifier')">追加</button>

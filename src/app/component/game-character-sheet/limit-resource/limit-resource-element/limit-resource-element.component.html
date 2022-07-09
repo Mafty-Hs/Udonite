@@ -1,0 +1,44 @@
+<div class="item-row" style="background-color: #333;">
+  <div class="cell" style="width: calc(100% - 6em)">
+    <input style="min-width:10em;" class="name" size="1" [(ngModel)]="name" placeholder="名前" />
+  </div>
+  <div class="cell" style="width: 6em">
+    <button class="panel-button" (click)="upElement()"><i class="material-icons" style="font-size: 14px;">arrow_upward</i></button>
+    <button class="panel-button" (click)="downElement()"><i class="material-icons" style="font-size: 14px;">arrow_downward</i></button>
+    <button class="panel-button" style="padding-left:1em" (click)="removeElement()"><i class="material-icons" style="font-size: 14px;">remove_circle_outline</i></button>
+  </div>
+</div>
+<div class="item-row">
+  <div class="cell" style="width: 6em">
+    <select style="font-size:14px" [ngModelOptions]="{standalone: true}" [(ngModel)]="resourceType">
+      <option value="">通常</option>
+      <option value="simpleNumber">数値</option>
+      <option value="numberResource">リソース</option>
+      <option value="checkProperty">チェック</option>
+      <option value="note">ノート</option>
+    </select>
+  </div>
+  <div class="cell" style="width: calc(100% - 6em)">
+    <ng-container *ngTemplateOutlet="element"></ng-container>
+  </div>
+</div>
+
+<ng-template #element>
+  <ng-container [ngSwitch]="resourceType">
+    <ng-container *ngSwitchCase="''">
+      <input style="width:100%" size="1" [(ngModel)]="value" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'note'">
+      <textarea style="width:100%; height:5em; min-width:50px; resize: bose; font-size: 1em;" [(ngModel)]="value" placeholder="Note"></textarea>
+    </ng-container>
+    <ng-container *ngSwitchCase="'simpleNumber'">
+      <input type="number" style="width:4em" size="1" [(ngModel)]="value" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'numberResource'">
+      <input type="number" style="width:4em" size="1" [(ngModel)]="currentValue" />/<input type="number" style="width:4em" size="1" [(ngModel)]="value" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'checkProperty'">
+      <input type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+    </ng-container>
+  </ng-container>
+</ng-template>

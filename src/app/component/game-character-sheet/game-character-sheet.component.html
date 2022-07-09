@@ -1,11 +1,11 @@
 <div class="flex-container">
   <div class="menu" *ngIf="aliasName === 'character'">
       <button class="menu-button" [ngClass]="{'select':mode == ''}" (click)="setMode('')">データ</button>
-      <button class="menu-button" [ngClass]="{'select':mode == 'character-image'}" (click)="setMode('character-image')">画像</button>
-      <button class="menu-button" [ngClass]="{'select':mode == 'stand'}" (click)="setMode('stand')">立ち絵</button>
+      <button class="menu-button" [ngClass]="{'select':mode == 'character-image'}" (click)="setMode('character-image')">画像設定</button>
+      <button class="menu-button" [ngClass]="{'select':mode == 'stand'}" (click)="setMode('stand')">立ち絵設定</button>
       <button class="menu-button" [ngClass]="{'select':mode == 'note'}" (click)="setMode('note')">メモ</button>
-      <button class="menu-button" [ngClass]="{'select':mode == 'palette'}" (click)="setMode('palette')">チャットパレット</button>
-      <button class="menu-button" [ngClass]="{'select':mode == 'resource'}" (click)="setMode('resource')">リソース</button>
+      <button class="menu-button" [ngClass]="{'select':mode == 'palette'}" (click)="setMode('palette')">チャットパレット設定</button>
+      <button class="menu-button" [ngClass]="{'select':mode == 'resource'}" (click)="setMode('resource')">リソース管理</button>
       <button class="menu-button" [ngClass]="{'select':mode == 'counter'}" (click)="setMode('counter')">カウンター</button>
   </div>
   <div class="sub-menu" *ngIf="mode == ''">
@@ -44,6 +44,9 @@
       <ng-container *ngSwitchCase="'palette'">
         <palette-edit [character]="tabletopObject"></palette-edit>
       </ng-container>
+      <ng-container *ngSwitchCase="'resource'">
+        <limit-resource [character]="tabletopObject"></limit-resource>
+      </ng-container>
       <ng-container *ngSwitchCase="'counter'">
         <character-counter [character]="tabletopObject"></character-counter>
       </ng-container>
@@ -62,7 +65,7 @@
       <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
     </div>
   </button>
-  <select *ngIf="tabletopObject && aliasName === 'character'" style="font-size:14px" (change)="setLocation($event.target.value)" [ngModel]="tabletopObject.location.name">
+  <select *ngIf="aliasName === 'character'" style="font-size:14px" (change)="setLocation($event.target.value)" [ngModel]="tabletopObject.location.name">
     <option value="table">テーブル</option>
     <option value="common">共有インベントリ</option>
     <option value="{{playerService.myPlayer.playerId}}">個人インベントリ</option>

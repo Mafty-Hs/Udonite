@@ -3,7 +3,10 @@
     <input *ngIf="isEdit; else showTitle" style="min-width:10em;" size="1" [(ngModel)]="name" placeholder="Value" />
   </div>
   <div class="button-area">
-    <button class="panel-button" (click)="toggleEdit()"><i class="material-icons" style="font-size: 14px;">build</i></button>
+    <button class="panel-button" (click)="toggleEdit()">
+      <i *ngIf="!isEdit" class="material-icons" style="font-size: 14px;">build</i>
+      <i *ngIf="isEdit" class="material-icons" style="font-size: 14px;">minimize</i>
+    </button>
   </div>
 </div>
 <div  *ngIf="isEdit" class="tool">

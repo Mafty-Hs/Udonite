@@ -7,6 +7,7 @@ import { FileSelecterComponent } from 'component/file-selecter/file-selecter.com
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { EventSystem } from '@udonarium/core/system';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageService } from 'service/image.service';
 
 interface editImage {
   image: ImageFile;
@@ -33,10 +34,10 @@ export class CharacterImageComponent implements OnInit, OnDestroy, AfterViewInit
 
   get images():editImage[] {
     return this.imageDataElements.map(dataElm => {
-      let image = ImageStorage.instance.get(dataElm.value as string);
+      let image = this.imageService.getEmptyOr(ImageStorage.instance.get(dataElm.value as string));
       let shadowIdentifier = dataElm.currentValue as string;
       if (shadowIdentifier.length < 1) dataElm.currentValue = dataElm.value as string;
-      let shadow = ImageStorage.instance.get(dataElm.currentValue as string);
+      let shadow = this.imageService.getEmptyOr(ImageStorage.instance.get(dataElm.currentValue as string));
       return {image: image, shadowImage: shadow};
     })
   }
@@ -87,11 +88,18 @@ export class CharacterImageComponent implements OnInit, OnDestroy, AfterViewInit
     const elements = this.character.imageDataElement.getElementsByName(name);
     if (elements[index]) {
       if (name == 'imageIdentifier') {
-        if (this.character.currntImageIndex > index) this.character.currntImageIndex -= 1;
-        this.character.imageDataElement.removeChild(elements[index]);
-        if (this.character.currntImageIndex >= elements.length - 1) this.character.currntImageIndex =  elements.length - 2;
-        if (this.character.currntImageIndex < 0) this.character.currntImageIndex = 0;
+        if (this.imageDataElements.length == 1) {
+          this.imageDataElements[0].value = "";
+          this.imageDataElements[0].currentValue = "";
+          this.character.currntImageIndex = 0;
+        }
+        else {
+          if (this.character.currntImageIndex > index) this.character.currntImageIndex -= 1;
+          this.character.imageDataElement.removeChild(elements[index]);
+          if (this.character.currntImageIndex >= elements.length - 1) this.character.currntImageIndex =  elements.length - 2;
+          if (this.character.currntImageIndex < 0) this.character.currntImageIndex = 0;
 
+        }
       }
       else if (name == 'faceIcon') {
         if (this.character.currntIconIndex > index) this.character.currntIconIndex -= 1;
@@ -107,7 +115,12 @@ export class CharacterImageComponent implements OnInit, OnDestroy, AfterViewInit
   addImageModal(name :string) {
     this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: '' }).then(value => {
       if (!this.character || !this.character.imageDataElement || !value) return;
-        let element = DataElement.create(name, value, { type: 'image' }, name + UUID.generateUuid());
+      let element:DataElement;
+      if (name == 'imageIdentifier' && this.imageDataElements.length == 1 && this.imageDataElements[0].value == '') {
+        element = this.imageDataElements[0];
+        element.value = value;
+      }
+      else element = DataElement.create(name, value, { type: 'image' }, name + UUID.generateUuid());
       if (name == 'imageIdentifier') {
         element.currentValue = value;
       }
@@ -154,6 +167,7 @@ export class CharacterImageComponent implements OnInit, OnDestroy, AfterViewInit
 
   constructor(
     private changeDetector:ChangeDetectorRef,
+    private imageService:ImageService,
     private modalService:ModalService
   ) {
 

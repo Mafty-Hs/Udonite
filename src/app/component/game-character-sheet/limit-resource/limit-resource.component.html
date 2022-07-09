@@ -1,0 +1,32 @@
+<div class="container">
+  <ng-container *ngFor="let resource of resouces; index as i">
+    <ng-container *ngTemplateOutlet="resourceCard; context:{dataElm: resource, index: i }"></ng-container>
+  </ng-container>
+  <button class="card" style="width:100%"  (click)="addElement()">項目を追加</button>
+</div>
+
+<ng-template #resourceCard let-resource="dataElm" let-index="index">
+  <div class="card body">
+    <div class="title">
+      <div>
+        <button class="panel-button" (click)="addItem(resource)"><i class="material-icons" style="font-size: 18px;">add_circle</i></button>
+      </div>
+      <div>
+        <input *ngIf="index != 0;else characterName" class="title-name" size="1" [(ngModel)]="resource.name" placeholder="Name" />
+      </div>
+      <div>
+        <button *ngIf="index != 0" class="panel-button" (click)="removeElement(resource)"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      </div>
+    </div>
+    <div class="data">
+      <ng-container *ngIf="resource.children && resource.children.length > 0">
+        <limit-resource-element class="item" *ngFor="let item of resource.children" [gameDataElement]="item"></limit-resource-element>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #characterName>
+  <span>{{character.name}}</span>
+</ng-template>
+

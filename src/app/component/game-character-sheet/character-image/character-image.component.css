@@ -82,6 +82,7 @@
   align-items: flex-end;
   border: 4px solid #666;
   margin: 3px;
+  min-width: 130px;
 }
 
 .click-flame {

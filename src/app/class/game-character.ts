@@ -113,6 +113,7 @@ export class GameCharacter extends TabletopObject {
     }
     let limitResource = new LimitResource('LimitResource_' + this.identifier);
     limitResource.initialize();
+    limitResource.appendChild(DataElement.create('common', '', {}));
     this.appendChild(limitResource);
     return limitResource;
   }

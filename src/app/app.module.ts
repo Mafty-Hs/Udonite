@@ -124,6 +124,8 @@ import { CommonDataCardComponent } from './component/game-character-sheet/data-s
 import { CharacterImageComponent } from './component/game-character-sheet/character-image/character-image.component';
 import { PaletteEditComponent } from './component/game-character-sheet/palette-edit/palette-edit.component';
 import { CharacterCounterComponent } from './component/game-character-sheet/character-counter/character-counter.component';
+import { LimitResourceComponent } from './component/game-character-sheet/limit-resource/limit-resource.component';
+import { LimitResourceElementComponent } from './component/game-character-sheet/limit-resource/limit-resource-element/limit-resource-element.component';
 
 @NgModule({
   declarations: [
@@ -233,6 +235,8 @@ import { CharacterCounterComponent } from './component/game-character-sheet/char
     CharacterImageComponent,
     PaletteEditComponent,
     CharacterCounterComponent,
+    LimitResourceComponent,
+    LimitResourceElementComponent,
   ],
   imports: [
     BrowserModule,

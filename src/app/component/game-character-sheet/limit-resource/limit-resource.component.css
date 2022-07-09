@@ -1,0 +1,64 @@
+.card {
+  margin: 8px 0;
+}
+
+.title {
+  display: flex;
+  width: 100%;
+  border: 1px solid #000;
+  background-color: #222;
+  color: #FFF;
+  justify-content: space-between;
+}
+
+.title-name {
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 6em;
+  background: none;
+  border: none;
+  padding: 0px;
+  border-radius: 0px;
+  outline: none;
+  text-align: right;
+  box-sizing: border-box;
+  -moz-appearance:textfield;
+  margin-right: 1em;
+}
+
+.body {
+  background-color: #444;
+}
+
+.panel-button {
+  background: none;
+  color: #FFF;
+  border: none;
+  border-radius: 0;
+  text-shadow: none;
+  padding: 0.2em;
+  margin: 0 3px;
+}
+
+.panel-button::after {
+  background: none;
+}
+
+.data {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+}
+
+.item {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 360px;
+  border-top: 1px dotted #888;
+  border-bottom: 1px dotted #888;
+  margin: 4px 8px;
+}
+
+

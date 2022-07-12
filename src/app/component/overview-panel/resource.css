@@ -1,0 +1,25 @@
+.resource-title {
+  width: 300px;
+  background-color: #222;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.resource-container {
+  width: 300px;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0;
+}
+
+.resource-item {
+  border: solid 1px #222;
+  background-color: #666;
+  font-weight: bolder;
+  padding: 2px 6px;
+  margin: 2px;
+  border-radius: 100px;
+}
+
+
+

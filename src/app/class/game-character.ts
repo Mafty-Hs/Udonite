@@ -78,13 +78,7 @@ export class GameCharacter extends TabletopObject {
     return null;
   }
 
-  private _showNote:boolean = false;
-  get showNote():boolean {
-    return this._showNote;
-  }
-  set showNote(showNote :boolean) {
-    this._showNote = showNote;
-  }
+  charaSW:string = "status";
 
   cloneNumber() :this {
     let cloneObject = super.clone();

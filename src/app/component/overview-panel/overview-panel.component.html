@@ -115,13 +115,10 @@
           </div>
         </div>
         <div class="grid-container">
-          <div class="charaSW"><label>
-            <input name="charaSW" type="checkbox" [(ngModel)]="character.showNote">
-            <div><div></div></div>
-            </label></div>
+          <button class="charaSW" (click)="toggleCharaSW()">{{charaSWtext}}</button>
         </div>
-        <ng-container *ngIf="!character.showNote ; else overviewCharacterNote">
-            <!--<ng-container *ngFor="let dataElm of dataElms">-->
+        <ng-container [ngSwitch]="character.charaSW">
+          <ng-container *ngSwitchCase="'status'">
             <ng-container *ngFor="let dataElm of inventoryDataElms">
               <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
                 <div class="grid-container">
@@ -129,6 +126,13 @@
                 </div>
               </ng-container>
             </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'note'">
+            <ng-container *ngTemplateOutlet="overviewCharacterNote"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'resource'">
+            <ng-container *ngTemplateOutlet="overviewCharacterResource"></ng-container>
+          </ng-container>
         </ng-container>
       </div>
     </div>
@@ -143,6 +147,47 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #overviewCharacterResource>
+  <ng-container *ngFor="let category of resources">
+    <ng-container *ngTemplateOutlet="resourceCategory; context: { category: category }"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #resourceCategory  let-category="category">
+  <div class="resource-title">
+    {{category.name}}
+  </div>
+  <div class="resource-container">
+    <ng-container *ngFor="let item of category.children">
+      <ng-container *ngTemplateOutlet="resourceItem; context: { item: item }"></ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #resourceItem  let-item="item">
+  <div class="resource-item">
+    <ng-container [ngSwitch]="item.type">
+      <ng-container *ngSwitchCase="'note'">
+        {{item.name}}
+      </ng-container>
+      <ng-container *ngSwitchCase="'simpleNumber'">
+        {{item.name}}: {{item.value}}
+      </ng-container>
+      <ng-container *ngSwitchCase="'numberResource'">
+        {{item.name}}: {{item.currentValue}} / {{item.value}}
+      </ng-container>
+      <ng-container *ngSwitchCase="'checkProperty'">
+        <span *ngIf="!dataElement.value">{{item.name}}</span>
+        <span *ngIf="dataElement.value">{{item.name}} (使用済み)</span>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        {{item.name}}: {{item.value}}
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
 
 <ng-template #forbidden>
   非公開

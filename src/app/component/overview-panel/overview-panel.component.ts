@@ -30,7 +30,7 @@ import { CardStack } from '@udonarium/card-stack';
 @Component({
   selector: 'overview-panel',
   templateUrl: './overview-panel.component.html',
-  styleUrls: ['./overview-panel.component.css','./overview-panel.design.css','./overview-panel.counter.css','./inner-note.css','../../common/range.status.css'],
+  styleUrls: ['./overview-panel.component.css','./overview-panel.design.css','./overview-panel.counter.css','./inner-note.css','./resource.css','../../common/range.status.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeInOut', [
@@ -167,6 +167,39 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       return this.applyImageEffect ? this.tabletopObject.aura : -1;
     }
     return -1;
+  }
+
+  toggleCharaSW() {
+    if (this._character.charaSW == 'status') {
+      this._character.charaSW = 'note';
+      return;
+    }
+    else if (this._character.charaSW == 'note') {
+      this._character.charaSW = 'resource';
+      return;
+    }
+    else if (this._character.charaSW == 'resource') {
+      this._character.charaSW = 'status';
+      return;
+    }
+    this._character.charaSW = 'status';
+  }
+
+  get charaSWtext():string {
+    if (this._character.charaSW == 'status') {
+      return "ステータス";
+    }
+    else if (this._character.charaSW == 'note') {
+      return "メモ";
+    }
+    else if (this._character.charaSW == 'resource') {
+      return "リソース";
+    }
+    return "ステータス";
+  }
+
+  get resources():DataElement[] {
+    return this._character.limitResource.childElement;
   }
 
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }

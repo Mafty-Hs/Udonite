@@ -90,7 +90,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
 
-  static readonly MIN_SIZE = 250;
+  static readonly MIN_SIZE = 100;
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
@@ -98,7 +98,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   private _isVisible = false;
   private _isEnd = false;
-  
+
   videoStateTransition = false;
 
   isMinimize = false;
@@ -155,7 +155,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get isPointerDragging(): boolean { return this._dragging; }
-  draggstart() { 
+  draggstart() {
     this.ngZone.run(() => {
      this._dragging = true;
     });
@@ -173,7 +173,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get cutInImage(): ImageFile {
     if (!this.cutIn) return this._imageFile;
-    if (this._imageFile.identifier !== this.cutIn.imageIdentifier) { 
+    if (this._imageFile.identifier !== this.cutIn.imageIdentifier) {
       let file: ImageFile = ImageStorage.instance.get(this.cutIn.imageIdentifier);
       this._imageFile = file ? file : ImageFile.Empty;
     }
@@ -186,7 +186,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
       ret = this.naturalWidth;
-    } else { 
+    } else {
       ret = (this.cutIn.width <= 0)
         ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
         : (document.documentElement.clientWidth * this.cutIn.width / 100);
@@ -219,7 +219,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (this.isMinimize) return CutInComponent.MIN_SIZE;
     let ret = 0;
     if (!this.cutIn) return ret;
-    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
+    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
       ret = this.naturalHeight;
     } else {
       ret = (this.cutIn.height <= 0)
@@ -234,7 +234,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (!this.cutIn) return ret;
     if (this.naturalWidth > this.naturalHeight) {
       ret = CutInComponent.MIN_SIZE * this.naturalWidth / this.naturalHeight;
-    } 
+    }
     return ret;
   }
 
@@ -264,12 +264,12 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (!this.cutIn) return ret;
     if (this.naturalWidth < this.naturalHeight) {
       ret = CutInComponent.MIN_SIZE * this.naturalHeight / this.naturalWidth;
-    } 
+    }
     return ret;
   }
 
   private get isAjustAspect(): boolean {
-    return (this.cutIn.width <= 0 || this.cutIn.height <= 0) 
+    return (this.cutIn.width <= 0 || this.cutIn.height <= 0)
       && (this.pixcelWidthPreAdjust > document.documentElement.clientWidth || this.pixcelHeightPreAdjust > document.documentElement.offsetHeight);
   }
 
@@ -352,7 +352,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   get isSoundOnly(): boolean { return this.cutIn && this.cutIn.isSoundOnly; }
 
   get senderName() {
-    let ret = ''; 
+    let ret = '';
     if (!this.sender) return ret;
     let object = this.playerService.findByPeerId(this.sender);
     if (object) {

@@ -90,6 +90,18 @@
 }
 
 player-palette-control {
-  height : 50px;
+  height: 54px;
+  box-sizing: border-box;
+  padding: 0px 5px;
+  font-size: 14px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  overflow-x: auto;
   color: #FFF;
+}
+
+simple-inventory {
+  height : 50px;
+  padding: 0;
 }

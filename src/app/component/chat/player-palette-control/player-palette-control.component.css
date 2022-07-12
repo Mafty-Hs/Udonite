@@ -12,9 +12,44 @@
   display: grid;
 }
 
+.toggleSW {
+  display: block;
+  margin: 0px 3px;
+  width: 72px;
+  height: 100%;
+  font-size: 12px;
+  padding: 2px;
+  white-space: nowrap;
+}
+
+.resource-control {
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 12px;
+  margin: 0px 3px;
+  width: 9em;
+}
+
+.reset {
+  display: block;
+  padding: 0 2px;
+  background: #555;
+  white-space: nowrap;
+}
+
+.reset::after {
+  background: none;
+}
+
 .frame {
   margin: 0px 3px;
   max-width: 10em;
+}
+
+.resource {
+  height: 40px;
+  padding: 0;
+  width: 8em;
 }
 
 .section {

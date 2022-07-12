@@ -9,6 +9,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
+import { LimitResource } from '@udonarium/limit-resource';
 
 
 @Component({
@@ -19,13 +20,17 @@ import { ModalService } from 'service/modal.service';
 })
 export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
-  private gameCharacter: GameCharacter = null;
+  gameCharacter: GameCharacter = null;
   private _sendFrom: string = "";
+
+  mode:string = 'status'
+
   get sendFrom(){
     return this._sendFrom;
   }
   @Input() set sendFrom(sendFrom:string){
     this.cancelEdit();
+    this.resourceTitle = 'common'
     this._sendFrom = sendFrom;
     let character = this.gameCharacterService.get(sendFrom);
     if (character) this.gameCharacter = character;
@@ -36,6 +41,9 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
   @Output() chat = new EventEmitter<{
     text: string, gameType: string, sendFrom: string, sendTo: string
     }>();
+  sendChat(e) {
+    this.chat.emit(e);
+  }
 
   get inventoryDataElms(): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(this.sendFrom);
@@ -45,6 +53,24 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
   isEdit: boolean = false;
   isString: boolean = false;
+
+  get limitResource():LimitResource { return this.gameCharacter.limitResource }
+
+  get currentResouce():DataElement[] {
+    let resource = this.limitResource.childElement.find(dataElm => dataElm.name === this.resourceTitle)
+    if (resource) return resource.children as DataElement[]
+    return this.limitResource.commonElement.children as DataElement[]
+  }
+
+  resourceTitle:string = 'common';
+
+  toggleMode() {
+    this.mode = this.mode === 'resource' ? 'status' : 'resource'
+  }
+
+  resetResource() {
+    this.limitResource.reset(this.resourceTitle);
+  }
 
   setDataElm(event:Event ,dataElm: DataElement){
     switch(true) {

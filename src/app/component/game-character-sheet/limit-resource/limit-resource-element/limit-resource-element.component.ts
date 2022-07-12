@@ -42,7 +42,6 @@ export class LimitResourceElementComponent implements OnInit, OnDestroy, AfterVi
   }
 
   upElement() {
-    console.log('up');
     let parentElement = this.gameDataElement.parent;
     let index: number = parentElement.children.indexOf(this.gameDataElement);
     if (0 < index) {
@@ -52,7 +51,6 @@ export class LimitResourceElementComponent implements OnInit, OnDestroy, AfterVi
   }
 
   downElement() {
-    console.log('down');
     let parentElement = this.gameDataElement.parent;
     let index: number = parentElement.children.indexOf(this.gameDataElement);
     if (index < parentElement.children.length - 1) {

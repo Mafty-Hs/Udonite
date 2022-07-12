@@ -1,0 +1,28 @@
+<div class="item" (dblclick)="itemUse()">
+  {{dataElement.name}}
+  <div *ngIf="isShow"  [ngStyle]="{'background-color': stock ? '#222' : '#300'}" class="count">
+    <ng-container *ngTemplateOutlet="count">
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #count>
+  <ng-container [ngSwitch]="dataElement.type">
+    <ng-container *ngSwitchCase="'note'">
+
+    </ng-container>
+    <ng-container *ngSwitchCase="'simpleNumber'">
+      {{dataElement.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'numberResource'">
+      {{dataElement.currentValue}} / {{dataElement.value}}
+    </ng-container>
+    <ng-container *ngSwitchCase="'checkProperty'">
+      <span *ngIf="!dataElement.value">未使用</span>
+      <span *ngIf="dataElement.value">使用済み</span>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      {{dataElement.value}}
+    </ng-container>
+  </ng-container>
+</ng-template>

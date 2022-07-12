@@ -126,6 +126,7 @@ import { PaletteEditComponent } from './component/game-character-sheet/palette-e
 import { CharacterCounterComponent } from './component/game-character-sheet/character-counter/character-counter.component';
 import { LimitResourceComponent } from './component/game-character-sheet/limit-resource/limit-resource.component';
 import { LimitResourceElementComponent } from './component/game-character-sheet/limit-resource/limit-resource-element/limit-resource-element.component';
+import { LimitResourceControlComponent } from './component/chat/player-palette-control/limit-resource-control/limit-resource-control.component';
 
 @NgModule({
   declarations: [
@@ -237,6 +238,7 @@ import { LimitResourceElementComponent } from './component/game-character-sheet/
     CharacterCounterComponent,
     LimitResourceComponent,
     LimitResourceElementComponent,
+    LimitResourceControlComponent,
   ],
   imports: [
     BrowserModule,

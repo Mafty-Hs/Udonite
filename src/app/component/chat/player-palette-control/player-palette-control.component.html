@@ -1,15 +1,38 @@
-<div class="component">
-  <ng-container *ngIf="!isEdit; else edit">
-    <ng-container *ngIf="isTransparent; else forbidden">
-      <div class="frame" *ngFor="let dataElm of inventoryDataElms">
-        <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
-          </ng-container>
-        </ng-container>
-      </div>
+<ng-container *ngIf="!isEdit; else edit">
+  <ng-container *ngIf="isTransparent; else forbidden">
+    <button class="toggleSW" (click)="toggleMode()">
+      <span *ngIf="mode === 'status'">ステータス</span>
+      <span *ngIf="mode === 'resource'">リソース</span>
+    </button>
+    <ng-container *ngIf="mode === 'status'">
+      <ng-container *ngTemplateOutlet="status">
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="mode === 'resource'">
+      <ng-container *ngTemplateOutlet="resource">
+      </ng-container>
     </ng-container>
   </ng-container>
-</div>
+</ng-container>
+
+<ng-template #status>
+  <div class="frame" *ngFor="let dataElm of inventoryDataElms">
+    <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+      <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }">
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #resource>
+  <div class="resource-control">
+    <select style="font-size:1em" [ngModelOptions]="{standalone: true}" [(ngModel)]="resourceTitle">
+      <option *ngFor="let name of limitResource.names" value="{{name}}">{{name}}</option>
+    </select>
+    <button class="reset" (click)="resetResource()">回数をリセット</button>
+  </div>
+  <limit-resource-control class="resource" *ngFor="let dataElm of currentResouce" [characterName]="gameCharacter.name" [dataElement]="dataElm" (chat)="sendChat($event)"></limit-resource-control>
+</ng-template>
 
 <ng-template #dataElement let-dataElm="dataElm">
   <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>

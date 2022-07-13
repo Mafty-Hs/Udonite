@@ -187,7 +187,7 @@ export class IONetwork {
     return result as AudioContext[];
   }
 
-  async audioUrl(audioUrl :string ,owner :string ,filename :string ,volume:number,tag:string):Promise<void> {
+  async audioUrl(audioUrl :string ,owner :string ,filename :string ,volume:number,tag:string,isHidden:boolean = false):Promise<void> {
     if (!this.checkFileType(audioUrl)) return;
     let context:AudioContext = {
       identifier: audioUrl ,
@@ -197,7 +197,7 @@ export class IONetwork {
       filesize: 0,
       owner: owner,
       volume: volume,
-      isHidden: false,
+      isHidden: isHidden,
       tag:tag
     };
     this.socket.send('audioUpdate', context);

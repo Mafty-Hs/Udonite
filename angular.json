@@ -26,14 +26,16 @@
               "src/styles.css"
             ],
             "scripts": [
-              "src/lib/effekseer.min.js"
+              "src/lib/effekseer.min.js",
+              "node_modules/jszip/dist/jszip.min.js"
            ],
             "allowedCommonJsDependencies": [
               "hammerjs",
               "crypto-js/sha256",
               "crypto-js/lib-typedarrays",
               "file-saver",
-              "buffer"
+              "buffer",
+              "vkbeautify"
             ],
             "vendorChunk": true,
             "extractLicenses": false,

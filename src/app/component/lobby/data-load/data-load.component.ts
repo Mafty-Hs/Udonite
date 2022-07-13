@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { RoomService,RoomState } from 'service/room.service';
-import * as JSZip from 'jszip/dist/jszip.min.js';
 import { MimeType } from '@udonarium/core/file-storage/mime-type';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { TabletopObject } from '@udonarium/tabletop-object';
+
+declare var JSZip: any
 
 @Component({
   selector: 'data-load',

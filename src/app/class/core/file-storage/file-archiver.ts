@@ -1,5 +1,4 @@
 import { saveAs } from 'file-saver';
-import * as JSZip from 'jszip/dist/jszip.min.js';
 
 import { EventSystem, IONetwork } from '../system';
 import { XmlUtil } from '../system/util/xml-util';
@@ -13,6 +12,7 @@ import { AudioStorage } from './audio-storage';
 import { AudioUrls } from './audio-context';
 import { StringUtil } from '../system/util/string-util';
 
+declare var JSZip: any
 
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;

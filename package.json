@@ -27,7 +27,7 @@
     "jszip": "^3.7.1",
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.3.2",
-    "three": "^0.141.0",
+    "three": "^0.142.0",
     "tslib": "^2.3.1",
     "vkbeautify": "^0.99.3"
   },

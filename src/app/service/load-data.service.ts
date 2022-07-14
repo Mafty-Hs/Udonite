@@ -110,6 +110,10 @@ export class LoadDataService {
       case (gameObject instanceof BillBoard):
         this.billBoardService.loadCard(<BillBoard>gameObject);
         break;
+      case (gameObject instanceof ChatTabList):
+        let chaTabs = ChatTabList.instance.chatTabs;
+        for (let chatTab of chaTabs) chatTab.allowedPlayers = [];
+        break;
       case (gameObject instanceof CutInList):
         CutInList.instance.load();
         break;
@@ -130,7 +134,9 @@ export class LoadDataService {
         gameObject.destroy();
         break;
       case (gameObject instanceof ChatTab):
-        ChatTabList.instance.addChatTab(<ChatTab>gameObject);
+        let chatTab = <ChatTab>gameObject;
+        chatTab.allowedPlayers = [];
+        ChatTabList.instance.addChatTab(chatTab);
         break;
       case (gameObject instanceof CutIn):
         CutInList.instance.addCutIn(<CutIn>gameObject);

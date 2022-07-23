@@ -70,6 +70,13 @@ export class PlayerPaletteControlComponent implements OnInit,OnDestroy  {
 
   resetResource() {
     this.limitResource.reset(this.resourceTitle);
+    let resulttext =  this.gameCharacter.name + 'が' + this.resourceTitle + 'の使用回数を回復しました';
+    this.chat.emit({
+      text: resulttext,
+      gameType: "",
+      sendFrom: "System",
+      sendTo: "",
+    });
   }
 
   setDataElm(event:Event ,dataElm: DataElement){

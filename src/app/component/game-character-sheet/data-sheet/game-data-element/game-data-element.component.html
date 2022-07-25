@@ -108,15 +108,16 @@
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isCommonValue]="isCommonValue" [isHideText]="isHideText"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [characterIdentifier]="characterIdentifier" [isEdit]="isEdit" [isCommonValue]="isCommonValue" [isHideText]="isHideText"></div>
       </div>
     </div>
   </ng-container>
 </ng-container>
 <ng-template #editButtons>
-  <button class="element-button" (click)="addElement()"><i class="material-icons">add_circle</i></button>
-  <button class="element-button" (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+    <button class="element-button element-icon" [attr.data-tooltip]="'要素を追加'" (click)="addElement()"><i class="material-icons">add_circle</i></button>
+    <button class="element-button element-icon" [attr.data-tooltip]="'要素を上に移動'" (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+    <button *ngIf="characterIdentifier.length > 0"  class="element-button element-icon" [attr.data-tooltip]="'要素をリソースに変更'" (click)="changeResource()"><i class="material-icons">token</i></button>
   <br>
-  <button class="element-button" (click)="deleteElement()"><i class="material-icons">remove_circle_outline</i></button>
-  <button class="element-button" (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
+    <button class="element-button element-icon"  [attr.data-tooltip]="'要素を削除'" (click)="deleteElement()"><i class="material-icons">remove_circle_outline</i></button>
+    <button class="element-button element-icon" [attr.data-tooltip]="'要素を下に移動'"  (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
 </ng-template>

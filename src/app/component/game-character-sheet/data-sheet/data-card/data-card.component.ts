@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit,ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'data-card',
@@ -10,6 +12,7 @@ import { DataElement } from '@udonarium/data-element';
 })
 export class DataCardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() tableTopObjectName: string = null;
+  @Input() characterIdentifier: string = '';
   @Input() gameDataElement: DataElement = null;
   isEdit:boolean = false;
 
@@ -44,6 +47,15 @@ export class DataCardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (index < parentElement.children.length - 1) {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.gameDataElement);
+    }
+  }
+
+  changeResource() {
+    let character = ObjectStore.instance.get(this.characterIdentifier);
+    if (character && character instanceof GameCharacter) {
+      if (confirm(this.gameDataElement.name + 'をリソースに変換します。よろしいですか？')) {
+        character.limitResource.castDataElement(this.gameDataElement);
+      }
     }
   }
 

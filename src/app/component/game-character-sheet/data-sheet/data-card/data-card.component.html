@@ -11,16 +11,17 @@
 </div>
 <div  *ngIf="isEdit" class="tool">
   <div  class="button-area">
-    <button class="panel-button" (click)="addElement()"><i class="material-icons" style="font-size: 18px;">add_circle</i></button>
-    <button class="panel-button" (click)="deleteElement()"><i class="material-icons" style="font-size: 18px;">remove_circle_outline</i></button>
-    <button class="panel-button" (click)="upElement()"><i class="material-icons" style="font-size: 18px;">arrow_upward</i></button>
-    <button class="panel-button" (click)="downElement()"><i class="material-icons" style="font-size: 18px;">arrow_downward</i></button>
+    <button class="panel-button element-icon" [attr.data-tooltip]="'要素を追加'" (click)="addElement()"><i class="material-icons" style="font-size: 18px;">add_circle</i></button>
+    <button class="panel-button element-icon"  [attr.data-tooltip]="'要素を削除'" (click)="deleteElement()"><i class="material-icons" style="font-size: 18px;">remove_circle_outline</i></button>
+    <button class="panel-button element-icon" [attr.data-tooltip]="'要素を上に移動'" (click)="upElement()"><i class="material-icons" style="font-size: 18px;">arrow_upward</i></button>
+    <button class="panel-button element-icon" [attr.data-tooltip]="'要素を下に移動'"  (click)="downElement()"><i class="material-icons" style="font-size: 18px;">arrow_downward</i></button>
+    <button *ngIf="characterIdentifier.length > 0"  class="panel-button element-icon" [attr.data-tooltip]="'要素をリソースに変更'" (click)="changeResource()"><i class="material-icons" style="font-size: 18px;">token</i></button>
   </div>
   <div  class="button-area">
   </div>
 </div>
 <div class="table">
-  <div class="table-row" *ngFor="let childElement of gameDataElement.children" game-data-element [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit"></div>
+  <div class="table-row" *ngFor="let childElement of gameDataElement.children" game-data-element [gameDataElement]="childElement" [characterIdentifier]="characterIdentifier" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit"></div>
 </div>
 
 <ng-template #showTitle>

@@ -15,11 +15,14 @@ export class LimitResourceControlComponent implements OnInit {
     text: string, gameType: string, sendFrom: string, sendTo: string
     }>();
 
+  numberPattern:RegExp = new RegExp('^[0-9]*$');
   get isShow():boolean {
-    if (['simpleNumber','numberResource','checkProperty'].includes(this.dataElement.type)) return true;
-    if (this.dataElement.type == '' && !Number.isNaN(this.dataElement.value)) {
-      return true;
+    if (!this.dataElement.type) {
+      let value = <string>this.dataElement.value;
+      if (value.length < 1) return false;
+      return this.numberPattern.test(value);
     }
+    if (['simpleNumber','numberResource','checkProperty'].includes(this.dataElement.type)) return true;
     return false;
   }
 

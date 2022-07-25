@@ -16,6 +16,10 @@ export class DataSheetComponent implements OnInit, OnDestroy, AfterViewInit{
   isCharacter:boolean = false;
   isCard:boolean = false;
 
+  get characterIdentifier():string {
+    return this.tabletopObject.aliasName === 'character' ? this.tabletopObject.identifier : '';
+  }
+
   get hasImage():boolean {
     let type = this.tabletopObject.aliasName;
     switch(type) {

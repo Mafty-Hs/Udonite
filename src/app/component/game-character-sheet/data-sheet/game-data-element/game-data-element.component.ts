@@ -7,9 +7,11 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
+import { GameCharacter } from '@udonarium/game-character';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
 
@@ -21,6 +23,7 @@ import { ModalService } from 'service/modal.service';
 })
 export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() tableTopObjectName: string = null;
+  @Input() characterIdentifier: string = '';
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
   @Input() isCommonValue: boolean = false;
@@ -140,6 +143,15 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     if (0 < index) {
       let prevElement = parentElement.children[index - 1];
       parentElement.insertBefore(this.gameDataElement, prevElement);
+    }
+  }
+
+  changeResource() {
+    let character = ObjectStore.instance.get(this.characterIdentifier);
+    if (character && character instanceof GameCharacter) {
+      if (confirm(this.gameDataElement.name + 'をリソースに変換します。よろしいですか？')) {
+        character.limitResource.castDataElement(this.gameDataElement);
+      }
     }
   }
 

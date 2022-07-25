@@ -7,20 +7,23 @@
   width: 8em;
   box-sizing: border-box;
   font-size: 12px;
+  overflow: hidden;
   white-space: pre-wrap;
   line-break: strict;
   background-color: #555;
   border: 1px solid #66F;
+  border-right:1px solid #22F;
+  border-bottom:1px solid #22F;
   border-radius: 5px;
   text-overflow: ellipsis;
 }
 
 .count {
   position: absolute;
-  bottom:-1px;
+  bottom:0;
   right: -1px;
   border: 1px solid #FFF;
-  padding: 3px 5px;
+  padding: 2px 4px;
   border-radius: 8px;
   max-width: 8em;
   font-size: 10px;

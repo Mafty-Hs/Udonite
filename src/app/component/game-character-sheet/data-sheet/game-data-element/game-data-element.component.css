@@ -58,6 +58,10 @@ input, button, textarea, select{
   font-size: 1.0em;
 }
 
+select {
+  background: #222;
+}
+
 button i {
   font-size: 1.0rem;
 }
@@ -67,7 +71,42 @@ button i {
 }
 
 .element-button::after {
-  background: none;
+  background:none;
+}
+
+.element-icon {
+  position: relative;
+}
+
+.element-icon::after {
+  -webkit-transition: all 0.2s;
+  opacity: 0;
+  position: absolute;
+  transition: all 0.2s;
+  visibility: hidden;
+  z-index: 11;
+  background: #222222;
+  border-radius: 3px;
+  color: #fff;
+  content: attr(data-tooltip);
+  display: block;
+  font-size: 11px;
+  left: 0;
+  padding: 3px;
+  top: 20px;
+  white-space: nowrap;
+	position: absolute;
+	width: 10em;
+	height: 1.6em;
+}
+
+.element-icon:hover {
+  cursor: pointer;
+}
+
+.element-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .table-cell button{

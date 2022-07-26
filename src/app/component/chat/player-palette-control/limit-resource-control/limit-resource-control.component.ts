@@ -36,7 +36,7 @@ export class LimitResourceControlComponent implements OnInit {
     else if (this.dataElement.type == 'numberResource' && Number(this.dataElement.currentValue) === 0) {
       return false;
     }
-    else if (this.dataElement.type == 'checkProperty' && !this.dataElement.value) {
+    else if (this.dataElement.type == 'checkProperty' && String(this.dataElement.value).length > 0) {
       return false;
     }
     return true;
@@ -59,8 +59,8 @@ export class LimitResourceControlComponent implements OnInit {
       this.sendChatNumber("(残り " + this.dataElement.currentValue + " / " + this.dataElement.value +" )");
     }
     else if (this.dataElement.type == 'checkProperty') {
-      if (!this.dataElement.value) return;
-      this.dataElement.value = '';
+      if (this.dataElement.value) return;
+      this.dataElement.value = this.dataElement.name;
       this.sendChatNumber("");
     }
   }

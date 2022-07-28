@@ -114,6 +114,9 @@
     </div>
     <span style="display: inline-block;width: 8em;">名前：</span><input type="text" width="24em" [(ngModel)]="name" /><br/>
     <ng-container *ngIf="editingIdentifier">
+      <ng-container *ngIf="canEditUrl">
+      <span style="display: inline-block;width: 8em;">外部URL：</span><input name="url" type="text" width="32em" [(ngModel)]="url" /><br/>
+      </ng-container>
       <span style="display: inline-block;width: 8em;">Volume:</span><input type="text" width="6em" [(ngModel)]="editingVolume" /><br/>
     </ng-container>
     <span style="display: inline-block;width: 8em;">タグ:</span><input type="text" width="6em" [(ngModel)]="editingTag" /><br/>

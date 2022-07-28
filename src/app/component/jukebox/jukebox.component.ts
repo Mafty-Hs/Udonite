@@ -87,6 +87,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   toggleEdit(isUpdate:boolean = false) {
     if (isUpdate && this.editingIdentifier) {
       this.name = this.editingAudio.name;
+      if (this.editingAudio.type === 'URL') this.url = this.editingAudio.context.url;
       this.editingVolume = this.editingAudio.volume;
       this.editingTag = this.editingAudio.tag  === this.noTag ? '' : this.editingAudio.tag ;
     }
@@ -105,9 +106,17 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get editingAudio() {
     return AudioStorage.instance.get(this.editingIdentifier);
   }
+  
+  get canEditUrl():boolean {
+    if (this.editingAudio.type === 'URL') {
+      return (this.editingAudio.owner === this.playerService.myPlayer.playerId);
+    }
+    return false;
+  }
 
   saveEdit() {
     if (this.editingIdentifier) {
+      if (this.editingAudio.type === 'URL' && this.editingAudio.context.url !== this.url) this.editingAudio.context.url = this.url;
       this.editingAudio.name = this.name;
       this.editingAudio.volume = this.editingVolume;
       this.editingAudio.tag = this.editingTag;

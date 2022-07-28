@@ -17,6 +17,10 @@
        <div>チャット</div>
     </label>
     <label>
+      <input name="menu" type="radio" value="sheet" [(ngModel)]="menu">
+       <div>キャラクターシート</div>
+    </label>
+    <label>
       <input name="menu" type="radio" value="character" [(ngModel)]="menu">
        <div>キャラクター</div>
     </label>
@@ -67,6 +71,9 @@
      </ng-container>
      <ng-container *ngSwitchCase="'chat'">
       <help-chat class="main-content"></help-chat>
+     </ng-container>
+     <ng-container *ngSwitchCase="'sheet'">
+      <help-sheet class="main-content"></help-sheet>
      </ng-container>
      <ng-container *ngSwitchCase="'character'">
       <help-character class="main-content"></help-character>

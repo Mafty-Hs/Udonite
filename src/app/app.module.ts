@@ -103,6 +103,7 @@ import { HelpCharacterComponent } from './component/help/help-character/help-cha
 import { HelpMenuComponent } from './component/help/help-menu/help-menu.component';
 import { HelpObjectComponent } from './component/help/help-object/help-object.component';
 import { HelpStandComponent } from './component/help/help-stand/help-stand.component';
+import { HelpSheetComponent } from './component/help/help-sheet/help-sheet.component';
 import { HelpCounterComponent } from './component/help/help-counter/help-counter.component';
 import { HelpBoardComponent } from './component/help/help-board/help-board.component';
 import { HelpPopupComponent } from './component/help/help-popup/help-popup.component';
@@ -215,6 +216,7 @@ import { LimitResourceControlComponent } from './component/chat/player-palette-c
     HelpMenuComponent,
     HelpObjectComponent,
     HelpStandComponent,
+    HelpSheetComponent,
     HelpCounterComponent,
     HelpBoardComponent,
     HelpPopupComponent,

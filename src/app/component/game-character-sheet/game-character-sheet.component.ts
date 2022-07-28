@@ -17,6 +17,7 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PlayerService } from 'service/player.service';
+import { HelpComponent } from 'component/help/help.component';
 
 @Component({
   selector: 'game-character-sheet',
@@ -167,6 +168,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   toggleEditMode() {
+  }
+
+  help() {
+    let option: PanelOption = { width: 800 , height: 600, left: 50, top: 100 };
+    let component = this.panelService.open(HelpComponent,option);
+    component.menu = "sheet";
   }
 
 }

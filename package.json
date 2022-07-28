@@ -42,7 +42,7 @@
     "@types/jasminewd2": "^2.0.10",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.0.0",
-    "@types/three": "^0.141.0",
+    "@types/three": "^0.142.0",
     "@types/vkbeautify": "^0.99.2",
     "jasmine-core": "^4.0.1",
     "karma": "^6.3.4",

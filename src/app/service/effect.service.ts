@@ -92,7 +92,6 @@ export class EffectService {
     renderer.context = null;
     renderer.effect = null;
     renderer.renderer.forceContextLoss();
-    renderer.renderer.context = null;
     renderer.renderer.domElement = null;
     renderer.renderer = null;
     renderer.canvas.remove();

@@ -82,7 +82,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 export class GameCharacterFlatComponent extends GameCharacterComponentTemplate implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
-
+  @ViewChild('characterImage') characterImage: ElementRef;
 
   ngOnInit():void {
     super.ngOnInit();
@@ -91,6 +91,8 @@ export class GameCharacterFlatComponent extends GameCharacterComponentTemplate i
       let effectName = event.data[0];
       let character = event.data[1];
       if(this.effectService.effectName.includes(effectName) && character.includes(this.identifier)) {
+        let rect = this.characterImage.nativeElement.getBoundingClientRect();
+        this.effectService.play(rect ,effectName, false)
         this.standImageService.show(this.gameCharacter,null,null,false,effectName)
       }
     });

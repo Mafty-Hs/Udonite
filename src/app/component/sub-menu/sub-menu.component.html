@@ -119,7 +119,7 @@
           <div>カットイン設定</div>
         </a>
       </li>
-      <li *ngIf="isOpen('work') && !is2d" (click)="open('EffectViewComponent')">
+      <li *ngIf="isOpen('work')" (click)="open('EffectViewComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">water_drop</i></div>
           <div>エフェクト</div>

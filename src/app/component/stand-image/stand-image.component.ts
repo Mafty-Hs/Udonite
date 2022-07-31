@@ -349,7 +349,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
     if (this.standImageElement) {
       let image = this.standImageElement.nativeElement as HTMLElement;
       let rect = image.getBoundingClientRect();
-      this.effectService.play(rect ,effectName ,false);
+      this.effectService.play(rect, effectName, false, false);
     }
   }
 

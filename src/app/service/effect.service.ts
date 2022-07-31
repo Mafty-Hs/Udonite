@@ -12,6 +12,7 @@ interface EffectData {
       time: number;
       file: string;
       audio?: string;
+      audioWait?: number;
       position: string;
       size: number;
 }
@@ -56,7 +57,7 @@ export class EffectService {
     setTimeout(()=> this.stop(identifier) , EffectInfo[effectName].time + 1000 );
   }
 
-  async play(rect :DOMRect, effectName :string, is3d :boolean) {
+  async play(rect :DOMRect, effectName :string, is3d :boolean,playSE: boolean = true) {
     if (!this.canEffect || (is3d && !this.isValid(rect))) return;
     let width,height,top,left: number;
     [width,height,top,left] = is3d ? this.calcSize3d(rect,effectName) : this.calcSize2d(rect,effectName);
@@ -67,8 +68,13 @@ export class EffectService {
     await this.setEffect(renderer ,effectName);
     this.renderers.push(renderer);
     let position = Position[EffectInfo[effectName].position];
+    if (playSE && EffectInfo[effectName].audio) {
+      if (EffectInfo[effectName].audioWait) {
+        setTimeout(()=> { this.sePLayer.directPlay(EffectInfo[effectName].audio); } ,EffectInfo[effectName].audioWait)
+      }
+      else this.sePLayer.directPlay(EffectInfo[effectName].audio);
+    }
     renderer.context.play(renderer.effect[effectName],position.x,position.y,position.z);
-    //if (EffectInfo[effectName].audio) this.sePLayer.play();
     setTimeout(()=> this.stop(identifier) , EffectInfo[effectName].time + 1000 );
   }
 
@@ -208,6 +214,10 @@ export class EffectService {
     }
   }
 
+  setEffectSE() {
+
+  }
+
   initialize() {
     this.sePLayer.volumeType = VolumeType.SE;
     effekseer.initRuntime("./assets/lib/effekseer.wasm",
@@ -229,26 +239,27 @@ const Position:{[key: string]: {x:number ,y:number , z: number }} = {
 }
 
 const EffectInfo:{[key: string]: EffectData} = {
-  '光柱': {time: 3000, file: "assets/effect/light.efk",size: 1,position: 'foot'},
-  '光': {time: 2000, file: "assets/effect/light2.efk",size: 1,position: 'center'},
-  '光2': {time: 1500, file: "assets/effect/light3.efk",size: 1,position: 'center'},
-  '闇': {time: 2000, file: "assets/effect/dark.efk",size: 1,position: 'center'},
-  '闇球': {time: 6000, file: "assets/effect/darksphere.efk",size: 1.8,position: 'area'},
-  '炎': {time: 1800, file: "assets/effect/fire.efk",size: 1,position: 'foot'},
-  '青炎': {time: 2400, file: "assets/effect/bluefire.efk",size: 1,position: 'foot'},
-  '黒炎': {time: 2400, file: "assets/effect/blackfire.efk",size: 1,position: 'foot'},
-  '冷気': {time: 2000, file: "assets/effect/cold.efk",size: 1,position: 'foot'},
-  '水': {time: 2000, file: "assets/effect/water.efk",size: 1,position: 'center'},
-  '氷': {time: 2000, file: "assets/effect/ice.efk",size: 1,position: 'foot'},
-  '風1': {time: 2000, file: "assets/effect/wind.efk",size: 1,position: 'foot'},
-  '風2': {time: 1400, file: "assets/effect/wind2.efk",size: 1,position: 'center'},
-  '土': {time: 2000, file: "assets/effect/soil.efk",size: 1,position: 'center'},
-  '雷': {time: 2000, file: "assets/effect/lightning.efk",size: 1,position: 'center'},
-  '爆発': {time: 1500, file: "assets/effect/bomb.efk",size: 1,position: 'center'},
-  '爆発2': {time: 5000, file: "assets/effect/bomb2.efk",size: 1,position: 'center'},
-  '核': {time: 6000, file: "assets/effect/nuke.efk",size: 1.8,position: 'area'},
-  '銃': {time: 1000, file: "assets/effect/gun.efk",size: 1,position: 'head'},
-  '出血': {time: 2000, file: "assets/effect/blood.efk",size: 1,position: 'center'},
+  '光柱': {time: 3000, file: "assets/effect/light.efk",audio: 'assets/sounds/effect/light.mp3',size: 1,position: 'foot'},
+  '光': {time: 2000, file: "assets/effect/light2.efk",audio: 'assets/sounds/effect/light2.mp3',size: 1,position: 'center'},
+  '光2': {time: 1500, file: "assets/effect/light3.efk",audio: 'assets/sounds/effect/light3.mp3',size: 1,position: 'center'},
+  '闇': {time: 2000, file: "assets/effect/dark.efk",audio: 'assets/sounds/effect/dark.mp3',size: 1,position: 'center'},
+  '闇球': {time: 6000, file: "assets/effect/darksphere.efk",audio: 'assets/sounds/effect/gravity.mp3',size: 1.8,position: 'area'},
+  '炎': {time: 1800, file: "assets/effect/fire.efk",audio: 'assets/sounds/effect/fire.mp3',size: 1,position: 'foot'},
+  '青炎': {time: 2400, file: "assets/effect/bluefire.efk",audio: 'assets/sounds/effect/fire2.mp3',size: 1,position: 'foot'},
+  '黒炎': {time: 2400, file: "assets/effect/blackfire.efk",audio: 'assets/sounds/effect/fire3.mp3',size: 1,position: 'foot'},
+  '冷気': {time: 2000, file: "assets/effect/cold.efk",audio: 'assets/sounds/effect/snow.mp3',size: 1,position: 'foot'},
+  '水': {time: 2000, file: "assets/effect/water.efk",audio: 'assets/sounds/effect/water.mp3',size: 1,position: 'center'},
+  '氷': {time: 2000, file: "assets/effect/ice.efk",audio: 'assets/sounds/effect/ice.mp3',size: 1,position: 'foot'},
+  '風1': {time: 2000, file: "assets/effect/wind.efk",audio: 'assets/sounds/effect/wind1.mp3',size: 1,position: 'foot'},
+  '風2': {time: 1400, file: "assets/effect/wind2.efk",audio: 'assets/sounds/effect/wind2.mp3',size: 1,position: 'center'},
+  '土': {time: 2000, file: "assets/effect/soil.efk",audio: 'assets/sounds/effect/stone.mp3',audioWait: 600,size: 1,position: 'center'},
+  '雷': {time: 2000, file: "assets/effect/lightning.efk",audio: 'assets/sounds/effect/thunder.mp3',size: 1,position: 'center'},
+  '爆発': {time: 1500, file: "assets/effect/bomb.efk",audio: 'assets/sounds/effect/bomb.mp3',size: 1,position: 'center'},
+  '爆発2': {time: 5000, file: "assets/effect/bomb2.efk",audio: 'assets/sounds/effect/bomb2.mp3',audioWait: 2000,size: 1,position: 'center'},
+  '核': {time: 6000, file: "assets/effect/nuke.efk",audio: 'assets/sounds/effect/nuke.mp3',audioWait: 2200,size: 1.8,position: 'area'},
+  '銃': {time: 1000, file: "assets/effect/gun.efk",audio: 'assets/sounds/effect/gun.mp3',size: 1,position: 'head'},
+  '連射': {time: 1000, file: "assets/effect/gun2.efk",audio: 'assets/sounds/effect/gun2.mp3',size: 1,position: 'head'},
+  '出血': {time: 2000, file: "assets/effect/blood.efk",audio: 'assets/sounds/effect/blood.mp3',size: 1,position: 'center'},
   '!': {time: 2000, file: "assets/effect/ex.efk",size: 1,position: 'head'},
   '?': {time: 2000, file: "assets/effect/question.efk",size: 1,position: 'head'},
   '♪': {time: 2000, file: "assets/effect/note.efk",size: 1,position: 'head'},

@@ -118,6 +118,16 @@ export class AudioPlayer {
     this.audio = audio;
   }
 
+  async directPlay(audioPath :string) {
+    this.stop();
+    this.mediaElementSource.connect(this.getConnectingAudioNode());
+    this.audioElm.src = audioPath;
+    this.audioElm.crossOrigin = 'anonymous';
+    this.audioElm.load();
+    this.volume =  0.4;
+    this.audioElm.play().catch(reason => { console.warn(reason); });
+  }
+
   async play(audio: AudioFile = this.audio, volume: number = 1.0) {
     this.stop();
     this.audio = audio;

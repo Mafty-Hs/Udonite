@@ -342,7 +342,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
       }, 12000);
     }
     if (this.standImageElement) this._playEffect(effectName);
-    else setTimeout(() => this._playEffect(effectName),100);
+    else setTimeout(() => this._playEffect(effectName),135);
   }
 
   private _playEffect(effectName :string) {

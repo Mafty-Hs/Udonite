@@ -53,6 +53,12 @@ export class EffectService {
     await this.setEffect(renderer ,effectName);
     this.renderers.push(renderer);
     let position = Position[EffectInfo[effectName].position];
+    if (EffectInfo[effectName].audio) {
+      if (EffectInfo[effectName].audioWait) {
+        setTimeout(()=> { this.sePLayer.directPlay(EffectInfo[effectName].audio); } ,EffectInfo[effectName].audioWait)
+      }
+      else this.sePLayer.directPlay(EffectInfo[effectName].audio);
+    }
     renderer.context.play(renderer.effect[effectName],position.x,position.y,position.z);
     setTimeout(()=> this.stop(identifier) , EffectInfo[effectName].time + 1000 );
   }
@@ -118,11 +124,11 @@ export class EffectService {
     let context = null;
     if (is3d) {
       camera.position.set(20, 20, 20);
-      camera.lookAt(new Vector3(0, 1, 0));
+      camera.lookAt(new Vector3(0, 3, 0));
     }
     else {
-      camera.position.set(0, 15, 30);
-      camera.lookAt(new Vector3(0, 5, 0));
+      camera.position.set(0, 0, 20);
+      camera.lookAt(new Vector3(0, 0, 0));
     }
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -158,16 +164,16 @@ export class EffectService {
 
   calcSize2d(rect: DOMRect , effectName:string) :number[] {
     let size:number = EffectInfo[effectName].size;
-    let baseWidth = (rect.bottom - rect.top);
-    let baseHeight = (rect.right - rect.left);
+    let baseWidth = Math.floor(rect.width);
+    let baseHeight = Math.floor(rect.height);
     let width:number = baseHeight > baseWidth ? baseHeight * 1.2 : baseWidth * 1.2;
-    let height:number = baseHeight > baseWidth ? baseHeight * 1.2 : baseWidth * 1.2;
+    let height:number = baseWidth > baseHeight ? baseWidth * 1.2 : baseHeight * 1.2;
     if (EffectInfo[effectName].position === 'area') {
       width *= 2.5;
       height *= 2.5;
     }
-    let top:number = rect.top - (height - baseHeight) / 2;
-    let left:number = rect.left - (width - baseWidth) / 2;
+    let top:number = Math.floor(rect.top) - (height - baseHeight) / 2;
+    let left:number = Math.floor(rect.left) - (width - baseWidth) / 2;
     return [width,height,top,left]
   }
 

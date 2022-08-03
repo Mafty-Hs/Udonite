@@ -90,7 +90,12 @@ export class CutInComponent implements OnInit, OnDestroy {
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
 
-  static readonly MIN_SIZE = 100;
+  static readonly IMAGE_MIN_SIZE = 50;
+  static readonly VIDEO_MIN_SIZE = 200;
+
+  get minSize():number {
+    return this.cutIn.isVideoCutIn ? CutInComponent.VIDEO_MIN_SIZE : CutInComponent.IMAGE_MIN_SIZE
+  }
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
@@ -181,7 +186,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixcelWidthPreAdjust(): number {
-    if (this.isMinimize) return CutInComponent.MIN_SIZE;
+    if (this.isMinimize) return this.minSize;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -209,14 +214,14 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
       ret = this.pixelWidthAspectMinimun;
-    } else if (ret < CutInComponent.MIN_SIZE) {
-      ret = CutInComponent.MIN_SIZE;
+    } else if (ret < this.minSize) {
+      ret = this.minSize;
     }
     return ret;
   }
 
   get pixcelHeightPreAdjust(): number {
-    if (this.isMinimize) return CutInComponent.MIN_SIZE;
+    if (this.isMinimize) return this.minSize;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -230,10 +235,10 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixelWidthAspectMinimun() {
-    let ret = CutInComponent.MIN_SIZE;
+    let ret = this.minSize;
     if (!this.cutIn) return ret;
     if (this.naturalWidth > this.naturalHeight) {
-      ret = CutInComponent.MIN_SIZE * this.naturalWidth / this.naturalHeight;
+      ret = this.minSize * this.naturalWidth / this.naturalHeight;
     }
     return ret;
   }
@@ -253,17 +258,17 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelHeightAspectMinimun > ret) {
       ret = this.pixelHeightAspectMinimun;
-    } else if (ret < CutInComponent.MIN_SIZE) {
-      ret = CutInComponent.MIN_SIZE;
+    } else if (ret < this.minSize) {
+      ret = this.minSize;
     }
     return ret;
   }
 
   get pixelHeightAspectMinimun() {
-    let ret = CutInComponent.MIN_SIZE;
+    let ret = this.minSize;
     if (!this.cutIn) return ret;
     if (this.naturalWidth < this.naturalHeight) {
-      ret = CutInComponent.MIN_SIZE * this.naturalHeight / this.naturalWidth;
+      ret = this.minSize * this.naturalHeight / this.naturalWidth;
     }
     return ret;
   }

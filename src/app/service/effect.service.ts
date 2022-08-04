@@ -241,7 +241,7 @@ const Position:{[key: string]: {x:number ,y:number , z: number }} = {
   'head': {x: 0,y: 2,z: 0},
   'center': {x: 0,y: 1,z: 0} ,
   'foot': {x: 0,y: -2,z: 0},
-  'area': {x: 0,y: 0,z: 0},
+  'area': {x: 0,y: -2,z: 0},
 }
 
 const EffectInfo:{[key: string]: EffectData} = {

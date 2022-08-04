@@ -27,7 +27,7 @@
     "jszip": "^3.10.0",
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.3.2",
-    "three": "^0.142.0",
+    "three": "^0.143.0",
     "tslib": "^2.3.1",
     "vkbeautify": "^0.99.3"
   },
@@ -42,7 +42,7 @@
     "@types/jasminewd2": "^2.0.10",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.0.0",
-    "@types/three": "^0.142.0",
+    "@types/three": "^0.143.0",
     "@types/vkbeautify": "^0.99.2",
     "jasmine-core": "^4.0.1",
     "karma": "^6.3.4",
